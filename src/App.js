@@ -1,11 +1,18 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import Main from "./User/Main/Main";
+import AdminHome from "./Admin/AdminHome";
+import AdminMain from "./Admin/AdminMain/AdminMain"
 
 function App() {
   return (
-    <div className="App">
-      <Main></Main>
-    </div>
+    <div className="container">
+    <BrowserRouter>
+     <Routes>
+       <Route path="/admin" element={<AdminHome />} />
+       <Route path="/admin/mainedit" element={<AdminMain />} />
+      </Routes>
+    </BrowserRouter> 
+    </div> 
   );
 }
 
