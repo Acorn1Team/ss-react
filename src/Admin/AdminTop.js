@@ -5,7 +5,7 @@ export default function AdminHome(){
         <>
             <h2>🤖🔨관리자 페이지🔨🤖</h2>
             <ul>
-                <li><Link to="/admin/mainedit">메인 편집</Link></li>
+                <li><Link to="/admin/fashion">패션 편집</Link></li>
                 <li><Link to="/admin/product">상품 관리</Link></li>
                 <li><Link to="/admin/order">주문 관리</Link></li>
                 <li><Link to="/admin/help">고객 지원</Link></li>
