@@ -7,6 +7,7 @@ import PromotionManage from "../AdminPromotion/PromotionManage";
 import CommunityManage from "../AdminCommunity/CommunityManage";
 import OrderManage from "../AdminOrder/OrderManage";
 import NoticeManage from "../AdminHelp/NoticeManage";
+import NoticeDetail from "../AdminHelp/NoticeDetail";
 
 export default function AdminRoutes(){
     return(
@@ -20,6 +21,7 @@ export default function AdminRoutes(){
           
           <Route path="/help" element={<HelpManage />} />
             <Route path="/help/notices" element={<NoticeManage />} />
+            <Route path="/help/notices/:no" element={<NoticeDetail />} />
             
           
           <Route path="/community" element={<CommunityManage />} />

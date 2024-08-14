@@ -1,0 +1,36 @@
+h2 {
+    text-align: center;
+}
+
+#topmenu {
+    width: 90%;
+    list-style-type: none; /* 기본 불릿 제거 */
+    padding: 0;
+    margin: 0;
+    display: flex; /* 옆으로 정렬 플렉스 컨테이너로 설정 */
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+#topmenu li {
+    margin-left: 5%;
+    margin-right: 5%;
+    text-align: center;
+}
+
+/* 마지막 li 요소의 오른쪽 제거 */
+#topmenu li:last-child {
+    margin-right: 0;
+}
+
+/* Link 요소 */
+#topmenu a {
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#topmenu a:hover {
+    color: darkgray;
+}

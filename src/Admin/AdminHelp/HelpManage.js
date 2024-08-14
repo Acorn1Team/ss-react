@@ -7,9 +7,9 @@ export default function HelpManage() {
       <AdminTop></AdminTop>
       <span>
         <Link to="/admin/help/notices">공지사항 편집</Link>
-      </span>
+      </span>&nbsp;&nbsp;
       <span>
-        여기는 라이브채팅하게 해두자
+        (여기는 라이브채팅)
       </span>
     </>
   );
