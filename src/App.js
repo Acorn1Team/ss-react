@@ -3,6 +3,7 @@ import "./App.css";
 import UserRoutes from "./User/Routes/UserRoutes";
 import AdminRoutes from "./Admin/Routes/AdminRoutes";
 import Header from "./User/Component/Header";
+import UserHome from "./User/UserHome";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <Header></Header>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<UserHome />} />
           <Route path="/user/*" element={<UserRoutes />} />
           <Route path="/admin/*" element={<AdminRoutes />} />
         </Routes>
