@@ -10,13 +10,13 @@ const profileImage = `${process.env.PUBLIC_URL}/images/profile.png`;
 
 // 기본 데이터 (자동완성을 위한 예제 데이터)
 const wholeTextArray = [
-  'apple',
-  'banana',
-  'coding',
-  'javascript',
-  '원티드',
-  '프리온보딩',
-  '프론트엔드',
+  "apple",
+  "banana",
+  "coding",
+  "javascript",
+  "원티드",
+  "프리온보딩",
+  "프론트엔드",
 ];
 
 const Header = styled.header`
@@ -70,48 +70,40 @@ const AutoSearchItem = styled.div`
   }
 `;
 
-function App() {
+function HeaderForm() {
   return (
-    <Router>
-      <Header>
-        <Nav>
-          <img src={leftImage} alt="public 폴더 이미지 읽기" style={{ width: 55, height: 60, marginLeft: 1 }} />
-          <NavLink to="/">HOME</NavLink>
-          <NavLink to="/shop">SHOP</NavLink>
-          <NavLink to="/style">STYLE</NavLink>
-        </Nav>
-        <Nav>
-          <Search />
-          <a href="http://www.naver.com">
-            <Icon src={cartImage} alt="Cart" />
-          </a>
-          <a href="http://www.naver.com" style={{ margin: '0 10px' }}>
-            <Icon src={alarmImage} alt="Alarm" />
-          </a>
-          <a href="http://www.naver.com">
-            <Icon src={profileImage} alt="Profile" />
-          </a>
-        </Nav>
-      </Header>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/style" element={<Style />} />
-        </Routes>
-      </div>
-    </Router>
+    <Header>
+      <img
+        src={leftImage}
+        alt="public 폴더 이미지 읽기"
+        style={{ width: 55, height: 60, marginLeft: 1 }}
+      />
+      <Link to="/user/main">HOME</Link>
+      <Link to="/shop">SHOP</Link>
+      <Link to="/style">STYLE</Link>
+
+      <Search />
+      <Link to="/shop/cart">
+        <Icon src={cartImage} alt="Cart" />
+      </Link>
+      <Link to="/mypage/alert">
+        <Icon src={alarmImage} alt="Alarm" />
+      </Link>
+      <Link to="/mypage/">
+        <Icon src={profileImage} alt="Profile" />
+      </Link>
+    </Header>
   );
 }
 
 function Search() {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [filteredItems, setFilteredItems] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
     if (inputValue) {
-      const filtered = wholeTextArray.filter(item =>
+      const filtered = wholeTextArray.filter((item) =>
         item.toLowerCase().includes(inputValue.toLowerCase())
       );
       setFilteredItems(filtered);
@@ -131,7 +123,7 @@ function Search() {
   };
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div style={{ position: "relative" }}>
       <SearchInput
         type="text"
         value={inputValue}
@@ -167,4 +159,4 @@ function Style() {
   return <h1>Style</h1>;
 }
 
-export default App;
+export default HeaderForm;
