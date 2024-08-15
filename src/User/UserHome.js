@@ -64,20 +64,24 @@ export default function UserHome() {
       <div id="mainReviews">
         <b className="mainTextTitle">New Review</b>
         {review.map((r) => (
-          <div className="mainReviewsBox" key={r.no}>
-            {r.pic}
-            <br />
-            {r.user.nickname}&emsp;{r.product.name}
-          </div>
+          <Link to={`/user/shop/review/${r.no}`}>
+            <div className="mainReviewsBox" key={r.no}>
+              {r.pic}
+              <br />
+              {r.user.nickname}&emsp;{r.product.name}
+            </div>
+          </Link>
         ))}
       </div>
       <div id="mainReviews">
         <b className="mainTextTitle">Style Best</b>
         <b className="mainTextTitle">New Review</b>
         {posts.map((p) => (
-          <div className="mainReviewsBox" key={p.no}>
-            {p.pic}&emsp;{p.nickname}
-          </div>
+          <Link to={`/user/style/posts/${p.no}`}>
+            <div className="mainReviewsBox" key={p.no}>
+              {p.pic}&emsp;{p.nickname}
+            </div>
+          </Link>
         ))}
       </div>
     </div>
