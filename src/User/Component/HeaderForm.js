@@ -1,23 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
 
 // 이미지 경로 설정
 const leftImage = `${process.env.PUBLIC_URL}/images/side.png`;
 const cartImage = `${process.env.PUBLIC_URL}/images/cart.png`;
 const alarmImage = `${process.env.PUBLIC_URL}/images/alarm.png`;
 const profileImage = `${process.env.PUBLIC_URL}/images/profile.png`;
-
-// 기본 데이터 (자동완성을 위한 예제 데이터)
-const wholeTextArray = [
-  "apple",
-  "banana",
-  "coding",
-  "javascript",
-  "원티드",
-  "프리온보딩",
-  "프론트엔드",
-];
 
 const Header = styled.header`
   background-color: gray;
@@ -39,8 +29,8 @@ const NavLink = styled(Link)`
 `;
 
 const Icon = styled.img`
-  width: 50px;
-  height: 45px;
+  width: 30px;
+  height: 25px;
 `;
 
 const SearchInput = styled.input`
@@ -78,20 +68,20 @@ function HeaderForm() {
         alt="public 폴더 이미지 읽기"
         style={{ width: 55, height: 60, marginLeft: 1 }}
       />
-      <Link to="/user/main">HOME</Link>
-      <Link to="/shop">SHOP</Link>
-      <Link to="/style">STYLE</Link>
+      <NavLink to="/user/main">HOME</NavLink>
+      <NavLink to="/shop">SHOP</NavLink>
+      <NavLink to="/style">STYLE</NavLink>
 
       <Search />
-      <Link to="/shop/cart">
+      <NavLink to="/shop/cart">
         <Icon src={cartImage} alt="Cart" />
-      </Link>
-      <Link to="/mypage/alert">
+      </NavLink>
+      <NavLink to="/mypage/alert">
         <Icon src={alarmImage} alt="Alarm" />
-      </Link>
-      <Link to="/mypage/">
+      </NavLink>
+      <NavLink to="/mypage/">
         <Icon src={profileImage} alt="Profile" />
-      </Link>
+      </NavLink>
     </Header>
   );
 }
@@ -100,30 +90,57 @@ function Search() {
   const [inputValue, setInputValue] = useState("");
   const [filteredItems, setFilteredItems] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [category, setCategory] = useState("actor");
+  const [dbData, setDbData] = useState(null);
 
   useEffect(() => {
-    if (inputValue) {
-      const filtered = wholeTextArray.filter((item) =>
-        item.toLowerCase().includes(inputValue.toLowerCase())
-      );
-      setFilteredItems(filtered);
-      setShowDropdown(true);
-    } else {
-      setShowDropdown(false);
-    }
-  }, [inputValue]);
+    const fetchData = async () => {
+      if (inputValue) {
+        try {
+          const response = await axios.get(
+            `http://localhost:8080/user/${category}?term=${inputValue}`
+          );
+          console.log("API response:", response.data);
+          setFilteredItems(response.data);
+          setShowDropdown(true);
+        } catch (error) {
+          console.error("Error fetching data : ", error);
+          setFilteredItems([]);
+        }
+      } else {
+        setShowDropdown(false);
+      }
+    };
+
+    fetchData();
+  }, [inputValue, category]);
 
   const handleChange = (e) => {
     setInputValue(e.target.value);
   };
 
   const handleClick = (item) => {
-    setInputValue(item);
+    setInputValue(item.name || item.title || item);
     setShowDropdown(false);
+  };
+
+  const clickHandler = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/user/${category}?term=${inputValue}`
+      );
+      setDbData(response.data);
+    } catch (error) {
+      console.error("Error fetching details: ", error);
+    }
   };
 
   return (
     <div style={{ position: "relative" }}>
+      <select onChange={(e) => setCategory(e.target.value)} value={category}>
+        <option value="actor">배우</option>
+        <option value="show">작품</option>
+      </select>
       <SearchInput
         type="text"
         value={inputValue}
@@ -135,7 +152,7 @@ function Search() {
           {filteredItems.length > 0 ? (
             filteredItems.map((item, index) => (
               <AutoSearchItem key={index} onClick={() => handleClick(item)}>
-                {item}
+                {item.name || item.title || "Unknown"}
               </AutoSearchItem>
             ))
           ) : (
@@ -143,20 +160,9 @@ function Search() {
           )}
         </AutoSearchContainer>
       )}
+      <button onClick={clickHandler}>조회</button>
     </div>
   );
-}
-
-function Home() {
-  return <h1>Home</h1>;
-}
-
-function Shop() {
-  return <h1>Shop</h1>;
-}
-
-function Style() {
-  return <h1>Style</h1>;
 }
 
 export default HeaderForm;
