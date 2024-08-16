@@ -50,16 +50,18 @@ export default function Sub() {
       });
   };
 
-  const changeCharacter = (direction) => {
+  const changeCharacter = (d) => {
     if (selectCharacter) {
-      const currentIndex = characters.findIndex(
-        (c) => c.no === selectCharacter.no
-      );
+      const index = characters.findIndex((c) => c.no === selectCharacter.no);
       const nextIndex =
-        (currentIndex + direction + characters.length) % characters.length;
+        index + d < 0
+          ? characters.length - 1
+          : index + d >= characters.length
+          ? 0
+          : index + d;
       const newCharacter = characters[nextIndex];
       setSelectCharacter(newCharacter);
-      isScrap(newCharacter.no); // 새로운 캐릭터에 대해 scrap 상태 확인
+      isScrap(newCharacter.no);
     }
   };
 
