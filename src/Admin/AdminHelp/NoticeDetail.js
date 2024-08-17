@@ -13,7 +13,7 @@ export default function NoticeDetail(){
     });
 
     useEffect(() => {
-        axios.get("/admin/notice/" + no)
+        axios.get("/admin/help/notice/" + no)
         .then(res => {
             setState(res.data)
         })
@@ -32,15 +32,23 @@ export default function NoticeDetail(){
     const navigate = useNavigate();
 
     const handleSave = () => {
-        axios.put("/admin/notice/" + no, state)
+        axios.put("/admin/help/notice/" + no, state)
         .then(res => {
             // 수정 후 목록보기
-            if(res.data.isSuccess){ // JS가 지원하는, 데이터를 받는 변수 data에서 우리가 보냈던 isSucess 값 받기
-                alert("수정 성공");
-                navigate("/admin/help/notice") // 이벤트에 의해 페이지가 넘어가야 하므로 navigate 함수 사용
-            }
+            if(res.data.isSuccess) navigate("/admin/help/notices");
         })
         .catch(err => {
+            console.log(err);
+        })
+    }
+
+    const handleDelete = (num) => {
+        axios.delete("/admin/help/notice/" + no)
+        .then(res => {
+            // 삭제 후 목록 보기
+            if(res.data.isSuccess) navigate("/admin/help/notices");
+        })
+        .catch(err =>{
             console.log(err);
         })
     }
@@ -49,13 +57,36 @@ export default function NoticeDetail(){
     return(
         <>
             <h2>공지 수정</h2>
-            <div>
-                <label for="title">제목: </label>
-                <input onChange={handleChange} type="text" name="title" /><br/>
-                <label for="addr">내용: </label>
-                <textarea onChange={handleChange} name="contents" /><br />
-                <button onClick={handleSave}>수정</button>
-            </div>
+            <button onClick={() =>{navigate(`/admin/help/notices`)}}>목록보기</button>
+            <table>
+                <tbody>
+                <tr>
+                    <td>제목</td>
+                    <td><input onChange={handleChange} type="text" name="title" value={state.title} /></td>
+                </tr>
+                <tr>
+                    <td>카테고리</td>
+                    <td>
+                        <select onChange={handleChange} name="category" value={state.category}>
+                                <option value="주문">주문</option>
+                                <option value="결제">결제</option>
+                                <option value="반품/환불">반품/환불</option>
+                                <option value="배송">배송</option>
+                                <option value="프로모션/쿠폰">프로모션/쿠폰</option>
+                                <option value="상품문의">상품문의</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>내용</td>
+                    <td><textarea onChange={handleChange} name="contents" value={state.contents} /></td>
+                </tr>
+                </tbody>
+            </table>
+            
+            <button onClick={handleSave}>수정</button>
+            <button onClick={handleDelete}>삭제</button>
+            
         </>
     );
 }

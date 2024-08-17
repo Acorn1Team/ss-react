@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import AdminTop from "../AdminTop";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function NoticeManage() {
   
@@ -12,7 +12,7 @@ export default function NoticeManage() {
   const [notices, setNotices] = useState([]);
 
   const getNoticeList = () => {
-    axios.get("/admin/notice")
+    axios.get("/admin/help/notice")
     .then(response => {
       setNotices(response.data);
     })
@@ -20,8 +20,6 @@ export default function NoticeManage() {
       console.log(error);
     })
   }
-
-  const navigate = useNavigate(); // 페이지 이동 함수
 
   return (
     <>
@@ -39,9 +37,7 @@ export default function NoticeManage() {
               <tr key={notice.no}>
                   <td>{notice.no}</td>
                   <td>{notice.category}</td>
-                  <td><button onClick={() =>{ 
-                    navigate(`/admin/help/notices/${notice.no}`)
-                    }}>{notice.title}</button></td>
+                  <td><Link to={`/admin/help/notices/${notice.no}`}>{notice.title}</Link></td>
                   <td>{notice.date}</td>
               </tr>
           )}

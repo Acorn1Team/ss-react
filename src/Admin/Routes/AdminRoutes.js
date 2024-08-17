@@ -8,6 +8,7 @@ import CommunityManage from "../AdminCommunity/CommunityManage";
 import OrderManage from "../AdminOrder/OrderManage";
 import NoticeManage from "../AdminHelp/NoticeManage";
 import NoticeDetail from "../AdminHelp/NoticeDetail";
+import NoticeForm from "../AdminHelp/NoticeForm";
 
 export default function AdminRoutes(){
     return(
@@ -21,6 +22,7 @@ export default function AdminRoutes(){
           
           <Route path="/help" element={<HelpManage />} />
             <Route path="/help/notices" element={<NoticeManage />} />
+            <Route path="/help/notices/new" element={<NoticeForm />} />
             <Route path="/help/notices/:no" element={<NoticeDetail />} />
             
           
