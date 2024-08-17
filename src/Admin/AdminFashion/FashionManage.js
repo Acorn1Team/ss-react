@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axios from "axios";
-import AdminTop from "../AdminTop";
 
 export default function FashionManage() {
     const [keyword, setKeyword] = useState("");
@@ -53,7 +52,6 @@ export default function FashionManage() {
 
     return (
         <>
-            <AdminTop></AdminTop>
             작품명 검색: <input id="keyword" onChange={handleChange} type="text" name="keyword" />
             <button onClick={doScrap}>스크래핑 시도</button>
             <hr/>

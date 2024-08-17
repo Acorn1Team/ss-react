@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import AdminTop from "../AdminTop";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
@@ -23,7 +22,6 @@ export default function NoticeManage() {
 
   return (
     <>
-      <AdminTop></AdminTop>
       <Link to="/admin/help/notices/new">공지 추가</Link><br/>
       <h1>공지 목록</h1>
       <table border="1">

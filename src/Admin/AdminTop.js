@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import './Style/admin.css'
 
-export default function AdminHome(){
+export default function AdminTop(){
     return(
         <>
             <h2>🤖🔨관리자 페이지🔨🤖</h2>

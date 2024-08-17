@@ -3,7 +3,7 @@ import "./App.css";
 import UserRoutes from "./User/Routes/UserRoutes";
 import AdminRoutes from "./Admin/Routes/AdminRoutes";
 import UserHome from "./User/UserHome";
-import AdminHome from "./Admin/AdminTop";
+import AdminTop from "./Admin/AdminTop";
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/user/*" element={<UserHome />} />
-          <Route path="/admin/*" element={<AdminHome />} />
+          <Route path="/admin/*" element={<AdminTop />} />
         </Routes>
         <Routes>
           <Route path="/user/*" element={<UserRoutes />} />
