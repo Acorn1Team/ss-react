@@ -8,7 +8,13 @@ import CommunityManage from "../AdminCommunity/CommunityManage";
 import OrderManage from "../AdminOrder/OrderManage";
 import NoticeManage from "../AdminHelp/NoticeManage";
 import NoticeDetail from "../AdminHelp/NoticeDetail";
+
 import NoticeForm from "../AdminHelp/NoticeForm";
+
+
+import ProductInsert from "../AdminProduct/ProductInsert";
+import ProductUpdateForm from "../AdminProduct/ProductUpdateForm";
+import ProductDetail from "../AdminProduct/ProductDetail";
 
 export default function AdminRoutes(){
     return(
@@ -17,7 +23,9 @@ export default function AdminRoutes(){
           <Route path="/fashion" element={<FashionManage />} />
           
           <Route path="/product" element={<ProductManage />} />
-          
+          <Route path="/product/insert" element={<ProductInsert />} />
+          <Route path="/product/update/:no" element={<ProductUpdateForm />} />
+          <Route path="/product/detail/:no" element={<ProductDetail />} /> {/* 추가 */}
           <Route path="/order" element={<OrderManage />} />
           
           <Route path="/help" element={<HelpManage />} />

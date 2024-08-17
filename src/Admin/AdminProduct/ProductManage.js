@@ -1,76 +1,102 @@
-import AdminTop from "../AdminTop"
-import { useState,useEffect } from "react";
-import { Link,useNavigate } from "react-router-dom";
+import AdminTop from "../AdminTop";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function ProductManage(){
-    const [members,setMembers] = useState([]);
+export default function ProductManage() {
+    const [products, setProducts] = useState([]);
+    const navigate = useNavigate();
+
     const refresh = () => {
-        // ajax 요청 (GET 방식) 설정
         axios.get("/admin/product")
-        .then(res =>{
-            // 서버로부터 응답된 데이터를 이용해서 State를 수정
-            setMembers(res.data)
-            console.log(res.data)
-        })
-        .catch(error =>{
-            console.log(error)
-        })
-    }
+            .then(res => {
+                const formattedProducts = res.data.map(product => ({
+                    ...product,
+                    date: new Date(product.date).toLocaleString(), // 날짜 및 시간 포맷팅
+                }));
+                setProducts(formattedProducts);
+                console.log(formattedProducts);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    };
 
     useEffect(() => {
-        refresh(); // Ajax 요청 처리 시작 
-    },[])
-
-    // 삭제 버튼 클릭시 이벤트 핸들러 함수
+        refresh(); 
+    }, []);
 
     const handleDelete = (no) => {
-        // ajax 요청 (delete 방식) 설정
-        axios.delete("/admin/product/" + no)
-        .then(res =>{
-            // 삭제후 목록 보기
-            refresh();
-        })
-        .catch(error =>{
-            console.log(error);
-        })
-    }
+        if (window.confirm("정말로 삭제하시겠습니까?")) {
+            axios.delete("/admin/product/" + no)
+                .then(res => {
+                    alert("상품이 삭제되었습니다.");
+                    refresh(); // 삭제 후 목록을 새로고침
+                })
+                .catch(error => {
+                    console.log(error);
+                    alert("삭제 중 오류가 발생했습니다.");
+                });
+        }
+    };
 
-    return(
+    const handleDetail = (no) => {
+        navigate(`/admin/product/detail/${no}`);
+    };
+
+    return (
         <>
-            <AdminTop></AdminTop>
+            <AdminTop />
+            <Link to="/admin/product/insert">상품 추가</Link>
             <table border={1}>
                 <thead>
                     <tr>
-                        <th>번호</th><th>이름</th><th>가격</th><th>상품설명</th><th>날짜</th>
-                        <th>카테고리</th><th>이미지</th><th>재고</th><th>할인률</th><th>평점</th>
+                        <th>번호</th>
+                        <th>이름</th>
+                        <th>가격</th>
+                        <th>내용</th>
+                        <th>날짜</th>
+                        <th>카테고리</th>
+                        <th>이미지</th>
+                        <th>재고</th>
+                        <th>할인률</th>
+                        <th>평점</th>
+                        <th>상세보기</th>
+                        <th>삭제</th>
                     </tr>
                 </thead>
                 <tbody>
-                   {members.map(item => <tr key={item.no}>
-                        <td>{item.no}</td>
-                        <td>{item.name}</td>
-                        <td>{item.price}</td>
-                        <td>{item.contents}</td>
-                        <td>{item.date}</td>
-                        <td>{item.category}</td>
-                        <td>{item.pic}</td>
-                        <td>{item.stock}</td>
-                        <td>{item.discountRate}</td>
-                        <td>{item.score}</td>
-                      
-                        <td>
-                          
-                        </td>
-                        <td>
-                           
-                        </td>
-                   </tr>)
-
-                   } 
+                    {products.map(item => (
+                        <tr key={item.no}>
+                            <td>{item.no}</td>
+                            <td>{item.name}</td>
+                            <td>{item.price}</td>
+                            <td>{item.contents}</td> {/* 상품 설명 */}
+                            <td>{item.date}</td> {/* 포맷팅된 날짜 및 시간 */}
+                            <td>{item.category}</td>
+                            <td>
+                                {/* 이미지 경로를 사용하여 이미지를 표시 */}
+                                <img src={item.pic} alt={item.name} style={{ width: '100px', height: '100px' }} />
+                            </td>
+                            <td>{item.stock}</td>
+                            <td>{item.discountRate}</td>
+                            <td>{item.score}</td>
+                            <td>
+                                <span 
+                                    onClick={() => handleDetail(item.no)} 
+                                    style={{ cursor: 'pointer', color: 'blue' }}>
+                                    상세보기
+                                </span>
+                            </td>
+                            <td>
+                                <button onClick={() => handleDelete(item.no)}>
+                                    삭제
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </>
-        
-    )    
+    );
 }
