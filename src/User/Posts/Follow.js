@@ -1,31 +1,18 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export default function Follow() {
-  const { no, followInfo } = useParams();
+  const { followInfo } = useParams();
   const [followData, setFollowData] = useState([]);
-  const [followStatus, setFollowStatus] = useState({}); // 객체로 변경
+  const [followStatus, setFollowStatus] = useState({});
 
-  useEffect(() => {
-    if (followInfo === "follower") {
-      followerInfo();
-    } else {
-      followeeInfo();
-    }
-  }, [no, followInfo]);
-
-  useEffect(() => {
-    if (followData.length > 0) {
-      followData.forEach((f) => {
-        followCheckProc(f.no);
-      });
-    }
-  }, [followData]);
+  // 로그인 정보라고 가정
+  const userNo = 3;
 
   const followerInfo = () => {
     axios
-      .get(`/posts/user/follow/follower/${no}`)
+      .get(`/posts/user/follow/follower/${userNo}`)
       .then((res) => setFollowData(res.data))
       .catch((err) => {
         console.log(err);
@@ -34,7 +21,7 @@ export default function Follow() {
 
   const followeeInfo = () => {
     axios
-      .get(`/posts/user/follow/followee/${no}`)
+      .get(`/posts/user/follow/followee/${userNo}`)
       .then((res) => setFollowData(res.data))
       .catch((err) => {
         console.log(err);
@@ -43,7 +30,7 @@ export default function Follow() {
 
   const followCheckProc = (fno) => {
     axios
-      .get(`/posts/user/follow/check/${no}/${fno}`) // fno는 숫자 값이어야 합니다.
+      .get(`/posts/user/follow/check/${userNo}/${fno}`)
       .then((res) => {
         setFollowStatus((pstatus) => ({
           ...pstatus,
@@ -58,7 +45,7 @@ export default function Follow() {
   const followOrCancle = (fno) => {
     if (followStatus[fno]) {
       axios
-        .delete(`/posts/user/follow/delete/${no}/${fno}`)
+        .delete(`/posts/user/follow/delete/${userNo}/${fno}`)
         .then((res) => {
           setFollowStatus((pstatus) => ({
             ...pstatus,
@@ -72,7 +59,7 @@ export default function Follow() {
       axios
         .post("/posts/user/follow/insert", {
           followeeNo: fno,
-          followerNo: no,
+          followerNo: userNo,
         })
         .then((res) => {
           setFollowStatus((pstatus) => ({
@@ -85,14 +72,30 @@ export default function Follow() {
         });
     }
   };
+  useEffect(() => {
+    if (followInfo === "follower") {
+      followerInfo();
+    } else {
+      followeeInfo();
+    }
+  }, [userNo, followInfo]);
+
+  useEffect(() => {
+    if (followData.length > 0) {
+      followData.forEach((f) => {
+        followCheckProc(f.no);
+      });
+    }
+  }, [followData]);
 
   return (
     <div>
       {followData.map((f) => (
         <div key={f.no}>
-          {f.pic}
-          {f.nickname}
-          <br />
+          <Link to={`/user/main/style/posts/${f.no}`}>
+            {f.pic}
+            {f.nickname}
+          </Link>
           <button onClick={() => followOrCancle(f.no)}>
             {followStatus[f.no] ? "팔로우 취소하기" : "팔로우 하기"}
           </button>

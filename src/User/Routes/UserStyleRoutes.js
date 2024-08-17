@@ -4,7 +4,7 @@ import PostForm from "../Posts/PostForm";
 export default function UserStyleRoutes() {
   return (
     <Routes>
-      <Route path="/posts/:no/*" element={<PostForm />} />
+      <Route path="/post/*" element={<PostForm />} />
     </Routes>
   );
 }

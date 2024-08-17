@@ -77,7 +77,7 @@ export default function UserHome() {
         <b className="mainTextTitle">Style Best</b>
         <b className="mainTextTitle">New Review</b>
         {posts.map((p) => (
-          <Link to={`/user/style/posts/${p.no}`}>
+          <Link to={`/user/style/post/${p.no}`}>
             <div className="mainPostsBox" key={p.no}>
               {p.pic}&emsp;{p.userNickname}
             </div>

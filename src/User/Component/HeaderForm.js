@@ -65,7 +65,7 @@ function HeaderForm() {
       />
       <Link to="/user/main">HOME</Link>
       <Link to="/shop">SHOP</Link>
-      <Link to="/style">STYLE</Link>
+      <Link to="/style/post">STYLE</Link>
 
       <Search />
       <Link to="/shop/cart">
