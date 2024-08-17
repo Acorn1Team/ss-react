@@ -5,16 +5,7 @@ import axios from "axios";
 
 export default function ProductList(){
     const [products, setProducts] = useState([]);
-    
-    // const navigate = useNavigate();
 
-    // // 카데고리 버튼 클릭시
-    // const handleClick = (category) => {
-    //     // 클릭 시 부모 컴포넌트에 새로운 카테고리 전달
-    //     onCategoryChange(category);
-    //     // ProductByCate로 이동
-    //     navigate('/');
-    // };
 
     const refresh = () => {
         // ajax 요청 (get 방식)
@@ -35,24 +26,27 @@ export default function ProductList(){
  
     return(
         <>
-        <Link to="/">상품메인화면</Link>
-        {/* <Link to="/user/shop/productlist/top">상의</Link> */}
-        {/* <button onClick={() => handleClick('상의')}>상의</button>
-        <button onClick={() => handleClick('하의')}>하의</button>
-        <button onClick={() => handleClick('신발')}>신발</button>
-        <button onClick={() => handleClick('기타')}>기타</button> */}
+        <Link to="/user/shop/productlist/category/Category 1">상의</Link>
+        <Link to="/user/shop/productlist/category/Category 2">하의</Link>
+        <Link to="/user/shop/productlist/category/Category 3">신발</Link>
+        <Link to="/user/shop/productlist/category/Category 4">기타</Link>
+      
 
-        {products.map((product) => (
+        {products.map((product) => ( 
             <div key={product.num}>
             <div>{product.no}</div>
             <div>{product.name}</div>
             <div>{product.price}</div>
             <div>{product.date}</div>
             <div>{product.category}</div>
-            <div>{product.pic}</div>
+            {/* <div>{product.pic}</div> */}
+            <div>
+            <Link to={`/user/shop/productlist/detail/${product.no}`}>{product.pic}</Link>
+            </div>
             <div>{product.discountRate}</div>
             <div>{product.score}</div>
-            <div>{product.reviews}</div>
+
+            
             </div>
         ))}
         </>
