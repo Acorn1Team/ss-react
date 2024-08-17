@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+} from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 
@@ -15,17 +21,6 @@ const Header = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
-`;
-
-const Nav = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const NavLink = styled(Link)`
-  margin: 0 10px;
-  text-decoration: none;
-  color: white;
 `;
 
 const Icon = styled.img`
@@ -68,20 +63,20 @@ function HeaderForm() {
         alt="public 폴더 이미지 읽기"
         style={{ width: 55, height: 60, marginLeft: 1 }}
       />
-      <NavLink to="/user/main">HOME</NavLink>
-      <NavLink to="/shop">SHOP</NavLink>
-      <NavLink to="/style">STYLE</NavLink>
+      <Link to="/user/main">HOME</Link>
+      <Link to="/shop">SHOP</Link>
+      <Link to="/style">STYLE</Link>
 
       <Search />
-      <NavLink to="/shop/cart">
+      <Link to="/shop/cart">
         <Icon src={cartImage} alt="Cart" />
-      </NavLink>
-      <NavLink to="/mypage/alert">
+      </Link>
+      <Link to="/mypage/alert">
         <Icon src={alarmImage} alt="Alarm" />
-      </NavLink>
-      <NavLink to="/mypage/">
+      </Link>
+      <Link to="/mypage/">
         <Icon src={profileImage} alt="Profile" />
-      </NavLink>
+      </Link>
     </Header>
   );
 }
@@ -91,20 +86,23 @@ function Search() {
   const [filteredItems, setFilteredItems] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [category, setCategory] = useState("actor");
-  const [dbData, setDbData] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       if (inputValue) {
         try {
           const response = await axios.get(
-            `http://localhost:8080/user/${category}?term=${inputValue}`
+            `http://localhost:8080/user/search/${category}?term=${inputValue}`
           );
-          console.log("API response:", response.data);
-          setFilteredItems(response.data);
+          if (Array.isArray(response.data)) {
+            setFilteredItems(response.data);
+          } else {
+            console.error("Unexpected response data format");
+          }
           setShowDropdown(true);
         } catch (error) {
-          console.error("Error fetching data : ", error);
+          console.error("Error fetching data:", error);
           setFilteredItems([]);
         }
       } else {
@@ -124,15 +122,10 @@ function Search() {
     setShowDropdown(false);
   };
 
-  const clickHandler = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/user/${category}?term=${inputValue}`
-      );
-      setDbData(response.data);
-    } catch (error) {
-      console.error("Error fetching details: ", error);
-    }
+  const clickHandler = () => {
+    const encodedInputValue = encodeURIComponent(inputValue);
+    const encodedCategory = encodeURIComponent(category);
+    navigate(`/search?category=${encodedCategory}&name=${encodedInputValue}`);
   };
 
   return (
@@ -140,6 +133,7 @@ function Search() {
       <select onChange={(e) => setCategory(e.target.value)} value={category}>
         <option value="actor">배우</option>
         <option value="show">작품</option>
+        <option value="product">상품</option>
       </select>
       <SearchInput
         type="text"
