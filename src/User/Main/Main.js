@@ -84,6 +84,7 @@ export default function UserHome() {
           </Link>
         ))}
       </div>
+      <Link to="/admin">관리자</Link>
     </div>
   );
 }

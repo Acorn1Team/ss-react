@@ -1,11 +1,10 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Posts from "../Posts/Posts";
-
+import PostForm from "../Posts/PostForm";
 export default function UserStyleRoutes() {
   return (
     <Routes>
-      <Route path="/posts/:no" element={<Posts />} />
+      <Route path="/posts/:no/*" element={<PostForm />} />
     </Routes>
   );
 }

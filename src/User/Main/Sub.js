@@ -16,11 +16,6 @@ export default function Sub() {
 
   const [scrap, setScrap] = useState();
 
-  const refresh = () => {
-    showSubData();
-    isScrap();
-  };
-
   const showSubData = () => {
     axios
       .get(`/main/sub/${no}`)
@@ -108,7 +103,8 @@ export default function Sub() {
   }, [selectCharacter]); // selectCharacter가 변경될 때마다 실행
 
   useEffect(() => {
-    refresh();
+    showSubData();
+    isScrap();
   }, [no]);
 
   return (
@@ -125,7 +121,7 @@ export default function Sub() {
           <h2>{selectCharacter.name}</h2>
           <img src={selectCharacter.pic} alt={selectCharacter.name} />
           <button onClick={() => scrapProc()}>
-            {scrap ? "스크랩햇음" : "스크랩안햇음"}
+            {scrap ? "스크랩했음" : "스크랩안했음"}
           </button>
 
           <div>
@@ -135,24 +131,16 @@ export default function Sub() {
                 <div key={s.no}>
                   <h3>Style {s.no}</h3>
                   <img src={s.pic} alt={`Style ${s.no}`} />
+                  {items
+                    .filter((i) => s.no == i.styleNo)
+                    .map((i) => (
+                      <Link to={`/user/productDetail/${i.no}`} key={i.no}>
+                        <div>
+                          <img src={i.pic} alt={`Item ${i.no}`} />
+                        </div>
+                      </Link>
+                    ))}
                 </div>
-              ))}
-          </div>
-
-          <div>
-            {items
-              .filter((i) =>
-                styles.some(
-                  (s) =>
-                    s.no === i.styleNo && s.characterNo === selectCharacter.no
-                )
-              )
-              .map((i) => (
-                <Link to={`/user/productDetail/${i.no}`} key={i.no}>
-                  <div>
-                    <img src={i.pic} alt={`Item ${i.no}`} />
-                  </div>
-                </Link>
               ))}
           </div>
         </div>
