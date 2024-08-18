@@ -19,7 +19,7 @@ export default function PromotionCoupon() {
                     <input type="date" name="expiry-date" />
                     
                 </div>
-                <button type="submit">등록</button>
+                <button>등록</button>
             </form>
         </div>
     );
