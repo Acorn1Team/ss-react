@@ -55,7 +55,38 @@ const AutoSearchItem = styled.div`
   }
 `;
 
+const PopupContainer = styled.div`
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  z-index: 10;
+  width: 150px;
+`;
+
 function HeaderForm() {
+  const [showPopup, setShowPopup] = useState(false);
+  const navigate = useNavigate();
+
+  // 로그인 정보라고 가정
+  const userNo = 3;
+
+  const profilePic = userNo ? `userProfilePic경로` : profileImage;
+
+  // 로그인 여부에 따른 상호작용 컨트롤용 함수
+  const handleProfileClick = () => {
+    if (userNo) {
+      // 로그인 정보가 있으면 팝업 띄우기
+      setShowPopup(!showPopup);
+    } else {
+      // 로그인 정보가 없으면 로그인창으로 이동하기
+      navigate("/login");
+    }
+  };
+
   return (
     <Header>
       <img
@@ -64,8 +95,8 @@ function HeaderForm() {
         style={{ width: 55, height: 60, marginLeft: 1 }}
       />
       <Link to="/user/main">HOME</Link>
-      <Link to="/shop">SHOP</Link>
-      <Link to="/style/post">STYLE</Link>
+      <Link to="/user/shop/productlist">SHOP</Link>
+      <Link to="/user/style/post">STYLE</Link>
 
       <Search />
       <Link to="/shop/cart">
@@ -74,9 +105,30 @@ function HeaderForm() {
       <Link to="/mypage/alert">
         <Icon src={alarmImage} alt="Alarm" />
       </Link>
-      <Link to="/mypage/">
-        <Icon src={profileImage} alt="Profile" />
-      </Link>
+      <Icon
+        src={profileImage}
+        alt="Profile"
+        onClick={() => setShowPopup(!showPopup)}
+        style={{ cursor: "pointer" }}
+      />
+      {showPopup && (
+        <PopupContainer>
+          <Link to="/user/mypage/profile" onClick={() => setShowPopup(false)}>
+            프로필
+          </Link>
+          <br />
+          <Link
+            to={`/user/mypage/scrap/${userNo}`}
+            onClick={() => setShowPopup(false)}
+          >
+            마이스크랩
+          </Link>
+          <br />
+          <Link to="/user/mypage/logout" onClick={() => setShowPopup(false)}>
+            로그아웃
+          </Link>
+        </PopupContainer>
+      )}
     </Header>
   );
 }

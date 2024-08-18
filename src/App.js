@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import UserRoutes from "./User/Routes/UserRoutes";
 import AdminRoutes from "./Admin/Routes/AdminRoutes";
-import UserHome from "./User/UserHome";
+import HeaderForm from "./User/Component/HeaderForm";
 import AdminTop from "./Admin/AdminTop";
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
     <div className="container">
       <BrowserRouter>
         <Routes>
-          <Route path="/user/*" element={<UserHome />} />
+          <Route path="/user/*" element={<HeaderForm />} />
           <Route path="/admin/*" element={<AdminTop />} />
         </Routes>
         <Routes>

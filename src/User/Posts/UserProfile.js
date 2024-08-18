@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+// style 탭 접근시 고정으로 표시될 로그인된 user 정보
 export default function UserProfile() {
   const [userData, setUserData] = useState([]);
   const [followeeData, setFolloweeData] = useState([]);
@@ -45,17 +46,18 @@ export default function UserProfile() {
       {userData.nickname}
       <br />
       <button onClick={() => profileEdit()}>수정</button>
+      <Link to={`/user/style/list/${userNo}`}>내가 쓴 글</Link>
       <div>
         팔로우
         <Link
-          to={`/user/style/post/${userNo}/followList/followee`}
+          to={`/user/style/${userNo}/followList/followee`}
           onClick={followInfo}
         >
           {followeeData.length}
         </Link>
         &emsp; 팔로워
         <Link
-          to={`/user/style/post/${userNo}/followList/follower`}
+          to={`/user/style/${userNo}/followList/follower`}
           onClick={followInfo}
         >
           {followerData.length}

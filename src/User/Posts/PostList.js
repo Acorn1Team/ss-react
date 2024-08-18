@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-// 상품 상세에서 피드 공유로 넘어왔을 때 처리해야 함
+// 팔로우한 유저 게시글 리스트
 export default function PostList() {
   const [followPost, setFollowPost] = useState([]);
   // 로그인 정보라고 가정
@@ -26,7 +26,7 @@ export default function PostList() {
         <div key={fp.no}>
           {fp.userPic}&emsp;@{fp.userNickname}
           <br />
-          <Link to={`/user/style/post/detail/${fp.no}`}>
+          <Link to={`/user/style/detail/${fp.no}`}>
             <b>{fp.pic}</b>
             {fp.content}
           </Link>

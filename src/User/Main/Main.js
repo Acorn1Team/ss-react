@@ -6,11 +6,8 @@ export default function UserHome() {
   const [show, setShow] = useState([]);
   const [review, setReview] = useState([]);
   const [posts, setPosts] = useState([]);
-  const refresh = () => {
-    showData();
-    showNewReview();
-    showStyleBest();
-  };
+
+  // 메인에 보여 줄 작품 목록 가져오기
   const showData = () => {
     axios
       .get("/main/showData")
@@ -21,6 +18,8 @@ export default function UserHome() {
         console.log(error);
       });
   };
+
+  // 메인에 보여 줄 최신 리뷰 가져오기
   const showNewReview = () => {
     axios
       .get("/main/showNewReview")
@@ -31,6 +30,8 @@ export default function UserHome() {
         console.log(error);
       });
   };
+
+  // 메인에 보여 줄 피드 베스트 가져오기
   const showStyleBest = () => {
     axios
       .get("/main/showStyleBest")
@@ -42,9 +43,13 @@ export default function UserHome() {
       });
   };
 
+  // 최초 접속시 1회 로딩
   useEffect(() => {
-    refresh();
+    showData();
+    showNewReview();
+    showStyleBest();
   }, []);
+
   return (
     <div>
       <img width="100%" src="../images/mainphoto-01.png" alt="main"></img>
@@ -77,7 +82,7 @@ export default function UserHome() {
         <b className="mainTextTitle">Style Best</b>
         <b className="mainTextTitle">New Review</b>
         {posts.map((p) => (
-          <Link to={`/user/style/post/${p.no}`}>
+          <Link to={`/user/style/detail/${p.no}`}>
             <div className="mainPostsBox" key={p.no}>
               {p.pic}&emsp;{p.userNickname}
             </div>
