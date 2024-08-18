@@ -1,11 +1,23 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import "../Style/Main.css";
 
 export default function UserHome() {
   const [show, setShow] = useState([]);
   const [review, setReview] = useState([]);
   const [posts, setPosts] = useState([]);
+  const [selectReviewIndex, setSelectReviewIndex] = useState(0);
+
+  // 리뷰 슬라이드 기능 구현
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSelectReviewIndex((prevIndex) =>
+        prevIndex === review.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000); // 5초마다 슬라이드 변경
+    return () => clearInterval(interval);
+  }, [review]);
 
   // 메인에 보여 줄 작품 목록 가져오기
   const showData = () => {
@@ -50,12 +62,22 @@ export default function UserHome() {
     showStyleBest();
   }, []);
 
+  // 리뷰 슬라이드 기능 구현
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSelectReviewIndex((prevIndex) =>
+        prevIndex === review.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000); // 5초마다 슬라이드 변경
+    return () => clearInterval(interval);
+  }, [review]);
+
   return (
     <div>
       <img width="100%" src="../images/mainphoto-01.png" alt="main"></img>
       <b>SceneStealer</b>
+      <b className="mainTextTitle">Choose Your Scene!</b>
       <div id="mainPosts">
-        <b className="mainTextTitle">Choose Your Scene!</b>
         {show.map((s) => (
           <Link to={`/user/main/sub/${s.no}`}>
             <div className="mainPostsBox" key={s.no}>
@@ -66,21 +88,21 @@ export default function UserHome() {
           </Link>
         ))}
       </div>
+      <b className="mainTextTitle">New Review</b>
       <div id="mainReviews">
-        <b className="mainTextTitle">New Review</b>
-        {review.map((r) => (
-          <Link to={`/user/shop/review/${r.no}`}>
-            <div className="mainReviewsBox" key={r.no}>
-              {r.pic}
+        {review.length > 0 && (
+          <div className="mainReviewsBox active">
+            <Link to={`/user/shop/review/${review[selectReviewIndex].no}`}>
+              {review[selectReviewIndex].pic}
               <br />
-              {r.userNickname}&emsp;{r.productName}
-            </div>
-          </Link>
-        ))}
+              {review[selectReviewIndex].userNickname}&emsp;
+              {review[selectReviewIndex].productName}
+            </Link>
+          </div>
+        )}
       </div>
+      <b className="mainTextTitle">Style Best</b>
       <div id="mainPosts">
-        <b className="mainTextTitle">Style Best</b>
-        <b className="mainTextTitle">New Review</b>
         {posts.map((p) => (
           <Link to={`/user/style/detail/${p.no}`}>
             <div className="mainPostsBox" key={p.no}>

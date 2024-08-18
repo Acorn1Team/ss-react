@@ -2,7 +2,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-// style 탭 접근시 고정으로 표시될 로그인된 user 정보
 export default function UserProfile() {
   const [userData, setUserData] = useState([]);
   const [followeeData, setFolloweeData] = useState([]);
@@ -40,7 +39,7 @@ export default function UserProfile() {
   }, [userNo]);
 
   return (
-    <div style={{ backgroundColor: "lightpink" }}>
+    <div>
       {userData.pic}
       <br />
       {userData.nickname}

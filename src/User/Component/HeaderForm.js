@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-  useNavigate,
-} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 
@@ -16,20 +10,97 @@ const alarmImage = `${process.env.PUBLIC_URL}/images/alarm.png`;
 const profileImage = `${process.env.PUBLIC_URL}/images/profile.png`;
 
 const Header = styled.header`
-  background-color: gray;
+  background-color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
 `;
 
+const LeftContainer = styled.div`
+  display: flex;
+  align-items: center;
+
+  & > *:not(:last-child) {
+    margin-right: 20px; /* 로고와 메뉴 아이템 간의 간격 설정 */
+  }
+`;
+
+const RightContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px; /* 아이템 간의 간격 설정 */
+`;
+
 const Icon = styled.img`
   width: 30px;
   height: 25px;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1); /* 마우스오버 시 요소가 커지는 효과 */
+  }
+`;
+
+const SearchForm = styled.form`
+  display: flex;
+  align-items: center;
+`;
+
+const SearchSelect = styled.select`
+  font-family: inherit;
+  font-size: inherit;
+  background-color: #f4f2f2;
+  border: none;
+  color: #646464;
+  padding: 0.7rem 1rem;
+  border-radius: 30px;
+  margin-right: 0.5rem;
+  transition: all ease-in-out 0.5s;
 `;
 
 const SearchInput = styled.input`
-  margin-right: 10px;
+  font-family: inherit;
+  font-size: inherit;
+  background-color: #f4f2f2;
+  border: none;
+  color: #646464;
+  padding: 0.7rem 1rem;
+  border-radius: 30px;
+  width: 12em;
+  transition: all ease-in-out 0.5s;
+  margin-right: 0.5rem;
+
+  &:hover,
+  &:focus {
+    box-shadow: 0 0 1em #00000013;
+  }
+
+  &:focus {
+    outline: none;
+    background-color: #f0eeee;
+  }
+
+  &::-webkit-input-placeholder {
+    font-weight: 100;
+    color: #ccc;
+  }
+`;
+
+const SearchButton = styled.button`
+  font-family: inherit;
+  font-size: inherit;
+  background-color: #323232;
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1rem;
+  border-radius: 30px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #505050;
+    cursor: pointer;
+  }
 `;
 
 const AutoSearchContainer = styled.div`
@@ -76,59 +147,51 @@ function HeaderForm() {
 
   const profilePic = userNo ? `userProfilePic경로` : profileImage;
 
-  // 로그인 여부에 따른 상호작용 컨트롤용 함수
-  const handleProfileClick = () => {
-    if (userNo) {
-      // 로그인 정보가 있으면 팝업 띄우기
-      setShowPopup(!showPopup);
-    } else {
-      // 로그인 정보가 없으면 로그인창으로 이동하기
-      navigate("/login");
-    }
-  };
-
   return (
     <Header>
-      <img
-        src={leftImage}
-        alt="public 폴더 이미지 읽기"
-        style={{ width: 55, height: 60, marginLeft: 1 }}
-      />
-      <Link to="/user/main">HOME</Link>
-      <Link to="/user/shop/productlist">SHOP</Link>
-      <Link to="/user/style/post">STYLE</Link>
-
-      <Search />
-      <Link to="/shop/cart">
-        <Icon src={cartImage} alt="Cart" />
-      </Link>
-      <Link to="/mypage/alert">
-        <Icon src={alarmImage} alt="Alarm" />
-      </Link>
-      <Icon
-        src={profileImage}
-        alt="Profile"
-        onClick={() => setShowPopup(!showPopup)}
-        style={{ cursor: "pointer" }}
-      />
-      {showPopup && (
-        <PopupContainer>
-          <Link to="/user/mypage/profile" onClick={() => setShowPopup(false)}>
-            프로필
-          </Link>
-          <br />
-          <Link
-            to={`/user/mypage/scrap/${userNo}`}
-            onClick={() => setShowPopup(false)}
-          >
-            마이스크랩
-          </Link>
-          <br />
-          <Link to="/user/mypage/logout" onClick={() => setShowPopup(false)}>
-            로그아웃
-          </Link>
-        </PopupContainer>
-      )}
+      <LeftContainer>
+        <img
+          src={leftImage}
+          alt="public 폴더 이미지 읽기"
+          style={{ width: 55, height: 60, marginLeft: 1 }}
+        />
+        <Link to="/user/main">HOME</Link>
+        <Link to="/user/shop/productlist">SHOP</Link>
+        <Link to="/user/style">STYLE</Link>
+      </LeftContainer>
+      <RightContainer>
+        <Search />
+        <Link to="/shop/cart">
+          <Icon src={cartImage} alt="Cart" />
+        </Link>
+        <Link to="/mypage/alert">
+          <Icon src={alarmImage} alt="Alarm" />
+        </Link>
+        <Icon
+          src={profileImage}
+          alt="Profile"
+          onClick={() => setShowPopup(!showPopup)}
+          style={{ cursor: "pointer" }}
+        />
+        {showPopup && (
+          <PopupContainer>
+            <Link to="/user/mypage/profile" onClick={() => setShowPopup(false)}>
+              프로필
+            </Link>
+            <br />
+            <Link
+              to={`/user/mypage/scrap/${userNo}`}
+              onClick={() => setShowPopup(false)}
+            >
+              마이스크랩
+            </Link>
+            <br />
+            <Link to="/user/mypage/logout" onClick={() => setShowPopup(false)}>
+              로그아웃
+            </Link>
+          </PopupContainer>
+        )}
+      </RightContainer>
     </Header>
   );
 }
@@ -181,33 +244,23 @@ function Search() {
   };
 
   return (
-    <div style={{ position: "relative" }}>
-      <select onChange={(e) => setCategory(e.target.value)} value={category}>
+    <SearchForm>
+      <SearchSelect
+        onChange={(e) => setCategory(e.target.value)}
+        value={category}
+      >
         <option value="actor">배우</option>
         <option value="show">작품</option>
         <option value="product">상품</option>
-      </select>
+      </SearchSelect>
       <SearchInput
         type="text"
         value={inputValue}
         onChange={handleChange}
         placeholder="Search..."
       />
-      {showDropdown && (
-        <AutoSearchContainer>
-          {filteredItems.length > 0 ? (
-            filteredItems.map((item, index) => (
-              <AutoSearchItem key={index} onClick={() => handleClick(item)}>
-                {item.name || item.title || "Unknown"}
-              </AutoSearchItem>
-            ))
-          ) : (
-            <AutoSearchItem>해당하는 단어가 없습니다</AutoSearchItem>
-          )}
-        </AutoSearchContainer>
-      )}
-      <button onClick={clickHandler}>조회</button>
-    </div>
+      <SearchButton onClick={clickHandler}>조회</SearchButton>
+    </SearchForm>
   );
 }
 

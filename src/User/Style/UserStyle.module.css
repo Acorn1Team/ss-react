@@ -1,0 +1,43 @@
+/* 전체 레이아웃을 감싸는 컨테이너 */
+.user-style-container {
+  display: flex;
+  height: 100vh;
+}
+
+/* 왼쪽에 고정되는 UserProfile 스타일 */
+.user-profile {
+  width: 30%;
+  /* background-color: lightpink; */
+  padding: 20px;
+  box-sizing: border-box;
+  height: 100%; /* 세로로 화면 전체를 채우도록 설정 */
+  position: fixed; /* UserProfile을 화면에 고정 */
+  top: 70px; /* 헤더 아래에 고정 */
+  left: 0; /* 페이지의 왼쪽에 고정 */
+  overflow-y: auto; /* 내용이 많을 경우 스크롤 가능하도록 설정 */
+  z-index: 1; /* Header보다 아래쪽에 배치 */
+}
+
+/* 오른쪽에 위치하는 Routes 컨테이너 스타일 */
+.user-routes {
+  margin-left: 30%; /* 왼쪽 UserProfile의 너비만큼 여백을 줌 */
+  width: 70%;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto; /* 이 부분만 스크롤 가능하도록 설정 */
+  height: calc(
+    100vh - 70px
+  ); /* Routes 컨테이너가 헤더 높이를 제외한 전체 화면을 채우도록 설정 */
+}
+
+/* 헤더를 고정하고 다른 요소들 위에 배치 */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 2; /* UserProfile과 Routes 위에 배치 */
+  padding: 10px 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
+}
