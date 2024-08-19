@@ -30,6 +30,7 @@ export default function PostListByUser() {
             <b>{up.pic}</b>
             {up.content}
           </Link>
+          <hr />
         </div>
       ))}
     </>

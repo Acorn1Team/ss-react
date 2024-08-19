@@ -45,7 +45,10 @@ export default function UserProfile() {
       {userData.nickname}
       <br />
       <button onClick={() => profileEdit()}>수정</button>
+      <br />
       <Link to={`/user/style/list/${userNo}`}>내가 쓴 글</Link>
+      <br />
+      <Link to={`/user/style/write`}>글 작성하기</Link>
       <div>
         팔로우
         <Link
