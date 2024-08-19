@@ -5,7 +5,7 @@ import AdminTop from "../AdminTop";
 export default function PromotionManage() {
     return (
         <>
-            <AdminTop />
+            
             <div style={{ padding: '20px' }}>
                 <h2>Promotion </h2>
                 <div style={{ marginBottom: '10px' }}>
