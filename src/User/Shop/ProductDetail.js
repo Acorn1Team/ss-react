@@ -6,13 +6,14 @@ import { useParams } from 'react-router-dom';
 
 export default function ProductDetail(){// 제품상세보기
     const {no} = useParams();
-    const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState([{}]);
 
     const refresh = (no) => {
         // Ajax 요청으로 선택된 카테고리에 해당하는 제품 목록을 가져옴
         axios
             .get(`/list/product/${no}`)
             .then((res) => {
+               console.log(res.data);
                 setProducts(res.data);
             })
             .catch((error) => {
@@ -43,10 +44,7 @@ export default function ProductDetail(){// 제품상세보기
             <div>
                 <label>가격: </label> 
                 {/* <span>{products.price}</span> */}
-                {/* if문으로 할인율 해서 가격에 영향이 가게 
-                    discountRate가 0이면 할인 없고
-                    discouteRate가 0이 아니면 할인 있게 만들기
-                */}
+
                 <span>{getDiscountedPrice()}</span> {/* 할인된 가격을 표시 */}
                 {products.discountRate > 0 && (
                     <span>
@@ -77,11 +75,23 @@ export default function ProductDetail(){// 제품상세보기
                 <span>{products.score}</span>
             </div>
             <div>
-                <label>리뷰: </label>
-                <span>{products.reviews}</span>
-                
+                <label>리뷰 보기: </label>
+                 <span>111{products.reviewNoList}</span> 
+                {products.reviewNoList && products.reviewNoList.length > 0 ? (
+                    <div>
+                        {products.reviewNoList.map((reviews, index) => (
+                            <div key={index}>
+                                <div>{reviews.contents}:</div>
+                                <br />
+                                평점: {reviews.score}
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <span>리뷰가 없습니다.</span>
+                )}
                 {/* 
-                리뷰쓰기 만들기 (CRUD) 
+                리뷰쓰기 만들기 (CRUD) --> 마이페이지에서 물건 구입하면 쓸수 있게 해야함
                 여기안에 평점5점 만점에 평점도 선택할 수 있게 만들어
                 1) 평점 선택
                 2) 리뷰 내용
