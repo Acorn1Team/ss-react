@@ -20,6 +20,7 @@ export default function UserStyleRoutes() {
           <Route path="/list/:no" element={<PostListByUser />} />
           <Route path="/write/*" element={<PostWrite />} />
           <Route path="/write/:productNo" element={<PostWrite />} />
+          <Route path="/write/edit/:postNo" element={<PostWrite />} />
           <Route path="/detail/:postNo" element={<Posts />} />
           <Route path="/:userNo/followList/:followInfo" element={<Follow />} />
         </Routes>
