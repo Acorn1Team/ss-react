@@ -18,6 +18,8 @@ export default function Posts() {
   const [commentLike, setCommentLike] = useState({});
   const [commentLikeStatus, setCommentLikeStatus] = useState({});
 
+  const [commentContent, setCommentContent] = useState("");
+
   // 로그인 정보라고 가정
   const userNo = 3;
 
@@ -161,6 +163,27 @@ export default function Posts() {
     }
   };
 
+  const handleContentChange = (e) => {
+    setCommentContent(e.target.value);
+  };
+
+  const insertCommnet = () => {
+    axios
+      .post(`/posts/comment`, {
+        postNo: postNo,
+        userNo: userNo,
+        parentCommentNo: null,
+        content: commentContent,
+      })
+      .then((res) => {
+        getPostDetailInfo();
+        setCommentContent("");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     getPostDetailInfo();
     getPostLike();
@@ -192,6 +215,11 @@ export default function Posts() {
             좋아요 {commentLike[pc.no]}개
           </div>
         ))}
+        <textarea
+          value={commentContent}
+          onChange={handleContentChange}
+        ></textarea>
+        <button onClick={() => insertCommnet()}>댓글 등록</button>
       </div>
     </div>
   );

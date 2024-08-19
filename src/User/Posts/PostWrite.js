@@ -6,9 +6,9 @@ export default function PostWrite() {
   const { productNo } = useParams();
   const [productInfo, setProductInfo] = useState({});
   const [productList, setProductList] = useState([]);
-  const [selected, setSelected] = useState("0"); // 기본값을 "0"으로 설정
+  const [selected, setSelected] = useState("0");
   const [selectedProductInfo, setSelectedProductInfo] = useState(null);
-  const [content, setContent] = useState(""); // Content 상태 관리
+  const [content, setContent] = useState("");
 
   const navigate = useNavigate();
   const userNo = 3;
@@ -19,9 +19,9 @@ export default function PostWrite() {
       .get(`/list/product/${pNo}`)
       .then((res) => {
         if (pNo === productNo) {
-          setProductInfo(res.data); // productNo로 불러온 상품 정보를 productInfo에 설정
+          setProductInfo(res.data);
         } else {
-          setSelectedProductInfo(res.data); // 선택한 상품 정보를 selectedProductInfo에 설정
+          setSelectedProductInfo(res.data);
         }
       })
       .catch((err) => {
@@ -48,7 +48,7 @@ export default function PostWrite() {
     axios
       .post("/posts/detail", {
         userNo: userNo,
-        content: content, // 상태에서 가져옴
+        content: content,
         productNo: finalProductNo,
         likesCount: 0,
         commentsCount: 0,
@@ -73,7 +73,7 @@ export default function PostWrite() {
   };
 
   const handleContentChange = (e) => {
-    setContent(e.target.value); // Content 상태를 업데이트
+    setContent(e.target.value);
   };
 
   useEffect(() => {
@@ -94,7 +94,7 @@ export default function PostWrite() {
         style={{ width: "50%" }}
         id="contentBox"
         value={content}
-        onChange={handleContentChange} // 입력값 변경 시 상태 업데이트
+        onChange={handleContentChange}
       ></textarea>
       <div id="productBox">
         {productNo ? (
