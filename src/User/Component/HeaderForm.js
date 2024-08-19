@@ -45,6 +45,7 @@ const Icon = styled.img`
 const SearchForm = styled.form`
   display: flex;
   align-items: center;
+  position: relative; /* 드롭다운의 위치를 제대로 설정하기 위해 추가 */
 `;
 
 const SearchSelect = styled.select`
@@ -233,14 +234,21 @@ function Search() {
   };
 
   const handleClick = (item) => {
-    setInputValue(item.name || item.title || item);
-    setShowDropdown(false);
+    setInputValue(item.name || item.title || item); // 먼저 input 값을 설정합니다.
+    setShowDropdown(false); // 그 후 드롭다운을 닫습니다.
   };
 
-  const clickHandler = () => {
+  const handleBlur = () => {
+    setTimeout(() => setShowDropdown(false), 100); // 드롭다운을 약간의 지연 후에 닫음
+  };
+
+  const clickHandler = (e) => {
+    e.preventDefault();
     const encodedInputValue = encodeURIComponent(inputValue);
     const encodedCategory = encodeURIComponent(category);
-    navigate(`/search?category=${encodedCategory}&name=${encodedInputValue}`);
+    navigate(
+      `/user/search?category=${encodedCategory}&name=${encodedInputValue}`
+    );
   };
 
   return (
@@ -257,9 +265,22 @@ function Search() {
         type="text"
         value={inputValue}
         onChange={handleChange}
+        onBlur={handleBlur}
         placeholder="Search..."
       />
       <SearchButton onClick={clickHandler}>조회</SearchButton>
+      {showDropdown && (
+        <AutoSearchContainer>
+          {filteredItems.map((item, index) => (
+            <AutoSearchItem
+              key={index}
+              onMouseDown={() => handleClick(item)} // onMouseDown으로 이벤트 핸들러 설정
+            >
+              {item.name || item.title || item}
+            </AutoSearchItem>
+          ))}
+        </AutoSearchContainer>
+      )}
     </SearchForm>
   );
 }

@@ -8,7 +8,7 @@ function Search() {
   const name = query.get("name");
   const category = query.get("category");
 
-  const [dbData, setDbData] = useState(null);
+  const [dbData, setDbData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,13 +23,10 @@ function Search() {
               },
             }
           );
-          console.log("서버 응답:", response.data); // 응답 데이터 확인
-          setDbData(response.data);
+          setDbData(response.data.results); // 서버에서 받은 결과를 설정
         } catch (error) {
           console.error("데이터 가져오기 오류:", error);
         }
-      } else {
-        console.error("name 또는 category가 정의되지 않았습니다.");
       }
     };
     fetchData();
@@ -37,11 +34,14 @@ function Search() {
 
   return (
     <div>
-      {dbData ? (
+      {dbData.length > 0 ? (
         <div>
-          <div>{dbData.data?.no || "데이터 없음"}</div>
-          <div>{dbData.data?.name || "데이터 없음"}</div>
-          <div>{dbData.data?.title || "데이터 없음"}</div>
+          {dbData.map((item, index) => (
+            <div key={index}>
+              <div>Actor: {item[0]?.name || "데이터 없음"}</div>
+              <div>Show: {item[1]?.title || "데이터 없음"}</div>
+            </div>
+          ))}
         </div>
       ) : (
         <div>데이터 없음</div>
