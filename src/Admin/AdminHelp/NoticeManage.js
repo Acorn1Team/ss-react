@@ -27,7 +27,7 @@ export default function NoticeManage() {
       <table border="1">
           <thead>
               <tr>
-                  <th>번호</th><th>분류</th><th>제목</th><th>날짜</th>
+                  <th>번호</th><th>분류</th><th>제목</th><th>등록일시</th>
               </tr>
           </thead>
           <tbody>

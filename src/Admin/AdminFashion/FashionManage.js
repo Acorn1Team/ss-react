@@ -1,9 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function FashionManage() {
+    const navigate = useNavigate();
     const [keyword, setKeyword] = useState("");
-    const [showset, setShowset] = useState([]);
+    const [scrapedDatas, setScrapedData] = useState([]);
     const [actors, setActors] = useState([]);
 
     const handleChange = (e) => {
@@ -11,9 +13,10 @@ export default function FashionManage() {
     }
 
     const doScrap = () => {
+        setActors([]); // 선택한 배우 초기화
         axios.get(`/admin/scrap/${keyword}`)
             .then(response => {
-                setShowset(response.data);
+                setScrapedData(response.data);
             })
             .catch(error => {
                 console.log(error);
@@ -34,19 +37,27 @@ export default function FashionManage() {
                         </tr>
                     ))}
                 </tbody></table>
-                <input type="text" value={keyword} />
-                <button>작품명 확정 & 선택 완료</button>
+                <button onClick={addMainData}>작품명 확정 & 선택 완료</button>
             </>
         )
     }
 
-    const addActor = (actor, character) => {
-    
+    const addMainData = ({ actors }) => {
+        axios.post('/admin/fashion', actors)
+            .then(response => {
+                navigate(`/admin/fashion/${response.data.no}`)
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
+    const selectActor = (data) => {
         const newActor = {
-          actor:actor,
-          character:character
+          actor:data.actor,
+          character:data.character,
+          pic:data.pic
         }
-    
         setActors((prevActors) => [...prevActors, newActor]);
       }
 
@@ -59,11 +70,12 @@ export default function FashionManage() {
             <hr/>
             <table>
                 <tbody>
-                {showset.map((data, index) =>
+                {scrapedDatas.map((data, index) =>
                     <tr key={index}>
                         <td>{data.actor}</td>
                         <td>({data.character})</td>
-                        <td><button onClick={() => addActor(data.actor, data.character)}>선택</button></td>
+                        <td><img src={data.pic} alt="{data.actor} 이미지"/></td>
+                        <td><button onClick={() => selectActor(data)}>선택</button></td>
                         {/* 람다 함수를 사용하면, 버튼 클릭 시에만 addActor 함수가 호출됨 */}
                     </tr>
                 )}
