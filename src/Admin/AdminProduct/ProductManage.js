@@ -137,20 +137,17 @@ export default function ProductManage() {
                                 <td>{item.no}</td>
                                 <td>{item.name}</td>
                                 <td>{item.price}</td>
-                                <td>{item.contents}</td> {/* 상품 설명 */}
-                                <td>{item.date}</td> {/* 포맷팅된 날짜 */}
+                                <td>{item.contents}</td>
+                                <td>{item.date}</td>
                                 <td>{item.category}</td>
                                 <td>
-                                    {/* 이미지 경로를 사용하여 이미지를 표시 */}
                                     <img src={item.pic} alt={item.name} style={{ width: '100px', height: '100px' }} />
                                 </td>
                                 <td>{item.stock}</td>
                                 <td>{item.discountRate}</td>
                                 <td>{item.score}</td>
                                 <td>
-                                    <span 
-                                        onClick={() => handleDetail(item.no)} 
-                                        style={{ cursor: 'pointer', color: 'blue' }}>
+                                    <span onClick={() => handleDetail(item.no)} style={{ cursor: 'pointer', color: 'blue' }}>
                                         상세보기
                                     </span>
                                 </td>

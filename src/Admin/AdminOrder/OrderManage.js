@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 export default function OrderManage() {
@@ -119,7 +120,8 @@ export default function OrderManage() {
             <th>상태</th>
             <th>주문일</th>
             <th>총액</th>
-            <th>변경</th>
+            <th>상태 변경</th>
+            <th>상세보기</th>
           </tr>
         </thead>
         <tbody>
@@ -142,11 +144,16 @@ export default function OrderManage() {
                     <option value="주문취소">주문취소</option>
                   </select>
                 </td>
+                <td>
+                  <Link to={`/admin/orders/detail/${order.no}`}>
+                    상세보기
+                  </Link>
+                </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>
+              <td colSpan="7" style={{ textAlign: 'center', padding: '20px' }}>
                 결과가 없습니다.
               </td>
             </tr>
