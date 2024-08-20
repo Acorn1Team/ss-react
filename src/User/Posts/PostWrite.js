@@ -4,12 +4,22 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export default function PostWrite() {
   const { postNo, productNo } = useParams();
+
+  // 상품 정보
   const [productInfo, setProductInfo] = useState({});
+
+  // 상품 리스트
   const [productList, setProductList] = useState([]);
+
+  // 선택 컨트롤
   const [selected, setSelected] = useState("0");
+
+  // 글 내용
   const [content, setContent] = useState("");
 
   const navigate = useNavigate();
+
+  // 로그인 정보라고 가정
   const userNo = 3;
 
   // 상품 불러오기

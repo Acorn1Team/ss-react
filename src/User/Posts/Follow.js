@@ -1,20 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import styles from "../Style/Follow.module.css"; // CSS 모듈 임포트
 
 export default function Follow() {
-  const { userFollowNo } = useParams();
-
-  // 접근시 팔로잉 정보 요청인지, 팔로워 정보 요청인지 가지고 들어옴
-  const { followInfo } = useParams();
+  const { userFollowNo, followInfo } = useParams();
 
   const [followData, setFollowData] = useState([]);
   const [followStatus, setFollowStatus] = useState({});
 
-  // 로그인된 유저 정보라고 가정
   const userNo = 3;
 
-  // 팔로워 정보 가져오기
   const followerInfo = (userNoToUse) => {
     axios
       .get(`/posts/user/follow/follower/${userNoToUse}`)
@@ -24,7 +20,6 @@ export default function Follow() {
       });
   };
 
-  // 팔로잉 정보 가져오기
   const followeeInfo = (userNoToUse) => {
     axios
       .get(`/posts/user/follow/followee/${userNoToUse}`)
@@ -34,7 +29,6 @@ export default function Follow() {
       });
   };
 
-  // 팔로우 여부 체크하기
   const followCheckProc = (fno) => {
     axios
       .get(`/posts/user/follow/${userNo}/${fno}`)
@@ -49,7 +43,6 @@ export default function Follow() {
       });
   };
 
-  // 팔로우 -> 언팔로우 / 언팔로우 -> 팔로우
   const followOrCancel = (fno) => {
     if (followStatus[fno]) {
       axios
@@ -103,14 +96,18 @@ export default function Follow() {
   }, [followData]);
 
   return (
-    <div>
+    <div className={styles.followContainer}>
+      {followInfo === "followee" ? "팔로잉" : "팔로워"}
       {followData.map((f) => (
-        <div key={f.no}>
-          <Link to={`/user/main/style/${f.no}`}>
-            {f.pic}
-            {f.nickname}
-          </Link>
-          <button onClick={() => followOrCancel(f.no)}>
+        <div key={f.no} className={styles.followItem}>
+          <img src={f.pic} alt="Profile" className={styles.profilePic} />
+          <Link to={`/user/style/profile/${f.no}`}> @{f.nickname}</Link>
+          <button
+            onClick={() => followOrCancel(f.no)}
+            className={
+              followStatus[f.no] ? styles.unfollowButton : styles.followButton
+            }
+          >
             {followStatus[f.no] ? "팔로우 취소하기" : "팔로우 하기"}
           </button>
         </div>

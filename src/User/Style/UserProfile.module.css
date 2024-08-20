@@ -1,0 +1,69 @@
+/* UserProfile.module.css */
+
+.profileContainer {
+  background-color: #f4f4f9;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 300px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.profilePic {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.profileNickname {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.profileBio {
+  font-size: 1em;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.editInput {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.editButton {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.editButton:hover {
+  background-color: #0056b3;
+}
+
+.followInfo {
+  font-size: 1em;
+  color: #007bff;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.followLink {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.followLink:hover {
+  text-decoration: underline;
+}

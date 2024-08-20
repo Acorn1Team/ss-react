@@ -2,7 +2,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-// 팔로우한 유저 게시글 리스트
 export default function PostList() {
   const [followPost, setFollowPost] = useState([]);
   // 로그인 정보라고 가정
@@ -12,6 +11,7 @@ export default function PostList() {
     getPostList();
   }, [userNo]);
 
+  // 팔로우한 유저 게시글 정보 가져오기
   const getPostList = () => {
     axios
       .get(`/posts/followPostList/${userNo}`)
@@ -24,7 +24,10 @@ export default function PostList() {
     <div>
       {followPost.map((fp) => (
         <div key={fp.no}>
-          {fp.userPic}&emsp;@{fp.userNickname}
+          {fp.userPic}&emsp;
+          <Link to={`/user/style/profile/${fp.userNo}`}>
+            @{fp.userNickname}
+          </Link>
           <br />
           <Link to={`/user/style/detail/${fp.no}`}>
             <b>{fp.pic}</b>

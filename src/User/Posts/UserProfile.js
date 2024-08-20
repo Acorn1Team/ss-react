@@ -1,16 +1,23 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import styles from "../Style/UserProfile.module.css"; // CSS 모듈 임포트
 
 export default function UserProfile() {
+  // 로그인 유저 데이터
   const [userData, setUserData] = useState([]);
+
+  // 로그인 유저의 팔로잉, 팔로워 데이터
   const [followeeData, setFolloweeData] = useState([]);
   const [followerData, setFollowerData] = useState([]);
+
+  // 수정 모드 온/오프 컨트롤
   const [isEditing, setIsEditing] = useState(false);
 
   // 로그인된 정보라고 가정
   const userNo = 3;
 
+  // 로그인된 유저 정보 가져오기
   const userInfo = () => {
     axios
       .get(`/posts/user/${userNo}`)
@@ -18,8 +25,10 @@ export default function UserProfile() {
       .catch((err) => console.log(err));
   };
 
+  // 유저 정보 수정/저장 버튼 클릭시
   const profileEdit = (action) => {
     if (action === "save") {
+      // 수정 이후 저장 버튼 클릭했을 경우
       axios
         .put(`/posts/user/${userNo}`, {
           userNickname: userData.userNickname,
@@ -28,16 +37,20 @@ export default function UserProfile() {
         .then((res) => {
           if (res.data.result) {
             setIsEditing(false);
+            // 업데이트 성공 후 수정 모드 컨트롤 false
           }
         })
         .catch((err) => {
           console.log(err);
         });
     } else {
+      // 수정 버튼 클릭했을 경우
       setIsEditing(true);
+      // 수정 모드 컨트롤 true
     }
   };
 
+  // 팔로잉, 팔로워 정보 가져오기
   const followInfo = () => {
     axios
       .get(`/posts/user/follow/${userNo}`)
@@ -56,13 +69,12 @@ export default function UserProfile() {
   }, [userNo]);
 
   return (
-    <div>
+    <div className={styles.profileContainer}>
       {isEditing ? (
         <div id="userPicNicknameEdit">
-          {/* <input type="file"></input> */}
           <input
             type="text"
-            id="nicknameEdit"
+            className={styles.editInput}
             value={userData.nickname}
             onChange={(e) =>
               setUserData({ ...userData, nickname: e.target.value })
@@ -70,41 +82,47 @@ export default function UserProfile() {
           />
           <input
             type="text"
-            id="bioEdit"
+            className={styles.editInput}
             value={userData.bio}
             onChange={(e) => setUserData({ ...userData, bio: e.target.value })}
           />
-          <button onClick={() => profileEdit("save")}>저장</button>
+          <button
+            className={styles.editButton}
+            onClick={() => profileEdit("save")}
+          >
+            저장
+          </button>
         </div>
       ) : (
-        <div id="userPicNickname">
-          {userData.pic}
-          {userData.nickname}
-          <br />
-          {userData.bio}
-          <br />
-          <button onClick={() => profileEdit()}>수정</button>
+        <div className={styles.profileContent}>
+          <img src={userData.pic} alt="Profile" className={styles.profilePic} />
+          <div className={styles.profileNickname}>{userData.nickname}</div>
+          <div className={styles.profileBio}>{userData.bio}</div>
+          <button className={styles.editButton} onClick={() => profileEdit()}>
+            수정
+          </button>
         </div>
       )}
 
-      <br />
-      <Link to={`/user/style/list/${userNo}`}>내가 쓴 글</Link>
-      <br />
-      <Link to={`/user/style/write`}>글 작성하기</Link>
       <div>
-        팔로우
+        <Link to={`/user/style/list/${userNo}`}>내가 쓴 글</Link>
+        <br />
+        <Link to={`/user/style/write`}>글 작성하기</Link>
+      </div>
+      <div className={styles.followInfo}>
         <Link
           to={`/user/style/${userNo}/followList/followee`}
+          className={styles.followLink}
           onClick={followInfo}
         >
-          {followeeData.length}
+          팔로우 {followeeData.length}
         </Link>
-        &emsp; 팔로워
         <Link
           to={`/user/style/${userNo}/followList/follower`}
+          className={styles.followLink}
           onClick={followInfo}
         >
-          {followerData.length}
+          팔로워 {followerData.length}
         </Link>
       </div>
     </div>

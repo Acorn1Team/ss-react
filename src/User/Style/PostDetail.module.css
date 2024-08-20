@@ -1,0 +1,96 @@
+/* Posts.module.css */
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #dbdbdb;
+}
+
+.userPic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.userInfo {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.postContent {
+  padding: 15px;
+}
+
+.postImage {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-top: 1px solid #dbdbdb;
+  border-bottom: 1px solid #dbdbdb;
+}
+
+.actionButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.commentSection {
+  padding: 15px;
+}
+
+.comment {
+  margin-bottom: 10px;
+}
+
+.reply {
+  margin-left: 20px;
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #dbdbdb;
+  border-radius: 5px;
+  resize: none;
+}
+
+.submitButton {
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
+  background-color: #3897f0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.submitButton:hover {
+  background-color: #318ce7;
+}
