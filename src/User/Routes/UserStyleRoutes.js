@@ -7,6 +7,7 @@ import PostList from "../Posts/PostList";
 import PostListByUser from "../Posts/PostListByUser";
 import css from "../Style/UserStyle.module.css";
 import PostWrite from "../Posts/PostWrite";
+import OtherProfile from "../Posts/OtherProfile";
 
 export default function UserStyleRoutes() {
   return (
@@ -21,8 +22,12 @@ export default function UserStyleRoutes() {
           <Route path="/write/*" element={<PostWrite />} />
           <Route path="/write/:productNo" element={<PostWrite />} />
           <Route path="/write/edit/:postNo" element={<PostWrite />} />
+          <Route path="/profile/:profileUserNo" element={<OtherProfile />} />
           <Route path="/detail/:postNo" element={<Posts />} />
-          <Route path="/:userNo/followList/:followInfo" element={<Follow />} />
+          <Route
+            path="/:userFollowNo/followList/:followInfo"
+            element={<Follow />}
+          />
         </Routes>
       </div>
     </div>
