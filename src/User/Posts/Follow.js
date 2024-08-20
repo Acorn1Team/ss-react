@@ -3,19 +3,21 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 export default function Follow() {
+  const { userFollowNo } = useParams();
+
   // 접근시 팔로잉 정보 요청인지, 팔로워 정보 요청인지 가지고 들어옴
   const { followInfo } = useParams();
 
   const [followData, setFollowData] = useState([]);
   const [followStatus, setFollowStatus] = useState({});
 
-  // 로그인 정보라고 가정
+  // 로그인된 유저 정보라고 가정
   const userNo = 3;
 
   // 팔로워 정보 가져오기
-  const followerInfo = () => {
+  const followerInfo = (userNoToUse) => {
     axios
-      .get(`/posts/user/follow/follower/${userNo}`)
+      .get(`/posts/user/follow/follower/${userNoToUse}`)
       .then((res) => setFollowData(res.data))
       .catch((err) => {
         console.log(err);
@@ -23,9 +25,9 @@ export default function Follow() {
   };
 
   // 팔로잉 정보 가져오기
-  const followeeInfo = () => {
+  const followeeInfo = (userNoToUse) => {
     axios
-      .get(`/posts/user/follow/followee/${userNo}`)
+      .get(`/posts/user/follow/followee/${userNoToUse}`)
       .then((res) => setFollowData(res.data))
       .catch((err) => {
         console.log(err);
@@ -48,12 +50,11 @@ export default function Follow() {
   };
 
   // 팔로우 -> 언팔로우 / 언팔로우 -> 팔로우
-  const followOrCancle = (fno) => {
+  const followOrCancel = (fno) => {
     if (followStatus[fno]) {
       axios
         .delete(`/posts/user/follow/${userNo}/${fno}`)
         .then((res) => {
-          console.log(res.data.result);
           if (res.data.result) {
             setFollowStatus((pstatus) => ({
               ...pstatus,
@@ -71,7 +72,6 @@ export default function Follow() {
           followerNo: userNo,
         })
         .then((res) => {
-          console.log(res.data.result);
           if (res.data.result) {
             setFollowStatus((pstatus) => ({
               ...pstatus,
@@ -84,13 +84,15 @@ export default function Follow() {
         });
     }
   };
+
   useEffect(() => {
+    const userNoToUse = userFollowNo || userNo;
     if (followInfo === "follower") {
-      followerInfo();
+      followerInfo(userNoToUse);
     } else {
-      followeeInfo();
+      followeeInfo(userNoToUse);
     }
-  }, [userNo, followInfo]);
+  }, [userNo, userFollowNo, followInfo]);
 
   useEffect(() => {
     if (followData.length > 0) {
@@ -108,7 +110,7 @@ export default function Follow() {
             {f.pic}
             {f.nickname}
           </Link>
-          <button onClick={() => followOrCancle(f.no)}>
+          <button onClick={() => followOrCancel(f.no)}>
             {followStatus[f.no] ? "팔로우 취소하기" : "팔로우 하기"}
           </button>
         </div>

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import styles from "../Style/PostsModal.module.css";
 
 // 댓글 작성, 수정, 삭제, 신고, 댓글 좋아요순 정렬?
 // 상품 인용 글 작성 처리, 답글 처리
@@ -18,8 +19,12 @@ export default function Posts() {
   const [commentLike, setCommentLike] = useState({});
   const [commentLikeStatus, setCommentLikeStatus] = useState({});
   const [productData, setProductData] = useState([]);
-
   const [commentContent, setCommentContent] = useState("");
+
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+
+  const [recommentCheck, setRecommentCheck] = useState(0);
 
   const navigator = useNavigate();
 
@@ -180,17 +185,22 @@ export default function Posts() {
   };
 
   const insertComment = () => {
+    let recomment = null;
+    if (recommentCheck !== 0) {
+      recomment = recommentCheck;
+    }
     axios
       .post(`/posts/comment`, {
         postNo: postNo,
         userNo: userNo,
-        parentCommentNo: null,
+        parentCommentNo: recomment,
         content: commentContent,
       })
       .then((res) => {
         if (res.data.result) {
           getPostDetailInfo();
           setCommentContent("");
+          setRecommentCheck(0);
         }
       })
       .catch((err) => {
@@ -228,31 +238,72 @@ export default function Posts() {
     }
   };
 
+  const postReports = () => {
+    setIsReportModalOpen(true); // 신고 모달 열기
+  };
+
+  const closeReportModal = () => {
+    setIsReportModalOpen(false); // 신고 모달 닫기
+  };
+
+  const handleReportReasonChange = (e) => {
+    setReportReason(e.target.value); // 신고 사유 선택
+  };
+
+  const submitReport = () => {
+    axios
+      .post("/posts/report", {
+        postNo: postNo,
+        userNo: userNo,
+        category: reportReason,
+      })
+      .then((res) => {
+        if (res.data.result) {
+          alert("신고가 접수되었습니다.");
+          closeReportModal();
+        }
+      })
+      .catch((err) => {
+        console.log("신고 실패 :", err);
+      });
+  };
+
+  const recomment = (commentUserNo, userNickname) => {
+    alert(commentUserNo);
+    setCommentContent("@" + userNickname + " ");
+    setRecommentCheck(commentUserNo);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      await getPostDetailInfo();
-      await getPostLike();
-      await checkPostLike();
+      getPostDetailInfo();
+      getPostLike();
+      checkPostLike();
 
       if (postData.productNo) {
-        await getProductInPost();
+        getProductInPost();
       }
 
       postCommentData.forEach((comment) => {
         getCommentLike(comment.no);
         checkCommentLike(comment.no);
       });
+
+      console.log(postCommentData); // 데이터 확인용
     };
 
     fetchData(); // 모든 로직 하나로 묶기
-  }, [postNo, postData.productNo]);
+  }, [postNo, postData.productNo, recommentCheck]);
 
   return (
     <div>
       {userInfo.userPic}&emsp;@{userInfo.userNickname} {postData.date}
+      {postData.userNo !== userNo && (
+        <button onClick={() => postReports()}>신고</button>
+      )}
       {postData.userNo === userNo && (
         <button onClick={() => postUDControl("u")}>수정</button>
-      )}{" "}
+      )}
       {postData.userNo === userNo && (
         <button onClick={() => postUDControl("d")}>삭제</button>
       )}
@@ -273,24 +324,100 @@ export default function Posts() {
       </div>
       <div id="commentBox">
         <b>댓글</b>
-        {postCommentData.map((pc) => (
-          <div key={pc.no}>
-            @{pc.userNickname} : {pc.content} <br />
-            <button onClick={() => likeProcHandler(pc.no)}>
-              {commentLikeStatus[pc.no] ? "좋아요 취소" : "좋아요"}
-            </button>
-            좋아요 {commentLike[pc.no]}개
-            {pc.userNo === userNo && (
-              <button onClick={() => deleteComment(pc.no)}>삭제</button>
-            )}
-          </div>
-        ))}
+        {postCommentData
+          .filter((pc) => pc.parentCommentNo === null) // 부모 댓글만 필터링
+          .map((pc) => (
+            <div key={pc.no} style={{ marginBottom: "10px" }}>
+              <div>
+                @{pc.userNickname} : {pc.content} <br />
+                <button onClick={() => recomment(pc.no, pc.userNickname)}>
+                  답글
+                </button>
+                <button onClick={() => likeProcHandler(pc.no)}>
+                  {commentLikeStatus[pc.no] ? "좋아요 취소" : "좋아요"}
+                </button>
+                좋아요 {commentLike[pc.no]}개
+                {pc.userNo === userNo && (
+                  <button onClick={() => deleteComment(pc.no)}>삭제</button>
+                )}
+              </div>
+              {/* 해당 부모 댓글에 대한 답글들 출력 */}
+              {postCommentData
+                .filter((reply) => reply.parentCommentNo === pc.no) // 답글 필터링
+                .map((reply) => (
+                  <div
+                    key={reply.no}
+                    style={{
+                      marginLeft: "20px",
+                      marginTop: "5px",
+                      backgroundColor: "#dddddd",
+                    }}
+                  >
+                    @{reply.userNickname} : {reply.content} <br />
+                    <button
+                      onClick={() => recomment(reply.no, reply.userNickname)}
+                    >
+                      답글
+                    </button>
+                    <button onClick={() => likeProcHandler(reply.no)}>
+                      {commentLikeStatus[reply.no] ? "좋아요 취소" : "좋아요"}
+                    </button>
+                    좋아요 {commentLike[reply.no]}개
+                    {reply.userNo === userNo && (
+                      <button onClick={() => deleteComment(reply.no)}>
+                        삭제
+                      </button>
+                    )}
+                  </div>
+                ))}
+            </div>
+          ))}
         <textarea
           value={commentContent}
           onChange={handleContentChange}
         ></textarea>
         <button onClick={() => insertComment()}>댓글 등록</button>
       </div>
+      {/* 신고 팝업 모달 */}
+      {isReportModalOpen && (
+        <div className={styles.modal}>
+          <div className={styles["modal-content"]}>
+            <h2>신고 사유를 선택하세요</h2>
+            <label>
+              <input
+                type="radio"
+                value="스팸"
+                checked={reportReason === "스팸"}
+                onChange={handleReportReasonChange}
+              />
+              스팸
+            </label>
+            <br />
+            <label>
+              <input
+                type="radio"
+                value="부적절한 콘텐츠"
+                checked={reportReason === "부적절한 콘텐츠"}
+                onChange={handleReportReasonChange}
+              />
+              부적절한 콘텐츠
+            </label>
+            <br />
+            <label>
+              <input
+                type="radio"
+                value="기타"
+                checked={reportReason === "기타"}
+                onChange={handleReportReasonChange}
+              />
+              기타
+            </label>
+            <br />
+            <button onClick={submitReport}>신고</button>
+            <button onClick={closeReportModal}>취소</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
