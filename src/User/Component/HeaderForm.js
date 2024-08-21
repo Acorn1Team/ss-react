@@ -149,8 +149,54 @@ const PopupContainer = styled.div`
   width: 150px;
 `;
 
+const AlertPopupContainer = styled.div`
+  position: absolute;
+  top: 60px;
+  right: 0px;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  z-index: 10;
+  width: 300px;
+  border-radius: 10px; /* 모서리 둥글게 */
+  transition: all 0.3s ease-in-out; /* 애니메이션 */
+`;
+
+const AlertItem = styled.div`
+  padding: 15px 10px;
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${(props) =>
+    props.isRead ? "#888" : "#333"}; /* 읽은 알림은 회색으로 표시 */
+  background-color: ${(props) =>
+    props.isRead ? "#f7f7f7" : "white"}; /* 읽은 알림의 배경색 조정 */
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: ${(props) =>
+      props.isRead
+        ? "#e0e0e0"
+        : "#f4f4f4"}; /* 읽은 알림은 더 어두운 회색 배경 */
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
 function HeaderForm() {
   const [showPopup, setShowPopup] = useState(false);
+  const [showAlertPopup, setShowAlertPopup] = useState(false);
+  const [alerts, setAlerts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("전체");
+
+  const filteredAlerts = alerts.filter(
+    (alert) =>
+      selectedCategory === "전체" || alert.category === selectedCategory
+  );
   const navigate = useNavigate();
 
   // 로그인 정보라고 가정
@@ -158,14 +204,52 @@ function HeaderForm() {
 
   const profilePic = userNo ? `userProfilePic경로` : profileImage;
 
+  useEffect(() => {
+    // 알림 데이터 가져오기
+
+    fetchAlerts();
+    if (showAlertPopup) {
+      fetchAlerts();
+    }
+  }, [showAlertPopup, userNo]);
+
+  const fetchAlerts = async () => {
+    await axios
+      .get(`/alert/${userNo}`)
+      .then((res) => setAlerts(res.data))
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+  };
+
+  const deleteAlert = (alertNo) => {
+    axios
+      .delete(`/alert/${alertNo}`)
+      .then((res) => {
+        if (res.data.result) {
+          fetchAlerts();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <Header>
       <LeftContainer>
-        <img
-          src={leftImage}
-          alt="public 폴더 이미지 읽기"
-          style={{ width: 55, height: 60, marginLeft: 1 }}
-        />
+        <Link to="/user/main">
+          <img
+            src={leftImage}
+            alt="public 폴더 이미지 읽기"
+            style={{ width: 55, height: 60, marginLeft: 1 }}
+          />
+        </Link>
         <StyledLink to="/user/main">HOME</StyledLink>
         <StyledLink to="/user/shop/productlist">SHOP</StyledLink>
         <StyledLink to="/user/style">STYLE</StyledLink>
@@ -175,9 +259,45 @@ function HeaderForm() {
         <Link to="/shop/cart">
           <Icon src={cartImage} alt="Cart" />
         </Link>
-        <Link to="/mypage/alert">
-          <Icon src={alarmImage} alt="Alarm" />
-        </Link>
+        <Icon
+          src={alarmImage}
+          alt="Alarm"
+          onClick={() => setShowAlertPopup(!showAlertPopup)}
+          style={{ cursor: "pointer" }}
+        />
+        {showAlertPopup && (
+          <AlertPopupContainer>
+            <div>
+              <button onClick={() => setSelectedCategory("전체")}>전체</button>
+              <button onClick={() => setSelectedCategory("주문")}>주문</button>
+              <button onClick={() => setSelectedCategory("커뮤니티")}>
+                커뮤니티
+              </button>
+              <button onClick={() => setSelectedCategory("프로모션")}>
+                프로모션
+              </button>
+            </div>
+            {filteredAlerts.length > 0 ? (
+              filteredAlerts.map((alert, index) => (
+                <AlertItem key={index} isRead={alert.isRead}>
+                  <Link to={alert.path}>
+                    <i style={{ fontSize: "85%" }}>{alert.category}</i>
+                    <br />
+
+                    {alert.content}
+                    <br />
+                    <i style={{ fontSize: "70%" }}>{formatDate(alert.date)}</i>
+                  </Link>
+                  <br />
+                  <br />
+                  <button onClick={() => deleteAlert(alert.no)}>×</button>
+                </AlertItem>
+              ))
+            ) : (
+              <div>알림 내역이 없습니다.</div>
+            )}
+          </AlertPopupContainer>
+        )}
         <Icon
           src={profileImage}
           alt="Profile"
@@ -197,6 +317,13 @@ function HeaderForm() {
               마이스크랩
             </Link>
             <br />
+            <Link
+              to={`/user/mypage/review/${userNo}`}
+              onClick={() => setShowPopup(false)}
+            >
+              마이리뷰
+            </Link>
+            <br />
             <Link to="/user/mypage/logout" onClick={() => setShowPopup(false)}>
               로그아웃
             </Link>
@@ -206,7 +333,6 @@ function HeaderForm() {
     </Header>
   );
 }
-
 function Search() {
   const [inputValue, setInputValue] = useState("");
   const [filteredItems, setFilteredItems] = useState([]);

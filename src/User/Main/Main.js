@@ -79,7 +79,7 @@ export default function UserHome() {
       <b className="mainTextTitle">Choose Your Scene!</b>
       <div id="mainPosts">
         {show.map((s) => (
-          <Link to={`/user/main/sub/${s.no}`}>
+          <Link to={`/user/main/sub/${s.no}`} key={s.no}>
             <div className="mainPostsBox" key={s.no}>
               {s.pic}
               <br />
@@ -104,7 +104,7 @@ export default function UserHome() {
       <b className="mainTextTitle">Style Best</b>
       <div id="mainPosts">
         {posts.map((p) => (
-          <Link to={`/user/style/detail/${p.no}`}>
+          <Link to={`/user/style/detail/${p.no}`} key={p.no}>
             <div className="mainPostsBox" key={p.no}>
               {p.pic}&emsp;{p.userNickname}
             </div>
