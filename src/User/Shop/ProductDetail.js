@@ -1,20 +1,20 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from 'react-router-dom';
+import ProductReviews from "./ProductReviews";
 
-
-export default function ProductDetail(){// 제품상세보기
-    const {no} = useParams();
-    const [products, setProducts] = useState([{}]);
+export default function ProductDetail() { // 제품상세보기
+    const { no } = useParams();
+    const [product, setProduct] = useState({});
+    const [count, setCount] = useState(1); // 수량을 상태로 관리
 
     const refresh = (no) => {
-        // Ajax 요청으로 선택된 카테고리에 해당하는 제품 목록을 가져옴
+        // Ajax 요청으로 선택된 카테고리에 해당하는 제품 상세 정보를 가져옴
         axios
             .get(`/list/product/${no}`)
             .then((res) => {
-               console.log(res.data);
-                setProducts(res.data);
+                console.log(res.data);
+                setProduct(res.data);
             })
             .catch((error) => {
                 console.log(error);
@@ -25,82 +25,80 @@ export default function ProductDetail(){// 제품상세보기
         refresh(no); // 컴포넌트가 마운트될 때, 그리고 no가 변경될 때마다 요청을 보냄
     }, [no]);
 
-
     // 할인율에 따른 가격 계산
     const getDiscountedPrice = () => {
-        if (products.discountRate > 0) {
-            return products.price - (products.price * (products.discountRate / 100));
-         }else{
-             return products.price;
-         }
-        };
-    return(
+        if (product.discountRate > 0) {
+            return product.price - (product.price * (product.discountRate / 100));
+        } else {
+            return product.price;
+        }
+    };
+
+    // 총 가격 계산 (수량에 따른 가격)
+    const getTotalPrice = () => {
+        return getDiscountedPrice() * count;
+    };
+
+    // 수량 증가
+    const incrementQuantity = () => {
+        setCount(prevQuantity => prevQuantity + 1);
+    };
+
+    // 수량 감소 (최소 1로 제한)
+    const decrementQuantity = () => {
+        setCount(prevQuantity => (prevQuantity > 1 ? prevQuantity - 1 : 1));
+    };
+
+
+    return (
         <>
-         <h2>상품 상세 정보</h2>
+            <h2>상품 상세 정보</h2>
             <div>
                 <label>이름: </label>
-                <span>{products.name}</span>
+                <span>{product.name}</span>
             </div>
             <div>
-                <label>가격: </label> 
-                {/* <span>{products.price}</span> */}
-
-                <span>{getDiscountedPrice()}</span> {/* 할인된 가격을 표시 */}
-                {products.discountRate > 0 && (
+                <label>수량: </label>
+                <button onClick={decrementQuantity}>-</button>
+                <span>{count}</span>
+                <button onClick={incrementQuantity}>+</button>
+            </div>
+            <div>
+                <label>가격: </label>
+                <span>{getTotalPrice()}</span> {/* 수량에 따른 총 가격을 표시 */}
+                {product.discountRate > 0 && (
                     <span>
-                        {/* {products.price} 원 */}
+                        {/* {product.price} 원 */}
                     </span>
                 )}
-
-
             </div>
             <div>
                 <label>할인율: </label>
-                <span>{products.discountRate}</span>
+                <span>{product.discountRate}</span>
             </div>
             <div>
                 <label>상품 설명: </label>
-                <span>{products.contents}</span>
+                <span>{product.contents}</span>
             </div>
             <div>
                 <label>카테고리: </label>
-                <span>{products.category}</span>
+                <span>{product.category}</span>
             </div>
             <div>
                 <label>이미지: </label>
-                <img src={products.pic} alt={products.name} />
+                <img src={product.pic} alt={product.name} />
             </div>
             <div>
                 <label>평점: </label>
-                <span>{products.score}</span>
+                <span>{product.score}</span>
+                {/* <div>상품 평점이랑 리뷰 평점이랑 같아야 되 (체크)</div> */}
             </div>
+            <br />
             <div>
                 <label>리뷰 보기: </label>
-                 <span>111{products.reviewNoList}</span> 
-                {products.reviewNoList && products.reviewNoList.length > 0 ? (
-                    <div>
-                        {products.reviewNoList.map((reviews, index) => (
-                            <div key={index}>
-                                <div>{reviews.contents}:</div>
-                                <br />
-                                평점: {reviews.score}
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <span>리뷰가 없습니다.</span>
-                )}
-                {/* 
-                리뷰쓰기 만들기 (CRUD) --> 마이페이지에서 물건 구입하면 쓸수 있게 해야함
-                여기안에 평점5점 만점에 평점도 선택할 수 있게 만들어
-                1) 평점 선택
-                2) 리뷰 내용
-                3) 사진 추가
-                */}
+                    <ProductReviews />
             </div>
-            
             <br />
         </>
     );
 }
-
