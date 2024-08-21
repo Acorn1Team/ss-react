@@ -158,7 +158,10 @@ export default function Sub() {
                   {items
                     .filter((i) => s.no === i.styleNo)
                     .map((i) => (
-                      <Link to={`/user/productDetail/${i.no}`} key={i.no}>
+                      <Link
+                        to={`/user/shop/productList/detail/${i.no}`}
+                        key={i.no}
+                      >
                         <div>
                           <img src={i.pic} alt={`Item ${i.no}`} />
                         </div>

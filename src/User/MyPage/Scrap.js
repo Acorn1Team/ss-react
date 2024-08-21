@@ -21,6 +21,21 @@ export default function Scrap() {
       });
   };
 
+  // 스크랩 취소 함수
+  const handleScrapCancel = (scrapNo) => {
+    axios
+      .delete(`/main/scrap/${scrapNo}/${no}`)
+      .then((res) => {
+        if (res.data.result === true) {
+          // 성공적으로 삭제되면 리스트를 다시 불러옵니다.
+          getScrapList();
+        }
+      })
+      .catch((err) => {
+        console.log("스크랩 취소 실패:", err);
+      });
+  };
+
   useEffect(() => {
     getScrapList();
   }, []);
@@ -31,8 +46,9 @@ export default function Scrap() {
         <div key={sl.no}>
           <Link to={`/user/main/sub/${sl.no}`}>
             {sl.name}
-            {sl.pic}
+            <img src={sl.pic} alt={sl.name} />
           </Link>
+          <button onClick={() => handleScrapCancel(sl.no)}>스크랩 취소</button>
         </div>
       ))}
     </div>
