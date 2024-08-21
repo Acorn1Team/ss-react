@@ -43,20 +43,7 @@ export default function OrderManage() {
       });
   };
 
-  // 상품을 삭제하는 함수
-  const handleDelete = (no) => {
-    if (window.confirm("정말로 삭제하시겠습니까?")) { // 삭제 전 사용자에게 확인
-        axios.delete("/admin/orders/" + no)
-            .then(res => {
-                alert("상품이 삭제되었습니다.");
-                refresh(); // 삭제 후 목록을 새로고침
-            })
-            .catch(error => {
-                console.log(error);
-                alert("삭제 중 오류가 발생했습니다."); // 오류 발생 시 사용자에게 알림
-            });
-    }
-  };
+  
 
   const filterOrders = () => {
     // 검색어에 따라 주문 목록을 필터링
@@ -136,7 +123,7 @@ export default function OrderManage() {
             <th>총액</th>
             <th>상태 변경</th>
             <th>상세보기</th>
-            <th>삭제</th> 
+            
           </tr>
         </thead>
         <tbody>
@@ -164,11 +151,7 @@ export default function OrderManage() {
                     상세보기
                   </Link>
                 </td>
-                <td>
-                 <button onClick={() => handleDelete(order.no)}>
-                   삭제
-                 </button>
-              </td>
+                
               </tr>
             ))
           ) : (
