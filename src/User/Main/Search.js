@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import axios from "axios";
+import styles from "../Style/ActorProfile.module.css";
 
 function Search() {
   const location = useLocation();
@@ -21,8 +22,7 @@ function Search() {
           const response = await axios.get(
             `http://localhost:8080/user/search/${category}/${name}`
           );
-          console.log("Fetched data:", response.data.results); // 콘솔 로그 추가
-          setDbData(response.data.results || []); // 서버에서 받은 결과를 설정
+          setDbData(response.data.results || []);
         } catch (error) {
           console.error("데이터 가져오기 오류:", error.message);
           setError("데이터를 가져오는 중 오류가 발생했습니다.");
@@ -50,46 +50,77 @@ function Search() {
       {dbData.length > 0 ? (
         <div>
           {dbData.map((item, index) => (
-            <div key={index}>
-              {/* 카테고리에 따라 다른 내용을 렌더링 */}
-              {category === "actor" && (
-                <div>
-                  <div>
-                    Actor:{" "}
-                    {item.actorNames
-                      ? item.actorNames.join(", ")
-                      : "데이터 없음"}
-                  </div>
-                  <div>Age: {item.age || "데이터 없음"}</div>
-                  <div>
-                    Movies:{" "}
-                    {item.movies ? item.movies.join(", ") : "데이터 없음"}
-                  </div>
-                </div>
-              )}
-              {category === "show" && (
-                <div>
-                  <div>Show Title: {item.title || "데이터 없음"}</div>
-                  <div>
-                    Cast:{" "}
-                    {item.actorNames
-                      ? item.actorNames.join(", ")
-                      : "데이터 없음"}
-                  </div>
-                </div>
-              )}
-              {category === "product" && (
-                <div>
-                  <div>Product Name: {item.name || "데이터 없음"}</div>
-                  <div>Price: {item.price || "데이터 없음"}</div>
-                </div>
-              )}
-            </div>
+            <span key={index}>
+              {category === "actor" && <ActorItem item={item} />}
+              {category === "show" && <ShowItem item={item} />}
+              {category === "product" && <ProductItem item={item} />}
+            </span>
           ))}
         </div>
       ) : (
         <div>데이터 없음</div>
       )}
+    </div>
+  );
+}
+
+function ActorItem({ item }) {
+  return (
+    <span>
+      <span>
+        <Link to={`/user/main/sub/${item.no}`}>
+          <img src={item.pic} alt={`${item.name}의 사진`} />
+        </Link>
+      </span>
+      <span>
+        <Link to={`/user/main/sub/${item.no}`}>{item.title}</Link>
+      </span>
+    </span>
+  );
+}
+
+function ShowItem({ item }) {
+  const { actorNames = [], actorPics = [], showActorsNo = [] } = item;
+
+  return (
+    <div className={styles.actorsContainer}>
+      {actorNames.length > 0 ? (
+        actorNames.map((actorName, idx) => (
+          <span
+            key={showActorsNo[idx] || idx}
+            className={styles.actorContainer}
+          >
+            <Link
+              to={`/user/main/sub/${showActorsNo[idx]}`}
+              className={styles.link} // 스타일 클래스 추가
+            >
+              <div className={styles.profileContainer}>
+                <img
+                  className={styles.profilePic}
+                  src={actorPics[idx]}
+                  alt={`${actorName}의 사진`} // 접근성을 위해 적절한 alt 속성을 설정하세요.
+                />
+                <span className={styles.actorName}>{actorName}</span>
+              </div>
+            </Link>
+          </span>
+        ))
+      ) : (
+        <div>배우 정보 없음</div>
+      )}
+    </div>
+  );
+}
+
+function ProductItem({ item }) {
+  return (
+    <div>
+      <div>
+        <Link to={`/user/shop/productlist/detail/${item.no}`}>
+          Product Name: {item.name || "데이터 없음"}
+        </Link>
+      </div>
+      <div>Price: {item.price || "데이터 없음"}</div>
     </div>
   );
 }
