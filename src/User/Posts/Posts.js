@@ -40,6 +40,15 @@ export default function Posts() {
   // 답글 관리
   const [recommentCheck, setRecommentCheck] = useState(0);
 
+  // 현재 페이지를 저장할 상태
+  const [currentPage, setCurrentPage] = useState(0);
+
+  // 페이지 크기를 저장할 상태
+  const [pageSize, setPageSize] = useState(10);
+
+  // 전체 페이지 수를 저장할 상태
+  const [totalPages, setTotalPages] = useState(1);
+
   const navigator = useNavigate();
 
   // 로그인 정보라고 가정
@@ -48,7 +57,12 @@ export default function Posts() {
   // 게시글 정보 가져오기
   const getPostDetailInfo = () => {
     axios
-      .get(`/posts/detail/${postNo}`)
+      .get(`/posts/detail/${postNo}`, {
+        params: {
+          page: currentPage,
+          size: 5,
+        },
+      })
       .then((res) => {
         setUserInfo({
           userPic: res.data.userPic,
@@ -56,6 +70,7 @@ export default function Posts() {
         });
         setPostData(res.data.posts);
         setPostCommentData(res.data.comments);
+        setTotalPages(res.data.totalPages);
         res.data.comments.forEach((comment) => {
           // 한 게시글에 여러 댓글이 있으므로 forEach 사용
           // 댓글마다 좋아요 수 확인 및 좋아요 여부 체크
@@ -309,7 +324,9 @@ export default function Posts() {
   // 신고 사유 핸들러 함수
   const handleReportReasonChange = (e) => {
     // 신고 사유 radio 변경될 때마다 (onChange) 해당 값 reportReason에 저장
-    setReportReason(e.target.value);
+    if (e !== null) {
+      setReportReason(e.target.value);
+    }
   };
 
   // 신고 접수하기
@@ -340,25 +357,28 @@ export default function Posts() {
     setRecommentCheck(commentUserNo);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
+  // 페이지 변경 함수
+  const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setCurrentPage(newPage);
       getPostDetailInfo();
-      getPostLike();
-      checkPostLike();
+    }
+  };
 
-      if (postData.productNo) {
-        getProductInPost();
-      }
+  useEffect(() => {
+    getPostDetailInfo();
+    getPostLike();
+    checkPostLike();
 
-      postCommentData.forEach((comment) => {
-        getCommentLike(comment.no);
-        checkCommentLike(comment.no);
-      });
-    };
+    if (postData.productNo) {
+      getProductInPost();
+    }
 
-    fetchData();
-    // 모든 로직 하나로 묶기
-  }, [postNo, postData.productNo, recommentCheck]);
+    postCommentData.forEach((comment) => {
+      getCommentLike(comment.no);
+      checkCommentLike(comment.no);
+    });
+  }, [postNo, currentPage, pageSize]);
 
   return (
     <div className={styles.container}>
@@ -505,6 +525,23 @@ export default function Posts() {
           </div>
         </div>
       )}
+      <div style={{ marginTop: "10px" }}>
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 0}
+        >
+          이전
+        </button>
+        <span style={{ margin: "0 10px" }}>
+          {currentPage + 1} / {totalPages}
+        </span>
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage + 1 >= totalPages}
+        >
+          다음
+        </button>
+      </div>
     </div>
   );
 }
