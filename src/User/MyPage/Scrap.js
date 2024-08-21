@@ -27,7 +27,7 @@ export default function Scrap() {
       .delete(`/main/scrap/${scrapNo}/${no}`)
       .then((res) => {
         if (res.data.result === true) {
-          // 성공적으로 삭제되면 리스트를 다시 불러옵니다.
+          // 삭제 성공시 리스트 다시 불러오기
           getScrapList();
         }
       })
