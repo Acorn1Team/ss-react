@@ -26,6 +26,16 @@ const LeftContainer = styled.div`
   }
 `;
 
+const StyledLink = styled(Link)`
+  text-decoration: none; /* 밑줄 제거 */
+  color: black; /* 기본 글씨색 설정 */
+  font-weight: bold; /* 글씨 굵게 */
+
+  &:hover {
+    color: gray; /* 마우스 오버 시 색상 변경 */
+  }
+`;
+
 const RightContainer = styled.div`
   display: flex;
   align-items: center;
@@ -156,9 +166,9 @@ function HeaderForm() {
           alt="public 폴더 이미지 읽기"
           style={{ width: 55, height: 60, marginLeft: 1 }}
         />
-        <Link to="/user/main">HOME</Link>
-        <Link to="/user/shop/productlist">SHOP</Link>
-        <Link to="/user/style">STYLE</Link>
+        <StyledLink to="/user/main">HOME</StyledLink>
+        <StyledLink to="/user/shop/productlist">SHOP</StyledLink>
+        <StyledLink to="/user/style">STYLE</StyledLink>
       </LeftContainer>
       <RightContainer>
         <Search />
@@ -206,11 +216,15 @@ function Search() {
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log(
+        `Fetching data for term: ${inputValue} and category: ${category}`
+      );
       if (inputValue) {
         try {
           const response = await axios.get(
             `http://localhost:8080/user/search/${category}?term=${inputValue}`
           );
+          console.log("API Response:", response.data); // 응답 데이터 확인
           if (Array.isArray(response.data)) {
             setFilteredItems(response.data);
           } else {
@@ -226,8 +240,8 @@ function Search() {
       }
     };
 
-    fetchData();
-  }, [inputValue, category]);
+    fetchData(); // 아래 두 값 중 하나라도 변경되면 useEffect가 실행되고, fetchData가 호출되어 그 값에 해당하는 데이터를 가져온다.
+  }, [inputValue, category]); // 이 두 값 중 하나라도 변경되면 useEffect가 실행된다.
 
   const handleChange = (e) => {
     setInputValue(e.target.value);
@@ -269,16 +283,24 @@ function Search() {
         placeholder="Search..."
       />
       <SearchButton onClick={clickHandler}>조회</SearchButton>
-      {showDropdown && (
+
+      {showDropdown && ( // 사용자 입력에 따라 드롭다운 목록 표시.
+        // showDropdown 상태가 true일 때만 AutoSearchContainer와 그 안의 항목들이 렌더링.
         <AutoSearchContainer>
-          {filteredItems.map((item, index) => (
-            <AutoSearchItem
-              key={index}
-              onMouseDown={() => handleClick(item)} // onMouseDown으로 이벤트 핸들러 설정
-            >
-              {item.name || item.title || item}
-            </AutoSearchItem>
-          ))}
+          {filteredItems.map(
+            (
+              item,
+              index // filteredItems 배열은 사용자 입력을 기반으로 필터링된 데이터가 담겨있다.. 사용자가 입력한 내용이 포함된 항목들이...
+            ) => (
+              // map 메소드는 배열을 순회하면서 각 요소(item)을 AutoSearchItem이라는 컴포넌트로 변환하고 있다.
+              <AutoSearchItem
+                key={index}
+                onMouseDown={() => handleClick(item)} // 클릭 시 호출될 함수
+              >
+                {item.name || item.title || item} {/* 항목의 내용 표시 */}
+              </AutoSearchItem>
+            )
+          )}
         </AutoSearchContainer>
       )}
     </SearchForm>
