@@ -8,6 +8,8 @@ export default function OrderDetail() {
   const [productInfo, setProductInfo] = useState({});
   const [error, setError] = useState(null);
 
+  
+
   useEffect(() => {
     axios.get(`/admin/orders/detail/${orderNo}`)
       .then(response => {

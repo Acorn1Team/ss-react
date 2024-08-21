@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import AdminTop from "../AdminTop";
+
 
 export default function PromotionManage() {
     return (

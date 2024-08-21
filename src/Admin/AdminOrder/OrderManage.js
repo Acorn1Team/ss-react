@@ -9,7 +9,7 @@ export default function OrderManage() {
   const [searchField, setSearchField] = useState('userId'); // 검색 필드 상태 (기본값: userId)
   const [error, setError] = useState(null); // 에러 메시지 상태
 
-  useEffect(() => {
+  const refresh = () => {
     // 주문 목록을 가져오는 API 호출
     axios.get('/admin/orders')
       .then(response => {
@@ -20,6 +20,10 @@ export default function OrderManage() {
         console.error('주문 목록을 가져오는 중 오류가 발생했습니다!', error);
         setError('주문 목록을 가져오는 중 오류가 발생했습니다.'); // 에러 메시지 설정
       });
+  };
+
+  useEffect(() => {
+    refresh(); // 컴포넌트가 처음 마운트될 때 주문 목록을 가져옴
   }, []);
 
   const handleStatusChange = (orderNo, status) => {
@@ -31,17 +35,27 @@ export default function OrderManage() {
     axios.put(`/admin/orders/${orderNo}/status`, { status: status })
       .then(response => {
         setError(null); // 에러 메시지 초기화
-        // 주문 목록을 갱신
-        const updatedOrders = orders.map(order =>
-          order.no === orderNo ? { ...order, state: status } : order
-        );
-        setOrders(updatedOrders);
-        filterOrders(searchTerm, updatedOrders); // 필터링된 목록 갱신
+        refresh(); // 상태 변경 후 목록을 새로고침
       })
       .catch(error => {
         console.error('주문 상태를 업데이트하는 중 오류가 발생했습니다!', error);
         setError('주문 상태 업데이트에 실패했습니다.'); // 에러 메시지 설정
       });
+  };
+
+  // 상품을 삭제하는 함수
+  const handleDelete = (no) => {
+    if (window.confirm("정말로 삭제하시겠습니까?")) { // 삭제 전 사용자에게 확인
+        axios.delete("/admin/orders/" + no)
+            .then(res => {
+                alert("상품이 삭제되었습니다.");
+                refresh(); // 삭제 후 목록을 새로고침
+            })
+            .catch(error => {
+                console.log(error);
+                alert("삭제 중 오류가 발생했습니다."); // 오류 발생 시 사용자에게 알림
+            });
+    }
   };
 
   const filterOrders = () => {
@@ -83,7 +97,7 @@ export default function OrderManage() {
     <div>
       <h2>주문 관리</h2>
 
-      {/* 검색 필드 선택 select box 및 검색어 입력 필드를 나란히 배치 */}
+   
       <div style={{ marginBottom: '10px' }}>
         <label style={{ display: 'inline-block', marginRight: '10px' }}>
           검색 :
@@ -94,7 +108,7 @@ export default function OrderManage() {
           </select>
         </label>
 
-        {/* 검색어 입력 필드 */}
+        {/* 검색어 입력*/}
         <input
           type="text"
           placeholder={`검색어를 입력하세요 (${searchField === 'userId' ? '유저 ID' : searchField === 'state' ? '상태' : '날짜'})`}
@@ -122,6 +136,7 @@ export default function OrderManage() {
             <th>총액</th>
             <th>상태 변경</th>
             <th>상세보기</th>
+            <th>삭제</th> 
           </tr>
         </thead>
         <tbody>
@@ -149,11 +164,16 @@ export default function OrderManage() {
                     상세보기
                   </Link>
                 </td>
+                <td>
+                 <button onClick={() => handleDelete(order.no)}>
+                   삭제
+                 </button>
+              </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="7" style={{ textAlign: 'center', padding: '20px' }}>
+              <td colSpan="8" style={{ textAlign: 'center', padding: '20px' }}>
                 결과가 없습니다.
               </td>
             </tr>
