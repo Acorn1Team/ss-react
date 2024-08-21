@@ -11,7 +11,7 @@
 페이징 기능을 추가하고 싶은 js 파일에 들어가서 아래 내용을 추가해 줍니다.
 그대로 **복사/붙여넣기** 하신 후, Prettier로 정렬해 주세요.
 
-#### 1. useState
+### 1. useState
 
 // 현재 페이지를 저장할 상태
 const [currentPage, setCurrentPage] = useState(0);

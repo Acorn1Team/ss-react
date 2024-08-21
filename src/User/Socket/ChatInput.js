@@ -5,8 +5,11 @@ function ChatInput({ onSendMessage }) {
 
   const handleSend = () => {
     if (message.trim() !== "") {
+      // 입력 필드가 비어 있거나 공백만 있지 않으면 해당 블록으로 진입
       onSendMessage(message);
-      setMessage(""); // 메시지 전송 후 입력 필드 초기화
+      // 부모 컴포넌트에게 메시지 전달
+      setMessage("");
+      // 메시지 전송 후 입력 필드 초기화
     }
   };
 
@@ -18,7 +21,7 @@ function ChatInput({ onSendMessage }) {
         onChange={(e) => setMessage(e.target.value)}
         placeholder="Type your message..."
       />
-      <button onClick={handleSend}>Send</button>
+      <button onClick={() => handleSend()}>Send</button>
     </div>
   );
 }
