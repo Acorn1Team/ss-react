@@ -1,99 +1,64 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
 
 body {
-  font-family: "Poppins", sans-serif;
-  margin: 0;
-  padding: 0;
+  font-family: "Jua", sans-serif;
 }
 
-/* 전체 화면을 채우고 가운데 정렬하기 위한 컨테이너 */
-.container {
-  display: flex;
-  justify-content: center; /* 수평 중앙 정렬 */
-  align-items: center; /* 수직 중앙 정렬 */
-  min-height: 100vh; /* 화면 전체 높이 */
-  margin: 0; /* 기본 마진 제거 */
-  padding: 0; /* 기본 패딩 제거 */
-}
-
-/* 전체 카드 컨테이너 스타일 */
 .profileContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* 사진과 내용이 수평으로 가운데 정렬됨 */
-  width: 300px;
-  padding: 20px 20px 20px; /* 카드의 상단 패딩을 크게 늘림 */
-  background: #ffffff; /* 흰색 배경 */
-  border: 1px solid #e0e0e0; /* 카드 테두리 */
-  border-radius: 16px; /* 둥근 모서리 */
-  box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.1); /* 카드 그림자 */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* 호버 효과 전환 */
-  text-align: center;
-  position: relative; /* 위치 상대 설정 */
+  position: relative;
+  display: inline-block;
+  width: 220px; /* Adjust width as needed */
+  margin: 10px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  background-color: #222; /* Dark background for Netflix style */
 }
 
-/* 호버 시 카드가 위로 이동하는 효과 */
 .profileContainer:hover {
-  transform: translateY(-10px); /* 카드가 위로 이동하는 효과 */
-  box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.15); /* 그림자 확대 */
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
 }
 
-/* 프로필 사진 스타일 */
-.profilePic {
-  width: 130px; /* 크기 유지 */
-  height: 130px;
-  border-radius: 50%; /* 원형으로 만들기 */
-  border: 5px solid #ddd; /* 사진 테두리 */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* 사진 그림자 */
-  position: absolute; /* 위치 절대 설정 */
-  top: -65px; /* 카드 상단에서 위로 이동 */
-  z-index: 1; /* 카드 위에 위치하게 함 */
-  transition: transform 0.3s ease; /* 호버 효과 전환 */
-}
-
-/* 호버 시 사진이 위로 이동하고 확대되는 효과 */
-.profilePic:hover {
-  transform: translateY(-8px) scale(1.07); /* 사진이 위로 이동하고 미세하게 확대되는 효과 */
-}
-
-/* 배우 목록 스타일 */
 .actorsContainer {
-  display: flex;
-  flex-wrap: wrap; /* 카드들이 줄 바꿈을 허용 */
-  justify-content: center; /* 카드들을 가운데 정렬 */
-  gap: 40px; /* 카드 간의 간격을 조정 */
-  margin-top: 120px; /* 상단 여백 추가 */
+  position: relative;
+  width: 100%;
+  height: 300px; /* Adjust height as needed */
 }
 
-/* 링크 스타일 제거 */
-.profileContainer a,
+.profilePic {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: opacity 0.3s;
+}
+
+.profilePic:hover {
+  opacity: 0.8;
+}
+
+.actorName {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.7); /* Dark background with some transparency */
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
 .actorName a {
-  text-decoration: none; /* 밑줄 제거 */
-  color: inherit; /* 부모 요소의 색상 상속 */
-}
-/* 이름 스타일 */
-.actorName {
-  font-weight: 600;
-  font-size: 20px; /* 폰트 크기 증가 */
-  margin-top: 80px; /* 사진과 이름 사이의 간격 조정 */
-  color: #333; /* 텍스트 색상 */
-  text-transform: uppercase; /* 대문자로 변환 */
-  letter-spacing: 0.75px; /* 문자 간격 추가 */
+  color: #fff;
   text-decoration: none;
+  transition: color 0.3s;
 }
 
-.link {
-  text-decoration: none;
-  color: inherit; /* 링크 색상을 부모 요소의 색상으로 설정 */
-}
-
-.actorName {
-  font-weight: 600;
-  font-size: 22px;
-  margin-top: 69px;
-  color: #444;
-  text-transform: uppercase;
-  letter-spacing: 0.75px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-  text-decoration: none; /* 추가적인 텍스트 장식 제거 */
+.actorName a:hover {
+  color: #e50914; /* Netflix red color */
 }

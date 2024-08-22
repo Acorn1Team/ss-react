@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import styles from "../Style/ActorProfile.module.css";
+import styles2 from "../Style/SearchUser.module.css";
 
 function Search() {
   const location = useLocation();
@@ -54,6 +55,7 @@ function Search() {
               {category === "actor" && <ActorItem item={item} />}
               {category === "show" && <ShowItem item={item} />}
               {category === "product" && <ProductItem item={item} />}
+              {category === "user" && <UserItem item={item} />}
             </span>
           ))}
         </div>
@@ -66,48 +68,40 @@ function Search() {
 
 function ActorItem({ item }) {
   return (
-    <span>
-      <span>
-        <Link to={`/user/main/sub/${item.no}`}>
-          <img src={item.pic} alt={`${item.name}의 사진`} />
-        </Link>
+    <div className={styles.actorsContainer}>
+      <span className={styles.profileContainer}>
+        <span>
+          <Link to={`/user/main/sub/${item.no}`}>
+            <img
+              src={item.pic}
+              alt={`${item.name}의 사진`}
+              className={styles.profilePic}
+            />
+          </Link>
+        </span>
+        <span className={styles.actorName}>
+          <Link to={`/user/main/sub/${item.no}`}>{item.title}</Link>
+        </span>
       </span>
-      <span>
-        <Link to={`/user/main/sub/${item.no}`}>{item.title}</Link>
-      </span>
-    </span>
+    </div>
   );
 }
 
 function ShowItem({ item }) {
-  const { actorNames = [], actorPics = [], showActorsNo = [] } = item;
-
   return (
-    <div className={styles.actorsContainer}>
-      {actorNames.length > 0 ? (
-        actorNames.map((actorName, idx) => (
-          <span
-            key={showActorsNo[idx] || idx}
-            className={styles.actorContainer}
-          >
-            <Link
-              to={`/user/main/sub/${showActorsNo[idx]}`}
-              className={styles.link} // 스타일 클래스 추가
-            >
-              <div className={styles.profileContainer}>
-                <img
-                  className={styles.profilePic}
-                  src={actorPics[idx]}
-                  alt={`${actorName}의 사진`} // 접근성을 위해 적절한 alt 속성을 설정하세요.
-                />
-                <span className={styles.actorName}>{actorName}</span>
-              </div>
-            </Link>
-          </span>
-        ))
-      ) : (
-        <div>배우 정보 없음</div>
-      )}
+    <div className={styles.profileContainer}>
+      <span className={styles.actorsContainer}>
+        <Link to={`/user/main/sub/${item.no}`}>
+          <img
+            src={item.pic}
+            alt={`${item.name}의 사진`}
+            className={styles.profilePic}
+          />
+        </Link>
+      </span>
+      <span className={styles.actorName}>
+        <Link to={`/user/main/sub/${item.no}`}>{item.title}</Link>
+      </span>
     </div>
   );
 }
@@ -125,4 +119,24 @@ function ProductItem({ item }) {
   );
 }
 
+function UserItem({ item }) {
+  return (
+    <div className={styles2.profileContainer}>
+      <img
+        src={item.pic}
+        alt={`${item.name}의 사진`}
+        className={styles2.profilePic}
+      />
+      <div className={styles2.profileInfo}>
+        <Link
+          to={`/user/style/profile/${item.no}`}
+          style={{ textDecoration: "none", color: "inherit" }} // 링크 스타일 초기화
+        >
+          <div className={styles2.profileId}>{item.id || "데이터 없음"}</div>
+        </Link>
+        <div className={styles2.profileNickname}>{item.nickname}</div>
+      </div>
+    </div>
+  );
+}
 export default Search;

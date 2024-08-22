@@ -342,15 +342,11 @@ function Search() {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log(
-        `Fetching data for term: ${inputValue} and category: ${category}`
-      );
       if (inputValue) {
         try {
           const response = await axios.get(
             `http://localhost:8080/user/search/${category}?term=${inputValue}`
           );
-          console.log("API Response:", response.data); // 응답 데이터 확인
           if (Array.isArray(response.data)) {
             setFilteredItems(response.data);
           } else {
@@ -400,6 +396,7 @@ function Search() {
         <option value="actor">배우</option>
         <option value="show">작품</option>
         <option value="product">상품</option>
+        <option value="user">사용자</option>
       </SearchSelect>
       <SearchInput
         type="text"
