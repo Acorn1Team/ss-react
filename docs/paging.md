@@ -156,7 +156,7 @@ axios.get(`/path`, {
 
 #### 검색 페이징의 경우 추가 처리가 필요합니다.
 
-a. 검색 분류 <SELECT>
+- 검색 분류 <SELECT>
 
 ```
  검색 :
@@ -165,13 +165,13 @@ a. 검색 분류 <SELECT>
 </select>
 ```
 
-b. 검색 버튼 <button>
+- 검색 버튼 <button>
 
 ```
 <button onClick={handleSearch}>검색</button>
 ```
 
-c. 전체 보기 <button>
+- 전체 보기 <button>
 
 ```
 <button onClick={handleReset}>전체 보기</button>
