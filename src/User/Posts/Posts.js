@@ -6,6 +6,10 @@ import modalStyles from "../Style/PostsModal.module.css"; // 모달 CSS 임포�
 
 export default function Posts() {
   const { postNo } = useParams();
+  const navigator = useNavigate();
+
+  // 로그인 정보라고 가정
+  const userNo = 3;
 
   // 글 작성자 프로필 사진, 닉네임
   const [userInfo, setUserInfo] = useState({
@@ -14,7 +18,7 @@ export default function Posts() {
   });
 
   // 글 정보
-  const [postData, setPostData] = useState([]);
+  const [postData, setPostData] = useState({});
 
   // 글 댓글 정보
   const [postCommentData, setPostCommentData] = useState([]);
@@ -28,7 +32,7 @@ export default function Posts() {
   const [commentLikeStatus, setCommentLikeStatus] = useState({});
 
   // 인용한 상품 정보
-  const [productData, setProductData] = useState([]);
+  const [productData, setProductData] = useState({});
 
   // 댓글 내용
   const [commentContent, setCommentContent] = useState("");
@@ -44,23 +48,22 @@ export default function Posts() {
   const [currentPage, setCurrentPage] = useState(0);
 
   // 페이지 크기를 저장할 상태
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(5);
 
   // 전체 페이지 수를 저장할 상태
   const [totalPages, setTotalPages] = useState(1);
 
-  const navigator = useNavigate();
-
-  // 로그인 정보라고 가정
-  const userNo = 3;
+  // 로딩 상태
+  const [loading, setLoading] = useState(false);
 
   // 게시글 정보 가져오기
   const getPostDetailInfo = () => {
+    setLoading(true);
     axios
       .get(`/posts/detail/${postNo}`, {
         params: {
           page: currentPage,
-          size: 5,
+          size: pageSize,
         },
       })
       .then((res) => {
@@ -72,14 +75,15 @@ export default function Posts() {
         setPostCommentData(res.data.comments);
         setTotalPages(res.data.totalPages);
         res.data.comments.forEach((comment) => {
-          // 한 게시글에 여러 댓글이 있으므로 forEach 사용
-          // 댓글마다 좋아요 수 확인 및 좋아요 여부 체크
           getCommentLike(comment.no);
           checkCommentLike(comment.no);
         });
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -162,7 +166,6 @@ export default function Posts() {
         .then((res) => {
           if (res.data.result === true) {
             setPostLikeStatus(false);
-            // 작업 성공 후 좋아요 상태 변경
             getPostLike();
             // 게시글 좋아요 상태 다시 불러오기
           }
@@ -181,7 +184,6 @@ export default function Posts() {
         .then((res) => {
           if (res.data.result === true) {
             setPostLikeStatus(true);
-            // 작업 성공 후 좋아요 상태 변경
             getPostLike();
             // 게시글 좋아요 상태 다시 불러오기
           }
@@ -244,7 +246,6 @@ export default function Posts() {
 
   // 댓글 내용 핸들링 함수
   const handleContentChange = (e) => {
-    // 댓글 내용 textarea가 변경될 때마다 입력된 값 commentContent 에 저장
     setCommentContent(e.target.value);
   };
 
@@ -252,7 +253,6 @@ export default function Posts() {
   const insertComment = () => {
     let recomment = null;
     if (recommentCheck !== 0) {
-      // 답글일 경우 parentCommentNo에 상위 댓글 번호 저장
       recomment = recommentCheck;
     }
     axios
@@ -265,7 +265,6 @@ export default function Posts() {
       .then((res) => {
         if (res.data.result) {
           getPostDetailInfo();
-          // 댓글 등록 후 초기화
           setCommentContent("");
           setRecommentCheck(0);
         }
@@ -291,15 +290,12 @@ export default function Posts() {
 
   // 게시글 수정 / 삭제 핸들링 함수
   const postUDControl = (val) => {
-    // d를 가지고 들어올 경우 delete (삭제)
-    // u를 가지고 들어올 경우 update (수정)
     if (val === "d") {
       axios
         .delete(`/posts/detail/${postNo}`)
         .then((res) => {
           if (res.data.result) {
             navigator(`../list/${userNo}`);
-            // 삭제에 성공하면 내 글 목록으로 이동
           }
         })
         .catch((error) => {
@@ -307,7 +303,6 @@ export default function Posts() {
         });
     } else if (val === "u") {
       navigator(`../write/edit/${postNo}`);
-      // 업데이트할 경우 에디터로 이동
     }
   };
 
@@ -323,10 +318,7 @@ export default function Posts() {
 
   // 신고 사유 핸들러 함수
   const handleReportReasonChange = (e) => {
-    // 신고 사유 radio 변경될 때마다 (onChange) 해당 값 reportReason에 저장
-    if (e !== null) {
-      setReportReason(e.target.value);
-    }
+    setReportReason(e.target.value);
   };
 
   // 신고 접수하기
@@ -341,7 +333,6 @@ export default function Posts() {
         if (res.data.result) {
           alert("신고가 접수되었습니다.");
           closeReportModal();
-          // 모달창 닫기
         }
       })
       .catch((err) => {
@@ -351,9 +342,7 @@ export default function Posts() {
 
   // 답글 달기 버튼 클릭시
   const recomment = (commentUserNo, userNickname) => {
-    // 댓글 입력 창에 상위 댓글 닉네임 출력
     setCommentContent("@" + userNickname + " ");
-    // 현재 입력하는 댓글이 commentUserNo의 답글임을 저장해 둠
     setRecommentCheck(commentUserNo);
   };
 
@@ -361,7 +350,6 @@ export default function Posts() {
   const handlePageChange = (newPage) => {
     if (newPage >= 0 && newPage < totalPages) {
       setCurrentPage(newPage);
-      getPostDetailInfo();
     }
   };
 
@@ -369,16 +357,22 @@ export default function Posts() {
     getPostDetailInfo();
     getPostLike();
     checkPostLike();
+  }, [postNo, currentPage, pageSize]);
 
+  useEffect(() => {
     if (postData.productNo) {
       getProductInPost();
     }
+  }, [postData.productNo]);
 
-    postCommentData.forEach((comment) => {
-      getCommentLike(comment.no);
-      checkCommentLike(comment.no);
-    });
-  }, [postNo, currentPage, pageSize]);
+  useEffect(() => {
+    if (postCommentData.length) {
+      postCommentData.forEach((comment) => {
+        getCommentLike(comment.no);
+        checkCommentLike(comment.no);
+      });
+    }
+  }, [postCommentData]);
 
   return (
     <div className={styles.container}>
@@ -388,18 +382,16 @@ export default function Posts() {
           <Link to={`/user/style/profile/${postData.userNo}`}>
             @{userInfo.userNickname}
           </Link>
+          {postData.date}
         </div>
         {postData.userNo !== userNo && (
-          // 자신의 글은 신고할 수 없음
           <button onClick={() => postReports()}>신고</button>
         )}
         {postData.userNo === userNo && (
-          // 자신의 글만 수정할 수 있음
-          <button onClick={() => postUDControl("u")}>수정</button>
-        )}
-        {postData.userNo === userNo && (
-          // 자신의 글만 삭제할 수 있음
-          <button onClick={() => postUDControl("d")}>삭제</button>
+          <>
+            <button onClick={() => postUDControl("u")}>수정</button>
+            <button onClick={() => postUDControl("d")}>삭제</button>
+          </>
         )}
       </div>
       <div className={styles.postContent}>
@@ -411,6 +403,7 @@ export default function Posts() {
           <button
             className={styles.actionButton}
             onClick={() => likeProcHandler()}
+            disabled={loading}
           >
             {postLikeStatus ? "좋아요 취소" : "좋아요"}
           </button>
@@ -433,9 +426,7 @@ export default function Posts() {
         <b>댓글</b>
         {postCommentData
           .filter((pc) => pc.parentCommentNo === null)
-          // 게시글에 달린 댓글 중 일반 댓글만 필터링 (답글 제외)
           .map((pc) => (
-            // 필터링된 일반 댓글로 map 반복문
             <div key={pc.no} className={styles.comment}>
               <Link to={`/user/style/profile/${pc.userNo}`}>
                 @{pc.userNickname}
@@ -453,9 +444,7 @@ export default function Posts() {
               )}
               {postCommentData
                 .filter((reply) => reply.parentCommentNo === pc.no)
-                // 댓글 데이터 중에 해당 댓글에 대한 답글만 필터링
                 .map((reply) => (
-                  // 필터링된 답글로 map 반복문
                   <div key={reply.no} className={styles.reply}>
                     @{reply.userNickname} : {reply.content} <br />
                     <button
@@ -478,10 +467,14 @@ export default function Posts() {
           ))}
         <textarea
           value={commentContent}
-          onChange={() => handleContentChange()}
+          onChange={handleContentChange}
           placeholder="댓글 입력"
         />
-        <button onClick={() => insertComment()} className={styles.submitButton}>
+        <button
+          onClick={insertComment}
+          className={styles.submitButton}
+          disabled={loading}
+        >
           댓글 등록
         </button>
       </div>
@@ -494,8 +487,7 @@ export default function Posts() {
                 type="radio"
                 value="스팸"
                 checked={reportReason === "스팸"}
-                // 선택된 reportReason이 스팸이면 해당 radio 가 체크된 것으로 봄
-                onChange={() => handleReportReasonChange()}
+                onChange={handleReportReasonChange}
               />
               스팸
             </label>
@@ -505,7 +497,7 @@ export default function Posts() {
                 type="radio"
                 value="부적절한 콘텐츠"
                 checked={reportReason === "부적절한 콘텐츠"}
-                onChange={() => handleReportReasonChange()}
+                onChange={handleReportReasonChange}
               />
               부적절한 콘텐츠
             </label>
@@ -515,20 +507,20 @@ export default function Posts() {
                 type="radio"
                 value="기타"
                 checked={reportReason === "기타"}
-                onChange={() => handleReportReasonChange()}
+                onChange={handleReportReasonChange}
               />
               기타
             </label>
             <br />
-            <button onClick={() => submitReport()}>신고</button>
-            <button onClick={() => closeReportModal()}>취소</button>
+            <button onClick={submitReport}>신고</button>
+            <button onClick={closeReportModal}>취소</button>
           </div>
         </div>
       )}
       <div style={{ marginTop: "10px" }}>
         <button
           onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 0}
+          disabled={currentPage === 0 || loading}
         >
           이전
         </button>
@@ -537,7 +529,7 @@ export default function Posts() {
         </span>
         <button
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage + 1 >= totalPages}
+          disabled={currentPage + 1 >= totalPages || loading}
         >
           다음
         </button>

@@ -102,7 +102,8 @@ export default function PostWrite() {
     await axios
       .get(`/posts/detail/${postNo}`)
       .then((res) => {
-        setContent(res.data.posts.content); // 기존 글 내용을 content에 설정
+        setContent(res.data.posts.content);
+        // 기존 글 내용을 content에 설정
         if (res.data.posts.productNo) {
           getProductInfo(res.data.posts.productNo);
         }
@@ -113,17 +114,19 @@ export default function PostWrite() {
   };
 
   useEffect(() => {
-    // 수정일 경우 등록되어 있는 post 내용 불러오기
-    if (postNo) {
-      getPostInfo();
-    }
+    const loadData = async () => {
+      await getProductList();
 
-    // 상품 인용일 경우 인용 상품 정보
-    if (productNo) {
-      getProductInfo(productNo);
-    } else {
-      getProductList();
-    }
+      if (postNo) {
+        getPostInfo();
+      }
+
+      if (productNo) {
+        getProductInfo(productNo);
+      }
+    };
+
+    loadData();
   }, [postNo, productNo]);
 
   return (

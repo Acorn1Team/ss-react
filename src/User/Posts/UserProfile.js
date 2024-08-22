@@ -105,7 +105,7 @@ export default function UserProfile() {
       )}
 
       <div>
-        <Link to={`/user/style/list/${userNo}`}>내가 쓴 글</Link>
+        <Link to={`/user/style/list`}>내가 쓴 글</Link>
         <br />
         <Link to={`/user/style/write`}>글 작성하기</Link>
       </div>

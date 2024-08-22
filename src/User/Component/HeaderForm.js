@@ -193,6 +193,15 @@ function HeaderForm() {
   const [alerts, setAlerts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("전체");
 
+  // 현재 페이지를 저장할 상태
+  const [currentPage, setCurrentPage] = useState(0);
+
+  // 페이지 크기를 저장할 상태
+  const [pageSize, setPageSize] = useState(5);
+
+  // 전체 페이지 수를 저장할 상태
+  const [totalPages, setTotalPages] = useState(1);
+
   const filteredAlerts = alerts.filter(
     (alert) =>
       selectedCategory === "전체" || alert.category === selectedCategory
@@ -211,15 +220,28 @@ function HeaderForm() {
     if (showAlertPopup) {
       fetchAlerts();
     }
-  }, [showAlertPopup, userNo]);
+  }, [showAlertPopup, userNo, currentPage]);
 
   const fetchAlerts = async () => {
     await axios
-      .get(`/alert/${userNo}`)
-      .then((res) => setAlerts(res.data))
+      .get(`/alert/${userNo}`, {
+        params: { page: currentPage, size: pageSize },
+      })
+      .then((res) => {
+        setAlerts(res.data.content);
+        setTotalPages(res.data.totalPages);
+      })
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  // 페이지 변경 함수
+  const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setCurrentPage(newPage);
+      fetchAlerts(); // 이 자리에 axios로 데이터를 불러오는 함수를 입력해 줍니다.
+    }
   };
 
   const formatDate = (dateString) => {
@@ -296,6 +318,25 @@ function HeaderForm() {
             ) : (
               <div>알림 내역이 없습니다.</div>
             )}
+            {totalPages > 1 && (
+              <div style={{ marginTop: "10px" }}>
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 0}
+                >
+                  이전
+                </button>
+                <span style={{ margin: "0 10px" }}>
+                  {currentPage + 1} / {totalPages}{" "}
+                </span>
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage + 1 >= totalPages}
+                >
+                  다음
+                </button>
+              </div>
+            )}
           </AlertPopupContainer>
         )}
         <Icon
@@ -310,10 +351,7 @@ function HeaderForm() {
               프로필
             </Link>
             <br />
-            <Link
-              to={`/user/mypage/scrap/${userNo}`}
-              onClick={() => setShowPopup(false)}
-            >
+            <Link to={`/user/mypage/scrap`} onClick={() => setShowPopup(false)}>
               마이스크랩
             </Link>
             <br />
@@ -322,6 +360,13 @@ function HeaderForm() {
               onClick={() => setShowPopup(false)}
             >
               마이리뷰
+            </Link>
+            <br />
+            <Link
+              to={`/user/mypage/coupon`}
+              onClick={() => setShowPopup(false)}
+            >
+              마이쿠폰
             </Link>
             <br />
             <Link to="/user/mypage/logout" onClick={() => setShowPopup(false)}>

@@ -6,6 +6,8 @@
 
 검색 포함 페이징은 AdminProductModel, AdminProductContoller, ProductRepository (보현 작성)를 참고하세요.
 
+List 반환일 경우는 방법이 다릅니다.......................
+
 ## 클라이언트
 
 페이징 기능을 추가하고 싶은 js 파일에 들어가서 아래 내용을 추가해 줍니다.
@@ -29,7 +31,7 @@ params : { // 이 부분을 추가해야 합니다.
 page: currentPage,
 // 여기서 page는 보여 줄 페이지 번호입니다.
 // 20개의 게시글을 5개로 나눠서 페이징할 경우, 첫 번째 페이지의 page 값은 0입니다.
-size : 5,
+size : pageSize,
 // 몇 개를 기준으로 자를지 지정합니다.
 }
 }).then((res) => {

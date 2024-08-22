@@ -5,11 +5,11 @@ import { Link, useParams } from "react-router-dom";
 // 마이페이지에서 접근(미연동 상태)
 // user/mypage/scrap/유저번호
 export default function Scrap() {
-  // 유저 번호
-  const { no } = useParams();
-
   // 스크랩 리스트 정보 저장용
   const [scrapList, setScrapList] = useState([]);
+
+  // 로그인 정보라고 가정
+  const no = 3;
 
   // 스크랩한 정보 가져오기
   const getScrapList = () => {

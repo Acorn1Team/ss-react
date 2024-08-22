@@ -25,7 +25,7 @@ function SupportButton() {
           <div className="support-modal-content">
             <button
               className="support-modal-option"
-              onClick={() => handleOptionClick("/user/notice")}
+              onClick={() => handleOptionClick("/user/mypage/notice")}
             >
               공지사항
             </button>
