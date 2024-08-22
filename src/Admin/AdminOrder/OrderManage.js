@@ -3,19 +3,18 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 export default function OrderManage() {
-  const [orders, setOrders] = useState([]);
-  const [filteredOrders, setFilteredOrders] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchField, setSearchField] = useState("userId");
-  const [currentPage, setCurrentPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
-  const [totalPages, setTotalPages] = useState(1);
-  const [error, setError] = useState(null);
-  const [searchTriggered, setSearchTriggered] = useState(false);
+  const [orders, setOrders] = useState([]); // 모든 주문 목록 상태
+  const [filteredOrders, setFilteredOrders] = useState([]); // 필터링된 주문 목록 상태
+  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
+  const [searchField, setSearchField] = useState("userId"); // 검색 필드 상태 (기본값: userId)
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
+  const [pageSize, setPageSize] = useState(10); // 페이지 크기 상태
+  const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수 상태
+  const [error, setError] = useState(null); // 에러 메시지 상태
 
   // 날짜 범위를 위한 상태
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState(""); // 시작 날짜 상태
+  const [endDate, setEndDate] = useState(""); // 종료 날짜 상태
 
   const fetchOrders = async (
     page = 0,
@@ -36,18 +35,25 @@ export default function OrderManage() {
           endDate,
         },
       });
-      setOrders(response.data.content);
-      setTotalPages(response.data.totalPages);
-      setCurrentPage(response.data.number);
-      setFilteredOrders(response.data.content);
+      setOrders(response.data.content); // 주문 목록을 상태에 저장
+      setTotalPages(response.data.totalPages); // 전체 페이지 수를 상태에 저장
+      setCurrentPage(response.data.number); // 현재 페이지를 상태에 저장
+      setFilteredOrders(response.data.content); // 필터링된 주문 목록 초기화
     } catch (error) {
       console.error("주문 목록을 가져오는 중 오류가 발생했습니다!", error);
-      setError("주문 목록을 가져오는 중 오류가 발생했습니다.");
+      setError("주문 목록을 가져오는 중 오류가 발생했습니다."); // 에러 메시지 설정
     }
   };
 
   useEffect(() => {
-    fetchOrders(currentPage, pageSize);
+    fetchOrders(
+      currentPage,
+      pageSize,
+      searchTerm,
+      searchField,
+      startDate,
+      endDate
+    ); // 컴포넌트가 처음 마운트될 때 주문 목록을 가져옴
   }, [currentPage, pageSize]);
 
   const handleStatusChange = async (orderNo, status) => {
@@ -59,10 +65,17 @@ export default function OrderManage() {
     try {
       await axios.put(`/admin/orders/${orderNo}/status`, { status });
       setError(null);
-      fetchOrders(currentPage, pageSize);
+      fetchOrders(
+        currentPage,
+        pageSize,
+        searchTerm,
+        searchField,
+        startDate,
+        endDate
+      ); // 상태 변경 후 목록을 새로고침
     } catch (error) {
       console.error("주문 상태를 업데이트하는 중 오류가 발생했습니다!", error);
-      setError("주문 상태 업데이트에 실패했습니다.");
+      setError("주문 상태 업데이트에 실패했습니다."); // 에러 메시지 설정
     }
   };
 
@@ -72,29 +85,26 @@ export default function OrderManage() {
 
   const handleSearchFieldChange = (e) => {
     setSearchField(e.target.value);
-    setSearchTerm("");
-    setStartDate("");
-    setEndDate("");
-    setFilteredOrders(orders);
+    setSearchTerm(""); // 검색어 초기화
+    setFilteredOrders(orders); // 필터링된 목록 초기화
   };
 
   const handleSearch = () => {
-    setCurrentPage(0);
-    setSearchTriggered(true);
-    fetchOrders(0, pageSize, searchTerm, searchField, startDate, endDate);
+    setCurrentPage(0); // 검색 후 페이지를 첫 페이지로 초기화
+    fetchOrders(0, pageSize, searchTerm, searchField, startDate, endDate); // 검색 버튼 클릭 시 필터링 수행
   };
 
   const handleReset = () => {
-    setSearchTerm("");
-    setStartDate("");
-    setEndDate("");
-    setFilteredOrders(orders);
+    setSearchTerm(""); // 검색어 초기화
+    setStartDate(""); // 시작 날짜 초기화
+    setEndDate(""); // 종료 날짜 초기화
+    setSearchField("");
     fetchOrders(0, pageSize); // 전체 목록을 다시 가져오기
   };
 
   const handlePageChange = (newPage) => {
     if (newPage >= 0 && newPage < totalPages) {
-      setCurrentPage(newPage);
+      setCurrentPage(newPage); // 페이지 상태 업데이트
     }
   };
 
@@ -117,7 +127,7 @@ export default function OrderManage() {
         </label>
 
         {searchField === "date" ? (
-          <div style={{ marginBottom: "10px" }}>
+          <div>
             <input
               type="date"
               placeholder="시작 날짜"
@@ -213,6 +223,7 @@ export default function OrderManage() {
         </tbody>
       </table>
 
+      {/* 페이지네이션 */}
       <div style={{ marginTop: "10px" }}>
         <button
           onClick={() => handlePageChange(currentPage - 1)}
