@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import axios from "axios";
+import React, { useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 
 export default function FashionStyle() {
@@ -8,19 +9,18 @@ export default function FashionStyle() {
   const show = location.state.show;
   const actors = location.state.actors;
 
-  const [styles, setStyles] = useState([]);
+  //const [styles, setStyles] = useState([]);
 
   useEffect(() => {
     axios
       .get(`/admin/scrap/style/${no}`)
       .then((response) => {
-        setShow(response.data);
-        setIsModalOpen(true); // 모달 열기
+
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [no]);
 
   return (
     <>

@@ -213,7 +213,6 @@ const SelectedActors = ({ actors, show, navigate }) => {
         show: show
       })
       .then((response) => { // 추가된 작품의 PK 반환
-        console.log('추가된 번호는 ', response.data);
         navigate(`/admin/fashion/${response.data}`, { state: { show, actors } });
       })
       .catch((error) => {
