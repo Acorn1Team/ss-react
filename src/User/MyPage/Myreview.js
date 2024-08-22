@@ -1,17 +1,22 @@
 import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom"; 
+import { useParams } from "react-router-dom"; 
 import axios from "axios";
 
 function Myreview(){
     const { userNo } = useParams(); //userNo
-    const [product, setProduct] = useState([]); // 구매 제품 리스트
+    const [products, setProducts] = useState([]); // 구매 제품 리스트
 
-    //   // 리뷰 데이터 가져오기
-    const myreviews = () => {
+    //  리뷰 데이터 가져오기
+    const myreviewOnly = () => {
         axios
         .get(`/mypage/review/${userNo}`)
         .then((res) => {
-            setProduct(res.data.product); //userid당 주문 제목 이랑 리뷰
+            //console.log(res.data); // 응답 데이터 확인
+            if (res.data.products) {
+                setProducts(res.data.products); // userid당 주문 제목 이랑 리뷰
+            } else {
+                setProducts([]); // 데이터가 없는 경우 빈 배열로 설정
+            }
         })
         .catch((error) => {
             console.log(error);
@@ -19,20 +24,24 @@ function Myreview(){
     }
 
     useEffect(() => {
-        myreviews(); 
-    }, );
+        myreviewOnly(); 
+    }, ); 
 
 
     return(
         <>
-          {product.map((mybuyProducts) => (
-            <div key={mybuyProducts.no}>
-                <div>리뷰 번호: {mybuyProducts.no}</div>
-                <div>사용자: {mybuyProducts.userNickname}</div>
-                <div>제품: {mybuyProducts.productName}</div>
-                <div>사진: {mybuyProducts.pic}</div>
-            </div>
-        ))}
+       {Array.isArray(products) && products.length > 0 ? (
+            products.map((mybuyProducts) => (
+                <div key={mybuyProducts.no}>
+                    <div>리뷰 번호: {mybuyProducts.no}</div>
+                    <div>사용자: {mybuyProducts.userNickname}</div>
+                    <div>제품: {mybuyProducts.productName}</div>
+                    <div>사진: {mybuyProducts.pic}</div>
+                </div>
+            ))
+          ) : (
+            <div>리뷰가 없습니다.</div>
+          )}
         </>
 
     );
