@@ -254,7 +254,7 @@ public PostDetailDto postDetail(int postNo, Pageable pageable) {
 예시 : 공지 목록 페이징
 예시 파일 : Notice.js / NoticesRepository, UserController, UserModel, NoticeDto
 
-~~ #### 2-2-1. Dto ~~  
+~~#### 2-2-1. Dto~~  
 추가 항목 없음.
 
 #### 2-2-2. Repository
