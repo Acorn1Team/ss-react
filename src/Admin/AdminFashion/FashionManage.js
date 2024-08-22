@@ -2,45 +2,39 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled from "styled-components"; 
 
 // Search 컴포넌트
-function Search({ inputValue, setInputValue, scrapShow }) {
+function Search({ inputValue, setInputValue, scrapShow, navigate }) {
   const [filteredItems, setFilteredItems] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);
-
-  const fetchData = async () => {
-        if (inputValue) {
-          try {
-            const response = await axios.get(`/admin/show/autocomplete/${inputValue}`);
-            setFilteredItems(response.data);
-          } catch (error) {
-            console.error("Error fetching data:", error);
-            setFilteredItems([]);
-          }
-        } else {
-          // 입력값 없을 때는 전체 목록을 가져온다.
-          try {
-            const response = await axios.get('/admin/show/autocomplete');
-            setFilteredItems(response.data);
-          } catch (error) {
-            console.error("Error fetching data:", error);
-            setFilteredItems([]);
-          }
-        }
-        setShowDropdown(true);
-  };  
+  const [showDropdown, setShowDropdown] = useState(false);  
 
   useEffect(() => {
+    const fetchData = async () => {
+      if (inputValue) {
+        try {
+          const response = await axios.get(`/admin/show/autocomplete/${inputValue}`);
+          setFilteredItems(response.data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          setFilteredItems([]);
+        }
+      } else {
+        // 입력값 없을 때는 전체 목록을 가져온다.
+        try {
+          const response = await axios.get('/admin/show/autocomplete');
+          setFilteredItems(response.data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          setFilteredItems([]);
+        }
+      }
+    };
     fetchData();
   }, [inputValue]);
 
   const handleChange = (e) => {
     setInputValue(e.target.value);
-  };
-
-  const handleClick = (item) => {
-    setInputValue(item.name || item.title || item);
   };
 
   const handleBlur = () => {
@@ -55,20 +49,24 @@ function Search({ inputValue, setInputValue, scrapShow }) {
         value={inputValue}
         onChange={handleChange}
         onBlur={handleBlur}
-        onFocus={fetchData}
+        onFocus={() => setShowDropdown(true)}
         name="inputValue"
       />
 
       {showDropdown && (
         <AutoSearchContainer>
           {filteredItems.map((item, index) => (
-            <AutoSearchItem key={index} onMouseDown={() => handleClick(item)}>
-              {item.title}
+            <AutoSearchItem key={index}>
+              {item.title} <SearchButton onClick={() => {navigate(`/admin/fashion/show/${encodeURIComponent(item.title)}`)}}>조회</SearchButton>
             </AutoSearchItem>
           ))}
           <AutoSearchItem>
-            <b>{inputValue}</b> 새로 추가를 원한다면{" "}
-            <button onClick={scrapShow}>네이버 웹 스크래핑</button>
+            {inputValue} <button onMouseDown={scrapShow}>네이버 웹 스크래핑</button>
+            {/* onMouseDown 이벤트로 설정해야, onMouseDown: 마우스를 눌렀을 때 (포커스가 바뀌기 전)
+                onBlur: 입력 필드 등에서 포커스를 잃었을 때 (onMouseDown 후에 발생)
+                onClick: 마우스를 눌렀다 뗄 때 (실제 클릭이 완료되었을 때) 
+                결론) onClick으로 하면 onBlur 이벤트가 먼저 트리거되므로 여기서는 onMouseDown으로 처리
+            */}
           </AutoSearchItem>
         </AutoSearchContainer>
       )}
@@ -76,7 +74,6 @@ function Search({ inputValue, setInputValue, scrapShow }) {
   );
 }
 
-// FashionManage 컴포넌트
 export default function FashionManage() {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState(""); // inputValue 상태 관리
@@ -86,13 +83,12 @@ export default function FashionManage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   const scrapShow = () => {
-    console.log('오키');
     setShow({ title: "", pic: "" }); // 선택한 작품 초기화
     axios
       .get(`/admin/scrap/show/${inputValue}`)
       .then((response) => {
         setShow(response.data);
-        setIsModalOpen(true); // 모달을 열기
+        setIsModalOpen(true); // 모달 열기
       })
       .catch((error) => {
         console.log(error);
@@ -104,8 +100,8 @@ export default function FashionManage() {
     axios
       .get(`/admin/scrap/actors/${inputValue}`)
       .then((response) => {
-        // Add a `selected` property to each actor data
-        const updatedData = response.data.map((actor) => ({
+        const updatedData = response.data
+        .map((actor) => ({
           ...actor,
           selected: false,
         }));
@@ -116,18 +112,6 @@ export default function FashionManage() {
       });
     document.querySelector("#inputValue").value = "";
     setIsModalOpen(false); // 모달을 닫기
-  };
-
-
-  const addMainData = () => {
-    axios
-      .post("/admin/fashion", actors)
-      .then((response) => {
-        navigate(`/admin/fashion/${response.data.no}`);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   };
 
   const selectActor = (data, index) => {
@@ -160,9 +144,14 @@ export default function FashionManage() {
         setShow={setShow}
         setIsModalOpen={setIsModalOpen}
         scrapShow={scrapShow}
+        navigate={navigate}
       />
       <hr />
-      <SelectedActors actors={actors} addMainData={addMainData} />
+      <SelectedActors 
+        actors={actors}
+        show={show}
+        navigate={navigate}
+      />
       <hr />
       <Table>
         <tbody>
@@ -214,6 +203,43 @@ export default function FashionManage() {
     </>
   );
 }
+
+const SelectedActors = ({ actors, show, navigate }) => {
+
+  const addMainData = () => {
+    axios
+      .post("/admin/fashion", {
+        actors: actors,
+        show: show
+      })
+      .then((response) => { // 추가된 작품의 PK 반환
+        console.log('추가된 번호는 ', response.data);
+        navigate(`/admin/fashion/${response.data}`, { state: { show, actors } });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  return (
+    <>
+      <div>선택 목록</div>
+      <Table>
+        <tbody>
+          {actors.map((actorData, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{actorData.actor}</td>
+              <td>({actorData.character})</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+      <button onClick={addMainData}>작품 & 배우 추가</button>
+    </>
+  );
+};
+
 
 // Styled-components
 const SearchForm = styled.form`
@@ -304,23 +330,3 @@ const Table = styled.table`
     height: auto;
   }
 `;
-
-const SelectedActors = ({ actors, addMainData }) => {
-  return (
-    <>
-      <div>선택 목록</div>
-      <Table>
-        <tbody>
-          {actors.map((actorData, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{actorData.actor}</td>
-              <td>({actorData.character})</td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-      <button onClick={addMainData}>작품명 확정 & 선택 완료</button>
-    </>
-  );
-};
