@@ -174,6 +174,7 @@ export default function ProductManage() {
             <th>번호</th>
             <th>이름</th>
             <th>가격</th>
+            <th>할인가격</th>
             <th>내용</th>
             <th>날짜</th>
             <th>카테고리</th>
@@ -192,6 +193,7 @@ export default function ProductManage() {
                 <td>{item.no}</td>
                 <td>{item.name}</td>
                 <td>{item.price}</td>
+                <td>{item.price - (item.price * item.discountRate) / 100}</td>
                 <td>{item.contents}</td>
                 <td>{item.date}</td>
                 <td>{item.category}</td>
