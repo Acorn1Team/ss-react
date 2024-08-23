@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import UserRoutes from "./User/Routes/UserRoutes";
@@ -8,12 +8,22 @@ import HeaderForm from "./User/Component/HeaderForm";
 import AdminTop from "./Admin/AdminTop";
 import ChatInput from "./User/Socket/ChatInput";
 import SupportButton from "./User/Component/SupportButton"; // 고객지원 버튼 컴포넌트 import
+import { useDispatch, useSelector } from "react-redux"; // Redux 관련 import
+import LoadingScreen from "./User/Component/Loding"; // 로딩 스크린 컴포넌트 import
 
 function App() {
+  const routeLocation = useLocation(); // location 대신 다른 이름 사용
+
+  const dispatch = useDispatch(); // Redux dispatch 함수
+  const loading = useSelector((state) => state.loading); // 전역 로딩 상태를 가져옴
+
   // 채팅 구현을 위한 STOMP 클라이언트 객체를 저장
   const [stompClient, setStompClient] = useState(null);
 
   useEffect(() => {
+    // 페이지 로딩 시작
+    dispatch({ type: "SET_LOADING", payload: true });
+
     const socket = new SockJS("http://localhost:8080/ws");
     // SockJS를 사용하여 웹 소켓 엔드포인트 (/ws) 에 연결
     // 서버의 WebSocketConfig.java 의 registerStompEndpoints 오버라이딩 메소드에서 지정함
@@ -45,6 +55,9 @@ function App() {
         console.log("Message received: ", JSON.parse(message.body));
         // 수신된 메시지 콘솔 출력 (확인)
       });
+
+      // 웹 소켓이 연결된 후 로딩 종료
+      dispatch({ type: "SET_LOADING", payload: false });
     };
 
     client.activate();
@@ -59,7 +72,17 @@ function App() {
         // 서버와 웹 소켓 연결 종료
       }
     };
-  }, []);
+  }, [dispatch]);
+
+  useEffect(() => {
+    // 페이지 이동 시 로딩 상태를 true로 설정
+    dispatch({ type: "SET_LOADING", payload: true });
+
+    // 실제 페이지 로드 시뮬레이션 (API 호출 등)
+    setTimeout(() => {
+      dispatch({ type: "SET_LOADING", payload: false });
+    }, 2000);
+  }, [routeLocation.pathname, dispatch]);
 
   // 메시지를 서버로 전송하는 함수
   const sendMessage = (messageContent) => {
@@ -81,23 +104,40 @@ function App() {
 
   return (
     <div className="container">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/user/*" element={<HeaderForm />} />
-          <Route path="/admin/*" element={<AdminTop />} />
-        </Routes>
-        <Routes>
-          <Route path="/user/*" element={<UserRoutes />} />
-          <Route path="/admin/*" element={<AdminRoutes />} />
-          <Route
-            path="/user/chat"
-            element={<ChatInput onSendMessage={sendMessage} />}
-          />
-        </Routes>
-        <SupportButton />
-      </BrowserRouter>
+      {loading ? (
+        <LoadingScreen /> // 로딩 중일 때 로딩 화면을 표시
+      ) : (
+        <>
+          <Routes>
+            <Route path="/user/*" element={<HeaderForm />} />
+            <Route path="/admin/*" element={<AdminTop />} />
+          </Routes>
+
+          <div>
+            {loading ? (
+              <LoadingScreen />
+            ) : (
+              <Routes>
+                <Route path="/user/*" element={<UserRoutes />} />
+                <Route path="/admin/*" element={<AdminRoutes />} />
+                <Route
+                  path="/user/chat"
+                  element={<ChatInput onSendMessage={sendMessage} />}
+                />
+              </Routes>
+            )}
+          </div>
+          <SupportButton />
+        </>
+      )}
     </div>
   );
 }
 
-export default App;
+export default function RootApp() {
+  return (
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  );
+}
