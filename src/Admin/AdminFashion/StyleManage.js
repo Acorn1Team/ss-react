@@ -30,10 +30,14 @@ export default function StyleManage() {
         {actorData.character} ({actorData.actor}) 의 스타일
         </div>
         <table>
+        <thead>
+            <th>스타일</th><th>아이템</th>
+        </thead>
         <tbody>
           {styles.map((styleData, index) => (
             <tr key={index}>
               <td><img src={styleData.pic} alt='{index}번 캐릭터의 스타일' /></td>
+              
             </tr>
           ))}
         </tbody>

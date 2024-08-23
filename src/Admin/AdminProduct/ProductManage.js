@@ -208,13 +208,9 @@ export default function ProductManage() {
             <th>번호</th>
             <th>이름</th>
             <th>가격</th>
-<<<<<<< Updated upstream
             <th>할인가격</th>
             <th>내용</th>
             <th>날짜</th>
-=======
-            <th>판매가</th> {/* 할인율 대신 판매가 표시 */}
->>>>>>> Stashed changes
             <th>카테고리</th>
             <th>이미지</th>
             <th>재고</th>
@@ -231,13 +227,9 @@ export default function ProductManage() {
                 <td>{item.no}</td>
                 <td>{item.name}</td>
                 <td>{item.price}</td>
-<<<<<<< Updated upstream
                 <td>{item.price - (item.price * item.discountRate) / 100}</td>
                 <td>{item.contents}</td>
                 <td>{item.date}</td>
-=======
-                <td>{calculateSellingPrice(item.price, item.discountRate)}</td> {/* 판매가 계산 */}
->>>>>>> Stashed changes
                 <td>{item.category}</td>
                 <td>
                   <img
