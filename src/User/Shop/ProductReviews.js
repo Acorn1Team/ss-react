@@ -20,7 +20,7 @@ const ProductReviews = () => {
 
     useEffect(() => {
         reviewData(); 
-    }, );
+    }, []);
 
     return(
         <>

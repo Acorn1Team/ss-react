@@ -4,7 +4,7 @@ import axios from "axios";
 
 function Myreview(){
     const { userNo } = useParams(); //userNo
-    const [products, setProducts] = useState([]); // 구매 제품 리스트
+    const [reviews, setReviews] = useState([]); // 구매 제품 리스트
 
     //  리뷰 데이터 가져오기
     const myreviewOnly = () => {
@@ -12,10 +12,10 @@ function Myreview(){
         .get(`/mypage/review/${userNo}`)
         .then((res) => {
             //console.log(res.data); // 응답 데이터 확인
-            if (res.data.products) {
-                setProducts(res.data.products); // userid당 주문 제목 이랑 리뷰
+            if (res.data.reviews) {
+                setReviews(res.data.reviews); // userid당 주문 제목 이랑 리뷰
             } else {
-                setProducts([]); // 데이터가 없는 경우 빈 배열로 설정
+                setReviews([]); // 데이터가 없는 경우 빈 배열로 설정
             }
         })
         .catch((error) => {
@@ -25,13 +25,13 @@ function Myreview(){
 
     useEffect(() => {
         myreviewOnly(); 
-    }, ); 
+    }, []); 
 
 
     return(
         <>
-       {Array.isArray(products) && products.length > 0 ? (
-            products.map((mybuyProducts) => (
+       {Array.isArray(reviews) && reviews.length > 0 ? (
+            reviews.map((mybuyProducts) => (
                 <div key={mybuyProducts.no}>
                     <div>리뷰 번호: {mybuyProducts.no}</div>
                     <div>사용자: {mybuyProducts.userNickname}</div>

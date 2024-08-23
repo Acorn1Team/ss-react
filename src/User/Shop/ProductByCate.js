@@ -7,7 +7,7 @@ function ProductByCate() {
     const [products, setProducts] = useState([]);
     const [selectCategory, setSelectCategory] = useState(category || ''); // 선택된 카테고리를 상태로 관리
 
-    const categories = ['상의', '하의', '신발', '기타']; // 상의, 하의, 신발, 기타
+    const categories = ['Category 1', 'Category 2', 'Category 3', 'Category 4']; // 상의, 하의, 신발, 기타
 
     const refresh = (category) => {
         // Ajax 요청으로 선택된 카테고리에 해당하는 제품 목록을 가져옴
@@ -34,7 +34,7 @@ function ProductByCate() {
     return (
         <>
             <div>
-                <h2>카테고리</h2>
+                
                 <div>
                     
                     {categories
