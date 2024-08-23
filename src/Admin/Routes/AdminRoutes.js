@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import AdminHome from "../AdminHome";
-import ShowManage from "../AdminFashion/ShowManage";
+import ShowSearch from "../AdminFashion/ShowSearch";
 import ProductManage from "../AdminProduct/ProductManage";
 import HelpManage from "../AdminHelp/HelpManage";
 import PromotionManage from "../AdminPromotion/PromotionManage";
@@ -15,7 +15,7 @@ import ProductUpdateForm from "../AdminProduct/ProductUpdateForm";
 import ProductDetail from "../AdminProduct/ProductDetail";
 import PromotionCoupon from "../AdminPromotion/PromotionCoupon";
 import PromotionAdvertise from "../AdminPromotion/PromotionAdvertise";
-import ActorManage from "../AdminFashion/ActorManage";
+import ActorEdit from "../AdminFashion/ActorEdit";
 import StyleManage from "../AdminFashion/StyleManage";
 
 export default function AdminRoutes(){
@@ -23,8 +23,8 @@ export default function AdminRoutes(){
         <Routes>
 
           <Route path="/" element={<AdminHome />} />
-          <Route path="/fashion" element={<ShowManage />} />
-            <Route path="/fashion/show/:no" element={<ActorManage />} />
+          <Route path="/fashion" element={<ShowSearch />} />
+            <Route path="/fashion/show/:no" element={<ActorEdit />} />
             <Route path="/fashion/character/:no" element={<StyleManage />} />
           
           <Route path="/product" element={<ProductManage />} />

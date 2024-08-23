@@ -7,7 +7,8 @@ import styled from "styled-components";
 // Search 컴포넌트
 function Search({ inputValue, setInputValue, scrapShow, navigate }) {
   const [filteredItems, setFilteredItems] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);  
+  const [showDropdown, setShowDropdown] = useState(false);
+   
 
   useEffect(() => {
     const fetchData = async () => {
@@ -149,24 +150,17 @@ export default function ShowManage() {
         navigate={navigate}
       />
       <hr />
-      <Table>
-        <tbody>
+        <div>
           {scrapedDatas.map((data, index) => (
-            <tr key={index}>
-              <td>{data.actor}</td>
-              <td>({data.character})</td>
-              <td>
-                <img src={data.pic} alt={`${data.actor} 이미지`} />
-              </td>
-              <td>
-                <button onClick={() => selectActor(data, index)}>
-                  {data.selected ? "선택 취소" : "선택"}
-                </button>
-              </td>
-            </tr>
+            <div id={index} key={index}>
+              <img src={data.pic} alt={`${data.actor} 이미지`} />
+              {data.actor} ({data.character})
+              <button onClick={() => selectActor(data, index)}>
+                {data.selected ? "선택 취소" : "선택"}
+              </button>
+            </div>
           ))}
-        </tbody>
-      </Table>
+        </div>
 
       {/* 모달창 구현 */}
       <Modal
