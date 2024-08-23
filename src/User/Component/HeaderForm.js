@@ -356,6 +356,13 @@ function HeaderForm() {
             </Link>
             <br />
             <Link
+              to={`/user/mypage/scrap/${userNo}`}
+              onClick={() => setShowPopup(false)}
+            >
+              주문내역
+            </Link>
+            <br />
+            <Link
               to={`/user/mypage/review/${userNo}`}
               onClick={() => setShowPopup(false)}
             >
