@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import AdminTop from "../AdminTop";
 
 export default function CommunityManage() {
   const [view, setView] = useState("all"); // "all"은 전체 글, "reported"는 신고 글을 의미
@@ -43,11 +42,15 @@ export default function CommunityManage() {
           <ul>
             {posts.map((post) => (
               <li key={post.no}>
-                <strong>유저 아이디:</strong> {post.no} <br />
-                {post.imageUrl && (
+                <strong>유저 아이디:</strong> {post.userId} <br />
+                {post.pic && (
                   <>
                     <strong>사진:</strong>
-                    <img src={post.pic} alt="Post" />
+                    <img
+                      src={post.pic}
+                      alt="Post"
+                      style={{ width: "100px", height: "100px" }}
+                    />
                     <br />
                   </>
                 )}
@@ -66,19 +69,9 @@ export default function CommunityManage() {
             {posts.map((post) => (
               <li key={post.no}>
                 <strong>유저 아이디:</strong> {post.userId} <br />
-                {post.imageUrl && (
-                  <>
-                    <strong>사진:</strong>
-                    <img
-                      src={post.imageUrl}
-                      alt="Post Image"
-                      style={{ width: "100px", height: "100px" }}
-                    />
-                    <br />
-                  </>
-                )}
                 <strong>글 내용:</strong> {post.content} <br />
-                <strong>신고 사유:</strong> {post.reportReason}
+                <strong>신고 사유:</strong> {post.category} <br />
+                <strong>신고 횟수:</strong> {post.reportsCount} <br />
               </li>
             ))}
           </ul>
@@ -88,27 +81,19 @@ export default function CommunityManage() {
   };
 
   return (
-    <>
-      <div style={{ padding: "20px" }}>
-        <div style={{ marginBottom: "10px" }}>
-          {/* 전체보기 버튼 */}
-          <button
-            style={{ padding: "10px", marginRight: "10px" }}
-            onClick={() => setView("all")}
-          >
-            전체보기
-          </button>
-          {/* 신고글 보기 버튼 */}
-          <button
-            style={{ padding: "10px" }}
-            onClick={() => setView("reported")}
-          >
-            신고글 보기
-          </button>
-        </div>
-        {/* 선택된 내용 렌더링 */}
-        {renderContent()}
+    <div style={{ padding: "20px" }}>
+      <div style={{ marginBottom: "10px" }}>
+        <button
+          style={{ padding: "10px", marginRight: "10px" }}
+          onClick={() => setView("all")}
+        >
+          전체보기
+        </button>
+        <button style={{ padding: "10px" }} onClick={() => setView("reported")}>
+          신고글 보기
+        </button>
       </div>
-    </>
+      {renderContent()}
+    </div>
   );
 }
