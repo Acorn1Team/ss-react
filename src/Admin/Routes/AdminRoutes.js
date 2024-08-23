@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import AdminHome from "../AdminHome";
-import FashionManage from "../AdminFashion/FashionManage"
+import ShowManage from "../AdminFashion/ShowManage"
 import ProductManage from "../AdminProduct/ProductManage";
 import HelpManage from "../AdminHelp/HelpManage";
 import PromotionManage from "../AdminPromotion/PromotionManage";
@@ -15,20 +15,21 @@ import ProductUpdateForm from "../AdminProduct/ProductUpdateForm";
 import ProductDetail from "../AdminProduct/ProductDetail";
 import PromotionCoupon  from "../AdminPromotion/PromotionCoupon";
 import PromotionAdvertise  from "../AdminPromotion/PromotionAdvertise";
-import FashionStyle from "../AdminFashion/FashionStyle";
+import ActorManage from "../AdminFashion/ActorManage";
 
 export default function AdminRoutes(){
     return(
         <Routes>
 
           <Route path="/" element={<AdminHome />} />
-          <Route path="/fashion" element={<FashionManage />} />
-            <Route path="/fashion/:no" element={<FashionStyle />} />
+          <Route path="/fashion" element={<ShowManage />} />
+            <Route path="/fashion/show/:no" element={<ActorManage />} />
+            {/*<Route path="/fashion/character/:no" element={<StyleManage />} /> */}
           
           <Route path="/product" element={<ProductManage />} />
             <Route path="/product/insert" element={<ProductInsert />} />
             <Route path="/product/update/:no" element={<ProductUpdateForm />} />
-            <Route path="/product/detail/:no" element={<ProductDetail />} /> {/* 추가 */}
+            <Route path="/product/detail/:no" element={<ProductDetail />} />
 
           <Route path="/orders" element={<OrderManage />} />
             <Route path="/orders/detail/:orderNo" element={<OrderDetail />} /> 

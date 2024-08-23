@@ -57,16 +57,12 @@ function Search({ inputValue, setInputValue, scrapShow, navigate }) {
         <AutoSearchContainer>
           {filteredItems.map((item, index) => (
             <AutoSearchItem key={index}>
-              {item.title} <SearchButton onClick={() => {navigate(`/admin/fashion/show/${encodeURIComponent(item.title)}`)}}>조회</SearchButton>
+              {item.title} <SearchButton onMouseDown={() => {navigate(`/admin/fashion/show/${item.no}`)}}>조회</SearchButton>
             </AutoSearchItem>
           ))}
           <AutoSearchItem>
             {inputValue} <button onMouseDown={scrapShow}>네이버 웹 스크래핑</button>
-            {/* onMouseDown 이벤트로 설정해야, onMouseDown: 마우스를 눌렀을 때 (포커스가 바뀌기 전)
-                onBlur: 입력 필드 등에서 포커스를 잃었을 때 (onMouseDown 후에 발생)
-                onClick: 마우스를 눌렀다 뗄 때 (실제 클릭이 완료되었을 때) 
-                결론) onClick으로 하면 onBlur 이벤트가 먼저 트리거되므로 여기서는 onMouseDown으로 처리
-            */}
+            {/* onClick으로 하면 onBlur 이벤트가 먼저 트리거되므로 여기서는 onMouseDown으로 처리 */}
           </AutoSearchItem>
         </AutoSearchContainer>
       )}
@@ -74,7 +70,7 @@ function Search({ inputValue, setInputValue, scrapShow, navigate }) {
   );
 }
 
-export default function FashionManage() {
+export default function ShowManage() {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState(""); // inputValue 상태 관리
   const [show, setShow] = useState({ title: "", pic: "" });
@@ -191,7 +187,7 @@ export default function FashionManage() {
           },
         }}
       >
-        <h2>{show.title} 의 등장인물을 스크랩하겠습니다.</h2>
+        <h2>{show.title} 의 등장인물을 불러올까요?</h2>
         <img
           src={show.pic}
           alt={`${show.title} 이미지`}
@@ -213,7 +209,7 @@ const SelectedActors = ({ actors, show, navigate }) => {
         show: show
       })
       .then((response) => { // 추가된 작품의 PK 반환
-        navigate(`/admin/fashion/${response.data}`, { state: { show, actors } });
+        navigate(`/admin/fashion/show/${response.data}`);
       })
       .catch((error) => {
         console.log(error);

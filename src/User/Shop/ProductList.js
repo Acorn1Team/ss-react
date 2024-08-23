@@ -73,7 +73,7 @@ export default function ProductList(){
             <div>{product.category}</div>
             {/* <div>{product.pic}</div> */}
             <div>
-            <Link to={`/user/shop/productlist/detail/${product.no}`}>{product.pic}</Link>
+            <Link to={`/user/shop/productlist/detail/${product.no}`}><img src={product.pic} alt="{product.name} 사진"/></Link>
             </div>
             <div>{product.discountRate}</div>
             <div>{product.score}</div>
