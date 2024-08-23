@@ -101,7 +101,7 @@ export default function ProductUpdateForm() {
                 <input type="text" name="stock" value={state.stock} onChange={handleChange} />
             </div>
             <div>
-                <label>할인률 :</label>
+                <label>할인율 :</label>
                 <input type="text" name="discountRate" value={state.discountRate} onChange={handleChange} />
             </div>
 

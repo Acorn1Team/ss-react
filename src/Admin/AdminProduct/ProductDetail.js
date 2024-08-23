@@ -43,6 +43,18 @@ export default function ProductDetail() {
                 <span>{product.price}</span>
             </div>
             <div>
+                <label>할인율: </label>
+                <span>{product.discountRate}%</span>
+            </div>
+            <div>
+                <label>할인가: </label>
+                <span>{product.discountRate}%</span>
+            </div>
+            <div>
+                <label>등록일: </label>
+                <span>{product.date}</span>
+            </div>
+            <div>
                 <label>상품 설명: </label>
                 <span>{product.contents}</span>
             </div>
@@ -63,8 +75,8 @@ export default function ProductDetail() {
                 <span>{product.score}</span>
             </div>
             <div>
-                <label>할인율: </label>
-                <span>{product.discountRate}</span>
+                <label>판매량: </label>
+                <span>{product.count}</span>
             </div>
             <br />
             <button onClick={handleUpdate}>수정하기</button>

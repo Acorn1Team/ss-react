@@ -109,6 +109,65 @@ export default function ProductManage() {
     }
   };
 
+  // 할인율을 고려하여 판매가를 계산하는 함수
+  const calculateSellingPrice = (price, discountRate) => {
+    if (discountRate === 0) {
+      return "X";
+    }
+    return (price * (1 - discountRate / 100)).toFixed(2); // 할인율을 적용한 가격 계산
+  };
+
+  // 검색 필드에 따른 조건부 렌더링
+  const renderSearchField = () => {
+    switch (searchField) {
+      case "date":
+        return (
+          <div style={{ display: "inline-block" }}>
+            <input
+              type="date"
+              placeholder="시작 날짜"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              style={{ padding: "5px", marginRight: "10px" }}
+            />
+            <input
+              type="date"
+              placeholder="종료 날짜"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              style={{ padding: "5px", marginRight: "10px" }}
+            />
+          </div>
+        );
+      case "name":
+        return (
+          <input
+            type="text"
+            placeholder={`검색어를 입력하세요 (${searchField})`}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ padding: "5px", width: "300px", marginRight: "10px" }}
+          />
+        );
+      case "category":
+        return (
+          <select
+            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchTerm}
+            style={{ padding: "5px", marginRight: "10px" }}
+          >
+            <option value="">선택해주세요</option>
+            <option value="상의">상의</option>
+            <option value="하의">하의</option>
+            <option value="신발">신발</option>
+            <option value="기타">기타</option>
+          </select>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <>
       {/* 상품 추가 페이지로 이동하는 링크 */}
@@ -129,32 +188,7 @@ export default function ProductManage() {
           </select>
         </label>
 
-        {searchField === "date" ? (
-          <div style={{ display: "inline-block" }}>
-            <input
-              type="date"
-              placeholder="시작 날짜"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              style={{ padding: "5px", marginRight: "10px" }}
-            />
-            <input
-              type="date"
-              placeholder="종료 날짜"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              style={{ padding: "5px", marginRight: "10px" }}
-            />
-          </div>
-        ) : (
-          <input
-            type="text"
-            placeholder={`검색어를 입력하세요 (${searchField})`}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ padding: "5px", width: "300px", marginRight: "10px" }}
-          />
-        )}
+        {renderSearchField()}
 
         <button
           onClick={handleSearch}
@@ -174,14 +208,18 @@ export default function ProductManage() {
             <th>번호</th>
             <th>이름</th>
             <th>가격</th>
+<<<<<<< Updated upstream
             <th>할인가격</th>
             <th>내용</th>
             <th>날짜</th>
+=======
+            <th>판매가</th> {/* 할인율 대신 판매가 표시 */}
+>>>>>>> Stashed changes
             <th>카테고리</th>
             <th>이미지</th>
             <th>재고</th>
-            <th>할인률</th>
             <th>평점</th>
+            <th>판매량</th>
             <th>상세보기</th>
             <th>삭제</th>
           </tr>
@@ -193,9 +231,13 @@ export default function ProductManage() {
                 <td>{item.no}</td>
                 <td>{item.name}</td>
                 <td>{item.price}</td>
+<<<<<<< Updated upstream
                 <td>{item.price - (item.price * item.discountRate) / 100}</td>
                 <td>{item.contents}</td>
                 <td>{item.date}</td>
+=======
+                <td>{calculateSellingPrice(item.price, item.discountRate)}</td> {/* 판매가 계산 */}
+>>>>>>> Stashed changes
                 <td>{item.category}</td>
                 <td>
                   <img
@@ -205,8 +247,8 @@ export default function ProductManage() {
                   />
                 </td>
                 <td>{item.stock}</td>
-                <td>{item.discountRate}</td>
                 <td>{item.score}</td>
+                <td>{item.count}</td>
                 <td>
                   <span
                     onClick={() => handleDetail(item.no)}
@@ -222,7 +264,7 @@ export default function ProductManage() {
             ))
           ) : (
             <tr>
-              <td colSpan="12" style={{ textAlign: "center", padding: "20px" }}>
+              <td colSpan="11" style={{ textAlign: "center", padding: "20px" }}>
                 결과가 없습니다.
               </td>
             </tr>

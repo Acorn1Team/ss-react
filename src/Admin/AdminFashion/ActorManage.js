@@ -12,7 +12,6 @@ export default function ActorManage() {
   //const [styles, setStyles] = useState([]);
 
   useEffect(() => {
-    console.log(no);
     axios
       .get(`/admin/fashion/show/${no}`)
       .then((response) => { // show와 actors를 담은 정보 받음
@@ -34,7 +33,7 @@ export default function ActorManage() {
             <tr key={index}>
               <td>{actorData.actor} ({actorData.character})</td>
               <td><img src={actorData.pic} alt={`${actorData.actor} 이미지`} /></td>
-              <td><button onClick={() => navigate(`admin/fashion/character/{actorData.no}`)}>스타일 조회</button></td>
+              <td><button onClick={() => navigate(`/admin/fashion/character/${actorData.no}`, { state: { actorData } })}>스타일 조회</button></td>
             </tr>
           ))}
         </tbody>

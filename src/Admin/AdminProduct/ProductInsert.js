@@ -90,7 +90,13 @@ export default function ProductInsert() {
             <br />
             <div>
                 <label>카테고리 :</label>
-                <input onChange={handleChange} type="text" name="category" placeholder="카테고리 입력" />
+                <select onChange={handleChange} name="category">
+                    <option value="">선택해주세요</option>
+                    <option value="상의">상의</option>
+                    <option value="하의">하의</option>
+                    <option value="신발">신발</option>
+                    <option value="기타">기타</option>
+                </select>
             </div>
             <br />
             <div>
@@ -101,11 +107,6 @@ export default function ProductInsert() {
             <div>
                 <label>재고 :</label>
                 <input onChange={handleChange} type="text" name="stock" placeholder="재고 입력" />
-            </div>
-            <br />
-            <div>
-                <label>평점 :</label>
-                <input onChange={handleChange} type="text" name="score" placeholder="평점 입력" />
             </div>
             <br />
             <div>
