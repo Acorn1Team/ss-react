@@ -55,6 +55,7 @@ axios.get(`/path`, {
     },
 }).then((res) => {
     // 데이터 로직 처리...
+    // res.data 로 받아오던 데이터는 res.data.content 로 변경합니다.
     setTotalPages(res.data.totalPages);
 }).catch((err) => {
     console.log(err);
@@ -137,7 +138,7 @@ axios.get(`/path`, {
         <div style={{ marginTop: "10px" }}>
           <button
             onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 0 || loading}
+            disabled={currentPage === 0}
           >
             이전
           </button>
@@ -146,7 +147,7 @@ axios.get(`/path`, {
           </span>
           <button
             onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage + 1 >= totalPages || loading}
+            disabled={currentPage + 1 >= totalPages}
           >
             다음
           </button>
@@ -175,6 +176,15 @@ axios.get(`/path`, {
 
 ```
 <button onClick={handleReset}>전체 보기</button>
+```
+
+### 1-5. useEffect
+
+```
+useEffect(() => {
+  // 설정 로직...
+}, [currentPage])
+// 배열에 currentPage를 추가합니다.
 ```
 
 ## 2. 서버

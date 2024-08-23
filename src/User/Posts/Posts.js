@@ -382,6 +382,7 @@ export default function Posts() {
           <Link to={`/user/style/profile/${postData.userNo}`}>
             @{userInfo.userNickname}
           </Link>
+          <br />
           {postData.date}
         </div>
         {postData.userNo !== userNo && (

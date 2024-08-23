@@ -18,6 +18,15 @@ export default function OtherProfile() {
   // 작성한 글 리스트
   const [postList, setPostList] = useState([]);
 
+  // 현재 페이지
+  const [currentPage, setCurrentPage] = useState(0);
+
+  // 페이지 크기
+  const [pageSize, setPageSize] = useState(20);
+
+  // 전체 페이지 수
+  const [totalPages, setTotalPages] = useState(1);
+
   const nv = useNavigate();
 
   // 로그인 정보라고 가정함
@@ -49,13 +58,26 @@ export default function OtherProfile() {
   // 해당 유저가 작성한 글 리스트 가져오기
   const postInfo = () => {
     axios
-      .get(`/posts/list/${profileUserNo}`)
+      .get(`/posts/list/${profileUserNo}`, {
+        params: {
+          page: currentPage,
+          size: pageSize,
+        },
+      })
       .then((res) => {
-        setPostList(res.data);
+        setPostList(res.data.content);
+        setTotalPages(res.data.totalPages);
       })
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  // 페이지 변경 함수
+  const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setCurrentPage(newPage);
+    }
   };
 
   // 해당 유저 팔로우하고 있는지 확인하기
@@ -110,11 +132,13 @@ export default function OtherProfile() {
       postInfo();
       followCheckProc();
     }
-  }, [profileUserNo, userNo]);
+  }, [profileUserNo, userNo, currentPage]);
 
   return (
     <div>
       {userInfo.pic}&emsp;@{userInfo.nickname}
+      <br />
+      {userInfo.id}
       <br />
       {userInfo.bio}
       <button onClick={followOrCancel}>
@@ -141,6 +165,25 @@ export default function OtherProfile() {
           <Link to={`/user/style/detail/${pl.userNo}`}>{pl.pic}</Link>
         </div>
       ))}
+      {totalPages > 1 && (
+        <div style={{ marginTop: "10px" }}>
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 0}
+          >
+            이전
+          </button>
+          <span style={{ margin: "0 10px" }}>
+            {currentPage + 1} / {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage + 1 >= totalPages}
+          >
+            다음
+          </button>
+        </div>
+      )}
     </div>
   );
 }

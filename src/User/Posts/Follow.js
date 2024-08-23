@@ -9,12 +9,29 @@ export default function Follow() {
   const [followData, setFollowData] = useState([]);
   const [followStatus, setFollowStatus] = useState({});
 
+  // 현재 페이지
+  const [currentPage, setCurrentPage] = useState(0);
+
+  // 페이지 크기
+  const [pageSize, setPageSize] = useState(10);
+
+  // 전체 페이지 수
+  const [totalPages, setTotalPages] = useState(1);
+
   const userNo = 3;
 
   const followerInfo = (userNoToUse) => {
     axios
-      .get(`/posts/user/follow/follower/${userNoToUse}`)
-      .then((res) => setFollowData(res.data))
+      .get(`/posts/user/follow/follower/${userNoToUse}`, {
+        params: {
+          page: currentPage,
+          size: pageSize,
+        },
+      })
+      .then((res) => {
+        setFollowData(res.data.content);
+        setTotalPages(res.data.totalPages);
+      })
       .catch((err) => {
         console.log(err);
       });
@@ -22,11 +39,26 @@ export default function Follow() {
 
   const followeeInfo = (userNoToUse) => {
     axios
-      .get(`/posts/user/follow/followee/${userNoToUse}`)
-      .then((res) => setFollowData(res.data))
+      .get(`/posts/user/follow/followee/${userNoToUse}`, {
+        params: {
+          page: currentPage,
+          size: pageSize,
+        },
+      })
+      .then((res) => {
+        setFollowData(res.data.content);
+        setTotalPages(res.data.totalPages);
+      })
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  // 페이지 변경 함수
+  const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setCurrentPage(newPage);
+    }
   };
 
   const followCheckProc = (fno) => {
@@ -85,7 +117,7 @@ export default function Follow() {
     } else {
       followeeInfo(userNoToUse);
     }
-  }, [userNo, userFollowNo, followInfo]);
+  }, [userNo, userFollowNo, followInfo, currentPage]);
 
   useEffect(() => {
     if (followData.length > 0) {
@@ -112,6 +144,25 @@ export default function Follow() {
           </button>
         </div>
       ))}
+      {totalPages > 1 && (
+        <div style={{ marginTop: "10px" }}>
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 0}
+          >
+            이전
+          </button>
+          <span style={{ margin: "0 10px" }}>
+            {currentPage + 1} / {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage + 1 >= totalPages}
+          >
+            다음
+          </button>
+        </div>
+      )}
     </div>
   );
 }

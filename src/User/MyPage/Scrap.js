@@ -2,11 +2,18 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-// 마이페이지에서 접근(미연동 상태)
-// user/mypage/scrap/유저번호
 export default function Scrap() {
   // 스크랩 리스트 정보 저장용
   const [scrapList, setScrapList] = useState([]);
+
+  // 현재 페이지
+  const [currentPage, setCurrentPage] = useState(0);
+
+  // 페이지 크기
+  const [pageSize, setPageSize] = useState(5);
+
+  // 전체 페이지 수
+  const [totalPages, setTotalPages] = useState(1);
 
   // 로그인 정보라고 가정
   const no = 3;
@@ -14,11 +21,26 @@ export default function Scrap() {
   // 스크랩한 정보 가져오기
   const getScrapList = () => {
     axios
-      .get(`/myScrapPage/${no}`)
-      .then((res) => setScrapList(res.data))
+      .get(`/myScrapPage/${no}`, {
+        params: {
+          page: currentPage,
+          size: pageSize,
+        },
+      })
+      .then((res) => {
+        setScrapList(res.data.content);
+        setTotalPages(res.data.totalPages);
+      })
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  // 페이지 변경 함수
+  const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setCurrentPage(newPage);
+    }
   };
 
   // 스크랩 취소 함수
@@ -38,7 +60,7 @@ export default function Scrap() {
 
   useEffect(() => {
     getScrapList();
-  }, []);
+  }, [currentPage]);
 
   return (
     <div>
@@ -51,6 +73,25 @@ export default function Scrap() {
           <button onClick={() => handleScrapCancel(sl.no)}>스크랩 취소</button>
         </div>
       ))}
+      {totalPages > 1 && (
+        <div style={{ marginTop: "10px" }}>
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 0}
+          >
+            이전
+          </button>
+          <span style={{ margin: "0 10px" }}>
+            {currentPage + 1} / {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage + 1 >= totalPages}
+          >
+            다음
+          </button>
+        </div>
+      )}
     </div>
   );
 }

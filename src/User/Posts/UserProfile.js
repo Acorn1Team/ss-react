@@ -80,6 +80,7 @@ export default function UserProfile() {
               setUserData({ ...userData, nickname: e.target.value })
             }
           />
+          <div>{userData.id}</div>
           <input
             type="text"
             className={styles.editInput}
@@ -96,7 +97,8 @@ export default function UserProfile() {
       ) : (
         <div className={styles.profileContent}>
           <img src={userData.pic} alt="Profile" className={styles.profilePic} />
-          <div className={styles.profileNickname}>{userData.nickname}</div>
+          <div className={styles.profileNickname}>@{userData.nickname}</div>
+          <div className={styles.profileNickname}>{userData.id}</div>
           <div className={styles.profileBio}>{userData.bio}</div>
           <button className={styles.editButton} onClick={() => profileEdit()}>
             수정
