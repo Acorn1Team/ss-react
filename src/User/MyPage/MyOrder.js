@@ -1,10 +1,9 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function PostList() {
-  const [followPost, setFollowPost] = useState([]);
-
+export default function MyOrder() {
   // 현재 페이지
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -14,24 +13,23 @@ export default function PostList() {
   // 전체 페이지 수
   const [totalPages, setTotalPages] = useState(1);
 
-  // 로그인 정보라고 가정
+  const [orderList, setOrderList] = useState([]);
+  const [productList, setProductList] = useState([]);
+
+  // 로그인 정보라고 가정함
   const userNo = 3;
 
-  useEffect(() => {
-    getPostList();
-  }, [userNo, currentPage]);
-
-  // 팔로우한 유저 게시글 정보 가져오기
-  const getPostList = () => {
+  const getOrderList = () => {
     axios
-      .get(`/posts/followPostList/${userNo}`, {
+      .get(`/order/orderlist/${userNo}`, {
         params: {
           page: currentPage,
           size: pageSize,
         },
       })
       .then((res) => {
-        setFollowPost(res.data.content);
+        setOrderList(res.data.orderList);
+        setProductList(res.data.productList);
         setTotalPages(res.data.totalPages);
       })
       .catch((err) => {
@@ -46,19 +44,26 @@ export default function PostList() {
     }
   };
 
+  useEffect(() => {
+    getOrderList();
+  }, [userNo, currentPage]);
+
   return (
-    <div>
-      {followPost.map((fp) => (
-        <div key={fp.no}>
-          {fp.userPic}&emsp;
-          <Link to={`/user/style/profile/${fp.userNo}`}>
-            @{fp.userNickname}
-          </Link>
+    <>
+      주문 내역
+      {orderList.map((ol) => (
+        <div key={ol.no}>
+          {ol.no}&emsp;{ol.date}
           <br />
-          <Link to={`/user/style/detail/${fp.no}`}>
-            <b>{fp.pic}</b>
-            {fp.content}
-          </Link>
+          <div>
+            <Link to={`/user/mypage/order/${ol.no}`}>
+              {productList.find((pl) => pl.no === ol.productNoList[0])?.name}
+              {ol.productNoList.length > 1 && (
+                <span> 외 {ol.productNoList.length - 1}건</span>
+              )}
+            </Link>
+          </div>
+          {ol.price}&emsp;{ol.state}&emsp;
           <hr />
         </div>
       ))}
@@ -81,6 +86,6 @@ export default function PostList() {
           </button>
         </div>
       )}
-    </div>
+    </>
   );
 }
