@@ -16,10 +16,10 @@ export default function PromotionCoupon() {
     const addCoupon = () => {
         axios
             .post("/admin/coupon", state)
-            .then((response) => { // 추가된 작품의 PK 반환
+            .then((response) => {
                 if(response.data.isSuccess){
                     alert("추가 성공");
-                    navigate("/admin/coupon");
+                    navigate("/admin/promotion");
                 }
             })
             .catch((error) => {

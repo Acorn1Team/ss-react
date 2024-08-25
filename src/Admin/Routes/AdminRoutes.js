@@ -44,7 +44,7 @@ export default function AdminRoutes(){
           
           <Route path="/promotion" element={<PromotionManage />} />
             <Route path="/promotion/coupon" element={<PromotionCoupon />} /> {/* 쿠폰 페이지 라우팅 */}
-            <Route path="promotion/advertise" element={<PromotionAdvertise />} />
+            <Route path="/promotion/advertise" element={<PromotionAdvertise />} />
 
         </Routes>
     )    
