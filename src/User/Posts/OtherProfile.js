@@ -162,7 +162,7 @@ export default function OtherProfile() {
       </div>
       {postList.map((pl) => (
         <div key={pl.no}>
-          <Link to={`/user/style/detail/${pl.userNo}`}>{pl.pic}</Link>
+          <Link to={`/user/style/detail/${pl.no}`}>{pl.pic}</Link>
         </div>
       ))}
       {totalPages > 1 && (

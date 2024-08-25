@@ -102,6 +102,10 @@ export default function Follow() {
               ...pstatus,
               [fno]: true,
             }));
+            axios.post(`/alert/follow/from/${userNo}`, {
+              userNo: fno,
+              isRead: 0,
+            });
           }
         })
         .catch((error) => {

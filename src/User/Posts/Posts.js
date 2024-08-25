@@ -56,6 +56,9 @@ export default function Posts() {
   // 로딩 상태
   const [loading, setLoading] = useState(false);
 
+  // 태그를 위함
+  const [userMap, setUserMap] = useState({});
+
   // 게시글 정보 가져오기
   const getPostDetailInfo = () => {
     setLoading(true);
@@ -186,6 +189,11 @@ export default function Posts() {
             setPostLikeStatus(true);
             getPostLike();
             // 게시글 좋아요 상태 다시 불러오기
+            axios.post(`/alert/like/post/${userNo}`, {
+              userNo: postData.userNo,
+              path: postNo,
+              isRead: 0,
+            });
           }
         })
         .catch((error) => {
@@ -255,6 +263,7 @@ export default function Posts() {
     if (recommentCheck !== 0) {
       recomment = recommentCheck;
     }
+
     axios
       .post(`/posts/comment`, {
         postNo: postNo,
@@ -267,6 +276,18 @@ export default function Posts() {
           getPostDetailInfo();
           setCommentContent("");
           setRecommentCheck(0);
+          axios.post(`/alert/reply/post/${userNo}`, {
+            userNo: postData.userNo,
+            path: postNo,
+            isRead: 0,
+          });
+          if (recomment !== null) {
+            axios.post(`/alert/reply/recomment/${userNo}`, {
+              userNo: recomment,
+              path: postNo,
+              isRead: 0,
+            });
+          }
         }
       })
       .catch((err) => {
@@ -340,10 +361,31 @@ export default function Posts() {
       });
   };
 
-  // 답글 달기 버튼 클릭시
   const recomment = (commentUserNo, userNickname) => {
-    setCommentContent("@" + userNickname + " ");
+    setCommentContent(`@${userNickname} `);
     setRecommentCheck(commentUserNo);
+  };
+
+  const renderCommentContent = (content) => {
+    const parts = content.split(/(@\w+)/g).map((part, index) => {
+      if (part.startsWith("@")) {
+        const username = part.slice(1);
+        const userNo = userMap[username] || ""; // userMap에서 userNo를 가져옴
+
+        return (
+          <Link
+            key={index}
+            to={`/user/style/profile/${userNo}`}
+            className={styles.link}
+          >
+            {part}
+          </Link>
+        );
+      }
+      return part;
+    });
+
+    return parts;
   };
 
   // 페이지 변경 함수
@@ -364,6 +406,14 @@ export default function Posts() {
       getProductInPost();
     }
   }, [postData.productNo]);
+
+  useEffect(() => {
+    const map = {};
+    postCommentData.forEach((comment) => {
+      map[comment.userNickname] = comment.userNo;
+    });
+    setUserMap(map);
+  }, [postCommentData]);
 
   useEffect(() => {
     if (postCommentData.length) {
@@ -432,7 +482,7 @@ export default function Posts() {
               <Link to={`/user/style/profile/${pc.userNo}`}>
                 @{pc.userNickname}
               </Link>
-              : {pc.content} <br />
+              : {renderCommentContent(pc.content)} <br />
               <button onClick={() => recomment(pc.no, pc.userNickname)}>
                 답글
               </button>
@@ -447,7 +497,10 @@ export default function Posts() {
                 .filter((reply) => reply.parentCommentNo === pc.no)
                 .map((reply) => (
                   <div key={reply.no} className={styles.reply}>
-                    @{reply.userNickname} : {reply.content} <br />
+                    <Link to={`/user/style/profile/${reply.userNo}`}>
+                      @{reply.userNickname}
+                    </Link>
+                    : {renderCommentContent(reply.content)} <br />
                     <button
                       onClick={() => recomment(pc.no, reply.userNickname)}
                     >
@@ -466,6 +519,7 @@ export default function Posts() {
                 ))}
             </div>
           ))}
+
         <textarea
           value={commentContent}
           onChange={handleContentChange}

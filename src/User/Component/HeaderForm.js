@@ -137,6 +137,16 @@ const AutoSearchItem = styled.div`
   }
 `;
 
+const RedDot = styled.div`
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+  top: -5px; /* 아이콘의 오른쪽 위로 이동 */
+  right: -5px; /* 아이콘의 오른쪽 위로 이동 */
+`;
+
 const PopupContainer = styled.div`
   position: absolute;
   top: 50px;
@@ -192,6 +202,7 @@ function HeaderForm() {
   const [showAlertPopup, setShowAlertPopup] = useState(false);
   const [alerts, setAlerts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("전체");
+  const hasUnreadAlerts = alerts.some((alert) => !alert.isRead);
 
   // 현재 페이지를 저장할 상태
   const [currentPage, setCurrentPage] = useState(0);
@@ -281,12 +292,16 @@ function HeaderForm() {
         <Link to="/shop/cart">
           <Icon src={cartImage} alt="Cart" />
         </Link>
-        <Icon
-          src={alarmImage}
-          alt="Alarm"
-          onClick={() => setShowAlertPopup(!showAlertPopup)}
-          style={{ cursor: "pointer" }}
-        />
+        <div style={{ position: "relative" }}>
+          <Icon
+            src={alarmImage}
+            alt="Alarm"
+            onClick={() => setShowAlertPopup(!showAlertPopup)}
+            style={{ cursor: "pointer" }}
+          />
+          {hasUnreadAlerts && <RedDot />}{" "}
+          {/* 확인되지 않은 알림이 있으면 빨간 점 표시 */}
+        </div>
         {showAlertPopup && (
           <AlertPopupContainer>
             <div>

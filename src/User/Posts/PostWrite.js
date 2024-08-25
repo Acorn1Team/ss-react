@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import styles from "../Style/PostWrite.module.css";
 
 export default function PostWrite() {
   const { postNo, productNo } = useParams();
@@ -16,6 +17,11 @@ export default function PostWrite() {
 
   // 글 내용
   const [content, setContent] = useState("");
+
+  // 검색 관련 상태
+  const [inputValue, setInputValue] = useState("");
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const navigate = useNavigate();
 
@@ -113,6 +119,48 @@ export default function PostWrite() {
       });
   };
 
+  // 검색 입력 변화 핸들러
+  const handleChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  // 상품 선택 핸들러
+  const handleClick = (item) => {
+    setProductInfo(item); // 선택된 상품 정보를 설정
+    setInputValue(item.name); // 선택된 상품의 이름을 검색창에 표시
+    setShowDropdown(false); // 드롭다운을 닫음
+  };
+
+  // 드롭다운 블러 핸들러
+  const handleBlur = () => {
+    setTimeout(() => setShowDropdown(false), 100); // 드롭다운을 약간의 지연 후에 닫음
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (inputValue) {
+        try {
+          const response = await axios.get(
+            `/user/search/product?term=${inputValue}`
+          );
+          if (Array.isArray(response.data)) {
+            setFilteredItems(response.data);
+          } else {
+            console.error("Unexpected response data format");
+          }
+          setShowDropdown(true);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+          setFilteredItems([]);
+        }
+      } else {
+        setShowDropdown(false);
+      }
+    };
+
+    fetchData();
+  }, [inputValue]);
+
   useEffect(() => {
     const loadData = async () => {
       await getProductList();
@@ -130,52 +178,66 @@ export default function PostWrite() {
   }, [postNo, productNo]);
 
   return (
-    <div>
-      <div id="photoBox"></div>
+    <div className={styles.container}>
+      <div id="photoBox" className={styles.photoBox}></div>
       {!postNo && <input type="file" />}
       <br />
 
       <textarea
-        style={{ width: "50%" }}
-        id="contentBox"
+        className={styles.contentBox}
         value={content}
         onChange={handleContentChange}
       ></textarea>
-      <div id="productBox">
-        {productNo || selected !== "0" ? (
-          <div>
-            선택한 상품 정보
-            <br />
-            <select value={selected} onChange={handleSelectChange}>
-              {productList.map((pl) => (
-                <option key={pl.no} value={pl.no}>
-                  {pl.name}
-                </option>
+      <div className={styles.productBox}>
+        상품을 검색해 보세요!&emsp;
+        <input
+          type="text"
+          className={styles.productSearchInput}
+          value={inputValue}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          placeholder="상품 검색..."
+        />
+        {showDropdown && (
+          <div className={styles.dropdownContainer}>
+            <div className={styles.dropdown}>
+              {filteredItems.map((item, index) => (
+                <div
+                  key={index}
+                  className={styles.dropdownItem}
+                  onMouseDown={() => handleClick(item)}
+                >
+                  {item.name}
+                </div>
               ))}
-            </select>
-            <br />
-            {productInfo.pic} {productInfo.name} {productInfo.price}
-            <br />
+            </div>
           </div>
-        ) : (
-          <div>
-            상품 목록
-            <br />
-            <select value={selected} onChange={handleSelectChange}>
-              <option value="0">상품 선택</option>
-              {productList.map((pl) => (
-                <option key={pl.no} value={pl.no}>
-                  {pl.name}
-                </option>
-              ))}
-            </select>
+        )}
+        {productInfo && productInfo.name && (
+          <div className={styles.productInfoContainer}>
+            <p>선택한 상품 정보:</p>
+            <div className={styles.productInfoDetails}>
+              <img
+                src={productInfo.pic}
+                alt={productInfo.name}
+                className={styles.productInfoImage}
+              />
+              <span className={styles.productInfoName}>{productInfo.name}</span>
+              <span className={styles.productInfoPrice}>
+                {productInfo.price}
+              </span>
+            </div>
           </div>
         )}
       </div>
-      <button onClick={() => insertPost(postNo)}>
+
+      <button
+        className={styles.submitButton}
+        onClick={() => insertPost(postNo)}
+      >
         {postNo ? "수정" : "등록"}
       </button>
-      <b id="error"></b>
+      <b id="error" className={styles.error}></b>
     </div>
   );
 }

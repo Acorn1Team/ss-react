@@ -18,7 +18,7 @@ export default function UserStyleRoutes() {
       <div className={css["user-routes"]}>
         <Routes>
           <Route path="/" element={<PostList />} />
-          <Route path="/list" element={<PostListByUser />} />
+          <Route path="/list/:userNo" element={<PostListByUser />} />
           <Route path="/write/*" element={<PostWrite />} />
           <Route path="/write/:productNo" element={<PostWrite />} />
           <Route path="/write/edit/:postNo" element={<PostWrite />} />
