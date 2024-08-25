@@ -43,11 +43,10 @@ export default function ActorEdit() {
     };
 
     const addCharacter = (data) => {
-        // 배우 존재여부 검사해야됨
         axios
             .post(`/admin/show/${show.no}/character`, data)
             .then((response) => { // 추가된 캐릭터의 PK 반환
-                navigate(`/admin/fashion/character/${response.data}`);
+                navigate(`/admin/fashion/character/${response.data}`, { state: data }); // 배역 정보 들고 감
             })
             .catch((error) => {
                 console.log(error);
@@ -64,6 +63,7 @@ export default function ActorEdit() {
                     <div key={index}>
                         <img src={actorData.pic} alt={`${actorData.character} 이미지`} />
                         {actorData.actor} ({actorData.character})
+                        <button onClick={() => navigate(`/admin/fashion/character/${actorData.no}`, { state: actorData })}>스타일 편집</button>
                     </div>
                 ))}
             </div>
