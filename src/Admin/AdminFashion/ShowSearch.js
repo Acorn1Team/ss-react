@@ -189,10 +189,14 @@ const AutoSearchContainer = styled.div`
 
 const AutoSearchItem = styled.div`
   padding: 10px;
-  cursor: pointer;
+  cursor: default;  // 기본 커서로 변경하여 클릭할 수 없음을 표시
   font-size: 14px;
   font-weight: bold;
-  &:hover {
-    background-color: #edf5f5;
+  pointer-events: none;  // 클릭 이벤트를 무시
+  display: flex;
+  justify-content: space-between; // 버튼과 텍스트를 양쪽 끝에 배치
+  align-items: center;
+  button {
+    pointer-events: all;  // 버튼은 클릭할 수 있게 설정
   }
 `;

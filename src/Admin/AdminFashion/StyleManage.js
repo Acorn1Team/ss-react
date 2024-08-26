@@ -86,7 +86,8 @@ export default function StyleManage() {
                 {[0, 1, 2].map((i) => (
                   <td key={i}>
                     {filteredItems[i] ? 
-                      (<><img src={filteredItems[i].pic} alt={`${index}번 스타일 아이템${i+1}`} /><br/><button>조회하기</button></>) 
+                      (<><img src={filteredItems[i].pic} alt={`${index}번 스타일 아이템${i+1}`} />
+                      <br/><button onClick={() => navigate(`/admin/product/detail/${filteredItems[i].product}`)}>유사상품 조회하기</button></>) 
                     : (<button>아이템 추가하기</button>)}
                   </td>
                 ))}
