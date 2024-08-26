@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function CommunityManage() {
   const [view, setView] = useState("all"); // "all"은 전체 글, "reported"는 신고 글을 의미
@@ -7,6 +8,7 @@ export default function CommunityManage() {
   const [posts, setPosts] = useState([]); // 글 데이터를 저장할 상태
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
+  const navigate = useNavigate();
 
   // 전체 글 데이터를 불러오는 함수
   const fetchPosts = async (page = 0) => {
@@ -89,6 +91,7 @@ export default function CommunityManage() {
                 )}
                 <strong>글 내용:</strong> {post.content}
                 <button onClick={() => deletePost(post.no)}>삭제하기</button>
+                <button onClick={() => navigate(`/user/style/detail/${post.no}`)}>상세보기</button>
               </li>
             ))}
           </ul>
@@ -138,6 +141,7 @@ export default function CommunityManage() {
                 >
                   삭제
                 </button>
+                <button onClick={() => navigate(`/user/style/detail/${post.no}`)}>상세보기</button>
               </li>
             ))}
           </ul>
