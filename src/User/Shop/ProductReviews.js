@@ -4,14 +4,23 @@ import { useParams } from 'react-router-dom';
 
 const ProductReviews = () => {
     const { no } = useParams();
-    const [reviews, setReviews] = useState([]); // 리뷰 리스트 상태
+    const [reviews, setReviews] = useState([]);
+    const [averageRating, setAverageRating] = useState(0); //리뷰 평균
 
-    // 리뷰 데이터 가져오기
     const reviewData = () => {
         axios
         .get(`/list/review/${no}`)
         .then((res) => {
-            setReviews(res.data.reviews); // 리뷰 데이터를 상태로 설정
+            const reviewsData = res.data.reviews || [];
+            setReviews(reviewsData);
+
+            // 평균 평점 계산
+            if (reviewsData.length > 0) {
+                const totalRating = reviewsData.reduce((acc, review) => acc + (parseFloat(review.score) || 0), 0);
+                setAverageRating((totalRating / reviewsData.length).toFixed(1));
+            } else {
+                setAverageRating(0);
+            }
         })
         .catch((error) => {
             console.log(error);
@@ -19,11 +28,12 @@ const ProductReviews = () => {
     }
 
     useEffect(() => {
-        reviewData(); 
-    }, []);
+        reviewData();
+    }, [no]);
 
-    return(
+    return (
         <>
+        <div>평균 평점: {averageRating}</div>
         {reviews.map((review) => (
             <div key={review.no}>
                 <div>리뷰 번호: {review.no}</div>

@@ -8,7 +8,7 @@ export default function ProductDetail() {
   const { no } = useParams();
   const [product, setProduct] = useState({});
   const [count, setCount] = useState(1); // 수량을 상태로 관리
-  const [reviews, setReviews] = useState([]); // 리뷰 데이터 상태 추가
+  //const [reviews, setReviews] = useState([]); // 리뷰 데이터 상태 추가
   const [averageRating, setAverageRating] = useState(0); // 평균 평점 상태 추가
 
   const refresh = (no) => {
@@ -22,18 +22,8 @@ export default function ProductDetail() {
       .catch((error) => {
         console.log(error);
       });
-  };
+};
 
- // 리뷰 데이터를 가져오는 요청 추가
-  axios
-  .get(`/list/review/${no}`)
-  .then((res) => {
-    setReviews(res.data.reviews || []);
-    calculateAverageRating(res.data.reviews || []);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
 
   useEffect(() => {
     refresh(no); // 컴포넌트가 마운트될 때, 그리고 no가 변경될 때마다 요청을 보냄
@@ -48,15 +38,6 @@ export default function ProductDetail() {
     }
   };
 
-  // 리뷰의 평균 평점을 계산하는 함수
-  const calculateAverageRating = (reviews) => {
-    if (reviews.length > 0) {
-      const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
-      setAverageRating((totalRating / reviews.length).toFixed(1)); // 평균 평점을 소수점 1자리까지 표시
-    } else {
-      setAverageRating(0);
-    }
-  };
 
   // 총 가격 계산 (수량에 따른 가격)
   const getTotalPrice = () => {
@@ -95,6 +76,7 @@ export default function ProductDetail() {
         <label>할인율: </label>
         <span>{product.discountRate}</span>
       </div>
+      <div>장바구니 담기 : </div>
       <div>
         <label>상품 설명: </label>
         <span>{product.contents}</span>
@@ -108,9 +90,8 @@ export default function ProductDetail() {
         <img src={product.pic} alt={product.name} />
       </div>
       <div>
-        <label>평점: </label>
-        <span>{averageRating}</span> {/* 평균 평점을 표시 */}
-        {/* <span>{product.score}</span> */}
+        {/* <label>평점: </label>
+   
         {/* <div>상품 평점이랑 리뷰 평점이랑 같아야 되 (체크)</div> */}
       </div>
       <Link to={`/user/style/write/${no}`}>커뮤니티 공유하기</Link>
@@ -118,7 +99,7 @@ export default function ProductDetail() {
       <div>
         <label>리뷰 보기: </label>
         {/* <ProductReviews /> */}
-        <ProductReviews reviews={reviews} /> {/* 리뷰 컴포넌트에 리뷰 데이터 전달 */}
+        <ProductReviews setAverageRating={setAverageRating} /> {/* 리뷰 컴포넌트에 리뷰 데이터 전달 */}
       </div>
       <br />
     </>

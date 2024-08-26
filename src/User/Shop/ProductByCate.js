@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+ 
 
 function ProductByCate() {
     const { category } = useParams();  // useParams를 사용하여 현재 URL에서 카테고리 파라미터를 가져옴
@@ -79,7 +80,9 @@ function ProductByCate() {
                         <div>가격: {product.price}</div>
                         <div>등록일: {product.date}</div>
                         <div>카테고리: {product.category}</div>
-                        <div>사진: <img src={product.pic} alt={product.name} /></div>
+                        <div>
+                            <Link to={`/user/shop/productlist/detail/${product.no}`}><img src={product.pic} alt="{product.name} 사진"/></Link>
+                        </div>
                         <div>할인율: {product.discountRate}</div>
                         <div>평점: {product.score}</div>
                         <div>리뷰 수: {product.reviews}</div>
