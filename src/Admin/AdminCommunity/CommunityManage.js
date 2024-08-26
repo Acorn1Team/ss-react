@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 export default function CommunityManage() {
   const [view, setView] = useState("all"); // "all"은 전체 글, "reported"는 신고 글을 의미
@@ -35,16 +35,14 @@ export default function CommunityManage() {
   };
 
   // userId 기반 신고글 삭제 함수
-  const deleteReportedPostByUserId = async (userId) => {
+  const deletePost = async (postNo) => {
     try {
-      const response = await axios.delete(`/admin/posts/reported/${userId}`);
+      const response = await axios.delete(`/admin/posts/${postNo}`);
 
       if (response.data.isSuccess) {
         // 성공적으로 삭제된 경우 목록에서 해당 항목을 제거
-        setPosts(posts.filter((post) => post.userId !== userId));
+        setPosts(posts.filter((post) => post.no !== postNo));
         console.log("삭제 성공");
-      } else {
-        console.error("신고글 삭제 실패:", response.data.message);
       }
     } catch (error) {
       console.error("신고 글 삭제 중 오류 발생:", error);
@@ -90,6 +88,7 @@ export default function CommunityManage() {
                   </>
                 )}
                 <strong>글 내용:</strong> {post.content}
+                <button onClick={() => deletePost(post.no)}>삭제하기</button>
               </li>
             ))}
           </ul>
@@ -129,7 +128,7 @@ export default function CommunityManage() {
                 <strong>신고 사유:</strong> {post.category} <br />
                 <strong>신고 횟수:</strong> {post.reportsCount} <br />
                 <button
-                  onClick={() => deleteReportedPostByUserId(post.userId)}
+                  onClick={() => deletePost(post.no)}
                   style={{
                     marginTop: "10px",
                     padding: "5px 10px",
