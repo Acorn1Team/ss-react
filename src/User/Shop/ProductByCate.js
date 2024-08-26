@@ -7,28 +7,51 @@ function ProductByCate() {
     const [products, setProducts] = useState([]);
     const [selectCategory, setSelectCategory] = useState(category || ''); // 선택된 카테고리를 상태로 관리
 
+    const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
+    const [pageSize, setPageSize] = useState(3); // 페이지 크기
+    const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
+
+
     const categories = ['Category1', 'Category2', 'Category3', 'Category4']; // 상의, 하의, 신발, 기타
 
-    const refresh = (category) => {
+    const refresh = (category, page = 0, size = 10) => {
         // Ajax 요청으로 선택된 카테고리에 해당하는 제품 목록을 가져옴
+    
         axios
-            .get(`/list/category/${category}`)
-            .then((res) => {
-                setProducts(res.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        .get(`/list/category/${category}`, {
+            params: {
+                page: currentPage,
+                size: pageSize,
+            },
+        })
+        .then((res) => {
+            setProducts(res.data.content); // 페이지의 content를 가져옴
+            setTotalPages(res.data.totalPages); // 전체 페이지 수 업데이트
+            setCurrentPage(page); // 현재 페이지 업데이트
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     };
+
+
+    // 페이지 변경 함수
+    const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setCurrentPage(newPage);
+         }
+     };
 
     useEffect(() => {
         if (selectCategory) {
-            refresh(selectCategory); // 선택된 카테고리에 따라 제품 목록을 가져옴
+            refresh(selectCategory, currentPage, pageSize); // 선택된 카테고리에 따라 제품 목록을 가져옴
         }
-    }, [selectCategory]); // selectCategory가 변경될 때마다 useEffect 실행
-
-    const handleCategoryChange = (newCategory) => { // 버튼 눌러서 핸들러
+    }, [selectCategory, currentPage, pageSize]); // selectCategory, currentPage, pageSize가 변경될 때마다 useEffect 실행
+   
+   
+    const handleCategoryChange = (newCategory) => {
         setSelectCategory(newCategory); // 카테고리가 변경될 때 상태 업데이트
+        setCurrentPage(0); // 카테고리가 변경되면 페이지를 0으로 초기화
     };
 
     return (
@@ -63,7 +86,23 @@ function ProductByCate() {
                     </div>
                 ))}
             </div>
-
+            <div style={{ marginTop: "10px" }}>
+                <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 0}
+                >
+                    이전
+                </button>
+                <span style={{ margin: "0 10px" }}>
+                    {currentPage + 1} / {totalPages}
+                </span>
+                <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage + 1 >= totalPages}
+                >
+                    다음
+                </button>
+            </div>
         </>
     );
 }

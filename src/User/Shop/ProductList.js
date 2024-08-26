@@ -5,23 +5,40 @@ import axios from "axios";
 
 export default function ProductList(){
     const [products, setProducts] = useState([]);
-    const [sortOption, setSortOption] = useState("latest");
+    const [sortOption, setSortOption] = useState("latest");// 최신순이 기본값
+    const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
+    const [pageSize, setPageSize] = useState(10); // 페이지 크기
+    const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
 
     const refresh = () => {
         // ajax 요청 (get 방식)
         axios
-        .get("/list")
+        .get('/list', {
+            params: {
+                page: currentPage,
+                size: pageSize,
+            },
+        })
         .then((res) => {
-            setProducts(res.data);
+            setProducts(res.data.content); // Page 객체의 content를 가져옴
+            setTotalPages(res.data.totalPages);
         })
         .catch((error) => {
             console.log(error);
         });
     };
 
+      // 페이지 변경 함수
+  const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
+
     useEffect(() => {
         refresh(); //ajax 요청 처리가 됨
-    },[]);
+    },[currentPage]); 
 
 
 
@@ -81,6 +98,26 @@ export default function ProductList(){
             
             </div>
         ))}
+
+{totalPages > 1 && (
+        <div style={{ marginTop: "10px" }}>
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 0}
+          >
+            이전
+          </button>
+          <span style={{ margin: "0 10px" }}>
+            {currentPage + 1} / {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage + 1 >= totalPages}
+          >
+            다음
+          </button>
+        </div>
+      )}
         </>
     )
 }

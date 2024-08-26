@@ -8,6 +8,8 @@ export default function ProductDetail() {
   const { no } = useParams();
   const [product, setProduct] = useState({});
   const [count, setCount] = useState(1); // 수량을 상태로 관리
+  const [reviews, setReviews] = useState([]); // 리뷰 데이터 상태 추가
+  const [averageRating, setAverageRating] = useState(0); // 평균 평점 상태 추가
 
   const refresh = (no) => {
     // Ajax 요청으로 선택된 카테고리에 해당하는 제품 상세 정보를 가져옴
@@ -22,6 +24,17 @@ export default function ProductDetail() {
       });
   };
 
+ // 리뷰 데이터를 가져오는 요청 추가
+  axios
+  .get(`/list/review/${no}`)
+  .then((res) => {
+    setReviews(res.data.reviews || []);
+    calculateAverageRating(res.data.reviews || []);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
   useEffect(() => {
     refresh(no); // 컴포넌트가 마운트될 때, 그리고 no가 변경될 때마다 요청을 보냄
   }, [no]);
@@ -32,6 +45,16 @@ export default function ProductDetail() {
       return product.price - product.price * (product.discountRate / 100);
     } else {
       return product.price;
+    }
+  };
+
+  // 리뷰의 평균 평점을 계산하는 함수
+  const calculateAverageRating = (reviews) => {
+    if (reviews.length > 0) {
+      const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+      setAverageRating((totalRating / reviews.length).toFixed(1)); // 평균 평점을 소수점 1자리까지 표시
+    } else {
+      setAverageRating(0);
     }
   };
 
@@ -86,14 +109,16 @@ export default function ProductDetail() {
       </div>
       <div>
         <label>평점: </label>
-        <span>{product.score}</span>
+        <span>{averageRating}</span> {/* 평균 평점을 표시 */}
+        {/* <span>{product.score}</span> */}
         {/* <div>상품 평점이랑 리뷰 평점이랑 같아야 되 (체크)</div> */}
       </div>
       <Link to={`/user/style/write/${no}`}>커뮤니티 공유하기</Link>
       <br />
       <div>
         <label>리뷰 보기: </label>
-        <ProductReviews />
+        {/* <ProductReviews /> */}
+        <ProductReviews reviews={reviews} /> {/* 리뷰 컴포넌트에 리뷰 데이터 전달 */}
       </div>
       <br />
     </>
