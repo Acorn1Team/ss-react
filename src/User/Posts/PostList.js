@@ -56,6 +56,7 @@ export default function PostList() {
           </Link>
           <br />
           <Link to={`/user/style/detail/${fp.no}`}>
+            <img src={fp.pic} alt={fp.pic} />
             <b>{fp.pic}</b>
             {fp.content}
           </Link>

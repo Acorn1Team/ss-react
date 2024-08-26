@@ -72,6 +72,7 @@ export default function UserProfile() {
     <div className={styles.profileContainer}>
       {isEditing ? (
         <div id="userPicNicknameEdit">
+          <input type="file"></input>
           <input
             type="text"
             className={styles.editInput}
