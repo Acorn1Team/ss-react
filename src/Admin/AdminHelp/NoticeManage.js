@@ -20,6 +20,11 @@ export default function NoticeManage() {
     })
   }
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+  };
+
   return (
     <>
       <Link to="/admin/help/notices/new">공지 추가</Link><br/>
@@ -36,7 +41,7 @@ export default function NoticeManage() {
                   <td>{notice.no}</td>
                   <td>{notice.category}</td>
                   <td><Link to={`/admin/help/notices/${notice.no}`}>{notice.title}</Link></td>
-                  <td>{notice.date}</td>
+                  <td>{formatDate(notice.date)}</td>
               </tr>
           )}
           </tbody>

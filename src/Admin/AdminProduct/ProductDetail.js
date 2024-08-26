@@ -31,6 +31,11 @@ export default function ProductDetail() {
         navigate(`/admin/product/update/${no}`);
     };
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+      }
+
     return (
         <>
             <h2>상품 상세 정보</h2>
@@ -52,7 +57,7 @@ export default function ProductDetail() {
             </div>
             <div>
                 <label>등록일: </label>
-                <span>{product.date}</span>
+                <span>{formatDate(product.date)}</span>
             </div>
             <div>
                 <label>상품 설명: </label>

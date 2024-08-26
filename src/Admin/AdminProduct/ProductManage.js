@@ -117,6 +117,11 @@ export default function ProductManage() {
     return (price * (1 - discountRate / 100)).toFixed(2); // 할인율을 적용한 가격 계산
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+  };
+
   // 검색 필드에 따른 조건부 렌더링
   const renderSearchField = () => {
     switch (searchField) {
@@ -229,7 +234,7 @@ export default function ProductManage() {
                 <td>{item.price}</td>
                 <td>{item.price - (item.price * item.discountRate) / 100}</td>
                 <td>{item.contents}</td>
-                <td>{item.date}</td>
+                <td>{formatDate(item.date)}</td>
                 <td>{item.category}</td>
                 <td>
                   <img
