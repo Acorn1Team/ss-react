@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 export default function StyleManage() {
@@ -7,9 +7,12 @@ export default function StyleManage() {
   const [styles, setStyles] = useState([]);
   const [newStyle, setNewStyle] = useState(null);
   const [items, setItems] = useState([]);
+  const [newItem, setNewItem] = useState(null);
+  const [productInput, setProductInput] = useState('');
   const location = useLocation();
   const actorData = location.state;
   const navigate = useNavigate();
+  const styleInputRef = useRef(null);
 
   useEffect(() => {
     axios
@@ -38,16 +41,46 @@ export default function StyleManage() {
     setNewStyle(e.target.files[0]);
   }
 
+  const onItemFileChange = (e) => {
+    setNewItem(e.target.files[0]);
+  }
+
+  const onProductInputChange = (e) => {
+    setProductInput(e.target.value);
+  }
+
   const addStyle = async() => {
     const styleForm = new FormData();
     styleForm.append('file', newStyle);
     
-    axios
+    await axios
       .post(`/admin/fashion/character/${no}/style`, styleForm, {
         headers: {'Content-Type': 'multipart/form-data'}
       })
       .then((response) => {
-        navigate(`/admin/fashion/character/${response.data}`, {state: actorData})
+        setStyles((prevStyles) => [...prevStyles, response.data]);
+        setNewStyle(null);
+        if (styleInputRef.current) {
+          styleInputRef.current.value = "";
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  const addItem = async(styleNo) => {
+    const itemForm = new FormData();
+    itemForm.append('file', newItem);
+    itemForm.append('product', productInput);
+    
+    await axios
+      .post(`/admin/fashion/${styleNo}/item`, itemForm, {
+        headers: {'Content-Type': 'multipart/form-data'}
+      })
+      .then((response) => {
+        setItems((prevItems) => [...prevItems, response.data]);
+        setNewStyle(null);
       })
       .catch((error) => {
         console.log(error);
@@ -65,7 +98,7 @@ export default function StyleManage() {
         <thead>
           <tr><td colSpan='4'>
             스타일 추가하기<br/>
-            <input type="file" onChange={onStyleFileChange} />
+            <input type="file" onChange={onStyleFileChange} ref={styleInputRef}/>
             <button onClick={addStyle}>추가</button>
           </td></tr>
           <tr>
@@ -88,7 +121,10 @@ export default function StyleManage() {
                     {filteredItems[i] ? 
                       (<><img src={filteredItems[i].pic} alt={`${index}번 스타일 아이템${i+1}`} />
                       <br/><button onClick={() => navigate(`/admin/product/detail/${filteredItems[i].product}`)}>유사상품 조회하기</button></>) 
-                    : (<button>아이템 추가하기</button>)}
+                    : (<>아이템 추가하기<br/>
+                      <input type="file" onChange={onItemFileChange} /><br/>
+                      연결 상품 검색 <input type="text" onChange={onProductInputChange} /><br/>
+                      <button onClick={() => {addItem(styleData.no)}}>추가</button></>)}
                   </td>
                 ))}
               </tr>
