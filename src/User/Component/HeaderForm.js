@@ -247,6 +247,15 @@ function HeaderForm() {
       });
   };
 
+  const markAsRead = async (alertNo) => {
+    try {
+      await axios.put(`/alert/${alertNo}`);
+      fetchAlerts(); // 알림 목록을 새로 불러와서 UI 업데이트
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   // 페이지 변경 함수
   const handlePageChange = (newPage) => {
     if (newPage >= 0 && newPage < totalPages) {
@@ -314,13 +323,17 @@ function HeaderForm() {
                 프로모션
               </button>
             </div>
+
             {filteredAlerts.length > 0 ? (
               filteredAlerts.map((alert, index) => (
-                <AlertItem key={index} isRead={alert.isRead}>
+                <AlertItem
+                  key={index}
+                  isRead={alert.isRead}
+                  onClick={() => markAsRead(alert.no)}
+                >
                   <Link to={alert.path}>
                     <i style={{ fontSize: "85%" }}>{alert.category}</i>
                     <br />
-
                     {alert.content}
                     <br />
                     <i style={{ fontSize: "70%" }}>{formatDate(alert.date)}</i>
@@ -333,6 +346,7 @@ function HeaderForm() {
             ) : (
               <div>알림 내역이 없습니다.</div>
             )}
+
             {totalPages > 1 && (
               <div style={{ marginTop: "10px" }}>
                 <button
@@ -354,6 +368,9 @@ function HeaderForm() {
             )}
           </AlertPopupContainer>
         )}
+        <Link to="/user/auth/login" onClick={() => setShowPopup(false)}>
+          로그인
+        </Link>
         <Icon
           src={profileImage}
           alt="Profile"
