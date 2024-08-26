@@ -397,6 +397,7 @@ function HeaderForm() {
     </Header>
   );
 }
+
 function Search() {
   const [inputValue, setInputValue] = useState("");
   const [filteredItems, setFilteredItems] = useState([]);
