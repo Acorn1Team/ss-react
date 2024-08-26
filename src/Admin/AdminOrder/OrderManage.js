@@ -15,6 +15,10 @@ export default function OrderManage() {
   // 날짜 범위를 위한 상태
   const [startDate, setStartDate] = useState(""); // 시작 날짜 상태
   const [endDate, setEndDate] = useState(""); // 종료 날짜 상태
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+  };
 
   const fetchOrders = async (
     page = 0,
