@@ -78,10 +78,12 @@ function App() {
     // 페이지 이동 시 로딩 상태를 true로 설정
     dispatch({ type: "SET_LOADING", payload: true });
 
-    // 실제 페이지 로드 시뮬레이션 (API 호출 등)
-    setTimeout(() => {
+    // 페이지가 완전히 로드된 후 로딩 상태를 false로 변경
+    const handlePageLoad = () => {
       dispatch({ type: "SET_LOADING", payload: false });
-    }, 2000);
+    };
+
+    setTimeout(handlePageLoad, 2000);
   }, [routeLocation.pathname, dispatch]);
 
   // 메시지를 서버로 전송하는 함수
@@ -104,32 +106,24 @@ function App() {
 
   return (
     <div className="container">
-      {loading ? (
-        <LoadingScreen /> // 로딩 중일 때 로딩 화면을 표시
-      ) : (
-        <>
+      <>
+        <Routes>
+          <Route path="/user/*" element={<HeaderForm />} />
+          <Route path="/admin/*" element={<AdminTop />} />
+        </Routes>
+        <div>
           <Routes>
-            <Route path="/user/*" element={<HeaderForm />} />
-            <Route path="/admin/*" element={<AdminTop />} />
+            <Route path="/user/*" element={<UserRoutes />} />
+            <Route path="/admin/*" element={<AdminRoutes />} />
+            <Route
+              path="/user/chat"
+              element={<ChatInput onSendMessage={sendMessage} />}
+            />
           </Routes>
-
-          <div>
-            {loading ? (
-              <LoadingScreen />
-            ) : (
-              <Routes>
-                <Route path="/user/*" element={<UserRoutes />} />
-                <Route path="/admin/*" element={<AdminRoutes />} />
-                <Route
-                  path="/user/chat"
-                  element={<ChatInput onSendMessage={sendMessage} />}
-                />
-              </Routes>
-            )}
-          </div>
-          <SupportButton />
-        </>
-      )}
+        </div>
+        {loading && <LoadingScreen />} {/* 로딩 상태일 때 로딩 화면을 표시 */}
+        <SupportButton />
+      </>
     </div>
   );
 }

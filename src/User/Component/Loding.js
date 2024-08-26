@@ -1,23 +1,30 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 const LoadingScreen = () => {
-  useEffect(() => {}, []);
-
   return (
     <div
       style={{
-        height: "100vh", // 화면 전체 높이를 차지
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        margin: 0,
-        animation: "fadeInOut 1s ease-in-out", // 페이드 인/아웃 애니메이션 추가
+        backgroundColor: "rgba(255, 255, 255, 0.5)", // 투명도 30% 흰색 배경으로 수정
+        zIndex: 9999, // 모든 요소 위에 로딩 화면이 오도록 설정
+        // pointerEvents: "none", // 로딩 화면 뒤의 요소와 상호작용을 허용
+        backdropFilter: "blur(1px)", // 배경 흐림 효과 추가 (선택 사항)
       }}
     >
-      <div className="cell">
-        <div className="card">
-          <span className="flower-loader">Loading…</span>
-        </div>
+      <div
+        style={{
+          width: "100px",
+          height: "100px",
+        }}
+      >
+        <div className="flower-loader">Loading…</div>
       </div>
 
       <style>{`
@@ -47,12 +54,6 @@ const LoadingScreen = () => {
             box-shadow: white 0 0 15px 0, #333 12px 12px 0 4px,
               #333 -12px 12px 0 4px, #333 -12px -12px 0 4px, #333 12px -12px 0 4px;
           }
-        }
-
-        @keyframes fadeInOut {
-          0% { opacity: 0; }
-          50% { opacity: 1; }
-          100% { opacity: 0; }
         }
       `}</style>
     </div>

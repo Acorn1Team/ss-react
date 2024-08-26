@@ -59,6 +59,12 @@ export default function Posts() {
   // 태그를 위함
   const [userMap, setUserMap] = useState({});
 
+  // 블라인드 여부
+  const [blindCheck, setBlindCheck] = useState(false);
+
+  // 관리자 여부 체크
+  const [isAdmin, setIsAdmin] = useState(false);
+
   // 게시글 정보 가져오기
   const getPostDetailInfo = () => {
     setLoading(true);
@@ -74,6 +80,9 @@ export default function Posts() {
           userPic: res.data.userPic,
           userNickname: res.data.userNickname,
         });
+        if (res.data.posts.reportsCount > 3) {
+          setBlindCheck(true);
+        }
         setPostData(res.data.posts);
         setPostCommentData(res.data.comments);
         setTotalPages(res.data.totalPages);
@@ -88,6 +97,13 @@ export default function Posts() {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  // 관리자인지 확인하기
+  const adminCheck = () => {
+    if (userNo === 0) {
+      setIsAdmin(true);
+    }
   };
 
   // 인용한 상품 정보 가져오기
@@ -395,10 +411,15 @@ export default function Posts() {
     }
   };
 
+  const backPage = () => {
+    window.history.back();
+  };
+
   useEffect(() => {
     getPostDetailInfo();
     getPostLike();
     checkPostLike();
+    adminCheck();
   }, [postNo, currentPage, pageSize]);
 
   useEffect(() => {
@@ -425,170 +446,197 @@ export default function Posts() {
   }, [postCommentData]);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <img src={userInfo.userPic} alt="User Pic" className={styles.userPic} />
-        <div className={styles.userInfo}>
-          <Link to={`/user/style/profile/${postData.userNo}`}>
-            @{userInfo.userNickname}
-          </Link>
-          <br />
-          {postData.date}
-        </div>
-        {postData.userNo !== userNo && (
-          <button onClick={() => postReports()}>신고</button>
-        )}
-        {postData.userNo === userNo && (
-          <>
-            <button onClick={() => postUDControl("u")}>수정</button>
-            <button onClick={() => postUDControl("d")}>삭제</button>
-          </>
-        )}
-      </div>
-      <div className={styles.postContent}>
-        {postData.pic && (
-          <img src={postData.pic} alt="Post Pic" className={styles.postImage} />
-        )}
-        <div>{postData.content}</div>
-        <div className={styles.actionButtons}>
-          <button
-            className={styles.actionButton}
-            onClick={() => likeProcHandler()}
-            disabled={loading}
-          >
-            {postLikeStatus ? "좋아요 취소" : "좋아요"}
-          </button>
-          좋아요 {postLike}개
-        </div>
-        {postData.productNo && (
-          <div>
-            <b>이 상품이 마음에 들어요!</b>
+    <>
+      {!blindCheck && (
+        <div className={styles.container}>
+          <div className={styles.header}>
             <img
-              src={productData.pic}
-              alt="Product Pic"
-              className={styles.productImage}
+              src={userInfo.userPic}
+              alt="User Pic"
+              className={styles.userPic}
             />
-            <div>{productData.name}</div>
-            <div>{productData.price}</div>
-          </div>
-        )}
-      </div>
-      <div className={styles.commentSection}>
-        <b>댓글</b>
-        {postCommentData
-          .filter((pc) => pc.parentCommentNo === null)
-          .map((pc) => (
-            <div key={pc.no} className={styles.comment}>
-              <Link to={`/user/style/profile/${pc.userNo}`}>
-                @{pc.userNickname}
+            <div className={styles.userInfo}>
+              <Link to={`/user/style/profile/${postData.userNo}`}>
+                @{userInfo.userNickname}
               </Link>
-              : {renderCommentContent(pc.content)} <br />
-              <button onClick={() => recomment(pc.no, pc.userNickname)}>
-                답글
-              </button>
-              <button onClick={() => likeProcHandler(pc.no)}>
-                {commentLikeStatus[pc.no] ? "좋아요 취소" : "좋아요"}
-              </button>
-              좋아요 {commentLike[pc.no]}개
-              {pc.userNo === userNo && (
-                <button onClick={() => deleteComment(pc.no)}>삭제</button>
-              )}
-              {postCommentData
-                .filter((reply) => reply.parentCommentNo === pc.no)
-                .map((reply) => (
-                  <div key={reply.no} className={styles.reply}>
-                    <Link to={`/user/style/profile/${reply.userNo}`}>
-                      @{reply.userNickname}
-                    </Link>
-                    : {renderCommentContent(reply.content)} <br />
-                    <button
-                      onClick={() => recomment(pc.no, reply.userNickname)}
-                    >
-                      답글
-                    </button>
-                    <button onClick={() => likeProcHandler(reply.no)}>
-                      {commentLikeStatus[reply.no] ? "좋아요 취소" : "좋아요"}
-                    </button>
-                    좋아요 {commentLike[reply.no]}개
-                    {reply.userNo === userNo && (
-                      <button onClick={() => deleteComment(reply.no)}>
-                        삭제
-                      </button>
-                    )}
-                  </div>
-                ))}
+              <br />
+              {postData.date}
             </div>
-          ))}
+            {postData.userNo !== userNo && (
+              <button onClick={() => postReports()}>신고</button>
+            )}
+            {postData.userNo === userNo && (
+              <>
+                <button onClick={() => postUDControl("u")}>수정</button>
+                <button onClick={() => postUDControl("d")}>삭제</button>
+              </>
+            )}
+            {isAdmin && (
+              <button onClick={() => postUDControl("d")}>삭제</button>
+            )}
+          </div>
+          <div className={styles.postContent}>
+            {postData.pic && (
+              <img
+                src={postData.pic}
+                alt="Post Pic"
+                className={styles.postImage}
+              />
+            )}
+            <div>{postData.content}</div>
+            <div className={styles.actionButtons}>
+              <button
+                className={styles.actionButton}
+                onClick={() => likeProcHandler()}
+                disabled={loading}
+              >
+                {postLikeStatus ? "좋아요 취소" : "좋아요"}
+              </button>
+              좋아요 {postLike}개
+            </div>
+            {postData.productNo && (
+              <div>
+                <b>이 상품이 마음에 들어요!</b>
+                <img
+                  src={productData.pic}
+                  alt="Product Pic"
+                  className={styles.productImage}
+                />
+                <div>{productData.name}</div>
+                <div>{productData.price}</div>
+              </div>
+            )}
+          </div>
+          <div className={styles.commentSection}>
+            <b>댓글</b>
+            {postCommentData
+              .filter((pc) => pc.parentCommentNo === null)
+              .map((pc) => (
+                <div key={pc.no} className={styles.comment}>
+                  <Link to={`/user/style/profile/${pc.userNo}`}>
+                    @{pc.userNickname}
+                  </Link>
+                  : {renderCommentContent(pc.content)} <br />
+                  <button onClick={() => recomment(pc.no, pc.userNickname)}>
+                    답글
+                  </button>
+                  <button onClick={() => likeProcHandler(pc.no)}>
+                    {commentLikeStatus[pc.no] ? "좋아요 취소" : "좋아요"}
+                  </button>
+                  좋아요 {commentLike[pc.no]}개
+                  {pc.userNo === userNo && (
+                    <button onClick={() => deleteComment(pc.no)}>삭제</button>
+                  )}
+                  {postCommentData
+                    .filter((reply) => reply.parentCommentNo === pc.no)
+                    .map((reply) => (
+                      <div key={reply.no} className={styles.reply}>
+                        <Link to={`/user/style/profile/${reply.userNo}`}>
+                          @{reply.userNickname}
+                        </Link>
+                        : {renderCommentContent(reply.content)} <br />
+                        <button
+                          onClick={() => recomment(pc.no, reply.userNickname)}
+                        >
+                          답글
+                        </button>
+                        <button onClick={() => likeProcHandler(reply.no)}>
+                          {commentLikeStatus[reply.no]
+                            ? "좋아요 취소"
+                            : "좋아요"}
+                        </button>
+                        좋아요 {commentLike[reply.no]}개
+                        {reply.userNo === userNo && (
+                          <button onClick={() => deleteComment(reply.no)}>
+                            삭제
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                </div>
+              ))}
 
-        <textarea
-          value={commentContent}
-          onChange={handleContentChange}
-          placeholder="댓글 입력"
-        />
-        <button
-          onClick={insertComment}
-          className={styles.submitButton}
-          disabled={loading}
-        >
-          댓글 등록
-        </button>
-      </div>
-      {isReportModalOpen && (
-        <div className={modalStyles.modal}>
-          <div className={modalStyles["modal-content"]}>
-            <h2>신고 사유를 선택하세요</h2>
-            <label>
-              <input
-                type="radio"
-                value="스팸"
-                checked={reportReason === "스팸"}
-                onChange={handleReportReasonChange}
-              />
-              스팸
-            </label>
-            <br />
-            <label>
-              <input
-                type="radio"
-                value="부적절한 콘텐츠"
-                checked={reportReason === "부적절한 콘텐츠"}
-                onChange={handleReportReasonChange}
-              />
-              부적절한 콘텐츠
-            </label>
-            <br />
-            <label>
-              <input
-                type="radio"
-                value="기타"
-                checked={reportReason === "기타"}
-                onChange={handleReportReasonChange}
-              />
-              기타
-            </label>
-            <br />
-            <button onClick={submitReport}>신고</button>
-            <button onClick={closeReportModal}>취소</button>
+            <textarea
+              value={commentContent}
+              onChange={handleContentChange}
+              placeholder="댓글 입력"
+            />
+            <button
+              onClick={insertComment}
+              className={styles.submitButton}
+              disabled={loading}
+            >
+              댓글 등록
+            </button>
+          </div>
+          {isReportModalOpen && (
+            <div className={modalStyles.modal}>
+              <div className={modalStyles["modal-content"]}>
+                <h2>신고 사유를 선택하세요</h2>
+                <label>
+                  <input
+                    type="radio"
+                    value="스팸"
+                    checked={reportReason === "스팸"}
+                    onChange={handleReportReasonChange}
+                  />
+                  스팸
+                </label>
+                <br />
+                <label>
+                  <input
+                    type="radio"
+                    value="부적절한 콘텐츠"
+                    checked={reportReason === "부적절한 콘텐츠"}
+                    onChange={handleReportReasonChange}
+                  />
+                  부적절한 콘텐츠
+                </label>
+                <br />
+                <label>
+                  <input
+                    type="radio"
+                    value="기타"
+                    checked={reportReason === "기타"}
+                    onChange={handleReportReasonChange}
+                  />
+                  기타
+                </label>
+                <br />
+                <button onClick={submitReport}>신고</button>
+                <button onClick={closeReportModal}>취소</button>
+              </div>
+            </div>
+          )}
+          <div style={{ marginTop: "10px" }}>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 0 || loading}
+            >
+              이전
+            </button>
+            <span style={{ margin: "0 10px" }}>
+              {currentPage + 1} / {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage + 1 >= totalPages || loading}
+            >
+              다음
+            </button>
           </div>
         </div>
       )}
-      <div style={{ marginTop: "10px" }}>
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 0 || loading}
-        >
-          이전
-        </button>
-        <span style={{ margin: "0 10px" }}>
-          {currentPage + 1} / {totalPages}
-        </span>
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage + 1 >= totalPages || loading}
-        >
-          다음
-        </button>
-      </div>
-    </div>
+
+      {blindCheck && (
+        <div className={styles.container}>
+          <div className={styles.header}>
+            유저 신고로 관리자가 처리 중인 게시글입니다.
+            <br />
+            <button onClick={() => backPage()}>돌아가기</button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
