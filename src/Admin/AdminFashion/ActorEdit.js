@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function ActorEdit() {
-    const { no } = useParams();
+    const { no } = useParams(); // 스타일 PK
     const [show, setShow] = useState({ title: '', pic: '' });
     const [actors, setActors] = useState([]);
     const [scrapedDatas, setScrapedData] = useState([]);
@@ -38,6 +38,17 @@ export default function ActorEdit() {
             });
     }, [no]);
 
+    const deleteShow = (no) => {
+        axios
+            .post(`/admin/show/${no}`)
+            .then(() => {
+                navigate('/admin/fashion');
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
     const isActorRegistered = (actor) => {
         return actors.some((registeredActor) => registeredActor.actor === actor.actor);
     };
@@ -57,6 +68,7 @@ export default function ActorEdit() {
         <>
             <h2>[{show.title}] 등장인물</h2>
             <img src={show.pic} alt={`${show.title} 이미지`} />
+            <button onClick={deleteShow}>[{show.title}] 의 정보 전체 삭제하기</button>
             <div>
                 <h4>등록된 배우들</h4>
                 {actors.map((actorData, index) => (
