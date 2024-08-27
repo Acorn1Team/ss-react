@@ -132,28 +132,6 @@ export default function NoticeDetail() {
 
       <button onClick={handleSave}>수정</button>
       <button onClick={handleDelete}>삭제</button>
-
-      <hr />
-
-      <h2>공지사항 목록</h2>
-      <label>카테고리 선택: </label>
-      <select onChange={handleCategoryFilterChange}>
-        <option value="">전체</option>
-        <option value="주문">주문</option>
-        <option value="결제">결제</option>
-        <option value="반품/환불">반품/환불</option>
-        <option value="배송">배송</option>
-        <option value="프로모션/쿠폰">프로모션/쿠폰</option>
-        <option value="상품문의">상품문의</option>
-      </select>
-
-      <ul>
-        {filteredNotices.map((notice) => (
-          <li key={notice.no}>
-            {notice.category} - {notice.title}
-          </li>
-        ))}
-      </ul>
     </>
   );
 }

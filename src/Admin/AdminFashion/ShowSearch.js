@@ -80,6 +80,7 @@ export default function ShowSearch() {
         onBlur={handleBlur}
         onFocus={() => setShowDropdown(true)}
         name="inputValue"
+        placeholder="작품명을 입력하세요"
       />
 
       {showDropdown && (

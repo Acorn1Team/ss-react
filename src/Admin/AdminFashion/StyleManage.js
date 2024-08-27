@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import Modal from "react-modal";
 
 export default function StyleManage() {
   const { no } = useParams();
@@ -8,11 +9,16 @@ export default function StyleManage() {
   const [newStyle, setNewStyle] = useState(null);
   const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState(null);
-  const [productInput, setProductInput] = useState('');
+  const [productKeyword, setProductKeyword] = useState('');
+  const [itemKeyword, setItemKeyword] = useState('');
+  const [itemInput, setItemName] = useState('');
   const location = useLocation();
   const actorData = location.state;
   const navigate = useNavigate();
   const styleInputRef = useRef(null);
+  const [isNewItemModalOpen, setIsNewItemModalOpen] = useState(false);
+  const [isExistingItemModalOpen, setIsExistingItemModalOpen] = useState(false);
+  const [currentStyle, setCurrentStyle] = useState({});
 
   useEffect(() => {
     axios
@@ -45,8 +51,16 @@ export default function StyleManage() {
     setNewItem(e.target.files[0]);
   }
 
-  const onProductInputChange = (e) => {
-    setProductInput(e.target.value);
+  const onProductKeywordChange = (e) => {
+    setProductKeyword(e.target.value);
+  }
+
+  const onItemKeywordChange = (e) => {
+    setItemKeyword(e.target.value);
+  }
+
+  const onItemNameChange = (e) => {
+    setItemName(e.target.value);
   }
 
   const addStyle = async() => {
@@ -72,7 +86,7 @@ export default function StyleManage() {
   const addItem = async(styleNo) => {
     const itemForm = new FormData();
     itemForm.append('file', newItem);
-    itemForm.append('product', productInput);
+    itemForm.append('product', productKeyword);
     
     await axios
       .post(`/admin/fashion/${styleNo}/item`, itemForm, {
@@ -80,7 +94,7 @@ export default function StyleManage() {
       })
       .then((response) => {
         setItems((prevItems) => [...prevItems, response.data]);
-        setNewStyle(null);
+        setNewItem(null);
       })
       .catch((error) => {
         console.log(error);
@@ -121,10 +135,17 @@ export default function StyleManage() {
                     {filteredItems[i] ? 
                       (<><img src={filteredItems[i].pic} alt={`${index}번 스타일 아이템${i+1}`} />
                       <br/><button onClick={() => navigate(`/admin/product/detail/${filteredItems[i].product}`)}>유사상품 조회하기</button></>) 
-                    : (<>아이템 추가하기<br/>
-                      <input type="file" onChange={onItemFileChange} /><br/>
-                      연결 상품 검색 <input type="text" onChange={onProductInputChange} /><br/>
-                      <button onClick={() => {addItem(styleData.no)}}>추가</button></>)}
+                    : (<>
+                          <button onClick={() => {
+                            setCurrentStyle(styleData);  // Set the current style number
+                            setIsNewItemModalOpen(true);
+                          }}>🛍️새로운 아이템으로 추가하기🛍️</button>
+                          <br/><br/>
+                          <button onClick={() => {
+                            setCurrentStyle(styleData);  // Set the current style number
+                            setIsExistingItemModalOpen(true);
+                          }}>🛍️기존 아이템으로 추가하기🛍️</button>
+                      </>)}
                   </td>
                 ))}
               </tr>
@@ -132,7 +153,69 @@ export default function StyleManage() {
           })}
         </tbody>
       </table>
+      <Modal
+        isOpen={isNewItemModalOpen}
+        onRequestClose={() => setIsNewItemModalOpen(false)}
+        contentLabel="새로운 아이템 추가하기"
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          },
+          content: {
+            background: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            textAlign: "center",
+            maxWidth: "500px",
+            margin: "auto",
+          },
+        }}
+      >
+        <img height='100px' src={currentStyle.pic} alt={`${currentStyle.no}번 스타일`} /><br/>
+        {currentStyle.no}번 스타일에 신규 아이템 연결하기<hr/>
+        <table>
+          <tbody>
+            <tr>
+              <td>아이템 사진</td>
+              <td><input type="file" onChange={onItemFileChange} /></td>
+            </tr>
+            <tr>
+              <td>아이템 이름</td>
+              <td><input type="text" onChange={onItemNameChange} /></td>
+            </tr>
+            <tr>
+              <td>연결 상품 검색</td>
+              <td><input type="text" onChange={onProductKeywordChange} /></td>
+            </tr>
+          </tbody>
+        </table>
+        <button onClick={() => addItem}>추가</button><hr/>
+        <button onClick={() => setIsNewItemModalOpen(false)}>닫기</button>
+      </Modal>
+
+      <Modal
+        isOpen={isExistingItemModalOpen}
+        onRequestClose={() => setIsExistingItemModalOpen(false)}
+        contentLabel="기존 아이템 추가하기"
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          },
+          content: {
+            background: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            textAlign: "center",
+            maxWidth: "500px",
+            margin: "auto",
+          },
+        }}
+      >
+        <img height='100px' src={currentStyle.pic} alt={`${currentStyle.no}번 스타일`} /><br/>
+        {currentStyle.no}번 스타일에 기존 아이템 연결하기<hr/>
+        아이템 검색 <input type="text" onChange={onItemKeywordChange} /><br/>
+        <button onClick={() => setIsExistingItemModalOpen(false)}>닫기</button>
+      </Modal>
     </>
   );
 }
-
