@@ -145,7 +145,7 @@ function ShowItem({ item }) {
   return (
     <div className={styles.profileContainer}>
       <span className={styles.actorsContainer}>
-        <Link to={`/user/main/sub/${item.showNo}`}>
+        <Link to={`/user/main/sub/${item.no}`} state={{ stateValue: item }}>
           <img
             src={item.pic} // 쇼의 사진 URL
             alt={`${item.name}'s picture`} // 이미지 설명
@@ -154,7 +154,9 @@ function ShowItem({ item }) {
         </Link>
       </span>
       <span className={styles.actorName}>
-        <Link to={`/user/main/sub/${item.showNo}`}>{item.name}</Link>{" "}
+        <Link to={`/user/main/sub/${item.showNo}`} state={{ stateValue: item }}>
+          {item.name}
+        </Link>{" "}
         {/* 쇼 제목 링크 */}
       </span>
     </div>

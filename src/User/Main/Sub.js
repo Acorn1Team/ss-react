@@ -1,12 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 
 // 메인에서 접근
 // user/main/sub/작품번호
 export default function Sub() {
   // 작품 번호
   const { no } = useParams();
+  const locationState = useLocation();
+
+  console.log(locationState);
 
   // 로그인된 정보라고 가정
   const userNo = 3;
@@ -29,15 +32,17 @@ export default function Sub() {
     axios
       .get(`/main/sub/${no}`)
       .then((res) => {
-        // null 일 경우 빈 배열 반환을 위해 || 사용
         setShow(res.data.show || {});
         setCharacters(res.data.characters || []);
         setStyles(res.data.styles || []);
         setStyleItems(res.data.styleItems || []);
         setItems(res.data.items || []);
 
-        // 가지고 온 정보 중 첫 번째 배역 선택
-        if (res.data.characters && res.data.characters.length > 0) {
+        const searchSelect = locationState.state?.stateValue;
+        console.log("Selected Character:", searchSelect);
+        if (searchSelect) {
+          setSelectCharacter(searchSelect);
+        } else if (res.data.characters && res.data.characters.length > 0) {
           setSelectCharacter(res.data.characters[0]);
         }
       })
@@ -45,7 +50,6 @@ export default function Sub() {
         console.log(error);
       });
   };
-
   // 스크랩 여부 확인하기
   const isScrap = (characterNo) => {
     axios
@@ -121,8 +125,8 @@ export default function Sub() {
       <h1>{show.title}</h1>
 
       <div>
-        <button onClick={() => changeCharacter(-1)}>Previous Character</button>
-        <button onClick={() => changeCharacter(1)}>Next Character</button>
+        <button onClick={() => changeCharacter(-1)}>이전캐릭터</button>
+        <button onClick={() => changeCharacter(1)}>다음캐릭터</button>
       </div>
 
       {selectCharacter && (
