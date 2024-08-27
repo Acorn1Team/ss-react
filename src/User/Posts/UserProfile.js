@@ -29,15 +29,37 @@ export default function UserProfile() {
   const profileEdit = (action) => {
     if (action === "save") {
       // 수정 이후 저장 버튼 클릭했을 경우
+      const formData = new FormData();
+      formData.append(
+        "userDto",
+        new Blob(
+          [
+            JSON.stringify({
+              userNickname: userData.nickname,
+              userBio: userData.bio,
+            }),
+          ],
+          { type: "application/json" }
+        )
+      );
+
+      if (document.querySelector('input[type="file"]').files[0]) {
+        formData.append(
+          "profileImage",
+          document.querySelector('input[type="file"]').files[0]
+        );
+      }
+
       axios
-        .put(`/posts/user/${userNo}`, {
-          userNickname: userData.userNickname,
-          userBio: userData.userBio,
+        .put(`/posts/user/${userNo}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         })
         .then((res) => {
           if (res.data.result) {
             setIsEditing(false);
-            // 업데이트 성공 후 수정 모드 컨트롤 false
+            userInfo(); // 수정 후 업데이트된 정보를 다시 가져옴
           }
         })
         .catch((err) => {
@@ -46,7 +68,6 @@ export default function UserProfile() {
     } else {
       // 수정 버튼 클릭했을 경우
       setIsEditing(true);
-      // 수정 모드 컨트롤 true
     }
   };
 
@@ -72,11 +93,11 @@ export default function UserProfile() {
     <div className={styles.profileContainer}>
       {isEditing ? (
         <div id="userPicNicknameEdit">
-          <input type="file"></input>
+          <input type="file" />
           <input
             type="text"
             className={styles.editInput}
-            value={userData.nickname}
+            value={userData.nickname || ""}
             onChange={(e) =>
               setUserData({ ...userData, nickname: e.target.value })
             }
@@ -85,7 +106,7 @@ export default function UserProfile() {
           <input
             type="text"
             className={styles.editInput}
-            value={userData.bio}
+            value={userData.bio || ""}
             onChange={(e) => setUserData({ ...userData, bio: e.target.value })}
           />
           <button
