@@ -16,11 +16,10 @@ export default function StyleManage() {
 
   const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState(null);
-  const [productKeyword, setProductKeyword] = useState(''); // 상품 검색 입력값
   const [itemKeyword, setItemKeyword] = useState(''); // 아이템 검색 입력값
+  const [productKeyword, setProductKeyword] = useState(''); // 상품 검색 입력값
+  const [productNo, setProductNo] = useState(); // 새로운 아이템 추가 시 연결할 상품 PK
   const [newItemName, setNewItemName] = useState(''); // 새로운 아이템 이름
-
-  const [itemNo, setItemNo] = useState();
   
   const [isNewItemModalOpen, setIsNewItemModalOpen] = useState(false);
   const [isExistingItemModalOpen, setIsExistingItemModalOpen] = useState(false);
@@ -239,7 +238,7 @@ export default function StyleManage() {
         <button onClick={() => setIsNewItemModalOpen(false)}>닫기</button>
         
         <SearchForm>
-          <SearchInput type="text" placeholder="연결할 상품명을 입력하세요" onChange={onProductKeywordChange} 
+          <SearchInput type="text" value={productKeyword} placeholder="연결할 상품명을 입력하세요" onChange={onProductKeywordChange} 
           onFocus={() => {setShowProductDropdown(true); fetchProductData()}} 
           />
           {showProductDropdown && (
@@ -247,7 +246,7 @@ export default function StyleManage() {
           {filteredProducts.map((product, index) => (
             <AutoSearchItem key={index}>
               {product.name} <img height='100px' src={product.pic} alt={`${product.name} 사진`} />
-              <SearchButton>연결</SearchButton>
+              <SearchButton onMouseDown={() => {setProductNo(product.no); setProductKeyword(product.name); setShowProductDropdown(false);}}>연결</SearchButton>
             </AutoSearchItem>
           ))}
           </AutoSearchContainer>
