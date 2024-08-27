@@ -15,6 +15,7 @@ export default function Sub() {
   const [show, setShow] = useState({});
   const [characters, setCharacters] = useState([]);
   const [styles, setStyles] = useState([]);
+  const [styleItems, setStyleItems] = useState([]);
   const [items, setItems] = useState([]);
 
   // 현재 선택된 캐릭터에 대한 정보 저장용
@@ -32,6 +33,7 @@ export default function Sub() {
         setShow(res.data.show || {});
         setCharacters(res.data.characters || []);
         setStyles(res.data.styles || []);
+        setStyleItems(res.data.styleItems || []);
         setItems(res.data.items || []);
 
         // 가지고 온 정보 중 첫 번째 배역 선택
@@ -155,18 +157,22 @@ export default function Sub() {
                 <div key={s.no}>
                   <h3>Style {s.no}</h3>
                   <img src={s.pic} alt={`Style ${s.no}`} />
-                  {items
-                    .filter((i) => s.no === i.styleNo)
-                    .map((i) => (
-                      <Link
-                        to={`/user/shop/productList/detail/${i.no}`}
-                        key={i.no}
-                      >
-                        <div>
-                          <img src={i.pic} alt={`Item ${i.no}`} />
-                        </div>
-                      </Link>
-                    ))}
+                  {styleItems
+                    .filter((si) => si.styleNo === s.no)
+                    .map((si) =>
+                      items
+                        .filter((i) => si.itemNo === i.no)
+                        .map((i) => (
+                          <Link
+                            to={`/user/shop/productList/detail/${i.no}`}
+                            key={i.no}
+                          >
+                            <div>
+                              <img src={i.pic} alt={`Item ${i.no}`} />
+                            </div>
+                          </Link>
+                        ))
+                    )}
                 </div>
               ))}
           </div>
