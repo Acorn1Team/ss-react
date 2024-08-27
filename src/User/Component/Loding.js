@@ -12,7 +12,7 @@ const LoadingScreen = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "rgba(255, 255, 255, 0.5)", // 투명도 30% 흰색 배경으로 수정
+        // backgroundColor: "rgba(255, 255, 255, 0.5)", // 투명도 30% 흰색 배경으로 수정
         zIndex: 9999, // 모든 요소 위에 로딩 화면이 오도록 설정
         // pointerEvents: "none", // 로딩 화면 뒤의 요소와 상호작용을 허용
         backdropFilter: "blur(1px)", // 배경 흐림 효과 추가 (선택 사항)

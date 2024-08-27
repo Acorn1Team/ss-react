@@ -60,32 +60,23 @@ export default function Sub() {
 
   // 같은 작품 내 캐릭터 이동하기
   const changeCharacter = (d) => {
-    // 파라미터 d 값 : 다음 캐릭터일 경우 +1, 이전 캐릭터일 경우 -1
     if (selectCharacter) {
-      // 현재 선택된 캐릭터 index 찾기 (캐릭터 배열 중 현재 선택된 캐릭터와 번호가 같은 곳의 index 반환)
       const index = characters.findIndex((c) => c.no === selectCharacter.no);
-
-      // 버튼에 따른 페이지 이동 (이동할 수 있는 최소, 최대값 벗어나지 않게 지정)
       const nextIndex =
         index + d < 0
           ? characters.length - 1
           : index + d >= characters.length
           ? 0
           : index + d;
-
-      // 선택된 캐릭터 변경을 위한 임시 변수
       const newCharacter = characters[nextIndex];
 
-      // 선택된 캐릭터 변경 이후 스크랩 여부 재확인
       setSelectCharacter(newCharacter);
-      isScrap(newCharacter.no);
     }
   };
 
   // 스크랩 프로세스
   const scrapProc = () => {
     if (scrap) {
-      // 스크랩이 되어 있을 경우 delete (스크랩 취소)
       axios
         .delete(`/main/scrap/${selectCharacter.no}/${userNo}`)
         .then((res) => {
@@ -97,7 +88,6 @@ export default function Sub() {
           console.log("스크랩 삭제 실패 :", error);
         });
     } else {
-      // 스크랩이 되어 있지 않을 경우 post (스크랩)
       axios
         .post("/main/scrap", {
           characterNo: selectCharacter.no,
@@ -114,12 +104,10 @@ export default function Sub() {
     }
   };
 
-  // 최초 로딩시 첫 번째 캐릭터 선택을 위한 useEffect
+  // 최초 로딩시 데이터 가져오기
   useEffect(() => {
-    if (characters.length > 0) {
-      setSelectCharacter(characters[0]);
-    }
-  }, [characters]);
+    showSubData();
+  }, [no]);
 
   // 캐릭터 변경시 scrap 업데이트를 위한 useEffect
   useEffect(() => {
@@ -127,11 +115,6 @@ export default function Sub() {
       isScrap(selectCharacter.no);
     }
   }, [selectCharacter]);
-
-  useEffect(() => {
-    showSubData();
-    isScrap();
-  }, [no]);
 
   return (
     <div>

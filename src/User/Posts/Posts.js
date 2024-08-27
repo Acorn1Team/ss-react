@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import styles from "../Style/PostDetail.module.css"; // CSS 모듈 임포트
 import modalStyles from "../Style/PostsModal.module.css"; // 모달 CSS 임포트
+import KakaoShareButton from "../Component/KaKaoShareButton";
 
 export default function Posts() {
   const { postNo } = useParams();
@@ -277,8 +278,29 @@ export default function Posts() {
   const insertComment = () => {
     let recomment = null;
     if (recommentCheck !== 0) {
-      recomment = recommentCheck;
+      let rcm = recommentCheck;
+
+      findParent: while (true) {
+        // findParent라는 레이블을 지정
+        const parentComment = postCommentData.find((cmt) => cmt.no === rcm);
+
+        if (parentComment) {
+          console.log("Current parentComment:", parentComment);
+          if (parentComment.parentCommentNo !== null) {
+            rcm = parentComment.parentCommentNo;
+          } else {
+            recomment = parentComment.no;
+            break findParent; // 최상위 댓글을 찾았을 때 루프 종료
+          }
+        } else {
+          console.log("Parent comment not found, exiting loop.");
+          recomment = recommentCheck;
+          break findParent; // parentComment를 찾지 못하면 루프 종료
+        }
+      }
     }
+
+    console.log("Final recomment value:", recomment);
 
     axios
       .post(`/posts/comment`, {
@@ -494,6 +516,15 @@ export default function Posts() {
               </button>
               좋아요 {postLike}개
             </div>
+            <KakaoShareButton
+              title={`${userInfo.userNickname} 님의 포스트 같이 봐요!`}
+              description={`${
+                postData.content && postData.content.length > 30
+                  ? `${postData.content.slice(0, 30)}...`
+                  : postData.content || ""
+              }`}
+              webUrl={`http://192.168.0.12:3000/user/style/detail/${postNo}`}
+            />
             {postData.productNo && (
               <div>
                 <b>이 상품이 마음에 들어요!</b>
@@ -527,16 +558,17 @@ export default function Posts() {
                   {pc.userNo === userNo && (
                     <button onClick={() => deleteComment(pc.no)}>삭제</button>
                   )}
-                  {postCommentData
-                    .filter((reply) => reply.parentCommentNo === pc.no)
-                    .map((reply) => (
+                  {pc.replies &&
+                    pc.replies.map((reply) => (
                       <div key={reply.no} className={styles.reply}>
                         <Link to={`/user/style/profile/${reply.userNo}`}>
                           @{reply.userNickname}
                         </Link>
                         : {renderCommentContent(reply.content)} <br />
                         <button
-                          onClick={() => recomment(pc.no, reply.userNickname)}
+                          onClick={() =>
+                            recomment(reply.no, reply.userNickname)
+                          }
                         >
                           답글
                         </button>

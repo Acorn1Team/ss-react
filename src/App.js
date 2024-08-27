@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import UserRoutes from "./User/Routes/UserRoutes";
+import Process from "./User/Main/Process";
 import AdminRoutes from "./Admin/Routes/AdminRoutes";
 import HeaderForm from "./User/Component/HeaderForm";
 import AdminTop from "./Admin/AdminTop";
@@ -63,6 +64,7 @@ function App() {
     client.activate();
     // STOMP 클라이언트를 활성화
     // 서버와 웹 소켓 연결 시작
+    setStompClient(client);
 
     return () => {
       // 컴포넌트가 언마운트될 때 호출되는 클린업 함수
@@ -78,12 +80,17 @@ function App() {
     // 페이지 이동 시 로딩 상태를 true로 설정
     dispatch({ type: "SET_LOADING", payload: true });
 
-    // 페이지가 완전히 로드된 후 로딩 상태를 false로 변경
-    const handlePageLoad = () => {
+    // 로딩 상태를 해제하는 함수
+    const handleDataLoad = () => {
+      // 데이터 로드가 완료되면 로딩 상태를 false로 설정
       dispatch({ type: "SET_LOADING", payload: false });
     };
 
-    setTimeout(handlePageLoad, 2000);
+    // 0.5초 후에 로딩 상태를 해제 (예시)
+    const timer = setTimeout(handleDataLoad, 500);
+
+    // 클린업 함수: 컴포넌트가 언마운트될 때 타이머를 정리
+    return () => clearTimeout(timer);
   }, [routeLocation.pathname, dispatch]);
 
   // 메시지를 서버로 전송하는 함수
@@ -113,6 +120,7 @@ function App() {
         </Routes>
         <div>
           <Routes>
+            <Route path="/" element={<Process />} />
             <Route path="/user/*" element={<UserRoutes />} />
             <Route path="/admin/*" element={<AdminRoutes />} />
             <Route
