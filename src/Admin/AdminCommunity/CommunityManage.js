@@ -65,9 +65,11 @@ export default function CommunityManage() {
 
   // 컴포넌트가 처음 렌더링될 때 데이터 불러옴
   useEffect(() => {
-    if (view === "all") { // 전체 글 보기를 선택했을 때 데이터 불러오기
+    if (view === "all") {
+      // 전체 글 보기를 선택했을 때 데이터 불러오기
       fetchPosts();
-    } else if (view === "reported") { // 신고된 글 보기를 선택했을 때 데이터 불러오기
+    } else if (view === "reported") {
+      // 신고된 글 보기를 선택했을 때 데이터 불러오기
       fetchFilterdPosts(0, sortOrder);
       fetchReportedInfos();
     }
@@ -90,7 +92,7 @@ export default function CommunityManage() {
           <ul>
             {posts.map((post) => (
               <li key={post.no}>
-                <strong>유저 아이디:</strong> {post.userId} <br />
+                <strong>작성자 ID:</strong> {post.userId} <br />
                 {post.pic && (
                   <>
                     <strong>사진:</strong>
@@ -104,7 +106,11 @@ export default function CommunityManage() {
                 )}
                 <strong>글 내용:</strong> {post.content}
                 <button onClick={() => deletePost(post.no)}>삭제하기</button>
-                <button onClick={() => navigate(`/user/style/detail/${post.no}`)}>상세보기</button>
+                <button
+                  onClick={() => navigate(`/user/style/detail/${post.no}`)}
+                >
+                  상세보기
+                </button>
               </li>
             ))}
           </ul>
@@ -137,34 +143,53 @@ export default function CommunityManage() {
             </button>
           </div>
           <ul>
-  {filteredPosts.map((post) => {
-    const filteredInfos = reportedInfos.filter(reportedInfo => reportedInfo.postNo === post.no);
-    return (
-      <li key={post.no}>
-        <strong>작성자:</strong> {post.userId} ({post.userNo})<br />
-        <strong>글 내용:</strong> {post.content} <br />
-        <strong>신고 횟수:</strong> {post.reportsCount} <br />
-        {filteredInfos.map((info) => (
-          <div key={info.no}> 
-            🐻‍❄️ 신고자 유저번호: {info.userNo} / 신고 사유: {info.category}
-          </div>
-        ))}
-        <button
-          onClick={() => deletePost(post.no)}
-          style={{
-            marginTop: "10px",
-            padding: "5px 10px",
-            backgroundColor: "#f00",
-            color: "#fff",
-          }}
-        >
-          삭제
-        </button>
-        <button onClick={() => navigate(`/user/style/detail/${post.no}`)}>상세보기</button>
-      </li>
-    );
-  })}
-</ul>
+          {filteredPosts.map((post) => {
+  // 신고 카테고리별 카운트를 저장하기 위한 객체
+  const categoryCounts = {
+    욕설: 0,
+    홍보: 0,
+    선정성: 0,
+  };
+
+  // 해당 포스트의 신고 내역을 필터링
+  const filteredInfos = reportedInfos.filter((reportedInfo) => reportedInfo.postNo === post.no);
+
+  // 신고 내역을 순회하면서 각 카테고리별로 카운트를 증가시킴
+  filteredInfos.forEach((info) => {
+    if (categoryCounts.hasOwnProperty(info.category)) {
+      categoryCounts[info.category]++;
+    }
+  });
+
+  // 카운트가 0이 아닌 항목만 표시하도록 필터링
+  const displayedCategories = Object.entries(categoryCounts)
+    .filter(([category, count]) => count > 0)
+    .map(([category, count]) => `${category} ${count}회`)
+    .join(", ");
+
+  return (
+    <li key={post.no}>
+      <strong>작성자:</strong> {post.userId} ({post.userNo})<br />
+      <strong>글 내용:</strong> {post.content} <br />
+      <strong>신고 횟수:</strong> {post.reportsCount} <br />
+      <strong>신고 사유:</strong> {displayedCategories}<br />
+      <button
+        onClick={() => deletePost(post.no)}
+        style={{
+          marginTop: "10px",
+          padding: "5px 10px",
+          backgroundColor: "#f00",
+          color: "#fff",
+        }}
+      >
+        삭제
+      </button>
+      <button onClick={() => navigate(`/user/style/detail/${post.no}`)}>상세보기</button>
+    </li>
+  );
+})}
+
+          </ul>
         </div>
       );
     }
