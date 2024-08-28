@@ -6,6 +6,7 @@ import Myreview from "../MyPage/Myreview";
 import Coupon from "../MyPage/Coupon";
 import MyOrder from "../MyPage/MyOrder";
 import MyOrderDetail from "../MyPage/MyOrderDetail";
+import ReviewWritePage from "../MyPage/ReviewWritePage";
 
 export default function UserMypageRoutes() {
   return (
@@ -17,6 +18,7 @@ export default function UserMypageRoutes() {
       <Route path="/coupon" element={<Coupon />} />
       <Route path="/order" element={<MyOrder />} />
       <Route path="/order/:orderNo" element={<MyOrderDetail />} />
+      <Route path="/review/write/:productNo" element={<ReviewWritePage />} />
     </Routes>
   );
 }

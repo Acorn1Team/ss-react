@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 
 export default function MyOrderDetail() {
   const { orderNo } = useParams();
-
+  const navigate = useNavigate(); // useNavigate 훅 사용
+ 
   const [orderInfo, setOrderInfo] = useState({});
   const [userInfo, setUserInfo] = useState({});
 
@@ -36,6 +37,15 @@ export default function MyOrderDetail() {
     getOrderList();
   }, [orderNo]);
 
+  const goToReviewPage = (productNo) => {
+    // 리뷰 데이터를 서버로 전송
+    navigate(`/user/mypage/review/write/${productNo}`, {
+      state: { orderNo: orderNo, userNo: userNo }
+    });
+  };
+
+
+
   return (
     <div>
       {orderInfo.no}
@@ -47,6 +57,8 @@ export default function MyOrderDetail() {
           {pl.name}&emsp;
           {orderProductList.find((op) => op.productNo === pl.no)?.quantity}개
           &emsp;{pl.price}
+          <button onClick={() => goToReviewPage(pl.no)}>리뷰 쓰기</button>
+          {/* <Link to={`/review/write/${productNo}`}>리뷰 쓰기222</Link> */}
         </div>
       ))}
       <div>

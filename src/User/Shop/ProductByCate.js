@@ -13,7 +13,7 @@ function ProductByCate() {
     const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
 
 
-    const categories = ['Category1', 'Category2', 'Category3', 'Category4']; // 상의, 하의, 신발, 기타
+    const categories = ['상의', '하의', '신발', '기타']; // 상의, 하의, 신발, 기타
 
     const refresh = (category, page = 0, size = 10) => {
         // Ajax 요청으로 선택된 카테고리에 해당하는 제품 목록을 가져옴

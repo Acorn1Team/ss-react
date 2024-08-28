@@ -76,10 +76,10 @@ export default function ProductList(){
         </select>
     </div>
 
-        <Link to="/user/shop/productlist/category/Category1">상의</Link>
-        <Link to="/user/shop/productlist/category/Category2">하의</Link>
-        <Link to="/user/shop/productlist/category/Category3">신발</Link>
-        <Link to="/user/shop/productlist/category/Category4">기타</Link>
+        <Link to="/user/shop/productlist/category/상의">상의</Link>
+        <Link to="/user/shop/productlist/category/하의">하의</Link>
+        <Link to="/user/shop/productlist/category/신발">신발</Link>
+        <Link to="/user/shop/productlist/category/기타">기타</Link>
       
         {sortedProducts.map((product) => ( 
             <div key={product.num}>
