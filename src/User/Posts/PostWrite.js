@@ -95,14 +95,67 @@ export default function PostWrite() {
   //     }
   //   }
   // };
+  // const insertPost = async (postNo) => {
+  //   // 최종 상품 번호 계산
+  //   const finalProductNo = selected ? parseInt(selected, 10) : 0;
+
+  //   // FormData 객체 생성
+  //   const formData = new FormData();
+
+  //   // postDto라는 이름으로 객체를 JSON 문자열로 변환하여 추가
+  //   const postDto = {
+  //     userNo: userNo,
+  //     content: content,
+  //     productNo: finalProductNo,
+  //     likesCount: 0,
+  //     commentsCount: 0,
+  //     reportsCount: 0,
+  //   };
+
+  //   formData.append("postDto", JSON.stringify(postDto));
+
+  //   // 파일 입력 필드에서 선택된 파일을 FormData에 추가
+  //   const fileInput = document.querySelector("input[type='file']");
+  //   if (fileInput.files.length > 0) {
+  //     formData.append("pic", fileInput.files[0]); // 'pic' 필드명으로 파일 추가
+  //   }
+
+  //   try {
+  //     let res;
+  //     if (postNo) {
+  //       res = await axios.put(`/posts/detail/${postNo}`, formData, {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       });
+  //     } else {
+  //       res = await axios.post("/posts/detail", formData, {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       });
+  //     }
+
+  //     console.log("Server response:", res.data); // 서버 응답 확인
+
+  //     if (res.data.isSuccess === true) {
+  //       // 서버에서 isSuccess가 true일 경우 처리
+  //       navigate(postNo ? `../detail/${postNo}` : `../list/${userNo}`);
+  //     } else {
+  //       console.log("Failed to save post:", res.data.message);
+  //       document.querySelector("#error").innerText =
+  //         "등록 실패: " + res.data.message;
+  //     }
+  //   } catch (error) {
+  //     console.error("Error occurred:", error);
+  //     document.querySelector("#error").innerText = "등록 실패: 서버 오류 발생";
+  //   }
+  // };
   const insertPost = async (postNo) => {
-    // 최종 상품 번호 계산
     const finalProductNo = selected ? parseInt(selected, 10) : 0;
 
-    // FormData 객체 생성
     const formData = new FormData();
 
-    // postDto라는 이름으로 객체를 JSON 문자열로 변환하여 추가
     const postDto = {
       userNo: userNo,
       content: content,
@@ -114,32 +167,22 @@ export default function PostWrite() {
 
     formData.append("postDto", JSON.stringify(postDto));
 
-    // 파일 입력 필드에서 선택된 파일을 FormData에 추가
     const fileInput = document.querySelector("input[type='file']");
-    if (fileInput.files.length > 0) {
-      formData.append("pic", fileInput.files[0]); // 'pic' 필드명으로 파일 추가
+    if (fileInput && fileInput.files.length > 0) {
+      formData.append("pic", fileInput.files[0]);
     }
 
     try {
       let res;
       if (postNo) {
-        res = await axios.put(`/posts/detail/${postNo}`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        res = await axios.put(`/posts/detail/${postNo}`, formData);
       } else {
-        res = await axios.post("/posts/detail", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        res = await axios.post("/posts/detail", formData);
       }
 
       console.log("Server response:", res.data); // 서버 응답 확인
 
-      if (res.data.isSuccess === true) {
-        // 서버에서 isSuccess가 true일 경우 처리
+      if (res.data.isSuccess) {
         navigate(postNo ? `../detail/${postNo}` : `../list/${userNo}`);
       } else {
         console.log("Failed to save post:", res.data.message);
