@@ -5,7 +5,9 @@ import { useNavigate } from "react-router-dom";
 export default function CommunityManage() {
   const [view, setView] = useState("all"); // "all"은 전체 글, "reported"는 신고 글을 의미
   const [sortOrder, setSortOrder] = useState("latest"); // "latest"는 최신보기, "mostReported"는 신고 많은 순 보기
-  const [posts, setPosts] = useState([]); // 글 데이터를 저장할 상태
+  const [posts, setPosts] = useState([]); // 전체 글 데이터를 저장할 상태
+  const [filteredPosts, setFilteredPosts] = useState([]); // 신고된 글 데이터(전체 글에서 신고수 1 이상)를 저장할 상태
+  const [reportedInfos, setReportedInfos] = useState([]); // 각 filteredPost에 해당하는 신고 내역을 위함
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const navigate = useNavigate();
@@ -22,17 +24,27 @@ export default function CommunityManage() {
     }
   };
 
-  // 신고된 글 데이터를 불러오는 함수
-  const fetchReportedPosts = async (page = 0, sort = "latest") => {
+  // 신고된 글 데이터(전체 글에서 신고 수>0)를 불러오는 함수
+  const fetchFilterdPosts = async (page = 0, sort = "latest") => {
     try {
       const response = await axios.get(
         `/admin/posts/reported?page=${page}&size=10&sort=${sort}`
       ); // 신고된 글을 가져오는 API 호출, sort 파라미터 추가
-      setPosts(response.data.content); // 받아온 데이터를 상태에 저장
+      setFilteredPosts(response.data.content); // 받아온 데이터를 상태에 저장
       setTotalPages(response.data.totalPages); // 전체 페이지 수 저장
       setCurrentPage(response.data.number); // 현재 페이지 번호 저장
     } catch (error) {
       console.error("신고 글 데이터를 불러오는 중 오류 발생:", error);
+    }
+  };
+
+  // 신고된 글의 신고내역을 불러오는 함수
+  const fetchReportedInfos = async () => {
+    try {
+      const response = await axios.get(`/admin/posts/reportedInfos`);
+      setReportedInfos(response.data);
+    } catch (error) {
+      console.error("신고 내역을 불러오는 중 오류 발생:", error);
     }
   };
 
@@ -53,10 +65,11 @@ export default function CommunityManage() {
 
   // 컴포넌트가 처음 렌더링될 때 데이터 불러옴
   useEffect(() => {
-    if (view === "all") {
-      fetchPosts(); // 전체 글 보기를 선택했을 때 데이터 불러오기
-    } else if (view === "reported") {
-      fetchReportedPosts(0, sortOrder); // 신고된 글 보기를 선택했을 때 데이터 불러오기
+    if (view === "all") { // 전체 글 보기를 선택했을 때 데이터 불러오기
+      fetchPosts();
+    } else if (view === "reported") { // 신고된 글 보기를 선택했을 때 데이터 불러오기
+      fetchFilterdPosts(0, sortOrder);
+      fetchReportedInfos();
     }
   }, [view, sortOrder]);
 
@@ -65,7 +78,7 @@ export default function CommunityManage() {
     if (view === "all") {
       fetchPosts(newPage);
     } else if (view === "reported") {
-      fetchReportedPosts(newPage, sortOrder);
+      fetchFilterdPosts(newPage, sortOrder);
     }
   };
 
@@ -124,27 +137,34 @@ export default function CommunityManage() {
             </button>
           </div>
           <ul>
-            {posts.map((post) => (
-              <li key={post.no}>
-                <strong>유저 아이디:</strong> {post.userId} <br />
-                <strong>글 내용:</strong> {post.content} <br />
-                <strong>신고 사유:</strong> {post.category} <br />
-                <strong>신고 횟수:</strong> {post.reportsCount} <br />
-                <button
-                  onClick={() => deletePost(post.no)}
-                  style={{
-                    marginTop: "10px",
-                    padding: "5px 10px",
-                    backgroundColor: "#f00",
-                    color: "#fff",
-                  }}
-                >
-                  삭제
-                </button>
-                <button onClick={() => navigate(`/user/style/detail/${post.no}`)}>상세보기</button>
-              </li>
-            ))}
-          </ul>
+  {filteredPosts.map((post) => {
+    const filteredInfos = reportedInfos.filter(reportedInfo => reportedInfo.postNo === post.no);
+    return (
+      <li key={post.no}>
+        <strong>작성자:</strong> {post.userId} ({post.userNo})<br />
+        <strong>글 내용:</strong> {post.content} <br />
+        <strong>신고 횟수:</strong> {post.reportsCount} <br />
+        {filteredInfos.map((info) => (
+          <div key={info.no}> 
+            🐻‍❄️ 신고자 유저번호: {info.userNo} / 신고 사유: {info.category}
+          </div>
+        ))}
+        <button
+          onClick={() => deletePost(post.no)}
+          style={{
+            marginTop: "10px",
+            padding: "5px 10px",
+            backgroundColor: "#f00",
+            color: "#fff",
+          }}
+        >
+          삭제
+        </button>
+        <button onClick={() => navigate(`/user/style/detail/${post.no}`)}>상세보기</button>
+      </li>
+    );
+  })}
+</ul>
         </div>
       );
     }

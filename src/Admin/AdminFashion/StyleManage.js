@@ -146,11 +146,13 @@ export default function StyleManage() {
         .get(`/admin/fashion/character/${no}/item`)
         .then((response) => {
           setItems(response.data);
-          setIsExistingItemModalOpen(false);
         })
         .catch((error) => {
           console.log(error);
         }))
+      .then(
+        setIsExistingItemModalOpen(false)
+      )
       .catch((error) => {
         console.log(error);
       });
@@ -171,8 +173,10 @@ export default function StyleManage() {
         .get(`/admin/fashion/character/${no}/item`)
         .then((response) => {
           setItems(response.data);
-          setIsNewItemModalOpen(false);
         })
+        .then(
+          setIsNewItemModalOpen(false)
+        )
         .catch((error) => {
           console.log(error);
         }))
@@ -203,8 +207,8 @@ export default function StyleManage() {
           </tr>
         </thead>
         <tbody>
-          {styles.map((styleData, index) => { // styleData.no와 일치하는 items 필터링
-            const filteredItems = items.filter(item => item.style === styleData.no);
+          {styles.map((styleData, index) => {
+            const filteredItems = items.filter(item => item.style === styleData.no); // styleData.no와 일치하는 items 필터링
             return (
               <tr key={index}>
                 <td><img src={styleData.pic} alt={`${index + 1}번 스타일`} /></td>
