@@ -4,21 +4,15 @@ import axios from "axios";
 
 export default function OrderManage() {
   const [orders, setOrders] = useState([]); // 모든 주문 목록 상태
-  const [filteredOrders, setFilteredOrders] = useState([]); // 필터링된 주문 목록 상태
   const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
   const [searchField, setSearchField] = useState("userId"); // 검색 필드 상태 (기본값: userId)
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태
   const [pageSize, setPageSize] = useState(10); // 페이지 크기 상태
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수 상태
   const [error, setError] = useState(null); // 에러 메시지 상태
-
-  // 날짜 범위를 위한 상태
   const [startDate, setStartDate] = useState(""); // 시작 날짜 상태
   const [endDate, setEndDate] = useState(""); // 종료 날짜 상태
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return `${date.getMonth() + 1}월 ${date.getDate()}일`;
-  };
+  const [status, setStatus] = useState(""); // 상태 필터 상태
 
   const fetchOrders = async (
     page = 0,
@@ -26,14 +20,15 @@ export default function OrderManage() {
     searchTerm = "",
     searchField = "",
     startDate = "",
-    endDate = ""
+    endDate = "",
+    status = ""
   ) => {
     try {
       const response = await axios.get("/admin/orders", {
         params: {
           page,
           size,
-          searchTerm,
+          searchTerm: searchField === "state" ? status : searchTerm, // 상태 검색 반영
           searchField,
           startDate,
           endDate,
@@ -42,7 +37,6 @@ export default function OrderManage() {
       setOrders(response.data.content); // 주문 목록을 상태에 저장
       setTotalPages(response.data.totalPages); // 전체 페이지 수를 상태에 저장
       setCurrentPage(response.data.number); // 현재 페이지를 상태에 저장
-      setFilteredOrders(response.data.content); // 필터링된 주문 목록 초기화
     } catch (error) {
       console.error("주문 목록을 가져오는 중 오류가 발생했습니다!", error);
       setError("주문 목록을 가져오는 중 오류가 발생했습니다."); // 에러 메시지 설정
@@ -56,7 +50,8 @@ export default function OrderManage() {
       searchTerm,
       searchField,
       startDate,
-      endDate
+      endDate,
+      status
     ); // 컴포넌트가 처음 마운트될 때 주문 목록을 가져옴
   }, [currentPage, pageSize]);
 
@@ -75,7 +70,8 @@ export default function OrderManage() {
         searchTerm,
         searchField,
         startDate,
-        endDate
+        endDate,
+        status
       ); // 상태 변경 후 목록을 새로고침
     } catch (error) {
       console.error("주문 상태를 업데이트하는 중 오류가 발생했습니다!", error);
@@ -90,19 +86,32 @@ export default function OrderManage() {
   const handleSearchFieldChange = (e) => {
     setSearchField(e.target.value);
     setSearchTerm(""); // 검색어 초기화
-    setFilteredOrders(orders); // 필터링된 목록 초기화
+    setStatus(""); // 상태 초기화
+  };
+
+  const handleStatusFilterChange = (e) => {
+    setStatus(e.target.value); // 상태 필터 변경
   };
 
   const handleSearch = () => {
     setCurrentPage(0); // 검색 후 페이지를 첫 페이지로 초기화
-    fetchOrders(0, pageSize, searchTerm, searchField, startDate, endDate); // 검색 버튼 클릭 시 필터링 수행
+    fetchOrders(
+      0,
+      pageSize,
+      searchTerm,
+      searchField,
+      startDate,
+      endDate,
+      status
+    ); // 검색 버튼 클릭 시 필터링 수행
   };
 
   const handleReset = () => {
     setSearchTerm(""); // 검색어 초기화
     setStartDate(""); // 시작 날짜 초기화
     setEndDate(""); // 종료 날짜 초기화
-    setSearchField("");
+    setSearchField("userId"); // 검색 필드 초기화
+    setStatus(""); // 상태 필터 초기화
     fetchOrders(0, pageSize); // 전체 목록을 다시 가져오기
   };
 
@@ -147,6 +156,17 @@ export default function OrderManage() {
               style={{ padding: "5px" }}
             />
           </div>
+        ) : searchField === "state" ? (
+          <select
+            value={status}
+            onChange={handleStatusFilterChange}
+            style={{ padding: "5px", marginRight: "10px" }}
+          >
+            <option value="">상태 선택</option>
+            <option value="배송중">배송중</option>
+            <option value="배송완료">배송완료</option>
+            <option value="주문취소">주문취소</option>
+          </select>
         ) : (
           <input
             type="text"
@@ -191,8 +211,8 @@ export default function OrderManage() {
           </tr>
         </thead>
         <tbody>
-          {filteredOrders.length > 0 ? (
-            filteredOrders.map((order) => (
+          {orders.length > 0 ? (
+            orders.map((order) => (
               <tr key={order.no}>
                 <td>{order.no}</td>
                 <td>{order.userId}</td>
