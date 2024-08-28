@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../Style/Main.css";
+import SocialKakao from "../Component/SocialKakao";
 
 export default function UserHome() {
   const [show, setShow] = useState([]);
@@ -74,6 +75,7 @@ export default function UserHome() {
 
   return (
     <div>
+      <SocialKakao />
       <img width="100%" src="../images/mainphoto-01.png" alt="main"></img>
       <b>SceneStealer</b>
       <b className="mainTextTitle">Choose Your Scene!</b>
@@ -81,7 +83,7 @@ export default function UserHome() {
         {show.map((s) => (
           <Link to={`/user/main/sub/${s.no}`} key={s.no}>
             <div className="mainPostsBox" key={s.no}>
-              {s.pic}
+              <img src={s.pic} alt={s.title}></img>
               <br />
               {s.title}
             </div>
