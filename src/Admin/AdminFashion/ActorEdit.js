@@ -26,6 +26,10 @@ export default function ActorEdit() {
     }
 
     useEffect(() => {
+        getShowInfo();
+    }, [no]);
+
+    const getShowInfo = () => {
         axios
             .get(`/admin/fashion/show/${no}`)
             .then((response) => {
@@ -36,7 +40,7 @@ export default function ActorEdit() {
             .catch((error) => {
                 console.log(error);
             });
-    }, [no]);
+    }
 
     const isActorRegistered = (actor) => {
         return actors.some((registeredActor) => registeredActor.actor === actor.actor);
@@ -53,6 +57,15 @@ export default function ActorEdit() {
             });
     }
 
+    const deleteCharacter = (no) => {
+        axios
+            .delete(`/admin/character/${no}`)
+            .then(getShowInfo)
+            .catch((error) => {
+                console.log(error);
+        });
+    }
+
     return (
         <>
             <h2>[{show.title}] 등장인물</h2>
@@ -63,6 +76,7 @@ export default function ActorEdit() {
                     <div key={index}>
                         <img src={actorData.pic} alt={`${actorData.character} 이미지`} />
                         {actorData.actor} ({actorData.character})
+                        <button onClick={() => deleteCharacter(actorData.no)}>배역 정보 전체 삭제하기</button>&nbsp;
                         <button onClick={() => navigate(`/admin/fashion/character/${actorData.no}`, { state: actorData })}>스타일 편집</button>
                     </div>
                 ))}
