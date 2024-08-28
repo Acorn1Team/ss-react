@@ -3,6 +3,7 @@ import axios from "axios";
 
 const SocialKakao = () => {
   const Rest_api_key = "a8472f7278389dd9d8c2ed629df1ad30"; // REST API KEY
+  const Client_secret = "KI4VoBFOCJ5lsEf26ivoI0QYdAZpSVSl";
   const redirect_uri = "http://localhost:3000/user/callback"; // Redirect URI
   const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
 
@@ -18,6 +19,7 @@ const SocialKakao = () => {
             client_id: Rest_api_key,
             redirect_uri: redirect_uri,
             code: code,
+            client_secret: Client_secret, // Client Secret 추가
           }),
           {
             headers: {
@@ -49,7 +51,11 @@ const SocialKakao = () => {
 
   return (
     <>
-      <button onClick={handleLogin}>카카오 로그인</button>
+      <img
+        src={`${process.env.PUBLIC_URL}/images/kakaologin.png`}
+        alt="kakaologin"
+        onClick={handleLogin}
+      ></img>
     </>
   );
 };
