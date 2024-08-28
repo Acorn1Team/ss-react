@@ -608,31 +608,31 @@ export default function Posts() {
                 <label>
                   <input
                     type="radio"
-                    value="스팸"
-                    checked={reportReason === "스팸"}
+                    value="욕설"
+                    checked={reportReason === "욕설"}
                     onChange={handleReportReasonChange}
                   />
-                  스팸
+                  욕설
                 </label>
                 <br />
                 <label>
                   <input
                     type="radio"
-                    value="부적절한 콘텐츠"
-                    checked={reportReason === "부적절한 콘텐츠"}
+                    value="홍보"
+                    checked={reportReason === "홍보"}
                     onChange={handleReportReasonChange}
                   />
-                  부적절한 콘텐츠
+                  홍보
                 </label>
                 <br />
                 <label>
                   <input
                     type="radio"
-                    value="기타"
-                    checked={reportReason === "기타"}
+                    value="선정성"
+                    checked={reportReason === "선정성"}
                     onChange={handleReportReasonChange}
                   />
-                  기타
+                  선정성
                 </label>
                 <br />
                 <button onClick={submitReport}>신고</button>
