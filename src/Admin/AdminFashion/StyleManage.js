@@ -15,7 +15,7 @@ export default function StyleManage() {
   const styleInputRef = useRef(null);
 
   const [items, setItems] = useState([]);
-  const [newItem, setNewItem] = useState(null);
+  const [newItemPic, setNewItemPic] = useState(null);
   const [itemKeyword, setItemKeyword] = useState(''); // 아이템 검색 입력값
   const [productKeyword, setProductKeyword] = useState(''); // 상품 검색 입력값
   const [productNo, setProductNo] = useState(); // 새로운 아이템 추가 시 연결할 상품 PK
@@ -59,7 +59,7 @@ export default function StyleManage() {
   }
 
   const onItemFileChange = (e) => {
-    setNewItem(e.target.files[0]);
+    setNewItemPic(e.target.files[0]);
   }
 
   const onProductKeywordChange = (e) => {
@@ -139,7 +139,6 @@ export default function StyleManage() {
   }
 
   const addExistingItem = async(style_no, item_no) => {
-    setIsExistingItemModalOpen(false);
     await axios
       .post(`/admin/fashion/${style_no}/item/${item_no}`)
       .then(
@@ -147,6 +146,7 @@ export default function StyleManage() {
         .get(`/admin/fashion/character/${no}/item`)
         .then((response) => {
           setItems(response.data);
+          setIsExistingItemModalOpen(false);
         })
         .catch((error) => {
           console.log(error);
@@ -156,19 +156,26 @@ export default function StyleManage() {
       });
   }
 
-  const addItem = async(style_no) => {
+  const addItem = async() => {
+    console.log('okok');
     const itemForm = new FormData();
-    itemForm.append('file', newItem);
-    itemForm.append('product', productKeyword);
+    itemForm.append('file', newItemPic);
+    itemForm.append('product', productNo);
+    itemForm.append('name', newItemName);
     
     await axios
-      .post(`/admin/fashion/${style_no}/item`, itemForm, {
+      .post(`/admin/fashion/${currentStyle.no}/item`, itemForm, {
         headers: {'Content-Type': 'multipart/form-data'}
       })
-      .then((response) => {
-        setItems((prevItems) => [...prevItems, response.data]);
-        setNewItem(null);
-      })
+      .then(axios
+        .get(`/admin/fashion/character/${no}/item`)
+        .then((response) => {
+          setItems(response.data);
+          setIsNewItemModalOpen(false);
+        })
+        .catch((error) => {
+          console.log(error);
+        }))
       .catch((error) => {
         console.log(error);
       });
@@ -264,7 +271,7 @@ export default function StyleManage() {
             </tr>
           </tbody>
         </table>
-        <button onClick={() => addItem}>추가</button>
+        <button onClick={addItem}>추가</button>
       </Modal>
 
       <Modal
