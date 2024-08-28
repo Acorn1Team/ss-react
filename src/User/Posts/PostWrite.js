@@ -49,28 +49,33 @@ export default function PostWrite() {
     }
   };
 
+  // 상품 선택 핸들러
+  const handleClick = (item) => {
+    setProductInfo(item); // 선택된 상품 정보를 설정
+    setInputValue(item.name); // 선택된 상품의 이름을 검색창에 표시
+    setSelected(parseInt(item.no, 10)); // 선택된 상품의 번호를 숫자로 설정
+    setShowDropdown(false); // 드롭다운을 닫음
+  };
+
   // 상품 등록 혹은 수정
   const insertPost = async (postNo) => {
-    if (postNo) {
-      const finalProductNo = productNo ? productNo : selected ? selected : 0;
+    // 최종 상품 번호 계산
+    const finalProductNo = selected ? parseInt(selected, 10) : 0;
 
-      axios
-        .put(`/posts/detail/${postNo}`, {
+    if (postNo) {
+      try {
+        const res = await axios.put(`/posts/detail/${postNo}`, {
           content: content,
           productNo: finalProductNo,
           //   pic:, 사진 등록 구현 예정
-        })
-        .then((res) => {
-          if (res.data.result) {
-            navigate(`../detail/${postNo}`);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
         });
+        if (res.data.result) {
+          navigate(`../detail/${postNo}`);
+        }
+      } catch (err) {
+        console.log(err);
+      }
     } else {
-      const finalProductNo = productNo ? productNo : selected ? selected : 0;
-
       try {
         const res = await axios.post("/posts/detail", {
           userNo: userNo,
@@ -89,13 +94,6 @@ export default function PostWrite() {
         console.log("등록 실패 :", error);
       }
     }
-  };
-
-  // 상품 목록에서 선택했을 경우를 위한 핸들러
-  const handleSelectChange = (e) => {
-    const selectedProductNo = e.target.value;
-    setSelected(selectedProductNo);
-    getProductInfo(selectedProductNo);
   };
 
   // 내용 입력했을 경우를 위한 핸들러
@@ -122,13 +120,6 @@ export default function PostWrite() {
   // 검색 입력 변화 핸들러
   const handleChange = (e) => {
     setInputValue(e.target.value);
-  };
-
-  // 상품 선택 핸들러
-  const handleClick = (item) => {
-    setProductInfo(item); // 선택된 상품 정보를 설정
-    setInputValue(item.name); // 선택된 상품의 이름을 검색창에 표시
-    setShowDropdown(false); // 드롭다운을 닫음
   };
 
   // 드롭다운 블러 핸들러
