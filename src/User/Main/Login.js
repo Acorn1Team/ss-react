@@ -114,6 +114,7 @@ const Login = () => {
         </p>
       </form>
       <SocialKakao />
+      <br />
       <SocailNaver />
     </div>
   );
