@@ -1,15 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams, useLocation } from "react-router-dom";
+import styles from "../Style/Sub.module.css"; // CSS 모듈 임포트
 
-// 메인에서 접근
-// user/main/sub/작품번호
 export default function Sub() {
-  // 작품 번호
   const { no } = useParams();
   const locationState = useLocation();
-
-  console.log(locationState);
 
   // 로그인된 정보라고 가정
   const userNo = 3;
@@ -17,7 +13,7 @@ export default function Sub() {
   // 전체 정보 저장용
   const [show, setShow] = useState({});
   const [characters, setCharacters] = useState([]);
-  const [styles, setStyles] = useState([]);
+  const [styleData, setStyleData] = useState([]); // 이름을 styleData로 변경
   const [styleItems, setStyleItems] = useState([]);
   const [items, setItems] = useState([]);
 
@@ -34,12 +30,11 @@ export default function Sub() {
       .then((res) => {
         setShow(res.data.show || {});
         setCharacters(res.data.characters || []);
-        setStyles(res.data.styles || []);
+        setStyleData(res.data.styles || []); // 여기도 styleData로 변경
         setStyleItems(res.data.styleItems || []);
         setItems(res.data.items || []);
 
         const searchSelect = locationState.state?.stateValue;
-        console.log("Selected Character:", searchSelect);
         if (searchSelect) {
           setSelectCharacter(searchSelect);
         } else if (res.data.characters && res.data.characters.length > 0) {
@@ -50,7 +45,7 @@ export default function Sub() {
         console.log(error);
       });
   };
-  // 스크랩 여부 확인하기
+
   const isScrap = (characterNo) => {
     axios
       .get(`/main/like/${characterNo}/${userNo}`)
@@ -62,7 +57,6 @@ export default function Sub() {
       });
   };
 
-  // 같은 작품 내 캐릭터 이동하기
   const changeCharacter = (d) => {
     if (selectCharacter) {
       const index = characters.findIndex((c) => c.no === selectCharacter.no);
@@ -78,7 +72,6 @@ export default function Sub() {
     }
   };
 
-  // 스크랩 프로세스
   const scrapProc = () => {
     if (scrap) {
       axios
@@ -108,12 +101,10 @@ export default function Sub() {
     }
   };
 
-  // 최초 로딩시 데이터 가져오기
   useEffect(() => {
     showSubData();
   }, [no]);
 
-  // 캐릭터 변경시 scrap 업데이트를 위한 useEffect
   useEffect(() => {
     if (selectCharacter) {
       isScrap(selectCharacter.no);
@@ -121,29 +112,47 @@ export default function Sub() {
   }, [selectCharacter]);
 
   return (
-    <div>
-      <h1>{show.title}</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>{show.title}</h1>
 
-      <div>
-        <button onClick={() => changeCharacter(-1)}>이전캐릭터</button>
-        <button onClick={() => changeCharacter(1)}>다음캐릭터</button>
+      <div className={styles.characterNavigation}>
+        <button
+          className={styles.characterBtn}
+          onClick={() => changeCharacter(-1)}
+        >
+          이전캐릭터
+        </button>
+        <button
+          className={styles.characterBtn}
+          onClick={() => changeCharacter(1)}
+        >
+          다음캐릭터
+        </button>
       </div>
 
       {selectCharacter && (
-        <div>
-          <h2>{selectCharacter.name}</h2>
-          <img src={selectCharacter.pic} alt={selectCharacter.name} />
-          <button onClick={() => scrapProc()}>
+        <div className={styles.characterDetails}>
+          <h2 className={styles.characterName}>{selectCharacter.name}</h2>
+          <img
+            className={styles.characterImg}
+            src={selectCharacter.pic}
+            alt={selectCharacter.name}
+          />
+          <button className={styles.scrapBtn} onClick={() => scrapProc()}>
             {scrap ? "스크랩했음" : "스크랩안했음"}
           </button>
 
-          <div>
-            {styles
+          <div className={styles.styles}>
+            {styleData
               .filter((s) => s.characterNo === selectCharacter.no)
               .map((s) => (
-                <div key={s.no}>
+                <div className={styles.styleItem} key={s.no}>
                   <h3>Style {s.no}</h3>
-                  <img src={s.pic} alt={`Style ${s.no}`} />
+                  <img
+                    className={styles.styleImg}
+                    src={s.pic}
+                    alt={`Style ${s.no}`}
+                  />
                   {styleItems
                     .filter((si) => si.styleNo === s.no)
                     .map((si) =>
@@ -153,6 +162,7 @@ export default function Sub() {
                           <Link
                             to={`/user/shop/productList/detail/${i.no}`}
                             key={i.no}
+                            className={styles.productLink}
                           >
                             <div>
                               <img src={i.pic} alt={`Item ${i.no}`} />

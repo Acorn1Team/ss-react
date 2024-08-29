@@ -255,21 +255,9 @@ function HeaderForm() {
     }
     let naverTokenValue = sessionStorage.getItem("token_n");
     if (naverTokenValue) {
-      // axios
-      //   .post("/api/naver/delete-token", { accessToken: naverTokenValue })
-      //   .then((res) => {
-      //     if (res.data) {
-      //       console.log("토큰 삭제 완료:", res.data);
-      //       navigate("/user");
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     console.log("토큰 삭제 에러:", err);
-      //   });
       sessionStorage.removeItem("token_n");
     }
     sessionStorage.clear();
-    // sessionStorage.removeItem("id");
     setIsLoggedIn(false);
     navigate("/user/auth/login");
   };
@@ -285,8 +273,8 @@ function HeaderForm() {
   };
 
   const navigate = useNavigate();
-  const userNo = 3; // 로그인 정보라고 가정
-  const profilePic = userNo ? `userProfilePic경로` : profileImage;
+  const userNo = sessionStorage.getItem("id"); // 로그인 정보라고 가정
+  // const profilePic = userNo ? `userProfilePic경로` : profileImage;
 
   // 알림 데이터가 없거나 유효하지 않은 경우를 처리합니다.
   const hasUnreadAlerts = alerts && alerts.some((alert) => !alert.isRead);
@@ -361,16 +349,18 @@ function HeaderForm() {
         <Link to="/shop/cart">
           <Icon src={cartImage} alt="Cart" />
         </Link>
-        <div style={{ position: "relative" }}>
-          <Icon
-            src={alarmImage}
-            alt="Alarm"
-            onClick={handleAlarmClick}
-            style={{ cursor: "pointer" }}
-          />
-          {hasUnreadAlerts && <RedDot />}{" "}
-          {/* 확인되지 않은 알림이 있으면 빨간 점 표시 */}
-        </div>
+        {userNo && (
+          <div style={{ position: "relative" }}>
+            <Icon
+              src={alarmImage}
+              alt="Alarm"
+              onClick={handleAlarmClick}
+              style={{ cursor: "pointer" }}
+            />
+            {hasUnreadAlerts && <RedDot />}{" "}
+            {/* 확인되지 않은 알림이 있으면 빨간 점 표시 */}
+          </div>
+        )}
         {showAlertPopup && (
           <AlertPopupContainer>
             <div>

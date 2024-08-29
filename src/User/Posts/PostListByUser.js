@@ -13,7 +13,6 @@ export default function PostListByUser() {
   const [totalPages, setTotalPages] = useState(1);
   const [showTrash, setShowTrash] = useState(false);
 
-
   // 로그인 정보라고 가정
   const no = sessionStorage.getItem("id");
 
@@ -177,10 +176,11 @@ export default function PostListByUser() {
                 checked={selectedPosts.includes(up.no)}
                 onChange={() => handleCheckboxChange(up.no)}
               />
-              {up.userPic}&emsp;@{up.userNickname}
+              <img src={up.userPic} alt={up.no}></img>
+              &emsp;@{up.userNickname}
               <br />
               <Link to={`/user/style/detail/${up.no}`}>
-                <b>{up.pic}</b>
+                <img width={"300px"} src={up.pic} alt={up.no}></img>
                 {up.content}
               </Link>
               <hr />

@@ -8,9 +8,10 @@ import AdminRoutes from "./Admin/Routes/AdminRoutes";
 import HeaderForm from "./User/Component/HeaderForm";
 import AdminTop from "./Admin/AdminTop";
 import ChatInput from "./User/Socket/ChatInput";
-import SupportButton from "./User/Component/SupportButton"; // 고객지원 버튼 컴포넌트 import
+
 import { useDispatch, useSelector } from "react-redux"; // Redux 관련 import
 import LoadingScreen from "./User/Component/Loding"; // 로딩 스크린 컴포넌트 import
+import { PrivateRoute, AdminRoute } from "./User/Component/PrivateRoute";
 
 function App() {
   const routeLocation = useLocation(); // location 대신 다른 이름 사용
@@ -123,6 +124,8 @@ function App() {
             <Route path="/" element={<Process />} />
             <Route path="/user/*" element={<UserRoutes />} />
             <Route path="/admin/*" element={<AdminRoutes />} />
+            {/* <Route path="/admin/*" element={<AdminRoute element={<AdminRoutes />} />} /> */}
+
             <Route
               path="/user/chat"
               element={<ChatInput onSendMessage={sendMessage} />}
@@ -130,7 +133,6 @@ function App() {
           </Routes>
         </div>
         {loading && <LoadingScreen />} {/* 로딩 상태일 때 로딩 화면을 표시 */}
-        <SupportButton />
       </>
     </div>
   );

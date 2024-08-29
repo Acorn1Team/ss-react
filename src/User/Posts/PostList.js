@@ -54,14 +54,13 @@ export default function PostList() {
     <div>
       {followPost.map((fp) => (
         <div key={fp.no}>
-          {fp.userPic}&emsp;
+          <img src={fp.userPic} alt={fp.no}></img>
           <Link to={`/user/style/profile/${fp.userNo}`}>
             @{fp.userNickname}
           </Link>
           <br />
           <Link to={`/user/style/detail/${fp.no}`}>
             <img src={fp.pic} alt={fp.pic} />
-            <b>{fp.pic}</b>
             {fp.content}
           </Link>
           <hr />

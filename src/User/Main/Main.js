@@ -103,7 +103,10 @@ export default function UserHome() {
         {Array.isArray(review) && review.length > 0 && (
           <div className="mainReviewsBox active">
             <Link to={`/user/shop/review/${review[selectReviewIndex].no}`}>
-              {review[selectReviewIndex].pic}
+              <img
+                src={review[selectReviewIndex].pic}
+                alt={review[selectReviewIndex].no}
+              ></img>
               <br />
               {review[selectReviewIndex].userNickname}&emsp;
               {review[selectReviewIndex].productName}
@@ -117,7 +120,9 @@ export default function UserHome() {
           posts.map((p) => (
             <Link to={`/user/style/detail/${p.no}`} key={p.no}>
               <div className="mainPostsBox" key={p.no}>
-                {p.pic}&emsp;{p.userNickname}
+                <img src={p.pic} alt={p.no}></img>
+
+                {p.userNickname}
               </div>
             </Link>
           ))}

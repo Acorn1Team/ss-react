@@ -127,11 +127,18 @@ export default function UserProfile() {
         </div>
       )}
 
-      <div>
-        <Link to={`/user/style/list/${userNo}`}>내가 쓴 글</Link>
-        <br />
-        <Link to={`/user/style/write`}>글 작성하기</Link>
+      <div className={styles.profileActions}>
+        <Link
+          to={`/user/style/list/${userNo}`}
+          className={styles.profileActionLink}
+        >
+          내가 쓴 글
+        </Link>
+        <Link to={`/user/style/write`} className={styles.profileActionLink}>
+          글 작성하기
+        </Link>
       </div>
+
       <div className={styles.followInfo}>
         <Link
           to={`/user/style/${userNo}/followList/followee`}

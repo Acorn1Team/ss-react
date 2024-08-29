@@ -1,0 +1,116 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.sortOptions {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.sortSelect {
+  margin-left: 10px;
+  padding: 5px;
+  border: 1px solid #dbdbdb;
+  border-radius: 5px;
+}
+
+.productList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.productItem {
+  border: 1px solid #dbdbdb;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  background-color: #fafafa;
+  text-align: center;
+}
+
+.productImage img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.productName {
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 10px;
+  color: #333;
+}
+
+.productPrice {
+  font-size: 14px;
+  color: #999;
+  margin-top: 5px;
+}
+
+.productCategory {
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* 기존 CSS는 동일하고, 아래 부분이 추가되었습니다. */
+
+.categoryLinks {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.categoryLink {
+  font-weight: bold;
+  color: #3897f0;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+}
+
+.categoryLink:hover {
+  background-color: #e0e0e0;
+}
+
+.pagination button {
+  background: none;
+  border: 1px solid #dbdbdb;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 0 5px;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pagination span {
+  margin: 0 10px;
+  font-size: 14px;
+}
