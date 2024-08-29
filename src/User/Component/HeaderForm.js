@@ -215,7 +215,7 @@ function HeaderForm() {
       // 프로필 이미지나 기타 사용자 정보 업데이트 로직 추가 가능
     } else {
       setIsLoggedIn(false);
-      navigate("/user/auth/login");
+      // navigate("/user/auth/login");
     }
   };
 
@@ -227,6 +227,47 @@ function HeaderForm() {
   };
 
   const handleLogout = () => {
+    let kakaoTokenValue = sessionStorage.getItem("token_k");
+    if (kakaoTokenValue) {
+      axios
+        .post(
+          `https://kapi.kakao.com/v1/user/logout`,
+          {
+            target_id_type: "user_id",
+            target_id: sessionStorage.getItem("id"),
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${kakaoTokenValue}`,
+            },
+          }
+        )
+        .then((res) => {
+          if (res.data) {
+            console.log(res.data);
+            navigate("/user");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      sessionStorage.removeItem("token_k");
+    }
+    let naverTokenValue = sessionStorage.getItem("token_n");
+    if (naverTokenValue) {
+      axios
+        .post("/api/naver/delete-token", { accessToken: naverTokenValue })
+        .then((res) => {
+          if (res.data) {
+            console.log("토큰 삭제 완료:", res.data);
+            navigate("/user");
+          }
+        })
+        .catch((err) => {
+          console.log("토큰 삭제 에러:", err);
+        });
+      sessionStorage.removeItem("token_n");
+    }
     sessionStorage.removeItem("id");
     setIsLoggedIn(false);
     navigate("/user/auth/login");

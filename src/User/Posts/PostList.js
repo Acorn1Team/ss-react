@@ -15,7 +15,7 @@ export default function PostList() {
   const [totalPages, setTotalPages] = useState(1);
 
   // 로그인 정보라고 가정
-  const userNo = 3;
+  const userNo = sessionStorage.getItem("id");
 
   useEffect(() => {
     getPostList();

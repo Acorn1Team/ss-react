@@ -9,8 +9,7 @@ export default function Posts() {
   const { postNo } = useParams();
   const navigator = useNavigate();
 
-  // 로그인 정보라고 가정
-  const userNo = 3;
+  const userNo = sessionStorage.getItem("id");
 
   // 글 작성자 프로필 사진, 닉네임
   const [userInfo, setUserInfo] = useState({

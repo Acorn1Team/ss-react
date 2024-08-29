@@ -14,8 +14,7 @@ export default function UserProfile() {
   // 수정 모드 온/오프 컨트롤
   const [isEditing, setIsEditing] = useState(false);
 
-  // 로그인된 정보라고 가정
-  const userNo = 3;
+  const userNo = sessionStorage.getItem("id");
 
   // 로그인된 유저 정보 가져오기
   const userInfo = () => {

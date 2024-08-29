@@ -30,7 +30,7 @@ export default function OtherProfile() {
   const nv = useNavigate();
 
   // 로그인 정보라고 가정함
-  const userNo = 3;
+  const userNo = sessionStorage.getItem("id");
 
   // 해당 프로필 유저 가져오기
   const getUserInfo = () => {

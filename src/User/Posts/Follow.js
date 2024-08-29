@@ -18,7 +18,7 @@ export default function Follow() {
   // 전체 페이지 수
   const [totalPages, setTotalPages] = useState(1);
 
-  const userNo = 3;
+  const userNo = sessionStorage.getItem("id");
 
   const followerInfo = (userNoToUse) => {
     axios

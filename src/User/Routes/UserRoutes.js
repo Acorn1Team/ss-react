@@ -7,6 +7,7 @@ import Main from "../Main/Main";
 import SearchRoutes from "./SearchRoutes";
 import AuthRoutes from "./AuthRoutes";
 import SocialKakao from "../Component/SocialKakao";
+import SocailNaver from "../Component/SocialNaver";
 
 export default function UserRoutes() {
   return (
@@ -19,6 +20,7 @@ export default function UserRoutes() {
       <Route path="/search/*" element={<SearchRoutes />} />
       <Route path="/auth/*" element={<AuthRoutes />} />
       <Route path="/callback" element={<SocialKakao />} />
+      <Route path="/callback/naver" element={<SocailNaver />} />
     </Routes>
   );
 }

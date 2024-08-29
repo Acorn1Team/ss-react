@@ -8,12 +8,13 @@ const SocialKakao = () => {
   const client_secret = "KI4VoBFOCJ5lsEf26ivoI0QYdAZpSVSl";
   const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
 
-  const nv = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");
-
     if (code) {
+      console.log("코드:", code);
+
       axios
         .post(
           `https://kauth.kakao.com/oauth/token`,
@@ -31,27 +32,35 @@ const SocialKakao = () => {
           }
         )
         .then((response) => {
+          console.log("토큰 응답:", response.data);
           const accessToken = response.data.access_token;
 
-          console.log(accessToken);
+          sessionStorage.setItem("token_k", accessToken);
 
           // 서버로 토큰 전달
-          axios
-            .post("/api/kakao", { accessToken })
-            .then((res) => {
-              console.log("Server response:", res.data);
-              // let userNo =
-              // sessionStorage.setItem("id");
-            })
-            .catch((serverError) => {
-              console.error(serverError);
-            });
+          return axios.post("/api/kakao", { accessToken });
+        })
+        .then((res) => {
+          console.log("서버 응답:", res.data);
+          const { status, user } = res.data;
+
+          sessionStorage.setItem("id", user.no);
+          if (status === "login") {
+            navigate("/user");
+          } else if (status === "signup") {
+            // 회원가입 성공: 추가 정보 입력 페이지로 이동
+            navigate(`/user/main/sub`); // 회원정보 수정 페이지 생성시 수정
+          }
         })
         .catch((error) => {
-          console.error(error);
+          console.error(
+            "에러 발생:",
+            error.response ? error.response.data : error.message
+          );
+          navigate("/user/auth/login");
         });
     }
-  }, []);
+  }, []); // 의존성 배열을 빈 배열로 설정하여 첫 렌더링 시에만 실행되도록 설정
 
   const handleLogin = () => {
     window.location.href = kakaoURL;

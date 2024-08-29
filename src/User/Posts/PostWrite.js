@@ -26,7 +26,7 @@ export default function PostWrite() {
   const navigate = useNavigate();
 
   // 로그인 정보라고 가정
-  const userNo = 3;
+  const userNo = sessionStorage.getItem("id");
 
   // 상품 불러오기
   const getProductInfo = async (pNo) => {
@@ -57,100 +57,7 @@ export default function PostWrite() {
     setShowDropdown(false); // 드롭다운을 닫음
   };
 
-  // // 상품 등록 혹은 수정
-  // const insertPost = async (postNo) => {
-  //   // 최종 상품 번호 계산
-  //   const finalProductNo = selected ? parseInt(selected, 10) : 0;
-
-  //   if (postNo) {
-  //     try {
-  //       const res = await axios.put(`/posts/detail/${postNo}`, {
-  //         content: content,
-  //         productNo: finalProductNo,
-  //         //   pic:, 사진 등록 구현 예정
-  //       });
-  //       if (res.data.result) {
-  //         navigate(`../detail/${postNo}`);
-  //       }
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   } else {
-  //     try {
-  //       const res = await axios.post("/posts/detail", {
-  //         userNo: userNo,
-  //         content: content,
-  //         productNo: finalProductNo,
-  //         likesCount: 0,
-  //         commentsCount: 0,
-  //         reportsCount: 0,
-  //         //   pic:, 사진 등록 구현 예정
-  //       });
-  //       if (res.data.result) {
-  //         navigate(`../list/${userNo}`);
-  //       }
-  //     } catch (error) {
-  //       document.querySelector("#error").innerHTML = "등록 실패";
-  //       console.log("등록 실패 :", error);
-  //     }
-  //   }
-  // };
-  // const insertPost = async (postNo) => {
-  //   // 최종 상품 번호 계산
-  //   const finalProductNo = selected ? parseInt(selected, 10) : 0;
-
-  //   // FormData 객체 생성
-  //   const formData = new FormData();
-
-  //   // postDto라는 이름으로 객체를 JSON 문자열로 변환하여 추가
-  //   const postDto = {
-  //     userNo: userNo,
-  //     content: content,
-  //     productNo: finalProductNo,
-  //     likesCount: 0,
-  //     commentsCount: 0,
-  //     reportsCount: 0,
-  //   };
-
-  //   formData.append("postDto", JSON.stringify(postDto));
-
-  //   // 파일 입력 필드에서 선택된 파일을 FormData에 추가
-  //   const fileInput = document.querySelector("input[type='file']");
-  //   if (fileInput.files.length > 0) {
-  //     formData.append("pic", fileInput.files[0]); // 'pic' 필드명으로 파일 추가
-  //   }
-
-  //   try {
-  //     let res;
-  //     if (postNo) {
-  //       res = await axios.put(`/posts/detail/${postNo}`, formData, {
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //       });
-  //     } else {
-  //       res = await axios.post("/posts/detail", formData, {
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //       });
-  //     }
-
-  //     console.log("Server response:", res.data); // 서버 응답 확인
-
-  //     if (res.data.isSuccess === true) {
-  //       // 서버에서 isSuccess가 true일 경우 처리
-  //       navigate(postNo ? `../detail/${postNo}` : `../list/${userNo}`);
-  //     } else {
-  //       console.log("Failed to save post:", res.data.message);
-  //       document.querySelector("#error").innerText =
-  //         "등록 실패: " + res.data.message;
-  //     }
-  //   } catch (error) {
-  //     console.error("Error occurred:", error);
-  //     document.querySelector("#error").innerText = "등록 실패: 서버 오류 발생";
-  //   }
-  // };
+  // 상품 등록 혹은 수정
   const insertPost = async (postNo) => {
     const finalProductNo = selected ? parseInt(selected, 10) : 0;
 

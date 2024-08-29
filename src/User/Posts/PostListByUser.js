@@ -23,7 +23,7 @@ export default function PostListByUser() {
   const [totalPages, setTotalPages] = useState(1);
 
   // 로그인 정보라고 가정
-  const no = 3;
+  const no = sessionStorage.getItem("id");
 
   // 로그인된 유저가 쓴 글 불러오기
   const getPostsByUser = () => {

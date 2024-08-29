@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SocialKakao from "../Component/SocialKakao";
+import SocailNaver from "../Component/SocialNaver";
 
 const Login = () => {
   const [id, setId] = useState("");
@@ -113,6 +114,7 @@ const Login = () => {
         </p>
       </form>
       <SocialKakao />
+      <SocailNaver />
     </div>
   );
 };
