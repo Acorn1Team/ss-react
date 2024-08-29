@@ -31,7 +31,11 @@ export default function PostList() {
         },
       })
       .then((res) => {
-        setFollowPost(res.data.content);
+        // deleted가 1 이상인 게시물 필터링
+        const filteredPosts = res.data.content.filter(
+          (post) => post.deleted < 1
+        );
+        setFollowPost(filteredPosts);
         setTotalPages(res.data.totalPages);
       })
       .catch((err) => {
