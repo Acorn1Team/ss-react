@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+const idCheck = () => {};
+
 const Register = () => {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
@@ -8,6 +10,7 @@ const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [emailDomain, setEmailDomain] = useState("");
+  const [isCustomDomain, setIsCustomDomain] = useState(false); // 직접 입력 여부
   const [tel, setTel] = useState("");
   const [zipcode, setZipcode] = useState("");
   const [addrStart, setAddrStart] = useState(""); // 도로명/지번 주소 상태
@@ -77,9 +80,17 @@ const Register = () => {
     }).open();
   };
 
-  const handleEmailDomainChange = (e) => {
-    const domain = e.target.value;
-    setEmailDomain(domain);
+  const handleEmailDomainChange = (event) => {
+    const selectedValue = event.target.value;
+
+    if (selectedValue === "9") {
+      // 직접입력을 선택한 경우
+      setEmailDomain(""); // 입력 칸을 비워두고
+      setIsCustomDomain(true); // 입력 칸 활성화
+    } else {
+      setEmailDomain(selectedValue); // 선택된 도메인으로 설정
+      setIsCustomDomain(false); // 입력 칸 비활성화
+    }
   };
 
   const handleRegister = async (event) => {
@@ -130,7 +141,7 @@ const Register = () => {
 
       // 응답에서 필요한 데이터 저장 (로그인 상태에 따라 수정)
       sessionStorage.setItem("token", result.token || "");
-      sessionStorage.setItem("id", result.id || "");
+      sessionStorage.setItem("id", result.no || "");
 
       console.log("회원가입 성공, ID : " + result.id);
       navigate("/"); // 회원가입 성공 시 홈으로 이동
@@ -154,7 +165,7 @@ const Register = () => {
             value={id}
             onChange={(e) => setId(e.target.value)}
           />
-          <button type="button" id="idCheck">
+          <button type="button" id="idCheck" onClick={idCheck}>
             중복체크
           </button>
         </div>
@@ -220,7 +231,8 @@ const Register = () => {
             name="email_domain"
             id="email_domain"
             value={emailDomain}
-            disabled
+            onChange={(e) => setEmailDomain(e.target.value)} // 입력 도메인을 업데이트
+            disabled={!isCustomDomain} // 직접입력을 선택했을 때만 활성화
           />
           <select
             name="email_select"

@@ -208,10 +208,6 @@ function HeaderForm() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(true); // 로그인 여부 상태
 
-  useEffect(() => {
-    checkFor();
-  }, [isLoggedIn]); // 빈 배열로 초기 렌더링 시 한 번만 실행되도록
-
   const checkFor = () => {
     const userId = sessionStorage.getItem("id");
     if (userId) {
@@ -223,9 +219,16 @@ function HeaderForm() {
     }
   };
 
+  const handleProfileClick = () => {
+    checkFor();
+    if (isLoggedIn) {
+      setShowPopup(!showPopup);
+    }
+  };
+
   const handleLogout = () => {
     sessionStorage.removeItem("id");
-    setIsLoggedIn(false); // 로그아웃 시 상태를 즉시 업데이트
+    setIsLoggedIn(false);
     navigate("/user/auth/login");
   };
 
@@ -233,11 +236,6 @@ function HeaderForm() {
     (alert) =>
       selectedCategory === "전체" || alert.category === selectedCategory
   );
-
-  const handleProfileClick = () => {
-    setShowPopup(!showPopup);
-    setShowAlertPopup(false); // 프로필 클릭 시 알림 팝업을 닫음
-  };
 
   const handleAlarmClick = () => {
     setShowAlertPopup(!showAlertPopup);
@@ -390,6 +388,8 @@ function HeaderForm() {
         )}
         {isLoggedIn ? (
           <>
+            <Icon src={cartImage} alt="Cart" />
+
             <Icon
               src={profileImage}
               alt="프로필"

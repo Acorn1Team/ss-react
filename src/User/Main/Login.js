@@ -50,9 +50,10 @@ const Login = () => {
         const result = await response.json();
 
         if (result.success) {
-          sessionStorage.setItem("id", result.user.id); // 사용자 ID 저장
+          sessionStorage.setItem("id", result.user.no);
           console.log("로그인 성공, ID : " + result.user.id);
           // 로그인 성공 시 홈으로 이동
+          //console.log(result);
           navigate("/user");
         } else {
           console.error("로그인 실패:", result.message);
