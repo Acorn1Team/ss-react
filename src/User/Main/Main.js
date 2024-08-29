@@ -13,7 +13,11 @@ export default function UserHome() {
   useEffect(() => {
     const interval = setInterval(() => {
       setSelectReviewIndex((prevIndex) =>
-        prevIndex === review.length - 1 ? 0 : prevIndex + 1
+        review.length > 0
+          ? prevIndex === review.length - 1
+            ? 0
+            : prevIndex + 1
+          : 0
       );
     }, 5000); // 5초마다 슬라이드 변경
     return () => clearInterval(interval);
@@ -24,10 +28,15 @@ export default function UserHome() {
     axios
       .get("/main/showData")
       .then((res) => {
-        setShow(res.data);
+        if (Array.isArray(res.data)) {
+          setShow(res.data);
+        } else {
+          setShow([]);
+        }
       })
       .catch((error) => {
         console.log(error);
+        setShow([]); // 오류 발생 시 빈 배열로 설정
       });
   };
 
@@ -36,10 +45,15 @@ export default function UserHome() {
     axios
       .get("/main/showNewReview")
       .then((res) => {
-        setReview(res.data);
+        if (Array.isArray(res.data)) {
+          setReview(res.data);
+        } else {
+          setReview([]);
+        }
       })
       .catch((error) => {
         console.log(error);
+        setReview([]); // 오류 발생 시 빈 배열로 설정
       });
   };
 
@@ -48,10 +62,15 @@ export default function UserHome() {
     axios
       .get("/main/showStyleBest")
       .then((res) => {
-        setPosts(res.data);
+        if (Array.isArray(res.data)) {
+          setPosts(res.data);
+        } else {
+          setPosts([]);
+        }
       })
       .catch((error) => {
         console.log(error);
+        setPosts([]); // 오류 발생 시 빈 배열로 설정
       });
   };
 
@@ -62,35 +81,26 @@ export default function UserHome() {
     showStyleBest();
   }, []);
 
-  // 리뷰 슬라이드 기능 구현
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSelectReviewIndex((prevIndex) =>
-        prevIndex === review.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 5000); // 5초마다 슬라이드 변경
-    return () => clearInterval(interval);
-  }, [review]);
-
   return (
     <div>
-      <img width="100%" src="../images/mainphoto-01.png" alt="main"></img>
+      <img width="100%" src="../images/mainphoto-01.png" alt="main" />
       <b>SceneStealer</b>
       <b className="mainTextTitle">Choose Your Scene!</b>
       <div id="mainPosts">
-        {show.map((s) => (
-          <Link to={`/user/main/sub/${s.no}`} key={s.no}>
-            <div className="mainPostsBox" key={s.no}>
-              <img src={s.pic} alt={s.title}></img>
-              <br />
-              {s.title}
-            </div>
-          </Link>
-        ))}
+        {Array.isArray(show) &&
+          show.map((s) => (
+            <Link to={`/user/main/sub/${s.no}`} key={s.no}>
+              <div className="mainPostsBox" key={s.no}>
+                {s.pic}
+                <br />
+                {s.title}
+              </div>
+            </Link>
+          ))}
       </div>
       <b className="mainTextTitle">New Review</b>
       <div id="mainReviews">
-        {review.length > 0 && (
+        {Array.isArray(review) && review.length > 0 && (
           <div className="mainReviewsBox active">
             <Link to={`/user/shop/review/${review[selectReviewIndex].no}`}>
               {review[selectReviewIndex].pic}
@@ -103,13 +113,14 @@ export default function UserHome() {
       </div>
       <b className="mainTextTitle">Style Best</b>
       <div id="mainPosts">
-        {posts.map((p) => (
-          <Link to={`/user/style/detail/${p.no}`} key={p.no}>
-            <div className="mainPostsBox" key={p.no}>
-              {p.pic}&emsp;{p.userNickname}
-            </div>
-          </Link>
-        ))}
+        {Array.isArray(posts) &&
+          posts.map((p) => (
+            <Link to={`/user/style/detail/${p.no}`} key={p.no}>
+              <div className="mainPostsBox" key={p.no}>
+                {p.pic}&emsp;{p.userNickname}
+              </div>
+            </Link>
+          ))}
       </div>
       <Link to="/admin">관리자</Link>
     </div>

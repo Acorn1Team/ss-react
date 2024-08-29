@@ -200,33 +200,43 @@ const AlertItem = styled.div`
 function HeaderForm() {
   const [showPopup, setShowPopup] = useState(false);
   const [showAlertPopup, setShowAlertPopup] = useState(false);
-  const [alerts, setAlerts] = useState([]);
+  const [alerts, setAlerts] = useState([]); // 기본값을 빈 배열로 설정
   const [selectedCategory, setSelectedCategory] = useState("전체");
-  const hasUnreadAlerts = alerts.some((alert) => !alert.isRead);
-
-  // 현재 페이지를 저장할 상태
   const [currentPage, setCurrentPage] = useState(0);
-
-  // 페이지 크기를 저장할 상태
   const [pageSize, setPageSize] = useState(5);
-
-  // 전체 페이지 수를 저장할 상태
   const [totalPages, setTotalPages] = useState(1);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 여부 상태
+
+  useEffect(() => {
+    const userId = sessionStorage.getItem("id");
+    if (userId) {
+      setIsLoggedIn(true);
+      // 프로필 이미지나 기타 사용자 정보 업데이트 로직 추가 가능
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []); // 빈 배열로 초기 렌더링 시 한 번만 실행되도록
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("id");
+    setIsLoggedIn(false); // 로그아웃 시 상태를 즉시 업데이트
+    navigate("/user/auth/login");
+  };
 
   const filteredAlerts = alerts.filter(
     (alert) =>
       selectedCategory === "전체" || alert.category === selectedCategory
   );
+
   const navigate = useNavigate();
-
-  // 로그인 정보라고 가정
-  const userNo = 3;
-
+  const userNo = 3; // 로그인 정보라고 가정
   const profilePic = userNo ? `userProfilePic경로` : profileImage;
 
-  useEffect(() => {
-    // 알림 데이터 가져오기
+  // 알림 데이터가 없거나 유효하지 않은 경우를 처리합니다.
+  const hasUnreadAlerts = alerts && alerts.some((alert) => !alert.isRead);
 
+  useEffect(() => {
     fetchAlerts();
     if (showAlertPopup) {
       fetchAlerts();
@@ -234,17 +244,16 @@ function HeaderForm() {
   }, [showAlertPopup, userNo, currentPage]);
 
   const fetchAlerts = async () => {
-    await axios
-      .get(`/alert/${userNo}`, {
+    try {
+      const response = await axios.get(`/alert/${userNo}`, {
         params: { page: currentPage, size: pageSize },
-      })
-      .then((res) => {
-        setAlerts(res.data.content);
-        setTotalPages(res.data.totalPages);
-      })
-      .catch((err) => {
-        console.log(err);
       });
+      setAlerts(response.data.content || []); // 데이터가 없을 경우 빈 배열로 설정
+      setTotalPages(response.data.totalPages || 1); // 총 페이지 수가 없을 경우 1로 설정
+    } catch (err) {
+      console.log(err);
+      setAlerts([]); // 에러 발생 시 알림 데이터를 빈 배열로 설정
+    }
   };
 
   const markAsRead = async (alertNo) => {
@@ -256,11 +265,9 @@ function HeaderForm() {
     }
   };
 
-  // 페이지 변경 함수
   const handlePageChange = (newPage) => {
     if (newPage >= 0 && newPage < totalPages) {
       setCurrentPage(newPage);
-      fetchAlerts(); // 이 자리에 axios로 데이터를 불러오는 함수를 입력해 줍니다.
     }
   };
 
@@ -269,17 +276,15 @@ function HeaderForm() {
     return `${date.getMonth() + 1}월 ${date.getDate()}일`;
   };
 
-  const deleteAlert = (alertNo) => {
-    axios
-      .delete(`/alert/${alertNo}`)
-      .then((res) => {
-        if (res.data.result) {
-          fetchAlerts();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const deleteAlert = async (alertNo) => {
+    try {
+      const response = await axios.delete(`/alert/${alertNo}`);
+      if (response.data.result) {
+        fetchAlerts();
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -327,7 +332,7 @@ function HeaderForm() {
             {filteredAlerts.length > 0 ? (
               filteredAlerts.map((alert, index) => (
                 <AlertItem
-                  key={index}
+                  key={alert.no || index}
                   isRead={alert.isRead}
                   onClick={() => markAsRead(alert.no)}
                 >
@@ -368,47 +373,62 @@ function HeaderForm() {
             )}
           </AlertPopupContainer>
         )}
-        <Link to="/user/auth/login" onClick={() => setShowPopup(false)}>
-          로그인
-        </Link>
-        <Icon
-          src={profileImage}
-          alt="Profile"
-          onClick={() => setShowPopup(!showPopup)}
-          style={{ cursor: "pointer" }}
-        />
-        {showPopup && (
-          <PopupContainer>
-            <Link to="/user/mypage/profile" onClick={() => setShowPopup(false)}>
-              프로필
-            </Link>
-            <br />
-            <Link to={`/user/mypage/scrap`} onClick={() => setShowPopup(false)}>
-              마이스크랩
-            </Link>
-            <br />
-            <Link to={`/user/mypage/order`} onClick={() => setShowPopup(false)}>
-              주문내역
-            </Link>
-            <br />
-            <Link
-              to={`/user/mypage/review/${userNo}`}
-              onClick={() => setShowPopup(false)}
-            >
-              마이리뷰
-            </Link>
-            <br />
-            <Link
-              to={`/user/mypage/coupon`}
-              onClick={() => setShowPopup(false)}
-            >
-              마이쿠폰
-            </Link>
-            <br />
-            <Link to="/user/mypage/logout" onClick={() => setShowPopup(false)}>
-              로그아웃
-            </Link>
-          </PopupContainer>
+        {isLoggedIn ? (
+          <>
+            <Icon
+              src={profileImage}
+              alt="프로필"
+              onClick={() => setShowPopup(!showPopup)}
+              style={{ cursor: "pointer" }}
+            />
+            {showPopup && (
+              <PopupContainer>
+                <Link
+                  to="/user/mypage/profile"
+                  onClick={() => setShowPopup(false)}
+                >
+                  프로필
+                </Link>
+                <br />
+                <Link
+                  to="/user/mypage/scrap"
+                  onClick={() => setShowPopup(false)}
+                >
+                  마이스크랩
+                </Link>
+                <br />
+                <Link
+                  to="/user/mypage/order"
+                  onClick={() => setShowPopup(false)}
+                >
+                  주문내역
+                </Link>
+                <br />
+                <Link
+                  to={`/user/mypage/review/${userNo}`}
+                  onClick={() => setShowPopup(false)}
+                >
+                  마이리뷰
+                </Link>
+                <br />
+                <Link
+                  to="/user/mypage/coupon"
+                  onClick={() => setShowPopup(false)}
+                >
+                  마이쿠폰
+                </Link>
+                <br />
+                <button onClick={handleLogout}>로그아웃</button>
+              </PopupContainer>
+            )}
+          </>
+        ) : (
+          <Icon
+            src={profileImage}
+            alt="로그인"
+            onClick={() => navigate("/user/auth/login")}
+            style={{ cursor: "pointer" }}
+          />
         )}
       </RightContainer>
     </Header>
@@ -433,6 +453,7 @@ function Search() {
             setFilteredItems(response.data);
           } else {
             console.error("Unexpected response data format");
+            setFilteredItems([]);
           }
           setShowDropdown(true);
         } catch (error) {
@@ -444,20 +465,20 @@ function Search() {
       }
     };
 
-    fetchData(); // 아래 두 값 중 하나라도 변경되면 useEffect가 실행되고, fetchData가 호출되어 그 값에 해당하는 데이터를 가져온다.
-  }, [inputValue, category]); // 이 두 값 중 하나라도 변경되면 useEffect가 실행된다.
+    fetchData();
+  }, [inputValue, category]);
 
   const handleChange = (e) => {
     setInputValue(e.target.value);
   };
 
   const handleClick = (item) => {
-    setInputValue(item.name || item.title || item); // 먼저 input 값을 설정합니다.
-    setShowDropdown(false); // 그 후 드롭다운을 닫습니다.
+    setInputValue(item.name || item.title || item);
+    setShowDropdown(false);
   };
 
   const handleBlur = () => {
-    setTimeout(() => setShowDropdown(false), 100); // 드롭다운을 약간의 지연 후에 닫음
+    setTimeout(() => setShowDropdown(false), 100);
   };
 
   const clickHandler = (e) => {
@@ -489,23 +510,13 @@ function Search() {
       />
       <SearchButton onClick={clickHandler}>조회</SearchButton>
 
-      {showDropdown && ( // 사용자 입력에 따라 드롭다운 목록 표시.
-        // showDropdown 상태가 true일 때만 AutoSearchContainer와 그 안의 항목들이 렌더링.
+      {showDropdown && (
         <AutoSearchContainer>
-          {filteredItems.map(
-            (
-              item,
-              index // filteredItems 배열은 사용자 입력을 기반으로 필터링된 데이터가 담겨있다.. 사용자가 입력한 내용이 포함된 항목들이...
-            ) => (
-              // map 메소드는 배열을 순회하면서 각 요소(item)을 AutoSearchItem이라는 컴포넌트로 변환하고 있다.
-              <AutoSearchItem
-                key={index}
-                onMouseDown={() => handleClick(item)} // 클릭 시 호출될 함수
-              >
-                {item.name || item.title || item} {/* 항목의 내용 표시 */}
-              </AutoSearchItem>
-            )
-          )}
+          {filteredItems.map((item, index) => (
+            <AutoSearchItem key={index} onMouseDown={() => handleClick(item)}>
+              {item.name || item.title || item}
+            </AutoSearchItem>
+          ))}
         </AutoSearchContainer>
       )}
     </SearchForm>

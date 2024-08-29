@@ -1,50 +1,79 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SocialKakao from "../Component/SocialKakao";
 
 const Login = () => {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
-  const [loginCheck, setLoginCheck] = useState(false); // 로그인 상태 체크
+  const [loginCheck, setLoginCheck] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
+
+  // 컴포넌트가 마운트될 때 로그인 상태를 확인
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const userId = sessionStorage.getItem("id");
+      if (userId) {
+        navigate("/user"); // 로그인된 상태일 때 홈으로 리디렉션
+      }
+    };
+
+    checkLoginStatus();
+  }, [navigate]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    // JSON 형식의 데이터 생성
-    const loginData = {
-      id: id,
-      pwd: pwd,
-    };
+    // 입력 검증
+    if (!id || !pwd) {
+      setErrorMessage("아이디와 비밀번호를 모두 입력해주세요.");
+      setLoginCheck(true);
+      return;
+    }
+
+    const loginData = { id, pwd };
 
     try {
-      const response = await fetch("http://localhost:8080/user/login", {
+      const response = await fetch("http://localhost:8080/user/auth/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", // JSON 형식으로 요청 헤더 설정
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
-        body: JSON.stringify(loginData), // JSON 형식으로 변환하여 요청 본문에 추가
+        credentials: "include",
+        body: JSON.stringify(loginData),
       });
 
-      if (!response.ok) {
-        // 응답 상태가 2xx가 아니면 오류 처리
-        const errorText = await response.text(); // 서버의 오류 메시지를 텍스트로 받기
-        throw new Error(`로그인 요청이 실패했습니다: ${errorText}`);
+      // 응답 상태 코드가 2xx 범위에 있으면 성공으로 처리
+      if (response.ok) {
+        const result = await response.json();
+
+        if (result.success) {
+          sessionStorage.setItem("id", result.user.id); // 사용자 ID 저장
+          console.log("로그인 성공, ID : " + result.user.id);
+          // 로그인 성공 시 홈으로 이동
+          navigate("/user");
+        } else {
+          console.error("로그인 실패:", result.message);
+          setErrorMessage(
+            result.message || "아이디 혹은 비밀번호가 틀렸습니다."
+          );
+          setLoginCheck(true); // 로그인 실패 상태 표시
+        }
+      } else {
+        // 응답 상태 코드가 2xx 범위에 있지 않으면 에러 처리
+        const errorResult = await response.json();
+        setErrorMessage(
+          errorResult.message || "아이디 혹은 비밀번호가 틀렸습니다."
+        );
+        setLoginCheck(true); // 로그인 실패 상태 표시
       }
-
-      const result = await response.json(); // JSON 응답 파싱
-
-      // 응답에서 필요한 데이터 저장
-      sessionStorage.setItem("token", result.token || "");
-      sessionStorage.setItem("id", result.id || "");
-      sessionStorage.setItem("role", result.role || "");
-      sessionStorage.setItem("storeid", result.storeId || "");
-
-      console.log("로그인 성공, ID : " + result.id);
-      navigate("/"); // 로그인 성공 시 홈으로 이동
     } catch (error) {
       console.error("로그인 요청 중 오류 발생:", error);
+      setErrorMessage(
+        "로그인 요청 중 오류가 발생했습니다. 나중에 다시 시도해주세요."
+      );
       setLoginCheck(true); // 로그인 실패 상태 표시
     }
   };
@@ -53,7 +82,7 @@ const Login = () => {
     <div className="login-container">
       <form className="login-form" onSubmit={handleLogin}>
         <h1>로그인</h1>
-        <label htmlFor="username">아이디</label>
+        <label htmlFor="id">아이디</label>
         <input
           type="text"
           id="id"
@@ -62,18 +91,17 @@ const Login = () => {
         />
         <br />
 
-        <label htmlFor="password">비밀번호</label>
+        <label htmlFor="pwd">비밀번호</label>
         <input
           type="password"
           id="pwd"
           value={pwd}
           onChange={(e) => setPwd(e.target.value)}
         />
-        {loginCheck && (
-          <label style={{ color: "red" }}>
-            이메일 혹은 비밀번호가 틀렸습니다.
-          </label>
-        )}
+        <br />
+
+        {loginCheck && <label style={{ color: "red" }}>{errorMessage}</label>}
+
         <button type="submit">로그인</button>
         <br />
         <br />
