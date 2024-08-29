@@ -1,8 +1,58 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const idCheck = () => {};
+// 정규 표현식
+const userPwdRegex =
+  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,}$/; // 최소 4자, 영문, 숫자, 특수문자 포함
+const userIdRegex = /^[a-zA-Z0-9]{4,20}$/; // 4~20자의 영문, 숫자만 허용
 
+// 아이디 중복 검사 함수
+const idCheck = async (id, setErrorMessage, setIdChecked) => {
+  if (!id) {
+    setErrorMessage((prev) => ({
+      ...prev,
+      id: "아이디를 입력하세요.",
+    }));
+    setIdChecked(false);
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `http://localhost:8080/user/auth/check?id=${encodeURIComponent(id)}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      }
+    );
+
+    if (response.ok) {
+      const result = await response.json();
+      if (result.exists) {
+        setErrorMessage((prev) => ({
+          ...prev,
+          id: "아이디가 이미 사용 중입니다.",
+        }));
+        setIdChecked(false);
+      } else {
+        setErrorMessage((prev) => ({
+          ...prev,
+          id: "사용 가능한 아이디입니다.",
+        }));
+        setIdChecked(true);
+      }
+    } else {
+      console.error("ID 중복 확인 실패.");
+      setIdChecked(false);
+    }
+  } catch (error) {
+    console.error("ID 중복 확인 중 오류 발생:", error);
+    setIdChecked(false);
+  }
+};
+
+// 회원가입 컴포넌트
 const Register = () => {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
@@ -25,6 +75,7 @@ const Register = () => {
     { value: "nate.com", text: "nate.com" },
     { value: "kakao.com", text: "kakao.com" },
   ]);
+  const [idChecked, setIdChecked] = useState(false); // 아이디 중복 체크 여부
 
   const navigate = useNavigate();
   const addrStartRef = useRef(null);
@@ -32,19 +83,19 @@ const Register = () => {
   const zipcodeDisplayRef = useRef(null);
   const userZipcodeRef = useRef(null);
 
+  // Daum API 스크립트 로드
   useEffect(() => {
-    // Daum API 스크립트를 동적으로 로드
     const script = document.createElement("script");
     script.src =
       "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
     script.async = true;
     script.onload = () => {
-      // 스크립트 로드 완료 후 `daum` 객체가 정의됨
       window.daum = window.daum || {};
     };
     document.head.appendChild(script);
   }, []);
 
+  // Daum 주소 검색 API 호출
   const openDaumPostcode = () => {
     if (!window.daum.Postcode) {
       console.error("Daum Postcode API가 로드되지 않았습니다.");
@@ -52,102 +103,89 @@ const Register = () => {
     }
 
     new window.daum.Postcode({
-      oncomplete: function (data) {
-        let addr = "";
-        if (data.userSelectedType === "R") {
-          addr = data.roadAddress;
-        } else {
-          addr = data.jibunAddress;
-        }
-
-        // 상태 업데이트
+      oncomplete: (data) => {
+        const addr =
+          data.userSelectedType === "R" ? data.roadAddress : data.jibunAddress;
         setAddrStart(addr);
         setZipcode(data.zonecode);
 
-        if (zipcodeDisplayRef.current) {
+        if (zipcodeDisplayRef.current)
           zipcodeDisplayRef.current.value = data.zonecode;
-        }
-        if (addrStartRef.current) {
-          addrStartRef.current.value = addr;
-        }
-        if (addrEndRef.current) {
-          addrEndRef.current.focus();
-        }
-        if (userZipcodeRef.current) {
-          userZipcodeRef.current.value = data.zonecode; // 우편번호 설정
-        }
+        if (addrStartRef.current) addrStartRef.current.value = addr;
+        if (addrEndRef.current) addrEndRef.current.focus();
+        if (userZipcodeRef.current)
+          userZipcodeRef.current.value = data.zonecode;
       },
     }).open();
   };
 
+  // 이메일 도메인 선택 핸들러
   const handleEmailDomainChange = (event) => {
     const selectedValue = event.target.value;
-
-    if (selectedValue === "9") {
-      // 직접입력을 선택한 경우
-      setEmailDomain(""); // 입력 칸을 비워두고
-      setIsCustomDomain(true); // 입력 칸 활성화
-    } else {
-      setEmailDomain(selectedValue); // 선택된 도메인으로 설정
-      setIsCustomDomain(false); // 입력 칸 비활성화
-    }
+    setEmailDomain(selectedValue);
+    setIsCustomDomain(selectedValue === "9");
   };
 
+  // 회원가입 핸들러
   const handleRegister = async (event) => {
     event.preventDefault();
 
     // 유효성 검사
     const errors = {};
-    if (!id) errors.id = "아이디를 입력하세요.";
-    if (!pwd) errors.pwd = "비밀번호를 입력하세요.";
+
+    if (!userIdRegex.test(id))
+      errors.id = "아이디는 4~20자의 영문자와 숫자만 허용됩니다.";
+    if (!userPwdRegex.test(pwd))
+      errors.pwd =
+        "비밀번호는 최소 4자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.";
     if (pwd !== pwdChk) errors.pwdChk = "비밀번호가 일치하지 않습니다.";
     if (!name) errors.name = "이름을 입력하세요.";
     if (!email || !emailDomain) errors.email = "이메일을 입력하세요.";
     if (!tel) errors.tel = "전화번호를 입력하세요.";
     if (!zipcode || !addrStart || !addrEnd)
       errors.address = "주소를 입력하세요.";
+
     if (Object.keys(errors).length > 0) {
       setErrorMessage(errors);
       return;
     }
 
-    // JSON 형식의 데이터 생성
+    if (!idChecked) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        id: "아이디 중복 체크를 해주세요",
+      }));
+      return;
+    }
+
+    // 요청 데이터
     const registerData = {
       id,
       pwd,
       name,
       tel,
       email: `${email}@${emailDomain}`,
-      address: `${addrStart} ${addrEnd}`, // 도로명/지번 주소와 상세 주소 결합
+      address: `${addrStart} ${addrEnd}`,
       zipcode,
     };
 
     try {
       const response = await fetch("http://localhost:8080/user/auth/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json", // JSON 형식으로 요청 헤더 설정
-        },
-        body: JSON.stringify(registerData), // JSON 형식으로 변환하여 요청 본문에 추가
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(registerData),
       });
 
       if (!response.ok) {
-        // 응답 상태가 2xx가 아니면 오류 처리
-        const errorText = await response.text(); // 서버의 오류 메시지를 텍스트로 받기
+        const errorText = await response.text();
         throw new Error(`회원가입 요청이 실패했습니다: ${errorText}`);
       }
 
-      const result = await response.json(); // JSON 응답 파싱
-
-      // 응답에서 필요한 데이터 저장 (로그인 상태에 따라 수정)
-      sessionStorage.setItem("token", result.token || "");
-      sessionStorage.setItem("id", result.no || "");
-
-      console.log("회원가입 성공, ID : " + result.id);
+      await response.json();
       navigate("/"); // 회원가입 성공 시 홈으로 이동
     } catch (error) {
       console.error("회원가입 요청 중 오류 발생:", error);
-      setErrorMessage({ global: error.message }); // 오류 메시지 표시
+      setErrorMessage({ global: error.message });
     }
   };
 
@@ -165,7 +203,11 @@ const Register = () => {
             value={id}
             onChange={(e) => setId(e.target.value)}
           />
-          <button type="button" id="idCheck" onClick={idCheck}>
+          <button
+            type="button"
+            id="idCheck"
+            onClick={() => idCheck(id, setErrorMessage, setIdChecked)}
+          >
             중복체크
           </button>
         </div>
@@ -182,10 +224,10 @@ const Register = () => {
             value={pwd}
             onChange={(e) => setPwd(e.target.value)}
           />
+          {errorMessage.pwd && (
+            <div className="error_message">{errorMessage.pwd}</div>
+          )}
         </div>
-        {errorMessage.pwd && (
-          <div className="error_message">{errorMessage.pwd}</div>
-        )}
         <div className="user_input">
           <input
             type="password"
@@ -194,10 +236,10 @@ const Register = () => {
             value={pwdChk}
             onChange={(e) => setPwdChk(e.target.value)}
           />
+          {errorMessage.pwdChk && (
+            <div className="error_message">{errorMessage.pwdChk}</div>
+          )}
         </div>
-        {errorMessage.pwdChk && (
-          <div className="error_message">{errorMessage.pwdChk}</div>
-        )}
 
         {/* 이름 */}
         <div className="user_input">
@@ -208,10 +250,10 @@ const Register = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
+          {errorMessage.name && (
+            <div className="error_message">{errorMessage.name}</div>
+          )}
         </div>
-        {errorMessage.name && (
-          <div className="error_message">{errorMessage.name}</div>
-        )}
 
         {/* 이메일 */}
         <div className="email_input">
@@ -231,8 +273,8 @@ const Register = () => {
             name="email_domain"
             id="email_domain"
             value={emailDomain}
-            onChange={(e) => setEmailDomain(e.target.value)} // 입력 도메인을 업데이트
-            disabled={!isCustomDomain} // 직접입력을 선택했을 때만 활성화
+            onChange={(e) => setEmailDomain(e.target.value)}
+            disabled={!isCustomDomain}
           />
           <select
             name="email_select"
@@ -260,17 +302,17 @@ const Register = () => {
             value={tel}
             onChange={(e) => setTel(e.target.value)}
           />
+          {errorMessage.tel && (
+            <div className="error_message">{errorMessage.tel}</div>
+          )}
         </div>
-        {errorMessage.tel && (
-          <div className="error_message">{errorMessage.tel}</div>
-        )}
 
         {/* 주소 */}
         <div className="user_input">
           <input
             type="text"
             placeholder="우편번호"
-            maxlength="6"
+            maxLength="6"
             name="zipcode"
             id="zipcode_display"
             disabled

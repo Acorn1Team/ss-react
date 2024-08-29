@@ -215,7 +215,7 @@ function HeaderForm() {
       // 프로필 이미지나 기타 사용자 정보 업데이트 로직 추가 가능
     } else {
       setIsLoggedIn(false);
-      // navigate("/user/auth/login");
+      navigate("/user/auth/login");
     }
   };
 
@@ -429,8 +429,6 @@ function HeaderForm() {
         )}
         {isLoggedIn ? (
           <>
-            <Icon src={cartImage} alt="Cart" />
-
             <Icon
               src={profileImage}
               alt="프로필"
