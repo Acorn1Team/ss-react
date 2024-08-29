@@ -24,7 +24,7 @@ export default function PostList() {
   // 팔로우한 유저 게시글 정보 가져오기
   const getPostList = () => {
     axios
-      .get(`/posts/followPostList/${userNo}`, {
+      .get(`/posts/followOrPopular/${userNo}`, {
         params: {
           page: currentPage,
           size: pageSize,

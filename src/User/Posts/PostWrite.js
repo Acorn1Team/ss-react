@@ -57,7 +57,10 @@ export default function PostWrite() {
     setShowDropdown(false); // 드롭다운을 닫음
   };
 
+<<<<<<< HEAD
   // 상품 등록 혹은 수정
+=======
+>>>>>>> 686ad77 (보현)
   const insertPost = async (postNo) => {
     const finalProductNo = selected ? parseInt(selected, 10) : 0;
 
