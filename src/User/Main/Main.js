@@ -91,7 +91,7 @@ export default function UserHome() {
           show.map((s) => (
             <Link to={`/user/main/sub/${s.no}`} key={s.no}>
               <div className="mainPostsBox" key={s.no}>
-                {s.pic}
+                <img src={s.pic} alt={s.title}></img>
                 <br />
                 {s.title}
               </div>

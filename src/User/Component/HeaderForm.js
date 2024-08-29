@@ -206,17 +206,22 @@ function HeaderForm() {
   const [pageSize, setPageSize] = useState(5);
   const [totalPages, setTotalPages] = useState(1);
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 여부 상태
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // 로그인 여부 상태
 
   useEffect(() => {
+    checkFor();
+  }, [isLoggedIn]); // 빈 배열로 초기 렌더링 시 한 번만 실행되도록
+
+  const checkFor = () => {
     const userId = sessionStorage.getItem("id");
     if (userId) {
       setIsLoggedIn(true);
       // 프로필 이미지나 기타 사용자 정보 업데이트 로직 추가 가능
     } else {
       setIsLoggedIn(false);
+      navigate("/user/auth/login");
     }
-  }, []); // 빈 배열로 초기 렌더링 시 한 번만 실행되도록
+  };
 
   const handleLogout = () => {
     sessionStorage.removeItem("id");
@@ -228,6 +233,16 @@ function HeaderForm() {
     (alert) =>
       selectedCategory === "전체" || alert.category === selectedCategory
   );
+
+  const handleProfileClick = () => {
+    setShowPopup(!showPopup);
+    setShowAlertPopup(false); // 프로필 클릭 시 알림 팝업을 닫음
+  };
+
+  const handleAlarmClick = () => {
+    setShowAlertPopup(!showAlertPopup);
+    setShowPopup(false); // 알림 클릭 시 프로필 팝업을 닫음
+  };
 
   const navigate = useNavigate();
   const userNo = 3; // 로그인 정보라고 가정
@@ -310,7 +325,7 @@ function HeaderForm() {
           <Icon
             src={alarmImage}
             alt="Alarm"
-            onClick={() => setShowAlertPopup(!showAlertPopup)}
+            onClick={handleAlarmClick}
             style={{ cursor: "pointer" }}
           />
           {hasUnreadAlerts && <RedDot />}{" "}
@@ -378,7 +393,7 @@ function HeaderForm() {
             <Icon
               src={profileImage}
               alt="프로필"
-              onClick={() => setShowPopup(!showPopup)}
+              onClick={handleProfileClick}
               style={{ cursor: "pointer" }}
             />
             {showPopup && (
@@ -426,7 +441,7 @@ function HeaderForm() {
           <Icon
             src={profileImage}
             alt="로그인"
-            onClick={() => navigate("/user/auth/login")}
+            onClick={() => checkFor()}
             style={{ cursor: "pointer" }}
           />
         )}
