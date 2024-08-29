@@ -255,20 +255,21 @@ function HeaderForm() {
     }
     let naverTokenValue = sessionStorage.getItem("token_n");
     if (naverTokenValue) {
-      axios
-        .post("/api/naver/delete-token", { accessToken: naverTokenValue })
-        .then((res) => {
-          if (res.data) {
-            console.log("토큰 삭제 완료:", res.data);
-            navigate("/user");
-          }
-        })
-        .catch((err) => {
-          console.log("토큰 삭제 에러:", err);
-        });
+      // axios
+      //   .post("/api/naver/delete-token", { accessToken: naverTokenValue })
+      //   .then((res) => {
+      //     if (res.data) {
+      //       console.log("토큰 삭제 완료:", res.data);
+      //       navigate("/user");
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     console.log("토큰 삭제 에러:", err);
+      //   });
       sessionStorage.removeItem("token_n");
     }
-    sessionStorage.removeItem("id");
+    sessionStorage.clear();
+    // sessionStorage.removeItem("id");
     setIsLoggedIn(false);
     navigate("/user/auth/login");
   };

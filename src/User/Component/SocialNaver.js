@@ -12,26 +12,22 @@ export default function SocialNaver() {
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");
-    if (code) {
-      console.log("코드:", code);
+    const storedCode = sessionStorage.getItem("naver_auth_code");
 
-      // 네이버 인증 코드를 백엔드로 전송하여 토큰을 요청
+    if (code && code !== storedCode) {
+      sessionStorage.setItem("naver_auth_code", code);
+
       axios
         .post("/api/naver/token", { code, state })
         .then((res) => {
-          console.log("토큰 응답:", res.data);
           const accessToken = res.data.access_token;
-
           sessionStorage.setItem("token_n", accessToken);
-          alert(accessToken);
-          // 백엔드에서 사용자 정보 요청
+
           return axios.post("/api/naver", { accessToken });
         })
         .then((res) => {
-          console.log("서버 응답:", res.data);
           const { status, user } = res.data;
-
-          sessionStorage.setItem("id", user.id);
+          sessionStorage.setItem("id", user.no);
           if (status === "login") {
             navigate("/user");
           } else if (status === "signup") {
@@ -46,7 +42,7 @@ export default function SocialNaver() {
           navigate("/user/auth/login");
         });
     }
-  }, []);
+  }, [navigate, state]);
 
   const handleLogin = () => {
     window.location.href = naverURL;
