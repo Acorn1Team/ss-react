@@ -13,7 +13,7 @@ export default function OtherProfile() {
   const [followerData, setFollowerData] = useState([]);
 
   // 로그인 유저가 조회하려는 유저의 팔로잉 여부
-  const [followState, setFollowState] = useState(false);
+  const [followState, setFollowState] = useState();
 
   // 작성한 글 리스트
   const [postList, setPostList] = useState([]);
@@ -36,7 +36,9 @@ export default function OtherProfile() {
   const getUserInfo = () => {
     axios
       .get(`/posts/user/${profileUserNo}`)
-      .then((res) => setUserInfo(res.data))
+      .then((res) => {
+        setUserInfo(res.data);
+      })
       .catch((err) => {
         console.log(err);
       });
@@ -84,7 +86,9 @@ export default function OtherProfile() {
   const followCheckProc = () => {
     axios
       .get(`/posts/user/follow/${userNo}/${profileUserNo}`)
-      .then((res) => setFollowState(res.data.result))
+      .then((res) => {
+        setFollowState(res.data.result);
+      })
       .catch((err) => {
         console.log(err);
       });
@@ -97,7 +101,9 @@ export default function OtherProfile() {
         .delete(`/posts/user/follow/${userNo}/${profileUserNo}`)
         .then((res) => {
           if (res.data.result) {
-            setFollowState(false);
+            if (followState) {
+              setFollowState(false);
+            }
             followInfo();
           }
         })
@@ -112,7 +118,9 @@ export default function OtherProfile() {
         })
         .then((res) => {
           if (res.data.result) {
-            setFollowState(true);
+            if (!followState) {
+              setFollowState(true);
+            }
             followInfo();
           }
         })
@@ -123,27 +131,29 @@ export default function OtherProfile() {
   };
 
   useEffect(() => {
-    if (parseInt(profileUserNo, 10) === userNo) {
+    if (profileUserNo === userNo) {
       nv(`/user/style/list/${userNo}`);
-      // 로그인된 유저의 프로필 누를 경우 '내 글 보기' 로 이동
     } else {
-      getUserInfo();
-      followInfo();
-      postInfo();
       followCheckProc();
+      followInfo();
+      getUserInfo();
+      postInfo();
     }
   }, [profileUserNo, userNo, currentPage]);
 
   return (
     <div>
-      {userInfo.pic}&emsp;@{userInfo.nickname}
+      <img src={userInfo.pic} alt={userInfo.nickname}></img>
+      &emsp;@{userInfo.nickname}
       <br />
       {userInfo.id}
       <br />
       {userInfo.bio}
-      <button onClick={followOrCancel}>
-        {followState ? "팔로우 취소" : "팔로우하기"}
-      </button>
+      {followState !== null && (
+        <button onClick={followOrCancel}>
+          {followState ? "팔로우 취소" : "팔로우하기"}
+        </button>
+      )}
       <div>
         팔로우
         <Link
@@ -162,7 +172,9 @@ export default function OtherProfile() {
       </div>
       {postList.map((pl) => (
         <div key={pl.no}>
-          <Link to={`/user/style/detail/${pl.no}`}>{pl.pic}</Link>
+          <Link to={`/user/style/detail/${pl.no}`}>
+            <img src={pl.pic} alt={pl.no}></img>
+          </Link>
         </div>
       ))}
       {totalPages > 1 && (

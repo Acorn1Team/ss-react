@@ -12,8 +12,10 @@ const SocialKakao = () => {
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");
-    if (code) {
-      console.log("코드:", code);
+    const tokenInProgress = sessionStorage.getItem("token_in_progress");
+
+    if (code && !tokenInProgress) {
+      sessionStorage.setItem("token_in_progress", "true");
 
       axios
         .post(
@@ -48,8 +50,7 @@ const SocialKakao = () => {
           if (status === "login") {
             navigate("/user");
           } else if (status === "signup") {
-            // 회원가입 성공: 추가 정보 입력 페이지로 이동
-            navigate(`/user/main/sub`); // 회원정보 수정 페이지 생성시 수정
+            navigate(`/user/main/sub`);
           }
         })
         .catch((error) => {
@@ -58,9 +59,12 @@ const SocialKakao = () => {
             error.response ? error.response.data : error.message
           );
           navigate("/user/auth/login");
+        })
+        .finally(() => {
+          sessionStorage.removeItem("token_in_progress");
         });
     }
-  }, []); // 의존성 배열을 빈 배열로 설정하여 첫 렌더링 시에만 실행되도록 설정
+  }, []);
 
   const handleLogin = () => {
     window.location.href = kakaoURL;
