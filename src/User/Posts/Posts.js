@@ -65,6 +65,9 @@ export default function Posts() {
   // 관리자 여부 체크
   const [isAdmin, setIsAdmin] = useState(false);
 
+  // 신고 여부 체크
+  const [isReport, setIsReport] = useState(false);
+
   // 게시글 정보 가져오기
   const getPostDetailInfo = () => {
     setLoading(true);
@@ -364,6 +367,18 @@ export default function Posts() {
     }
   };
 
+  // 신고 여부 확인하기
+  const reportCheck = () => {
+    axios
+      .get(`/posts/report/${userNo}/${postNo}`)
+      .then((res) => {
+        setIsReport(res.data.result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   // 신고 모달 열기
   const postReports = () => {
     setIsReportModalOpen(true);
@@ -441,6 +456,7 @@ export default function Posts() {
     getPostLike();
     checkPostLike();
     adminCheck();
+    reportCheck();
   }, [postNo, currentPage, pageSize]);
 
   useEffect(() => {
@@ -483,7 +499,7 @@ export default function Posts() {
               <br />
               {postData.date}
             </div>
-            {postData.userNo !== userNo && (
+            {postData.userNo !== userNo && !isReport && (
               <button onClick={() => postReports()}>신고</button>
             )}
             {postData.userNo === userNo && (
