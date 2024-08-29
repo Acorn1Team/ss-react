@@ -12,6 +12,7 @@ export default function AdminTop(){
                 <li><Link to="/admin/help">고객 지원</Link></li>
                 <li><Link to="/admin/community">커뮤니티 관리</Link></li>
                 <li><Link to="/admin/promotion">프로모션</Link></li>
+                <li><Link to="/admin/statistics">통계</Link></li>
             </ul><br/>
         </>
         
