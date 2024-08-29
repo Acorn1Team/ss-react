@@ -12,15 +12,12 @@ export default function PostListByUser() {
   const [pageSize] = useState(5);
   const [totalPages, setTotalPages] = useState(1);
   const [showTrash, setShowTrash] = useState(false);
-  const no = 3; // 로그인 정보라고 가정
 
-<<<<<<< HEAD
+
   // 로그인 정보라고 가정
   const no = sessionStorage.getItem("id");
 
   // 로그인된 유저가 쓴 글 불러오기
-=======
->>>>>>> 686ad77 (보현)
   const getPostsByUser = () => {
     axios
       .get(`/posts/list/${no}`, {
