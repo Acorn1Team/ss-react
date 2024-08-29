@@ -90,9 +90,11 @@ export default function CommunityManage() {
         <div>
           <h3>전체 글 보기</h3>
           <ul>
-            {posts.map((post) => (
+          {posts
+            .filter((post) => !post.deleted) // deleted가 false인 경우만 필터링
+            .map((post) => (
               <li key={post.no}>
-                <strong>작성자 ID:</strong> {post.userId} <br />
+                <strong>작성자 ID:</strong> {post.userId}<br />
                 {post.pic && (
                   <>
                     <strong>사진:</strong>
@@ -143,53 +145,57 @@ export default function CommunityManage() {
             </button>
           </div>
           <ul>
-          {filteredPosts.map((post) => {
-  // 신고 카테고리별 카운트를 저장하기 위한 객체
-  const categoryCounts = {
-    욕설: 0,
-    홍보: 0,
-    선정성: 0,
-  };
+  {filteredPosts
+    .filter(post => !post.deleted) // 삭제되지 않은 포스트만 필터링
+    .map(post => {
+      // 신고 카테고리별 카운트를 저장하기 위한 객체
+      const categoryCounts = {
+        욕설: 0,
+        홍보: 0,
+        선정성: 0,
+      };
 
-  // 해당 포스트의 신고 내역을 필터링
-  const filteredInfos = reportedInfos.filter((reportedInfo) => reportedInfo.postNo === post.no);
+      // 해당 포스트의 신고 내역을 필터링
+      const filteredInfos = reportedInfos.filter(
+        reportedInfo => reportedInfo.postNo === post.no
+      );
 
-  // 신고 내역을 순회하면서 각 카테고리별로 카운트를 증가시킴
-  filteredInfos.forEach((info) => {
-    if (categoryCounts.hasOwnProperty(info.category)) {
-      categoryCounts[info.category]++;
-    }
-  });
+      // 신고 내역을 순회하면서 각 카테고리별로 카운트를 증가시킴
+      filteredInfos.forEach(info => {
+        if (categoryCounts.hasOwnProperty(info.category)) {
+          categoryCounts[info.category]++;
+        }
+      });
 
-  // 카운트가 0이 아닌 항목만 표시하도록 필터링
-  const displayedCategories = Object.entries(categoryCounts)
-    .filter(([category, count]) => count > 0)
-    .map(([category, count]) => `${category} ${count}회`)
-    .join(", ");
+      // 카운트가 0이 아닌 항목만 표시하도록 필터링
+      const displayedCategories = Object.entries(categoryCounts)
+        .filter(([category, count]) => count > 0)
+        .map(([category, count]) => `${category} ${count}회`)
+        .join(", ");
 
-  return (
-    <li key={post.no}>
-      <strong>작성자:</strong> {post.userId} ({post.userNo})<br />
-      <strong>글 내용:</strong> {post.content} <br />
-      <strong>신고 횟수:</strong> {post.reportsCount} <br />
-      <strong>신고 사유:</strong> {displayedCategories}<br />
-      <button
-        onClick={() => deletePost(post.no)}
-        style={{
-          marginTop: "10px",
-          padding: "5px 10px",
-          backgroundColor: "#f00",
-          color: "#fff",
-        }}
-      >
-        삭제
-      </button>
-      <button onClick={() => navigate(`/user/style/detail/${post.no}`)}>상세보기</button>
-    </li>
-  );
-})}
+      return (
+        <li key={post.no}>
+          <strong>작성자:</strong> {post.userId} ({post.userNo})<br />
+          <strong>글 내용:</strong> {post.content} <br />
+          <strong>신고 횟수:</strong> {post.reportsCount} <br />
+          <strong>신고 사유:</strong> {displayedCategories}<br />
+          <button
+            onClick={() => deletePost(post.no)}
+            style={{
+              marginTop: "10px",
+              padding: "5px 10px",
+              backgroundColor: "#f00",
+              color: "#fff",
+            }}
+          >
+            삭제
+          </button>
+          <button onClick={() => navigate(`/user/style/detail/${post.no}`)}>상세보기</button>
+        </li>
+      );
+    })}
+</ul>
 
-          </ul>
         </div>
       );
     }
