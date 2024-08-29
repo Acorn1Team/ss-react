@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { FaStar} from 'react-icons/fa';
 
 export default function ReviewWritePage() {
   const { productNo } = useParams();
   const location = useLocation();
   const { orderNo, userNo } = location.state;
   const {no} = useParams();
+  const navigate = useNavigate(); // useNavigate 훅 사용
+ 
 
   const [contents, setContents] = useState("");
   const [score, setScore] = useState(0);
@@ -15,16 +18,30 @@ export default function ReviewWritePage() {
   const handleSubmit = () => {
     // 여기에 리뷰 제출 로직을 구현
     console.log("리뷰 작성 중:", { productNo, orderNo, userNo, contents, score, pic });
-
-    // axios
-    // .put(`/review/write/${no}`,{ productNo, orderNo, userNo, contents, score, pic })
-    //   .then(response => {
-    //     console.log("리뷰 제출 성공:", response.data);
-    //   })
-    //   .catch(error => {
-    //     console.log("리뷰 제출 실패:", error);
-    //   });
+   
+      // 작성된 리뷰 데이터를 서버로 전송
+      
+      const reviewData = {
+        productNo,
+        orderNo,
+        userNo,
+        contents,
+        score,
+        pic
+      };
+  
+      axios
+      .post(`/list/review/${productNo}`, reviewData)
+      .then((response) => {
+        console.log("리뷰 제출 성공:", response.data);
+        // 리뷰 제출 후 다른 페이지로 이동
+        navigate(`../review/${productNo}`);
+      })
+      .catch((error) => {
+        console.error("리뷰 제출 실패:", error);
+      });
   };
+
 
   return (
     <div>
@@ -42,12 +59,31 @@ export default function ReviewWritePage() {
         onChange={(e) => setContents(e.target.value)}
       ></textarea>
       <br />
-      <input 
-        type="number" 
-        placeholder="점수" 
-        value={score} 
-        onChange={(e) => setScore(e.target.value)} 
-      />
+
+      <div>
+        <h3>평점:</h3>
+        {[...Array(5)].map((star, index) => {
+          const ratingValue = index + 1;
+          return (
+            <label key={index}>
+              <input
+                type="radio"
+                name="rating"
+                value={ratingValue}
+                style={{ display: "none" }}
+                onClick={() => setScore(ratingValue)}
+              />
+              <FaStar
+                size={30}
+                color={ratingValue <= score ? "#ffc107" : "#e4e5e9"}
+                style={{ cursor: "pointer" }}
+                onMouseEnter={() => setScore(ratingValue)}
+                onMouseLeave={() => setScore(ratingValue)}
+              />
+            </label>
+          );
+        })}
+      </div>
       <br />
       <input 
         type="text" 

@@ -5,11 +5,13 @@ import ProductReviews from "./ProductReviews";
 
 export default function ProductDetail() {
   // 제품상세보기
-  const { no } = useParams();
+  const { no, productNo } = useParams();
   const [product, setProduct] = useState({});
   const [count, setCount] = useState(1); // 수량을 상태로 관리
   //const [reviews, setReviews] = useState([]); // 리뷰 데이터 상태 추가
   const [averageRating, setAverageRating] = useState(0); // 평균 평점 상태 추가
+
+  //const userNo = 11;
 
   const refresh = (no) => {
     // Ajax 요청으로 선택된 카테고리에 해당하는 제품 상세 정보를 가져옴
@@ -54,6 +56,26 @@ export default function ProductDetail() {
     setCount((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
   };
 
+
+ // 장바구니에 제품 추가
+ const addToCart = () => {
+  axios
+    .post("/cart/add", {
+      userNo: 11, // 사용자 ID
+      productNo: productNo, // 제품 번호
+      quantity: count // 수량
+    })
+    .then((response) => {
+      alert("장바구니에 추가되었습니다.");
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error("장바구니에 제품을 추가하는데 문제가 발생했습니다.", error);
+      alert("장바구니 추가에 실패했습니다.");
+    });
+};
+
+
   return (
     <>
       <h2>상품 상세 정보</h2>
@@ -76,7 +98,10 @@ export default function ProductDetail() {
         <label>할인율: </label>
         <span>{product.discountRate}</span>
       </div>
-      <div>장바구니 담기 : </div>
+      <div>
+        <button onClick={addToCart}>장바구니에 담기</button>
+      </div>
+      <Link to={`/cart/list/${productNo}`}>장바구니</Link>
       <div>
         <label>상품 설명: </label>
         <span>{product.contents}</span>

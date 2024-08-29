@@ -5,7 +5,8 @@ import axios from "axios";
 function Myreview(){
     const { userNo } = useParams(); //userNo
     const [reviews, setReviews] = useState([]); // 구매 제품 리스트
-
+    const {reviewNo} = useParams(); // 리뷰번호
+ 
     //  리뷰 데이터 가져오기
     const myreviewOnly = () => {
         axios
@@ -27,6 +28,18 @@ function Myreview(){
         myreviewOnly(); 
     }, []); 
 
+    const deleteReview = (reviewNo) => {
+        axios
+        .delete(`/review/delete/${reviewNo}`)
+        .then((res) => {
+            // 리뷰 삭제 후 리뷰 리스트를 다시 불러옴
+            setReviews(reviews.filter(review => review.no !== reviewNo));
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+
 
     return(
         <>
@@ -37,6 +50,10 @@ function Myreview(){
                     <div>사용자: {mybuyProducts.userNickname}</div>
                     <div>제품: {mybuyProducts.productName}</div>
                     <div>사진: {mybuyProducts.pic}</div>
+                    <div>리뷰 평점: {mybuyProducts.score}</div>
+                    <div>리뷰 평점: {mybuyProducts.contents}</div>
+                    <button onClick={() => deleteReview(mybuyProducts.no)}>삭제</button>
+                    
                 </div>
             ))
           ) : (
