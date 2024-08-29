@@ -76,7 +76,7 @@ const SocialKakao = () => {
         src={`${process.env.PUBLIC_URL}/images/kakaologin.png`}
         alt="kakaologin"
         onClick={handleLogin}
-        width={"300px"}
+        width={"200px"}
       ></img>
     </>
   );

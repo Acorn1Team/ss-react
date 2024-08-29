@@ -54,7 +54,7 @@ export default function SocialNaver() {
         src={`${process.env.PUBLIC_URL}/images/naverlogin.png`}
         alt="naverlogin"
         onClick={handleLogin}
-        width={"300px"}
+        width={"200px"}
       ></img>
     </>
   );
