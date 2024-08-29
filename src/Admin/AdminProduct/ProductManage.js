@@ -248,7 +248,6 @@ export default function ProductManage() {
             <th>이름</th>
             <th>가격</th>
             <th>할인가격</th>
-            <th>내용</th>
             <th>날짜</th>
             <th>카테고리</th>
             <th>이미지</th>
@@ -270,7 +269,6 @@ export default function ProductManage() {
                   <td>
                     {calculateSellingPrice(item.price, item.discountRate)}
                   </td>
-                  <td>{item.contents}</td>
                   <td>{formatDate(item.date)}</td>
                   <td>{item.category}</td>
                   <td>

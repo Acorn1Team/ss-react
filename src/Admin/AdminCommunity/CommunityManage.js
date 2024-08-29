@@ -89,32 +89,40 @@ export default function CommunityManage() {
       return (
         <div>
           <h3>전체 글 보기</h3>
-          <ul>
-          {posts
-            .filter((post) => !post.deleted) // deleted가 false인 경우만 필터링
-            .map((post) => (
-              <li key={post.no}>
-                <strong>작성자 ID:</strong> {post.userId}<br />
-                {post.pic && (
-                  <>
-                    <strong>사진:</strong>
-                    <img
-                      src={post.pic}
-                      alt="Post"
-                      style={{ width: "100px", height: "100px" }}
-                    />
-                    <br />
-                  </>
-                )}
-                <strong>글 내용:</strong> {post.content}
-                <button onClick={() => deletePost(post.no)}>삭제하기</button>
-                <button
-                  onClick={() => navigate(`/user/style/detail/${post.no}`)}
-                >
-                  상세보기
-                </button>
-              </li>
-            ))}
+          <ul className="post-list">
+            {posts
+              .filter((post) => !post.deleted) // deleted가 false인 경우만 필터링
+              .map((post) => (
+                <li key={post.no} className="post-item">
+                  <strong>작성자 ID:</strong> {post.userId}
+                  <br />
+                  {post.pic && (
+                    <>
+                      <strong>사진:</strong>
+                      <img
+                        src={post.pic}
+                        alt="Post"
+                        className="post-image"
+                      />
+                      <br />
+                    </>
+                  )}
+                  <strong>글 내용:</strong> {post.content}
+                  <br />
+                  <button
+                    onClick={() => navigate(`/user/style/detail/${post.no}`)}
+                    className="detail-button"
+                  >
+                    상세보기
+                  </button>&nbsp;&nbsp;
+                  <button
+                    onClick={() => deletePost(post.no)}
+                    className="delete-button"
+                  >
+                    삭제하기
+                  </button>
+                </li>
+              ))}
           </ul>
         </div>
       );
@@ -124,78 +132,75 @@ export default function CommunityManage() {
           <h3>신고 글 보기</h3>
           <div style={{ marginBottom: "10px" }}>
             <button
-              style={{
-                padding: "5px 10px",
-                marginRight: "10px",
-                backgroundColor: sortOrder === "latest" ? "#ccc" : "initial",
-              }}
+              className={`sort-button ${
+                sortOrder === "latest" ? "active" : ""
+              }`}
               onClick={() => setSortOrder("latest")}
             >
               최신보기
             </button>
             <button
-              style={{
-                padding: "5px 10px",
-                backgroundColor:
-                  sortOrder === "mostReported" ? "#ccc" : "initial",
-              }}
+              className={`sort-button ${
+                sortOrder === "mostReported" ? "active" : ""
+              }`}
               onClick={() => setSortOrder("mostReported")}
             >
               신고 많은 순
             </button>
           </div>
-          <ul>
-  {filteredPosts
-    .filter(post => !post.deleted) // 삭제되지 않은 포스트만 필터링
-    .map(post => {
-      // 신고 카테고리별 카운트를 저장하기 위한 객체
-      const categoryCounts = {
-        욕설: 0,
-        홍보: 0,
-        선정성: 0,
-      };
+          <ul className="post-list">
+            {filteredPosts
+              .filter((post) => !post.deleted) // 삭제되지 않은 포스트만 필터링
+              .map((post) => {
+                // 신고 카테고리별 카운트를 저장하기 위한 객체
+                const categoryCounts = {
+                  욕설: 0,
+                  홍보: 0,
+                  선정성: 0,
+                };
 
-      // 해당 포스트의 신고 내역을 필터링
-      const filteredInfos = reportedInfos.filter(
-        reportedInfo => reportedInfo.postNo === post.no
-      );
+                // 해당 포스트의 신고 내역을 필터링
+                const filteredInfos = reportedInfos.filter(
+                  (reportedInfo) => reportedInfo.postNo === post.no
+                );
 
-      // 신고 내역을 순회하면서 각 카테고리별로 카운트를 증가시킴
-      filteredInfos.forEach(info => {
-        if (categoryCounts.hasOwnProperty(info.category)) {
-          categoryCounts[info.category]++;
-        }
-      });
+                // 신고 내역을 순회하면서 각 카테고리별로 카운트를 증가시킴
+                filteredInfos.forEach((info) => {
+                  if (categoryCounts.hasOwnProperty(info.category)) {
+                    categoryCounts[info.category]++;
+                  }
+                });
 
-      // 카운트가 0이 아닌 항목만 표시하도록 필터링
-      const displayedCategories = Object.entries(categoryCounts)
-        .filter(([category, count]) => count > 0)
-        .map(([category, count]) => `${category} ${count}회`)
-        .join(", ");
+                // 카운트가 0이 아닌 항목만 표시하도록 필터링
+                const displayedCategories = Object.entries(categoryCounts)
+                  .filter(([category, count]) => count > 0)
+                  .map(([category, count]) => `${category} ${count}회`)
+                  .join(", ");
 
-      return (
-        <li key={post.no}>
-          <strong>작성자:</strong> {post.userId} ({post.userNo})<br />
-          <strong>글 내용:</strong> {post.content} <br />
-          <strong>신고 횟수:</strong> {post.reportsCount} <br />
-          <strong>신고 사유:</strong> {displayedCategories}<br />
-          <button
-            onClick={() => deletePost(post.no)}
-            style={{
-              marginTop: "10px",
-              padding: "5px 10px",
-              backgroundColor: "#f00",
-              color: "#fff",
-            }}
-          >
-            삭제
-          </button>
-          <button onClick={() => navigate(`/user/style/detail/${post.no}`)}>상세보기</button>
-        </li>
-      );
-    })}
-</ul>
-
+                return (
+                  <li key={post.no} className="post-item">
+                    <strong>작성자:</strong> {post.userId} ({post.userNo})
+                    <br />
+                    <strong>글 내용:</strong> {post.content} <br />
+                    <strong>신고 횟수:</strong> {post.reportsCount} <br />
+                    <strong>신고 사유:</strong> {displayedCategories}
+                    <br />
+                    <button
+                      onClick={() => navigate(`/user/style/detail/${post.no}`)}
+                      className="detail-button"
+                    >
+                      상세보기
+                    </button>&nbsp;&nbsp;
+                    <button
+                      onClick={() => deletePost(post.no)}
+                      className="delete-button"
+                    >
+                      삭제
+                    </button>
+                  </li>
+                );
+              })}
+          </ul>
         </div>
       );
     }
@@ -203,6 +208,58 @@ export default function CommunityManage() {
 
   return (
     <div style={{ padding: "20px" }}>
+      <style>
+        {`
+          .post-list {
+            list-style-type: none;
+            padding: 0;
+          }
+
+          .post-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+          }
+
+          .post-image {
+            width: 100px;
+            height: 100px;
+          }
+
+          .delete-button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: pink;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+          }
+
+          .detail-button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            margin-left: 10px;
+            background-color: skyblue;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+          }
+
+          .sort-button {
+            padding: 5px 10px;
+            margin-right: 10px;
+            background-color: initial;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+          }
+
+          .sort-button.active {
+            background-color: #ccc;
+          }
+        `}
+      </style>
       <div style={{ marginBottom: "10px" }}>
         <button
           style={{ padding: "10px", marginRight: "10px" }}
