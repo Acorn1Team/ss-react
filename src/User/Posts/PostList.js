@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
-import "./PostList.css"; // 스타일 파일 추가
+import styles from "./PostList.css";
 
 export default function PostList() {
   const [followPost, setFollowPost] = useState([]);
