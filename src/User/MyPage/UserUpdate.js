@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 const UserUpdate = () => {
-  const { userNo } = useParams();
+  const { userNo, social } = useParams();
 
   const [user, setUser] = useState({
     id: "",
@@ -164,30 +164,35 @@ const UserUpdate = () => {
   return (
     <div className="container">
       <form onSubmit={handleSubmit} id="updateForm">
-        <div id="userId">@{user.id}</div>
-
+        {social === "kakao" && <div>카카오 아이디로 로그인된 계정입니다.</div>}
+        {social === "naver" && <div>네이버 아이디로 로그인된 계정입니다.</div>}
+        <div id="userId">{user.id}</div>
         {/* 비밀번호 */}
-        <div className="user_input">
-          <input
-            type="password"
-            name="pwd"
-            placeholder="비밀번호"
-            onChange={handleInputChange}
-          />
-          {errors.pwd && <div className="error_message">{errors.pwd}</div>}
-        </div>
-        <div className="user_input">
-          <input
-            type="password"
-            name="pwd_chk"
-            placeholder="비밀번호 재입력"
-            value={user.pwd_chk}
-            onChange={handleInputChange}
-          />
-          {errors.pwd_chk && (
-            <div className="error_message">{errors.pwd_chk}</div>
-          )}
-        </div>
+        {!social && (
+          <>
+            <div className="user_input">
+              <input
+                type="password"
+                name="pwd"
+                placeholder="비밀번호"
+                onChange={handleInputChange}
+              />
+              {errors.pwd && <div className="error_message">{errors.pwd}</div>}
+            </div>
+            <div className="user_input">
+              <input
+                type="password"
+                name="pwd_chk"
+                placeholder="비밀번호 재입력"
+                value={user.pwd_chk}
+                onChange={handleInputChange}
+              />
+              {errors.pwd_chk && (
+                <div className="error_message">{errors.pwd_chk}</div>
+              )}
+            </div>
+          </>
+        )}
 
         {/* 이름 */}
         <div className="user_input">

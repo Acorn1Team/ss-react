@@ -25,14 +25,11 @@ export default function UserRoutes() {
           path="/mypage/*"
           element={<PrivateRoute element={<UserMypageRoutes />} />}
         />
-        {/* <Route path="/style/*" element={<UserStyleRoutes />} />
-      <Route path="/mypage/*" element={<UserMypageRoutes />} /> */}
         <Route path="/main/*" element={<UserMainRoutes />} />
         <Route path="/search/*" element={<SearchRoutes />} />
         <Route path="/auth/*" element={<AuthRoutes />} />
         <Route path="/callback" element={<SocialKakao />} />
         <Route path="/callback/naver" element={<SocailNaver />} />
-        <Route path="/*" element={<UserMypageRoutes />} />
       </Routes>
       <SupportButton />
     </>
