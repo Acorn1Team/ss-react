@@ -71,6 +71,7 @@ export default function ShowSearch() {
 
   return (
     <>
+    <h2>패션 정보 관리</h2>
     <SearchForm>
       <SearchInput
         id="inputValue"
@@ -97,6 +98,7 @@ export default function ShowSearch() {
         </AutoSearchContainer>
       )}
     </SearchForm>
+    
     <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
@@ -124,10 +126,10 @@ export default function ShowSearch() {
   );
 }
 
-
 const SearchForm = styled.form`
   display: flex;
   align-items: center;
+  justify-content: center; /* 중앙 정렬 추가 */
   position: relative; /* 드롭다운의 위치를 제대로 설정하기 위해 추가 */
 `;
 
@@ -178,9 +180,10 @@ const SearchButton = styled.button`
 const AutoSearchContainer = styled.div`
   position: absolute;
   top: 45px;
-  left: 0;
-  width: 400px;
-  max-height: 200px;
+  left: 50%;
+  transform: translateX(-50%); /* 중앙 정렬 추가 */
+  width: 200px;
+  max-height: 500px;
   overflow-y: auto;
   background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.3);

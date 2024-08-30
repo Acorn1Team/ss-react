@@ -187,18 +187,18 @@ export default function StyleManage() {
 
   if (!actorData) { return <p>상세 정보를 불러올 수 없습니다.</p>; }
   return (
-    <>
-      <div>
+    <>  
+    <h2>
+        {actorData.character} ({actorData.actor}) 의 스타일<br/>
         <img src={actorData.pic} alt={`${actorData.character} 이미지`} />
-        {actorData.character} ({actorData.actor}) 의 스타일
-      </div>
-      <table border="1">
+        <hr/>
+        스타일 추가하기<br/>
+        <input type="file" onChange={onStyleFileChange} ref={styleInputRef}/><br/>
+        <button onClick={addStyle}>추가</button>
+      <hr/>
+    </h2>
+        <table style={{ margin: "0 auto", textAlign: "center" }}>
         <thead>
-          <tr><td colSpan='4'>
-            스타일 추가하기<br/>
-            <input type="file" onChange={onStyleFileChange} ref={styleInputRef}/>
-            <button onClick={addStyle}>추가</button>
-          </td></tr>
           <tr>
             <th>스타일</th>
             <th>아이템1</th>
@@ -211,12 +211,14 @@ export default function StyleManage() {
             const filteredItems = items.filter(item => item.style === styleData.no); // styleData.no와 일치하는 items 필터링
             return (
               <tr key={index}>
-                <td><img src={styleData.pic} alt={`${index + 1}번 스타일`} /></td>
+                <td><img src={styleData.pic} alt={`${index + 1}번 스타일`}
+                  style={{height: '300px', marginRight: '20px'}} /></td>
                 {[0, 1, 2].map((i) => (
                   <td key={i}>
                     {filteredItems[i] ? 
                       (<>{filteredItems[i].name}<br/>
-                      <img src={filteredItems[i].pic} alt={`${index}번 스타일 아이템${i+1}`} /><br/>
+                      <img src={filteredItems[i].pic} alt={`${index}번 스타일 아이템${i+1}`} 
+                      style={{width: '200px', height: '200px', borderRadius: '50%', marginRight: '20px'}}/><br/>
                       <button onClick={() => navigate(`/admin/product/detail/${filteredItems[i].product}`)}>유사상품 조회하기</button></>) 
                     : (<>
                           <button onClick={() => {
@@ -246,14 +248,13 @@ export default function StyleManage() {
       >
         <img height='100px' src={currentStyle.pic} alt={`${currentStyle.no}번 스타일`} /><br/>
         {currentStyle.no}번 스타일에 신규 아이템 연결하기
-        <button onClick={() => setIsNewItemModalOpen(false)}>닫기</button>
         
         <SearchForm>
           <SearchInput type="text" value={productKeyword} placeholder="연결할 상품명을 입력하세요" onChange={onProductKeywordChange} 
           onFocus={() => {setShowProductDropdown(true); fetchProductData()}} 
           />
           {showProductDropdown && (
-          <AutoSearchContainer>
+            <AutoSearchContainer>
           {filteredProducts.map((product, index) => (
             <AutoSearchItem key={index}>
               {product.name} <img height='100px' src={product.pic} alt={`${product.name} 사진`} />
@@ -262,20 +263,11 @@ export default function StyleManage() {
           ))}
           </AutoSearchContainer>
           )}
-        </SearchForm>
-        <table>
-          <tbody>
-            <tr>
-              <td>아이템 사진</td>
-              <td><input type="file" onChange={onItemFileChange} /></td>
-            </tr>
-            <tr>
-              <td>아이템 이름</td>
-              <td><input type="text" onChange={onItemNameChange} /></td>
-            </tr>
-          </tbody>
-        </table>
-        <button onClick={addItem}>추가</button>
+        </SearchForm><br/>
+        아이템 사진 <input type="file" onChange={onItemFileChange} /><br/>
+        아이템 이름 <input type="text" onChange={onItemNameChange} /><br/>
+        <button onClick={addItem}>추가</button><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+        <button onClick={() => setIsNewItemModalOpen(false)}>닫기</button>
       </Modal>
 
       <Modal
@@ -285,7 +277,7 @@ export default function StyleManage() {
         style={{overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)",},
                 content: {background: "white",padding: "20px", borderRadius: "8px", textAlign: "center", maxWidth: "500px", margin: "auto",},}}
       >
-        {currentStyle.no}번 스타일에 기존 아이템 연결하기<button onClick={() => setIsExistingItemModalOpen(false)}>닫기</button><br/><br/>
+        {currentStyle.no}번 스타일에 기존 아이템 연결하기<br/><br/>
         <img height='100px' src={currentStyle.pic} alt={`${currentStyle.no}번 스타일`} /><br/>
         <br/>
         <SearchForm>
@@ -302,7 +294,8 @@ export default function StyleManage() {
           ))}
           </AutoSearchContainer>
         )}
-        </SearchForm>
+        </SearchForm><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+        <button onClick={() => setIsExistingItemModalOpen(false)}>닫기</button>
       </Modal>
     </>
   );

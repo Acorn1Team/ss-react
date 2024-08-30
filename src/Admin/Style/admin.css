@@ -1,4 +1,12 @@
-h1, h2, h3 {
+h1 {
+    text-align: center;
+    color: #333;
+    font-size: 2.5rem;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+h2, h3 {
     text-align: center;
 }
 
@@ -9,10 +17,12 @@ h1, h2, h3 {
     margin: 0 auto; /* 가로로 중앙 정렬 */
     display: flex; /* 옆으로 정렬 플렉스 컨테이너로 설정 */
     justify-content: center; /* 플렉스 항목들(메뉴 항목들)을 가운데 정렬 */
+    border-radius: 8px;
+
 }
 
 #topmenu li {
-    margin-right: 7%;
+    margin-right: 5%;
     text-align: center;
 }
 
@@ -22,13 +32,32 @@ h1, h2, h3 {
 }
 
 /* Link 요소 */
-#topmenu a {
+a {
     text-decoration: none;
     color: black;
     font-size: 18px;
     font-weight: bold;
 }
 
-#topmenu a:hover {
-    color: darkgray;
+a:hover {
+    background-color: #f4f4f4;
+}
+
+body {
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+
+#topmenu li a {
+    padding: 10px 10px;
+    display: block;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#topmenu li a:hover {
+    background-color: darkgray;
+    color: #fff;
 }
