@@ -108,7 +108,9 @@ const Login = () => {
         <br />
         <br />
         <br />
-
+        <div>
+          <Link to="/user/auth/findPass">비밀번호 찾기</Link>
+        </div>
         <p className="signup-link">
           아직 회원이 아니신가요? <Link to="/user/auth/register">회원가입</Link>
         </p>

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 const userPwdRegex =
   /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,}$/; // 최소 4자, 영문, 숫자, 특수문자 포함
 const userIdRegex = /^[a-zA-Z0-9]{4,20}$/; // 4~20자의 영문, 숫자만 허용
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // 이메일 형식 검증 정규 표현식
 
 // 아이디 중복 검사 함수
 const idCheck = async (id, setErrorMessage, setIdChecked) => {
@@ -43,11 +44,18 @@ const idCheck = async (id, setErrorMessage, setIdChecked) => {
         setIdChecked(true);
       }
     } else {
-      console.error("ID 중복 확인 실패.");
+      setErrorMessage((prev) => ({
+        ...prev,
+        id: "아이디 중복 확인 실패.",
+      }));
       setIdChecked(false);
     }
   } catch (error) {
     console.error("ID 중복 확인 중 오류 발생:", error);
+    setErrorMessage((prev) => ({
+      ...prev,
+      id: "아이디 중복 확인 중 오류 발생.",
+    }));
     setIdChecked(false);
   }
 };
@@ -75,6 +83,8 @@ const validateForm = ({
   if (pwd !== pwdChk) errors.pwdChk = "비밀번호가 일치하지 않습니다.";
   if (!name) errors.name = "이름을 입력하세요.";
   if (!email || !emailDomain) errors.email = "이메일을 입력하세요.";
+  else if (!emailRegex.test(`${email}@${emailDomain}`))
+    errors.email = "올바른 이메일 형식을 입력하세요.";
   if (!tel) errors.tel = "전화번호를 입력하세요.";
   if (!zipcode || !addrStart || !addrEnd) errors.address = "주소를 입력하세요.";
 
@@ -88,7 +98,7 @@ const Register = () => {
   const [pwdChk, setPwdChk] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [emailDomain, setEmailDomain] = useState(""); // 기본값으로 "0" 설정
+  const [emailDomain, setEmailDomain] = useState(""); // 기본값으로 빈 문자열
   const [isCustomDomain, setIsCustomDomain] = useState(false); // 직접 입력 여부
   const [tel, setTel] = useState("");
   const [zipcode, setZipcode] = useState("");
@@ -96,7 +106,7 @@ const Register = () => {
   const [addrEnd, setAddrEnd] = useState(""); // 상세 주소 상태
   const [errorMessage, setErrorMessage] = useState({});
   const [emailOptions, setEmailOptions] = useState([
-    { value: "0", text: "선택하세요" },
+    { value: "", text: "선택하세요" },
     { value: "직접입력", text: "직접입력" },
     { value: "naver.com", text: "naver.com" },
     { value: "google.com", text: "google.com" },
@@ -165,11 +175,6 @@ const Register = () => {
       setEmailDomain(selectedValue); // 선택된 도메인으로 설정
     }
   };
-  useEffect(() => {
-    console.log("isCustomDomain:", isCustomDomain);
-    console.log("customDomainInput:", customDomainInput);
-    console.log("emailDomain:", emailDomain);
-  }, [isCustomDomain, customDomainInput, emailDomain]);
 
   const handleCustomDomainInputChange = (event) => {
     setCustomDomainInput(event.target.value);
@@ -369,7 +374,7 @@ const Register = () => {
             value={zipcode}
           />
           <button type="button" onClick={openDaumPostcode}>
-            Search
+            검색
           </button>
         </div>
         <input
@@ -412,7 +417,7 @@ const Register = () => {
         />
 
         <button type="submit" className="btnRegister btn-16" id="btnRegister">
-          Join Up
+          가입하기
         </button>
         {errorMessage.global && (
           <div className="error_message">{errorMessage.global}</div>
