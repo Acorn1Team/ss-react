@@ -91,8 +91,15 @@ export default function PostList() {
     [hasMore, isLoading]
   );
 
-  const handleImageLoadError = (event) => {
-    event.target.style.display = "none"; // 이미지 숨김
+  const handleImageLoadError = (e) => {
+    e.target.style.display = "none"; // 이미지 숨김
+  };
+
+  const handleImageLoad = (e) => {
+    const parentCard = e.target.closest(".post-card");
+    if (parentCard) {
+      parentCard.style.height = "auto"; // 이미지가 로드된 후 카드 높이를 조정
+    }
   };
 
   return (
@@ -103,6 +110,7 @@ export default function PostList() {
             return (
               <div ref={lastPostElementRef} key={fp.no} className="post-card">
                 <Link to={`/user/style/detail/${fp.no}`}>
+<<<<<<< Updated upstream
                   {fp.pic ? (
                     <img
                       src={fp.pic}
@@ -113,6 +121,15 @@ export default function PostList() {
                   ) : (
                     <div className="no-image">이미지가 없습니다</div>
                   )}
+=======
+                  <img
+                    src={imageUrl}
+                    alt={fp.pic}
+                    className="post-image"
+                    onError={handleImageLoadError} // 이미지 로드 에러 처리
+                    onLoad={handleImageLoad} // 이미지 로드 후 높이 조정
+                  />
+>>>>>>> Stashed changes
                 </Link>
                 <div className="post-content">{fp.content}</div>
                 <div className="post-nickname">
@@ -126,6 +143,7 @@ export default function PostList() {
             return (
               <div key={fp.no} className="post-card">
                 <Link to={`/user/style/detail/${fp.no}`}>
+<<<<<<< Updated upstream
                   {fp.pic ? (
                     <img
                       src={fp.pic}
@@ -136,6 +154,15 @@ export default function PostList() {
                   ) : (
                     <div className="no-image">이미지가 없습니다</div>
                   )}
+=======
+                  <img
+                    src={imageUrl}
+                    alt={fp.pic}
+                    className="post-image"
+                    onError={handleImageLoadError} // 이미지 로드 에러 처리
+                    onLoad={handleImageLoad} // 이미지 로드 후 높이 조정
+                  />
+>>>>>>> Stashed changes
                 </Link>
                 <div className="post-content">{fp.content}</div>
                 <div className="post-nickname">
