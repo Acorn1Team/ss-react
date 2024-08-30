@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 const UserUpdate = () => {
-  const { userNo } = useParams(); // userNo를 useParams 내에서 사용
+  const { userNo } = useParams();
 
   const [user, setUser] = useState({
     id: "",
@@ -19,12 +19,11 @@ const UserUpdate = () => {
   });
   const [errors, setErrors] = useState({});
 
-  const zipcodeDisplayRef = useRef(null);
   const addrStartRef = useRef(null);
   const addrEndRef = useRef(null);
+  const zipcodeDisplayRef = useRef(null);
   const userZipcodeRef = useRef(null);
 
-  // Daum API 스크립트 로드
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
@@ -36,7 +35,6 @@ const UserUpdate = () => {
     document.head.appendChild(script);
   }, []);
 
-  // Daum 주소 검색 API 호출
   const openDaumPostcode = () => {
     if (!window.daum.Postcode) {
       console.error("Daum Postcode API가 로드되지 않았습니다.");
@@ -63,34 +61,23 @@ const UserUpdate = () => {
     }).open();
   };
 
-  // DB에서 사용자 데이터 가져오기
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const id = sessionStorage.getItem("id");
         if (!id) {
-          window.location.href = "/loginForm"; // 로그인 페이지로 리다이렉트
+          window.location.href = "/loginForm";
           return;
         }
         const response = await axios.get(`/user/update/${userNo}`);
-        setUser(response.data); // 가져온 데이터로 상태 설정
+        setUser(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
     fetchUserData();
-  }, [userNo]); // userNo를 의존성 배열에 추가
+  }, [userNo]);
 
-  // 폼 입력 핸들러
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUser({
-      ...user,
-      [name]: value,
-    });
-  };
-
-  // 폼 검증 함수
   const validateForm = () => {
     let formIsValid = true;
     let newErrors = {};
@@ -116,7 +103,6 @@ const UserUpdate = () => {
     return formIsValid;
   };
 
-  // 주소 병합 함수
   const combineAddress = () => {
     const { addr_start, addr_end } = user;
     if (!addr_start || !addr_end) {
@@ -126,23 +112,22 @@ const UserUpdate = () => {
     }
   };
 
-  // 폼 제출 핸들러 (DB에 수정된 데이터 저장)
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       const combinedAddress = combineAddress();
       const updatedUser = {
         ...user,
-        address: combinedAddress, // 새로운 주소로 업데이트
-        zipcode: user.zipcode, // 우편번호가 포함되도록 확인
+        address: combinedAddress,
+        zipcode: user.zipcode,
       };
 
       try {
-        console.log("Sending data to server:", updatedUser); // 디버깅 로그
+        console.log("Sending data to server:", updatedUser);
         const response = await axios.put(`/user/update/${userNo}`, updatedUser);
-        console.log("Server response:", response.data); // 디버깅 로그
+        console.log("Server response:", response.data);
         alert("회원 정보가 수정되었습니다.");
-        window.location.href = "/user/main"; // 메인 페이지로 리다이렉트
+        window.location.href = "/user/main";
       } catch (error) {
         console.error(
           "Error updating user:",
@@ -153,21 +138,27 @@ const UserUpdate = () => {
     }
   };
 
-  // 취소 버튼 핸들러
   const handleCancel = () => {
-    window.location.href = "/main"; // 메인 페이지로 리다이렉트
+    window.location.href = "/main";
   };
 
-  // 회원 탈퇴 핸들러
   const handleDelete = async () => {
     try {
-      await axios.delete(`/api/user/${user.id}`); // 사용자 정보 삭제
+      await axios.delete(`/user/delete/${userNo}`);
       alert("회원 탈퇴가 완료되었습니다.");
-      window.location.href = "/loginForm"; // 로그인 페이지로 리다이렉트
+      window.location.href = "/loginForm";
     } catch (error) {
       console.error("Error deleting user:", error);
       alert("회원 탈퇴 중 오류가 발생했습니다.");
     }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUser((prevUser) => ({
+      ...prevUser,
+      [name]: value,
+    }));
   };
 
   return (
@@ -175,17 +166,21 @@ const UserUpdate = () => {
       <form onSubmit={handleSubmit} id="updateForm">
         <div id="userId">@{user.id}</div>
 
-        <div className="form-group">
-          <label>Password</label>
-          <input type="password" name="pwd" onChange={handleInputChange} />
+        {/* 비밀번호 */}
+        <div className="user_input">
+          <input
+            type="password"
+            name="pwd"
+            placeholder="비밀번호"
+            onChange={handleInputChange}
+          />
           {errors.pwd && <div className="error_message">{errors.pwd}</div>}
         </div>
-
-        <div className="form-group">
-          <label>Check</label>
+        <div className="user_input">
           <input
             type="password"
             name="pwd_chk"
+            placeholder="비밀번호 재입력"
             value={user.pwd_chk}
             onChange={handleInputChange}
           />
@@ -194,99 +189,95 @@ const UserUpdate = () => {
           )}
         </div>
 
-        <div className="form-group">
-          <label>Name</label>
+        {/* 이름 */}
+        <div className="user_input">
           <input
             type="text"
             name="name"
+            placeholder="이름"
             value={user.name}
             onChange={handleInputChange}
           />
+          {errors.name && <div className="error_message">{errors.name}</div>}
         </div>
 
-        <div className="form-group">
-          <label>Email</label>
+        {/* 이메일 */}
+        <div className="email_input">
           <input
             type="text"
             name="email"
+            placeholder="이메일"
             value={user.email}
             onChange={handleInputChange}
           />
+
+          {errors.email && <div className="error_message">{errors.email}</div>}
         </div>
 
-        <div className="form-group">
-          <label>Phone</label>
+        {/* 전화번호 */}
+        <div className="user_input">
           <input
             type="text"
             name="tel"
+            placeholder="전화번호"
             value={user.tel}
             onChange={handleInputChange}
           />
+          {errors.tel && <div className="error_message">{errors.tel}</div>}
         </div>
 
-        <div className="form-group">
-          <label>Postcode</label>
-          <div style={{ display: "flex" }}>
-            <input
-              type="text"
-              name="zipcode"
-              value={user.zipcode}
-              disabled
-              ref={zipcodeDisplayRef}
-            />
-            <button type="button" onClick={openDaumPostcode}>
-              Search
-            </button>
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label>Current Address</label>
+        {/* 주소 */}
+        <div className="address_input">
           <input
             type="text"
-            name="current_addr"
-            value={user.address}
-            disabled
+            name="zipcode"
+            ref={zipcodeDisplayRef}
+            placeholder="우편번호"
+            value={user.zipcode}
+            readOnly
           />
-        </div>
-
-        <div className="form-group">
-          <label>New Address</label>
+          <button type="button" onClick={openDaumPostcode}>
+            주소 찾기
+          </button>
           <input
             type="text"
             name="addr_start"
-            placeholder="도로명/지번 주소"
-            value={user.addr_start}
-            onChange={handleInputChange}
             ref={addrStartRef}
+            placeholder="주소"
+            value={user.addr_start}
+            readOnly
           />
           <input
             type="text"
             name="addr_end"
-            placeholder="상세 주소"
+            ref={addrEndRef}
+            placeholder="상세주소"
             value={user.addr_end}
             onChange={handleInputChange}
-            ref={addrEndRef}
           />
+          {errors.address && (
+            <div className="error_message">{errors.address}</div>
+          )}
         </div>
 
-        <div className="form-group">
-          <button type="submit" className="btn btn-primary">
-            수정완료
+        {/* 버튼 */}
+        <div className="button_group">
+          <button type="submit" className="register_button">
+            수정
           </button>
           <button
             type="button"
-            className="btn btn-secondary"
+            className="register_button"
             onClick={handleCancel}
           >
-            수정취소
+            취소
           </button>
           <button
             type="button"
-            className="btn btn-danger"
+            className="register_button"
             onClick={handleDelete}
           >
-            회원탈퇴
+            탈퇴
           </button>
         </div>
       </form>

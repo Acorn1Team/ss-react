@@ -53,6 +53,35 @@ const idCheck = async (id, setErrorMessage, setIdChecked) => {
   }
 };
 
+// 유효성 검사 함수
+const validateForm = ({
+  id,
+  pwd,
+  pwdChk,
+  name,
+  email,
+  emailDomain,
+  tel,
+  zipcode,
+  addrStart,
+  addrEnd,
+}) => {
+  const errors = {};
+
+  if (!userIdRegex.test(id))
+    errors.id = "아이디는 4~20자의 영문자와 숫자만 허용됩니다.";
+  if (!userPwdRegex.test(pwd))
+    errors.pwd =
+      "비밀번호는 최소 4자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.";
+  if (pwd !== pwdChk) errors.pwdChk = "비밀번호가 일치하지 않습니다.";
+  if (!name) errors.name = "이름을 입력하세요.";
+  if (!email || !emailDomain) errors.email = "이메일을 입력하세요.";
+  if (!tel) errors.tel = "전화번호를 입력하세요.";
+  if (!zipcode || !addrStart || !addrEnd) errors.address = "주소를 입력하세요.";
+
+  return errors;
+};
+
 // 회원가입 컴포넌트
 const Register = () => {
   const [id, setId] = useState("");
@@ -60,7 +89,7 @@ const Register = () => {
   const [pwdChk, setPwdChk] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [emailDomain, setEmailDomain] = useState("");
+  const [emailDomain, setEmailDomain] = useState("0"); // 기본값으로 "0" 설정
   const [isCustomDomain, setIsCustomDomain] = useState(false); // 직접 입력 여부
   const [tel, setTel] = useState("");
   const [zipcode, setZipcode] = useState("");
@@ -76,6 +105,7 @@ const Register = () => {
     { value: "nate.com", text: "nate.com" },
     { value: "kakao.com", text: "kakao.com" },
   ]);
+  const [customDomainInput, setCustomDomainInput] = useState("");
   const [idChecked, setIdChecked] = useState(false); // 아이디 중복 체크 여부
 
   const navigate = useNavigate();
@@ -120,11 +150,31 @@ const Register = () => {
     }).open();
   };
 
-  // 이메일 도메인 선택 핸들러
   const handleEmailDomainChange = (event) => {
     const selectedValue = event.target.value;
-    setEmailDomain(selectedValue);
-    setIsCustomDomain(selectedValue === "9");
+    if (selectedValue === "9") {
+      setIsCustomDomain(true);
+      setCustomDomainInput(""); // 입력 칸 초기화
+      setEmailDomain(""); // 커스텀 도메인 입력 필드에 빈 문자열로 설정
+    } else if (selectedValue === "0") {
+      setIsCustomDomain(false);
+      setCustomDomainInput(""); // 입력 칸 초기화
+      setEmailDomain(""); // 선택 안된 상태를 나타내는 빈 문자열로 설정
+    } else {
+      setIsCustomDomain(false);
+      setCustomDomainInput(""); // 입력 칸 초기화
+      setEmailDomain(selectedValue); // 선택된 도메인으로 설정
+    }
+  };
+  useEffect(() => {
+    console.log("isCustomDomain:", isCustomDomain);
+    console.log("customDomainInput:", customDomainInput);
+    console.log("emailDomain:", emailDomain);
+  }, [isCustomDomain, customDomainInput, emailDomain]);
+
+  const handleCustomDomainInputChange = (event) => {
+    setCustomDomainInput(event.target.value);
+    setEmailDomain(event.target.value); // 입력값으로 도메인 업데이트
   };
 
   // 회원가입 핸들러
@@ -132,19 +182,18 @@ const Register = () => {
     event.preventDefault();
 
     // 유효성 검사
-    const errors = {};
-
-    if (!userIdRegex.test(id))
-      errors.id = "아이디는 4~20자의 영문자와 숫자만 허용됩니다.";
-    if (!userPwdRegex.test(pwd))
-      errors.pwd =
-        "비밀번호는 최소 4자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.";
-    if (pwd !== pwdChk) errors.pwdChk = "비밀번호가 일치하지 않습니다.";
-    if (!name) errors.name = "이름을 입력하세요.";
-    if (!email || !emailDomain) errors.email = "이메일을 입력하세요.";
-    if (!tel) errors.tel = "전화번호를 입력하세요.";
-    if (!zipcode || !addrStart || !addrEnd)
-      errors.address = "주소를 입력하세요.";
+    const errors = validateForm({
+      id,
+      pwd,
+      pwdChk,
+      name,
+      email,
+      emailDomain,
+      tel,
+      zipcode,
+      addrStart,
+      addrEnd,
+    });
 
     if (Object.keys(errors).length > 0) {
       setErrorMessage(errors);
@@ -209,12 +258,12 @@ const Register = () => {
             id="idCheck"
             onClick={() => idCheck(id, setErrorMessage, setIdChecked)}
           >
-            중복체크
+            중복 확인
           </button>
+          {errorMessage.id && (
+            <div className="error_message">{errorMessage.id}</div>
+          )}
         </div>
-        {errorMessage.id && (
-          <div className="error_message">{errorMessage.id}</div>
-        )}
 
         {/* 비밀번호 */}
         <div className="user_input">
@@ -273,14 +322,15 @@ const Register = () => {
             type="text"
             name="email_domain"
             id="email_domain"
-            value={emailDomain}
-            onChange={(e) => setEmailDomain(e.target.value)}
+            value={isCustomDomain ? customDomainInput : emailDomain}
+            onChange={handleCustomDomainInputChange}
             disabled={!isCustomDomain}
           />
           <select
             name="email_select"
             id="email_select"
             onChange={handleEmailDomainChange}
+            value={emailDomain}
           >
             {emailOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -341,7 +391,6 @@ const Register = () => {
             disabled
             ref={addrStartRef}
             value={addrStart}
-            onChange={(e) => setAddrStart(e.target.value)}
           />
         </div>
         <div className="user_input">
