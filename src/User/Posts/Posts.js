@@ -89,6 +89,7 @@ export default function Posts() {
         setPostData(res.data.posts);
         setPostCommentData(res.data.comments);
         setTotalPages(res.data.totalPages);
+
         res.data.comments.forEach((comment) => {
           getCommentLike(comment.no);
           checkCommentLike(comment.no);
@@ -113,7 +114,9 @@ export default function Posts() {
   const getProductInPost = () => {
     axios
       .get(`/list/product/${postData.productNo}`)
-      .then((res) => setProductData(res.data))
+      .then((res) => {
+        setProductData(res.data);
+      })
       .catch((err) => {
         console.log(err);
       });
@@ -502,7 +505,7 @@ export default function Posts() {
             {postData.userNo !== userNo && !isReport && (
               <button onClick={() => postReports()}>신고</button>
             )}
-            {postData.userNo === userNo && (
+            {String(postData.userNo) === String(userNo) && (
               <>
                 <button onClick={() => postUDControl("u")}>수정</button>
                 <button onClick={() => postUDControl("d")}>삭제</button>

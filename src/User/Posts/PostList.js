@@ -99,17 +99,20 @@ export default function PostList() {
     <div className="post-list-container">
       {followPost.length > 0 ? (
         followPost.map((fp, index) => {
-          const imageUrl = fp.pic ? fp.pic : defaultImage; // 이미지가 없는 경우 기본 이미지 사용
           if (followPost.length === index + 1) {
             return (
               <div ref={lastPostElementRef} key={fp.no} className="post-card">
                 <Link to={`/user/style/detail/${fp.no}`}>
-                  <img
-                    src={imageUrl}
-                    alt={fp.pic}
-                    className="post-image"
-                    onError={handleImageLoadError} // 이미지 로드 에러 처리
-                  />
+                  {fp.pic ? (
+                    <img
+                      src={fp.pic}
+                      alt="포스트 이미지"
+                      className="post-image"
+                      onError={handleImageLoadError} // 이미지 로드 에러 처리
+                    />
+                  ) : (
+                    <div className="no-image">이미지가 없습니다</div>
+                  )}
                 </Link>
                 <div className="post-content">{fp.content}</div>
                 <div className="post-nickname">
@@ -123,12 +126,16 @@ export default function PostList() {
             return (
               <div key={fp.no} className="post-card">
                 <Link to={`/user/style/detail/${fp.no}`}>
-                  <img
-                    src={imageUrl}
-                    alt={fp.pic}
-                    className="post-image"
-                    onError={handleImageLoadError} // 이미지 로드 에러 처리
-                  />
+                  {fp.pic ? (
+                    <img
+                      src={fp.pic}
+                      alt="포스트 이미지"
+                      className="post-image"
+                      onError={handleImageLoadError} // 이미지 로드 에러 처리
+                    />
+                  ) : (
+                    <div className="no-image">이미지가 없습니다</div>
+                  )}
                 </Link>
                 <div className="post-content">{fp.content}</div>
                 <div className="post-nickname">
