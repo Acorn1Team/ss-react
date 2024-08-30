@@ -81,7 +81,7 @@ export default function CartList() {
                 <button onClick={() => decrementQuantity(item.product.no)}>-</button>
                 <span>{item.quantity}</span>
                 <button onClick={() => incrementQuantity(item.product.no)}>+</button>&nbsp;&nbsp;
-                <span>{item.product.price}원</span>&nbsp;&nbsp;
+                <span>{item.product.price * item.quantity}원</span>&nbsp;&nbsp; {/* 상품 가격 * 수량 계산 후 표시 */}
                 <button
                   onClick={() =>
                     dispatch({ type: "REMOVE_FROM_CART", payload: item.product.no })
