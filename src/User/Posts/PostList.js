@@ -58,40 +58,6 @@ export default function PostList() {
   };
 
   return (
-<<<<<<< Updated upstream
-    <div>
-      {followPost.map((fp) => (
-        <div key={fp.no}>
-          <img src={fp.userPic} alt={fp.no}></img>
-          <Link to={`/user/style/profile/${fp.userNo}`}>
-            @{fp.userNickname}
-          </Link>
-          <br />
-          <Link to={`/user/style/detail/${fp.no}`}>
-            <img src={fp.pic} alt={fp.pic} />
-            {fp.content}
-          </Link>
-          <hr />
-        </div>
-      ))}
-      {totalPages > 1 && (
-        <div style={{ marginTop: "10px" }}>
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 0}
-          >
-            이전
-          </button>
-          <span style={{ margin: "0 10px" }}>
-            {currentPage + 1} / {totalPages}
-          </span>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage + 1 >= totalPages}
-          >
-            다음
-          </button>
-=======
     <div className="post-list-container">
       {followPost.length > 0 ? (
         followPost.map((fp, index) => {
@@ -134,7 +100,6 @@ export default function PostList() {
         <div className="empty-message">
           <p>팔로우한 사용자가 아직 게시글을 올리지 않았어요.</p>
           <p>지금 인기 게시물을 확인해보세요!</p>
->>>>>>> Stashed changes
         </div>
       )}
     </div>
