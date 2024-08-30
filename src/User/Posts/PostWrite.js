@@ -32,6 +32,7 @@ export default function PostWrite() {
   const getProductInfo = async (pNo) => {
     try {
       const res = await axios.get(`/list/product/${pNo}`);
+
       setProductInfo(res.data);
       setSelected(pNo); // 선택된 상품 설정
     } catch (err) {

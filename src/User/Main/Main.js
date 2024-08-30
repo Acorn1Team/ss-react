@@ -8,6 +8,7 @@ export default function UserHome() {
   const [review, setReview] = useState([]);
   const [posts, setPosts] = useState([]);
   const [selectReviewIndex, setSelectReviewIndex] = useState(0);
+  const userNo = sessionStorage.getItem("id");
 
   // 리뷰 슬라이드 기능 구현
   useEffect(() => {
@@ -127,7 +128,7 @@ export default function UserHome() {
             </Link>
           ))}
       </div>
-      <Link to="/admin">관리자</Link>
+      {userNo === "1" && <Link to="/admin">관리자</Link>}
     </div>
   );
 }

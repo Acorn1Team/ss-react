@@ -9,10 +9,10 @@ function ChatComponent() {
   useEffect(() => {
     let chatRoomId;
 
-    if (userId === "0") {
-      chatRoomId = "0"; // 관리자 전용 방이 있을 경우 여기서 설정
+    if (userId === "1") {
+      chatRoomId = "1"; // 관리자 전용 방이 있을 경우 여기서 설정
     } else {
-      chatRoomId = `0_${userId}`; // 일반 사용자 채팅방
+      chatRoomId = `1_${userId}`; // 일반 사용자 채팅방
     }
 
     console.log("Chat Room ID:", chatRoomId); // 구독하려는 경로를 확인

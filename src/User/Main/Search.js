@@ -148,7 +148,7 @@ function ShowItem({ item }) {
         <Link to={`/user/main/sub/${item.no}`} state={{ stateValue: item }}>
           <img
             src={item.pic} // 쇼의 사진 URL
-            alt={`${item.name}'s picture`} // 이미지 설명
+            alt={`${item.name}`} // 이미지 설명
             className={styles.profilePic} // 스타일 적용
           />
         </Link>
@@ -179,7 +179,7 @@ function ProductItem({ item }) {
   );
 }
 
-// 사용자 아이템 컴포넌트
+// 사용자 아이템 컴포넌트`
 function UserItem({ item }) {
   return (
     <div className={styles2.profileContainer}>

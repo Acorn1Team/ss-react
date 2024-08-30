@@ -7,9 +7,11 @@ function ChatInput({ onSendMessage }) {
   const handleSend = () => {
     if (message.trim() !== "") {
       const messagePayload = {
-        no: userNo,
-        content: message,
+        content: message, // Ensure this is a string
+        receiverNo: 1,
+        closeChat: false,
         sendAdmin: false,
+        userNo: userNo,
       };
       console.log("Sending message:", JSON.stringify(messagePayload));
       onSendMessage(messagePayload);

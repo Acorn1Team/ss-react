@@ -105,7 +105,7 @@ export default function Posts() {
 
   // 관리자인지 확인하기
   const adminCheck = () => {
-    if (userNo === 0) {
+    if (userNo === 1) {
       setIsAdmin(true);
     }
   };
@@ -573,7 +573,7 @@ export default function Posts() {
                     {commentLikeStatus[pc.no] ? "좋아요 취소" : "좋아요"}
                   </button>
                   좋아요 {commentLike[pc.no]}개
-                  {pc.userNo === userNo && (
+                  {String(pc.userNo) === String(userNo) && (
                     <button onClick={() => deleteComment(pc.no)}>삭제</button>
                   )}
                   {pc.replies &&

@@ -133,6 +133,8 @@ export default function OtherProfile() {
   useEffect(() => {
     if (profileUserNo === userNo) {
       nv(`/user/style/list/${userNo}`);
+    } else if (userNo === 1) {
+      nv(`/user/mypage/notice`);
     } else {
       followCheckProc();
       followInfo();

@@ -34,7 +34,7 @@ function App() {
 
     client.onConnect = () => {
       const userNo = sessionStorage.getItem("id"); // 사용자 ID를 세션 등에서 가져옴
-      const chatRoomId = `admin_${userNo}`; // 관리자와 사용자 간의 고유 경로 생성
+      const chatRoomId = `1_${userNo}`; // 관리자와 사용자 간의 고유 경로 생성
 
       client.subscribe(`/sub/chat/room/${chatRoomId}`, (message) => {
         console.log("Message received: ", JSON.parse(message.body));

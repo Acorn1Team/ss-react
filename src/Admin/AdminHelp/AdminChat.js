@@ -5,7 +5,7 @@ import SockJS from "sockjs-client";
 function AdminChat({ selectedUserId }) {
   const [stompClient, setStompClient] = useState(null);
   const [messages, setMessages] = useState([]);
-  const adminId = "0"; // 관리자는 항상 고정된 ID
+  const adminId = "1"; // 관리자는 항상 고정된 ID
 
   useEffect(() => {
     const socket = new SockJS("http://localhost:8080/ws");
@@ -18,7 +18,7 @@ function AdminChat({ selectedUserId }) {
     });
 
     client.onConnect = () => {
-      const chatRoomId = `0_${selectedUserId}`; // 유저와의 채팅방 구독
+      const chatRoomId = `${adminId}_${selectedUserId}`; // 유저와의 채팅방 구독
 
       client.subscribe(`/sub/chat/room/${chatRoomId}`, (message) => {
         const receivedMessage = JSON.parse(message.body);
