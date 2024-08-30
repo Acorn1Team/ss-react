@@ -110,7 +110,6 @@ export default function PostList() {
             return (
               <div ref={lastPostElementRef} key={fp.no} className="post-card">
                 <Link to={`/user/style/detail/${fp.no}`}>
-<<<<<<< Updated upstream
                   {fp.pic ? (
                     <img
                       src={fp.pic}
@@ -121,15 +120,6 @@ export default function PostList() {
                   ) : (
                     <div className="no-image">이미지가 없습니다</div>
                   )}
-=======
-                  <img
-                    src={imageUrl}
-                    alt={fp.pic}
-                    className="post-image"
-                    onError={handleImageLoadError} // 이미지 로드 에러 처리
-                    onLoad={handleImageLoad} // 이미지 로드 후 높이 조정
-                  />
->>>>>>> Stashed changes
                 </Link>
                 <div className="post-content">{fp.content}</div>
                 <div className="post-nickname">
