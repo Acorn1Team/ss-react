@@ -349,7 +349,7 @@ function HeaderForm() {
       <RightContainer>
         <Search />
         <Link to="/user/shop/cart">
-          <Icon src={cartImage} alt="Cart" />
+          <Icon src={cartImage} alt="Cart" width={"300px"} />
         </Link>
         {userNo && (
           <div style={{ position: "relative" }}>
@@ -357,6 +357,7 @@ function HeaderForm() {
               src={alarmImage}
               alt="Alarm"
               onClick={handleAlarmClick}
+              width={"500px"}
               style={{ cursor: "pointer" }}
             />
             {hasUnreadAlerts && <RedDot />}{" "}

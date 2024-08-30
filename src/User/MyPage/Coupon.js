@@ -14,7 +14,7 @@ export default function Coupon() {
   const [totalPages, setTotalPages] = useState(1);
 
   // 로그인 정보라고 가정
-  const userNo = 3;
+  const userNo = sessionStorage.getItem("id");
 
   useEffect(() => {
     getCouponData();
@@ -30,6 +30,7 @@ export default function Coupon() {
   const getCouponData = () => {
     axios
       .get(`/coupon/${userNo}`, {
+        // 사용하지 않은 쿠폰만 불러옴!!
         params: {
           page: currentPage,
           size: pageSize,

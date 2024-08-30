@@ -1,5 +1,5 @@
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../Style/Main.css";
 
@@ -9,6 +9,8 @@ export default function UserHome() {
   const [posts, setPosts] = useState([]);
   const [selectReviewIndex, setSelectReviewIndex] = useState(0);
   const userNo = sessionStorage.getItem("id");
+
+  const imageRef = useRef(null);
 
   // 리뷰 슬라이드 기능 구현
   useEffect(() => {
@@ -24,109 +26,94 @@ export default function UserHome() {
     return () => clearInterval(interval);
   }, [review]);
 
-  // 메인에 보여 줄 작품 목록 가져오기
-  const showData = () => {
+  // 스크롤에 따른 이미지 이동
+  useEffect(() => {
+    const handleScroll = () => {
+      if (imageRef.current) {
+        const scrollPosition = window.scrollY;
+        imageRef.current.style.transform = `translateY(${scrollPosition}px)`;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // 데이터 가져오기
+  const fetchData = () => {
     axios
       .get("/main/showData")
-      .then((res) => {
-        if (Array.isArray(res.data)) {
-          setShow(res.data);
-        } else {
-          setShow([]);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setShow([]); // 오류 발생 시 빈 배열로 설정
-      });
-  };
+      .then((res) => setShow(Array.isArray(res.data) ? res.data : []))
+      .catch(() => setShow([]));
 
-  // 메인에 보여 줄 최신 리뷰 가져오기
-  const showNewReview = () => {
     axios
       .get("/main/showNewReview")
-      .then((res) => {
-        if (Array.isArray(res.data)) {
-          setReview(res.data);
-        } else {
-          setReview([]);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setReview([]); // 오류 발생 시 빈 배열로 설정
-      });
-  };
+      .then((res) => setReview(Array.isArray(res.data) ? res.data : []))
+      .catch(() => setReview([]));
 
-  // 메인에 보여 줄 피드 베스트 가져오기
-  const showStyleBest = () => {
     axios
       .get("/main/showStyleBest")
-      .then((res) => {
-        if (Array.isArray(res.data)) {
-          setPosts(res.data);
-        } else {
-          setPosts([]);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        setPosts([]); // 오류 발생 시 빈 배열로 설정
-      });
+      .then((res) => setPosts(Array.isArray(res.data) ? res.data : []))
+      .catch(() => setPosts([]));
   };
 
-  // 최초 접속시 1회 로딩
   useEffect(() => {
-    showData();
-    showNewReview();
-    showStyleBest();
+    fetchData();
   }, []);
 
   return (
-    <div>
-      <img width="100%" src="../images/mainphoto-01.png" alt="main" />
-      <b>SceneStealer</b>
-      <b className="mainTextTitle">Choose Your Scene!</b>
-      <div id="mainPosts">
-        {Array.isArray(show) &&
-          show.map((s) => (
-            <Link to={`/user/main/sub/${s.no}`} key={s.no}>
-              <div className="mainPostsBox" key={s.no}>
-                <img src={s.pic} alt={s.title}></img>
+    <div className="page-container">
+      <div className="image-wrapper">
+        <img
+          ref={imageRef}
+          className="scrollable-image"
+          src="../images/mainFinal-01.png"
+          alt="main"
+        />
+      </div>
+      <div className="content">
+        <b>SceneStealer</b>
+        <b className="mainTextTitle">Choose Your Scene!</b>
+        <div id="mainPosts">
+          {Array.isArray(show) &&
+            show.map((s) => (
+              <Link to={`/user/main/sub/${s.no}`} key={s.no}>
+                <div className="mainPostsBox">
+                  <img src={s.pic} alt={s.title} />
+                  <br />
+                  {s.title}
+                </div>
+              </Link>
+            ))}
+        </div>
+        <b className="mainTextTitle">New Review</b>
+        <div id="mainReviews">
+          {Array.isArray(review) && review.length > 0 && (
+            <div className="mainReviewsBox active">
+              <Link to={`/user/shop/review/${review[selectReviewIndex].no}`}>
+                <img
+                  src={review[selectReviewIndex].pic}
+                  alt={review[selectReviewIndex].no}
+                />
                 <br />
-                {s.title}
-              </div>
-            </Link>
-          ))}
-      </div>
-      <b className="mainTextTitle">New Review</b>
-      <div id="mainReviews">
-        {Array.isArray(review) && review.length > 0 && (
-          <div className="mainReviewsBox active">
-            <Link to={`/user/shop/review/${review[selectReviewIndex].no}`}>
-              <img
-                src={review[selectReviewIndex].pic}
-                alt={review[selectReviewIndex].no}
-              ></img>
-              <br />
-              {review[selectReviewIndex].userNickname}&emsp;
-              {review[selectReviewIndex].productName}
-            </Link>
-          </div>
-        )}
-      </div>
-      <b className="mainTextTitle">Style Best</b>
-      <div id="mainPosts">
-        {Array.isArray(posts) &&
-          posts.map((p) => (
-            <Link to={`/user/style/detail/${p.no}`} key={p.no}>
-              <div className="mainPostsBox" key={p.no}>
-                <img src={p.pic} alt={p.no}></img>
-
-                {p.userNickname}
-              </div>
-            </Link>
-          ))}
+                {review[selectReviewIndex].userNickname} &emsp;{" "}
+                {review[selectReviewIndex].productName}
+              </Link>
+            </div>
+          )}
+        </div>
+        <b className="mainTextTitle">Style Best</b>
+        <div id="mainPosts">
+          {Array.isArray(posts) &&
+            posts.map((p) => (
+              <Link to={`/user/style/detail/${p.no}`} key={p.no}>
+                <div className="mainPostsBox">
+                  <img src={p.pic} alt={p.no} />
+                  {p.userNickname}
+                </div>
+              </Link>
+            ))}
+        </div>
       </div>
       {userNo === "1" && <Link to="/admin">관리자</Link>}
     </div>

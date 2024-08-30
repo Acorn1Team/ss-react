@@ -3,6 +3,8 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   background-color: #f5f5f5;
+  padding: 0;
+  overflow-x: hidden; /* 수평 스크롤 방지 */
 }
 
 /* 메인 페이지 컨테이너 */
@@ -96,10 +98,30 @@ b {
 }
 
 /* 메인 배너 이미지 스타일 */
-img[alt="main"] {
+.image-wrapper {
+  position: sticky; /* Sticky로 설정하여 스크롤에 따라 이미지가 고정되도록 함 */
+  top: 0;
+  width: 100%;
+  height: 200vh; /* 화면 전체 높이 */
+  overflow: hidden; /* 이미지 밖으로 나가는 부분을 숨김 */
+  z-index: -1; /* 이미지가 콘텐츠 아래에 위치하도록 설정 */
+}
+
+.scrollable-image {
+  position: absolute; /* 이미지가 스크롤 시 이동하도록 설정 */
+  top: -1100px;
+  left: 0;
   width: 100%;
   height: auto;
-  border-bottom: 5px solid #ddd;
+  object-fit: cover; /* 이미지가 컨테이너를 가득 채우도록 */
+}
+
+/* 콘텐츠 스타일 */
+.content {
+  position: relative;
+  z-index: 1; /* 이미지 위에 콘텐츠가 위치하도록 설정 */
+  padding: 20px; /* 콘텐츠에 여백 추가 */
+  padding-bottom: 170px;
 }
 
 /* 관리자 링크 스타일 */

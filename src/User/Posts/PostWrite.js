@@ -23,6 +23,8 @@ export default function PostWrite() {
   const [filteredItems, setFilteredItems] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
 
+  const [orderProductList, setOrderProductList] = useState([]);
+
   const navigate = useNavigate();
 
   // 로그인 정보라고 가정
@@ -48,6 +50,19 @@ export default function PostWrite() {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  // 구매한 상품 자료
+  const getOrderProductList = () => {
+    axios
+      .get(`/posts/product/${userNo}`)
+      .then((res) => {
+        setOrderProductList(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   // 상품 선택 핸들러
@@ -129,6 +144,28 @@ export default function PostWrite() {
     setInputValue(e.target.value);
   };
 
+  // 상품 선택 핸들러
+  const handleSelectChange = (e) => {
+    const selectedProductNo = e.target.value;
+    setSelected(parseInt(selectedProductNo, 10));
+
+    if (selectedProductNo === "0") {
+      setProductInfo({});
+      return;
+    }
+
+    const selectedProduct = orderProductList.find(
+      (item) => item.no === parseInt(selectedProductNo, 10)
+    );
+
+    if (selectedProduct) {
+      setProductInfo(selectedProduct);
+    } else {
+      console.error("Selected product not found in orderProductList");
+      setProductInfo({});
+    }
+  };
+
   // 드롭다운 블러 핸들러
   const handleBlur = () => {
     setTimeout(() => setShowDropdown(false), 100); // 드롭다운을 약간의 지연 후에 닫음
@@ -162,6 +199,7 @@ export default function PostWrite() {
   useEffect(() => {
     const loadData = async () => {
       await getProductList();
+      await getOrderProductList();
 
       if (postNo) {
         getPostInfo();
@@ -211,6 +249,19 @@ export default function PostWrite() {
             </div>
           </div>
         )}
+        아니면 구매한 상품을 첨부할 수 있어요.
+        <select
+          value={selected}
+          onChange={handleSelectChange}
+          className={styles.productSelect}
+        >
+          <option value="0">구매한 상품을 선택하세요</option>
+          {orderProductList.map((item) => (
+            <option key={item.no} value={item.no}>
+              {item.name}
+            </option>
+          ))}
+        </select>
         {productInfo && productInfo.name && (
           <div className={styles.productInfoContainer}>
             <p>선택한 상품 정보:</p>
