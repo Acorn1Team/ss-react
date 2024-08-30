@@ -59,7 +59,11 @@ export default function PostList() {
         },
       })
       .then((res) => {
-        setFollowPost(res.data.content); // 페이지를 변경할 때마다 갱신
+        // 삭제된 게시물을 제외하고 불러옴
+        const filteredPosts = res.data.content.filter(
+          (post) => post.deleted < 1
+        );
+        setFollowPost(filteredPosts); // 페이지를 변경할 때마다 갱신
         setTotalPages(res.data.totalPages);
       })
       .catch((err) => {
