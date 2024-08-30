@@ -89,7 +89,7 @@ const Register = () => {
   const [pwdChk, setPwdChk] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [emailDomain, setEmailDomain] = useState("0"); // 기본값으로 "0" 설정
+  const [emailDomain, setEmailDomain] = useState(""); // 기본값으로 "0" 설정
   const [isCustomDomain, setIsCustomDomain] = useState(false); // 직접 입력 여부
   const [tel, setTel] = useState("");
   const [zipcode, setZipcode] = useState("");
@@ -98,7 +98,7 @@ const Register = () => {
   const [errorMessage, setErrorMessage] = useState({});
   const [emailOptions, setEmailOptions] = useState([
     { value: "0", text: "선택하세요" },
-    { value: "9", text: "직접입력" },
+    { value: "직접입력", text: "직접입력" },
     { value: "naver.com", text: "naver.com" },
     { value: "google.com", text: "google.com" },
     { value: "hanmail.net", text: "hanmail.net" },
@@ -152,10 +152,10 @@ const Register = () => {
 
   const handleEmailDomainChange = (event) => {
     const selectedValue = event.target.value;
-    if (selectedValue === "9") {
+    if (selectedValue === "직접입력") {
       setIsCustomDomain(true);
       setCustomDomainInput(""); // 입력 칸 초기화
-      setEmailDomain(""); // 커스텀 도메인 입력 필드에 빈 문자열로 설정
+      setEmailDomain("직접입력"); // 커스텀 도메인 입력 필드에 빈 문자열로 설정
     } else if (selectedValue === "0") {
       setIsCustomDomain(false);
       setCustomDomainInput(""); // 입력 칸 초기화
@@ -174,7 +174,6 @@ const Register = () => {
 
   const handleCustomDomainInputChange = (event) => {
     setCustomDomainInput(event.target.value);
-    setEmailDomain(event.target.value); // 입력값으로 도메인 업데이트
   };
 
   // 회원가입 핸들러
