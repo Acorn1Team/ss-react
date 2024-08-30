@@ -8,6 +8,7 @@ export default function PostList() {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize] = useState(10);
   const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
 
   const userNo = sessionStorage.getItem("id");
   const observer = useRef();
@@ -15,13 +16,51 @@ export default function PostList() {
   const defaultImage = "https://via.placeholder.com/200"; // 기본 이미지 URL
 
   useEffect(() => {
-    getPostList();
+    if (hasMore && !isLoading) {
+      getPostList();
+    }
   }, [userNo, currentPage]);
 
   // 팔로우한 유저 게시글 정보 가져오기
   const getPostList = () => {
+    setIsLoading(true); // 로딩 시작
     axios
       .get(`/posts/followOrPopular/${userNo}`, {
+        params: {
+          page: currentPage,
+          size: pageSize,
+        },
+      })
+      .then((res) => {
+        const filteredPosts = res.data.content.filter(
+          (post) => post.deleted < 1
+        );
+
+        if (filteredPosts.length === 0 && currentPage === 0) {
+          // 팔로우한 게시물이 없는 경우 전체 게시물 불러오기
+          getAllPosts();
+        } else {
+          // 중복 데이터가 추가되지 않도록 prevPosts에 새로운 게시물 추가
+          setFollowPost((prevPosts) => {
+            const newPosts = filteredPosts.filter(
+              (newPost) => !prevPosts.some((post) => post.no === newPost.no)
+            );
+            return [...prevPosts, ...newPosts];
+          });
+          setHasMore(currentPage + 1 < res.data.totalPages);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false); // 로딩 종료
+      });
+  };
+
+  const getAllPosts = () => {
+    axios
+      .get(`/posts/popular`, {
         params: {
           page: currentPage,
           size: pageSize,
@@ -43,13 +82,13 @@ export default function PostList() {
     (node) => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
+        if (entries[0].isIntersecting && hasMore && !isLoading) {
           setCurrentPage((prevPage) => prevPage + 1);
         }
       });
       if (node) observer.current.observe(node);
     },
-    [hasMore]
+    [hasMore, isLoading]
   );
 
   const handleImageLoadError = (event) => {
@@ -104,8 +143,7 @@ export default function PostList() {
         })
       ) : (
         <div className="empty-message">
-          <p>팔로우한 사용자가 아직 게시글을 올리지 않았어요.</p>
-          <p>지금 인기 게시물을 확인해보세요!</p>
+          <p>게시글을 불러오고 있습니다...</p>
         </div>
       )}
     </div>
