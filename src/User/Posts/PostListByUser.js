@@ -38,7 +38,7 @@ export default function PostListByUser() {
 
   const getDeletedPosts = () => {
     axios
-      .get(`/posts/deleted`)
+      .get(`/posts/deleted/${no}`)
       .then((res) => {
         setDeletedPosts(res.data.content || []);
       })

@@ -123,8 +123,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Process />} />
             <Route path="/user/*" element={<UserRoutes />} />
-            <Route path="/admin/*" element={<AdminRoutes />} />
-            {/* <Route path="/admin/*" element={<AdminRoute element={<AdminRoutes />} />} /> */}
+            <Route path="/admin/*" element={<AdminRoute element={<AdminRoutes />} />} />
 
             <Route
               path="/user/chat"

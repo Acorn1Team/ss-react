@@ -93,7 +93,6 @@ export default function PostList() {
 
   const handleImageLoadError = (event) => {
     event.target.style.display = "none"; // 이미지 숨김
-    event.target.insertAdjacentHTML("afterend", `<div>이미지 로드 실패</div>`); // 파일 이름 표시 또는 경고 메시지
   };
 
   return (
