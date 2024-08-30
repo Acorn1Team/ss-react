@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../Style/Register.module.css";
 
 // 정규 표현식
 const userPwdRegex =

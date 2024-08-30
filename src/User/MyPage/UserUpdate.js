@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
+
 import axios from "axios";
 
 const UserUpdate = () => {
@@ -47,7 +48,7 @@ const UserUpdate = () => {
           data.userSelectedType === "R" ? data.roadAddress : data.jibunAddress;
         setUser((prevUser) => ({
           ...prevUser,
-          addr_start: addr,
+          address: addr,
           zipcode: data.zonecode,
         }));
 
@@ -139,7 +140,7 @@ const UserUpdate = () => {
   };
 
   const handleCancel = () => {
-    window.location.href = "/main";
+    window.history.back();
   };
 
   const handleDelete = async () => {
@@ -166,7 +167,7 @@ const UserUpdate = () => {
       <form onSubmit={handleSubmit} id="updateForm">
         {social === "kakao" && <div>카카오 아이디로 로그인된 계정입니다.</div>}
         {social === "naver" && <div>네이버 아이디로 로그인된 계정입니다.</div>}
-        <div id="userId">{user.id}</div>
+        <div id="userId">아이디 : {user.id}</div>
         {/* 비밀번호 */}
         {!social && (
           <>
@@ -232,26 +233,28 @@ const UserUpdate = () => {
         </div>
 
         {/* 주소 */}
-        <div className="address_input">
+        <div>
           <input
             type="text"
             name="zipcode"
             ref={zipcodeDisplayRef}
             placeholder="우편번호"
             value={user.zipcode}
-            readOnly
+            disabled
           />
           <button type="button" onClick={openDaumPostcode}>
             주소 찾기
           </button>
+          <br />
           <input
             type="text"
             name="addr_start"
             ref={addrStartRef}
             placeholder="주소"
-            value={user.addr_start}
-            readOnly
+            value={user.address}
+            disabled
           />
+          <br />
           <input
             type="text"
             name="addr_end"
