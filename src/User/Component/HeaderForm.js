@@ -348,7 +348,7 @@ function HeaderForm() {
       </LeftContainer>
       <RightContainer>
         <Search />
-        <Link to="/shop/cart">
+        <Link to="/user/shop/cart">
           <Icon src={cartImage} alt="Cart" />
         </Link>
         {userNo && (

@@ -9,7 +9,7 @@ export default function ProductList() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
   const [pageSize, setPageSize] = useState(12); // 페이지 크기
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
-
+  
   const refresh = () => {
     // ajax 요청 (get 방식)
     axios

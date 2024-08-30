@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import ProductReviews from "./ProductReviews";
 
 export default function ProductDetail() {
@@ -8,8 +9,9 @@ export default function ProductDetail() {
   const { no, productNo } = useParams();
   const [product, setProduct] = useState({});
   const [count, setCount] = useState(1); // 수량을 상태로 관리
-  //const [reviews, setReviews] = useState([]); // 리뷰 데이터 상태 추가
   const [averageRating, setAverageRating] = useState(0); // 평균 평점 상태 추가
+  const dispatch = useDispatch(); // Redux의 dispatch 함수 사용
+  const navigate = useNavigate(); // useNavigate 훅 사용
 
   //const userNo = 11;
 
@@ -58,22 +60,15 @@ export default function ProductDetail() {
 
 
  // 장바구니에 제품 추가
- const addToCart = () => {
-  axios
-    .post("/cart/add", {
-      userNo: 11, // 사용자 ID
-      productNo: productNo, // 제품 번호
-      quantity: count // 수량
-    })
-    .then((response) => {
-      alert("장바구니에 추가되었습니다.");
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.error("장바구니에 제품을 추가하는데 문제가 발생했습니다.", error);
-      alert("장바구니 추가에 실패했습니다.");
-    });
+ const handleAddToCart = () => {
+  dispatch({
+    type: "ADD_TO_CART",
+    payload: { product, quantity: count },
+  });
+  alert("장바구니에 추가되었습니다.");
+  navigate(`/user/shop/cart`); // 장바구니 페이지로 이동
 };
+
 
 
   return (
@@ -99,9 +94,8 @@ export default function ProductDetail() {
         <span>{product.discountRate}</span>
       </div>
       <div>
-        <button onClick={addToCart}>장바구니에 담기</button>
+      <button onClick={handleAddToCart}>장바구니에 담기</button>
       </div>
-      <Link to={`/cart/list/${productNo}`}>장바구니</Link>
       <div>
         <label>상품 설명: </label>
         <span>{product.contents}</span>
