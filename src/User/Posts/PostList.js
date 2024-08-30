@@ -91,8 +91,15 @@ export default function PostList() {
     [hasMore, isLoading]
   );
 
-  const handleImageLoadError = (event) => {
-    event.target.style.display = "none"; // 이미지 숨김
+  const handleImageLoadError = (e) => {
+    e.target.style.display = "none"; // 이미지 숨김
+  };
+
+  const handleImageLoad = (e) => {
+    const parentCard = e.target.closest(".post-card");
+    if (parentCard) {
+      parentCard.style.height = "auto"; // 이미지가 로드된 후 카드 높이를 조정
+    }
   };
 
   return (

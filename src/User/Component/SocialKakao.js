@@ -50,7 +50,7 @@ const SocialKakao = () => {
           if (status === "login") {
             navigate("/user");
           } else if (status === "signup") {
-            navigate(`/user/main/sub`);
+            navigate(`/user/mypage/update/${user.no}/kakao`);
           }
         })
         .catch((error) => {
