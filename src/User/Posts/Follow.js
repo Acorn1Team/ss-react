@@ -9,6 +9,8 @@ export default function Follow() {
   const [followData, setFollowData] = useState([]);
   const [followStatus, setFollowStatus] = useState({});
 
+  const [isMyPage, setIsMyPage] = useState(false);
+
   // 현재 페이지
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -67,11 +69,24 @@ export default function Follow() {
       .then((res) => {
         setFollowStatus((pstatus) => ({
           ...pstatus,
-          [fno]: res.data,
+          [fno]: res.data.result,
         }));
       })
       .catch((err) => {
         console.log(err);
+      });
+  };
+
+  const deleteFollower = (fno) => {
+    axios
+      .delete(`/posts/user/follow/${fno}/${userNo}`)
+      .then((res) => {
+        if (res.data.result) {
+          setFollowData((prevData) => prevData.filter((f) => f.no !== fno));
+        }
+      })
+      .catch((error) => {
+        console.log("팔로우 취소 실패 :", error);
       });
   };
 
@@ -115,6 +130,9 @@ export default function Follow() {
   };
 
   useEffect(() => {
+    if (userNo === userFollowNo) {
+      setIsMyPage(true);
+    }
     const userNoToUse = userFollowNo || userNo;
     if (followInfo === "follower") {
       followerInfo(userNoToUse);
@@ -138,14 +156,23 @@ export default function Follow() {
         <div key={f.no} className={styles.followItem}>
           <img src={f.pic} alt="Profile" className={styles.profilePic} />
           <Link to={`/user/style/profile/${f.no}`}> @{f.nickname}</Link>
-          <button
-            onClick={() => followOrCancel(f.no)}
-            className={
-              followStatus[f.no] ? styles.unfollowButton : styles.followButton
-            }
-          >
-            {followStatus[f.no] ? "팔로우 취소하기" : "팔로우 하기"}
-          </button>
+          {isMyPage && followInfo === "follower" ? (
+            <button
+              onClick={() => deleteFollower(f.no)}
+              className={styles.unfollowButton}
+            >
+              삭제하기
+            </button>
+          ) : (
+            <button
+              onClick={() => followOrCancel(f.no)}
+              className={
+                followStatus[f.no] ? styles.unfollowButton : styles.followButton
+              }
+            >
+              {followStatus[f.no] ? "팔로우 취소하기" : "팔로우 하기"}
+            </button>
+          )}
         </div>
       ))}
       {totalPages > 1 && (

@@ -287,15 +287,17 @@ function HeaderForm() {
   }, [showAlertPopup, userNo, currentPage]);
 
   const fetchAlerts = async () => {
-    try {
-      const response = await axios.get(`/alert/${userNo}`, {
-        params: { page: currentPage, size: pageSize },
-      });
-      setAlerts(response.data.content || []); // 데이터가 없을 경우 빈 배열로 설정
-      setTotalPages(response.data.totalPages || 1); // 총 페이지 수가 없을 경우 1로 설정
-    } catch (err) {
-      console.log(err);
-      setAlerts([]); // 에러 발생 시 알림 데이터를 빈 배열로 설정
+    if (userNo) {
+      try {
+        const response = await axios.get(`/alert/${userNo}`, {
+          params: { page: currentPage, size: pageSize },
+        });
+        setAlerts(response.data.content || []); // 데이터가 없을 경우 빈 배열로 설정
+        setTotalPages(response.data.totalPages || 1); // 총 페이지 수가 없을 경우 1로 설정
+      } catch (err) {
+        console.log(err);
+        setAlerts([]); // 에러 발생 시 알림 데이터를 빈 배열로 설정
+      }
     }
   };
 

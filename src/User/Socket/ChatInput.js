@@ -2,14 +2,24 @@ import React, { useState } from "react";
 
 function ChatInput({ onSendMessage }) {
   const [message, setMessage] = useState("");
+  const userNo = sessionStorage.getItem("id"); // 현재 유저의 ID 가져오기
 
   const handleSend = () => {
     if (message.trim() !== "") {
-      // 입력 필드가 비어 있거나 공백만 있지 않으면 해당 블록으로 진입
-      onSendMessage(message);
-      // 부모 컴포넌트에게 메시지 전달
+      const messagePayload = {
+        no: userNo,
+        content: message,
+        sendAdmin: false,
+      };
+      console.log("Sending message:", JSON.stringify(messagePayload));
+      onSendMessage(messagePayload);
       setMessage("");
-      // 메시지 전송 후 입력 필드 초기화
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSend();
     }
   };
 
@@ -19,9 +29,10 @@ function ChatInput({ onSendMessage }) {
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={handleKeyDown}
         placeholder="Type your message..."
       />
-      <button onClick={() => handleSend()}>Send</button>
+      <button onClick={handleSend}>Send</button>
     </div>
   );
 }

@@ -1,11 +1,11 @@
-// AdminChat.js
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
-function AdminInput() {
-  const [messages, setMessages] = useState([]);
+function AdminChat({ selectedUserId }) {
   const [stompClient, setStompClient] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const adminId = "0"; // 관리자는 항상 고정된 ID
 
   useEffect(() => {
     const socket = new SockJS("http://localhost:8080/ws");
@@ -18,11 +18,11 @@ function AdminInput() {
     });
 
     client.onConnect = () => {
-      client.subscribe("/sub/chat/room/100", (message) => {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          JSON.parse(message.body),
-        ]);
+      const chatRoomId = `0_${selectedUserId}`; // 유저와의 채팅방 구독
+
+      client.subscribe(`/sub/chat/room/${chatRoomId}`, (message) => {
+        const receivedMessage = JSON.parse(message.body);
+        setMessages((prevMessages) => [...prevMessages, receivedMessage]);
       });
     };
 
@@ -34,17 +34,16 @@ function AdminInput() {
         client.deactivate();
       }
     };
-  }, []);
+  }, [selectedUserId]);
 
-  const sendMessage = (roomId, messageContent) => {
+  const sendMessage = (messageContent) => {
     if (stompClient && stompClient.connected) {
       stompClient.publish({
         destination: `/pub/chat/message`,
         body: JSON.stringify({
-          userNo: null, // 유저 ID를 null로 설정하거나 적절히 설정
+          no: selectedUserId, // ChatUser ID 사용
           content: messageContent,
-          roomId: roomId,
-          sendCheck: true,
+          sendAdmin: true,
         }),
       });
     }
@@ -52,24 +51,27 @@ function AdminInput() {
 
   return (
     <div>
-      <h2>Admin Chat</h2>
-      {/* 유저 목록과 채팅 내용 표시 */}
+      <h2>Admin Chat with User {selectedUserId}</h2>
       <div>
         {messages.map((msg, index) => (
           <div key={index}>
-            <strong>User {msg.userNo}:</strong> {msg.content}
+            {msg.sendAdmin ? "관리자: " : ""}
+            {msg.content}
           </div>
         ))}
       </div>
-      {/* 메시지 입력 및 전송 */}
       <input
         type="text"
-        onKeyPress={(e) =>
-          e.key === "Enter" && sendMessage(100, e.target.value)
-        }
+        placeholder="Type a message..."
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            sendMessage(e.target.value);
+            e.target.value = "";
+          }
+        }}
       />
     </div>
   );
 }
 
-export default AdminInput;
+export default AdminChat;
