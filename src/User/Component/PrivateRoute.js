@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 const isAdminAuthenticated = () => {
-  return sessionStorage.getItem("id") === "0"; // '0'은 문자열로 비교해야 합니다.
+  return sessionStorage.getItem("id") === "1";
 };
 
 const isUserAuthenticated = () => {

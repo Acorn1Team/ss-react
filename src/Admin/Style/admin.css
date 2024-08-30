@@ -1,4 +1,4 @@
-h2 {
+h1, h2, h3 {
     text-align: center;
 }
 
@@ -6,15 +6,13 @@ h2 {
     width: 90%;
     list-style-type: none; /* 기본 불릿 제거 */
     padding: 0;
-    margin: 0;
+    margin: 0 auto; /* 가로로 중앙 정렬 */
     display: flex; /* 옆으로 정렬 플렉스 컨테이너로 설정 */
-    margin-left: 5%;
-    margin-right: 5%;
+    justify-content: center; /* 플렉스 항목들(메뉴 항목들)을 가운데 정렬 */
 }
 
 #topmenu li {
-    margin-left: 5%;
-    margin-right: 5%;
+    margin-right: 7%;
     text-align: center;
 }
 
