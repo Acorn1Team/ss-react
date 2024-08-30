@@ -65,12 +65,15 @@ export default function PostList() {
           if (followPost.length === index + 1) {
             return (
               <div ref={lastPostElementRef} key={fp.no} className="post-card">
-                <img
-                  src={imageUrl}
-                  alt={fp.pic}
-                  className="post-image"
-                  onError={handleImageLoadError} // 이미지 로드 에러 처리
-                />
+                <Link to={`/user/style/detail/${fp.no}`}>
+                  <img
+                    src={imageUrl}
+                    alt={fp.pic}
+                    className="post-image"
+                    onError={handleImageLoadError} // 이미지 로드 에러 처리
+                  />
+                </Link>
+                <div className="post-content">{fp.content}</div>
                 <div className="post-nickname">
                   <Link to={`/user/style/profile/${fp.userNo}`}>
                     @{fp.userNickname}
@@ -81,12 +84,15 @@ export default function PostList() {
           } else {
             return (
               <div key={fp.no} className="post-card">
-                <img
-                  src={imageUrl}
-                  alt={fp.pic}
-                  className="post-image"
-                  onError={handleImageLoadError} // 이미지 로드 에러 처리
-                />
+                <Link to={`/user/style/detail/${fp.no}`}>
+                  <img
+                    src={imageUrl}
+                    alt={fp.pic}
+                    className="post-image"
+                    onError={handleImageLoadError} // 이미지 로드 에러 처리
+                  />
+                </Link>
+                <div className="post-content">{fp.content}</div>
                 <div className="post-nickname">
                   <Link to={`/user/style/profile/${fp.userNo}`}>
                     @{fp.userNickname}
