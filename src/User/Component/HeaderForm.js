@@ -429,10 +429,10 @@ function HeaderForm() {
             {showPopup && (
               <PopupContainer>
                 <Link
-                  to="/user/mypage/profile"
+                  to={`/user/update/${userNo}`}
                   onClick={() => setShowPopup(false)}
                 >
-                  프로필
+                  회원정보수정
                 </Link>
                 <br />
                 <Link

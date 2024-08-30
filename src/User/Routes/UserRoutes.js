@@ -32,6 +32,7 @@ export default function UserRoutes() {
         <Route path="/auth/*" element={<AuthRoutes />} />
         <Route path="/callback" element={<SocialKakao />} />
         <Route path="/callback/naver" element={<SocailNaver />} />
+        <Route path="/*" element={<UserMypageRoutes />} />
       </Routes>
       <SupportButton />
     </>

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "../Style/Register.module.css";
 
 // 정규 표현식
 const userPwdRegex =
@@ -190,12 +191,12 @@ const Register = () => {
   };
 
   return (
-    <div className="register-container">
-      <form className="register-form" onSubmit={handleRegister}>
+    <div className="register_Container">
+      <form className="register_Form" onSubmit={handleRegister}>
         <h1>회원가입</h1>
 
         {/* 아이디 */}
-        <div className="user_input">
+        <div className="register_Form">
           <input
             type="text"
             name="id"

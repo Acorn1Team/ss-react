@@ -1,0 +1,124 @@
+.register-container {
+  background: #ffffff;
+  padding: 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px;
+}
+
+.register-form h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.user_input,
+.email_input {
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.user_input input,
+.email_input input,
+.email_input select {
+  color: red;
+  /* width: calc(100% - 20px);
+  padding: 10px 15px;
+  margin-right: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: all 0.3s ease; */
+}
+
+.user_input input:focus,
+.email_input input:focus,
+.email_input select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.email_input {
+  display: flex;
+  align-items: center;
+}
+
+.email_input select {
+  width: 50%;
+  padding: 10px 15px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.email_input select:focus {
+  border-color: #007bff;
+}
+
+#middle {
+  margin: 0 10px;
+}
+
+button {
+  background-color: #007bff;
+  color: #ffffff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.error_message {
+  color: #ff4d4d;
+  font-size: 12px;
+  margin-top: 5px;
+  margin-left: 2px;
+}
+
+#idCheck {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  padding: 5px 10px;
+  font-size: 12px;
+  background-color: #28a745;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#idCheck:hover {
+  background-color: #218838;
+}
+
+#btnRegister {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: #ffffff;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+#btnRegister:hover {
+  background-color: #0056b3;
+}
