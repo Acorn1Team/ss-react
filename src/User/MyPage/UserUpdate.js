@@ -53,7 +53,7 @@ const UserUpdate = () => {
           data.userSelectedType === "R" ? data.roadAddress : data.jibunAddress;
         setUser((prevUser) => ({
           ...prevUser,
-          address: addr,
+          addr_start: addr,
           zipcode: data.zonecode,
         }));
 
@@ -115,11 +115,12 @@ const UserUpdate = () => {
 
   const combineAddress = () => {
     const { addr_start, addr_end } = user;
-    if (!addr_start || !addr_end) {
-      return "";
-    } else {
-      return `${addr_start} ${addr_end}`;
+    let address = `${addr_start} ${addr_end}`;
+
+    if (addr_start && addr_end) {
+      address = `${addr_start} ${addr_end}`;
     }
+    return address;
   };
 
   const handleSubmit = async (e) => {
@@ -201,7 +202,7 @@ const UserUpdate = () => {
             <div className={styles.error_message}>{errors.name}</div>
           )}
         </div>
-        {!social && (
+        {social === "0" && (
           <>
             <div className={styles.user_input}>
               <input
@@ -235,7 +236,7 @@ const UserUpdate = () => {
             placeholder="이메일"
             value={user.email}
             onChange={handleInputChange}
-            disabled={social === "" ? false : true}
+            disabled={social === "0" ? false : true}
           />
 
           {errors.email && (
@@ -276,7 +277,7 @@ const UserUpdate = () => {
             name="addr_start"
             ref={addrStartRef}
             placeholder="주소"
-            value={user.address}
+            value={user.addr_start}
             disabled
           />
         </div>
@@ -294,11 +295,7 @@ const UserUpdate = () => {
           )}
         </div>
         <div className={styles.button_group}>
-          <button
-            type="button"
-            className={styles.register_button}
-            onClick={() => SubmitEvent()}
-          >
+          <button type="submit" className={styles.register_button}>
             수정
           </button>
           <button
@@ -312,6 +309,7 @@ const UserUpdate = () => {
             type="button"
             className={styles.register_button}
             onClick={handleDelete}
+            style={{ backgroundColor: "darkgray" }}
           >
             탈퇴
           </button>

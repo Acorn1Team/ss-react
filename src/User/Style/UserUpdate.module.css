@@ -69,6 +69,19 @@ button[type="button"] {
   box-sizing: border-box; /* 버튼 크기가 컨테이너에 맞춰지도록 설정 */
 }
 
+button[type="submit"] {
+  width: 100%;
+  padding: 8px;
+  background-color: #3897f0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+  box-sizing: border-box; /* 버튼 크기가 컨테이너에 맞춰지도록 설정 */
+}
+
 .error_message {
   color: #ff6f61;
   font-size: 12px;
