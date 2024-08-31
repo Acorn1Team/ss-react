@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SocialKakao from "../Component/SocialKakao";
 import SocailNaver from "../Component/SocialNaver";
+import styles from "../Style/Login.module.css";
 
 const Login = () => {
   const [id, setId] = useState("");
@@ -81,8 +82,8 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <form className="login-form" onSubmit={handleLogin}>
+    <div className={styles["login-container"]}>
+      <form className={styles["login-form"]} onSubmit={handleLogin}>
         <h1>로그인</h1>
         <label htmlFor="id">아이디</label>
         <input
@@ -102,7 +103,9 @@ const Login = () => {
         />
         <br />
 
-        {loginCheck && <label style={{ color: "red" }}>{errorMessage}</label>}
+        {loginCheck && (
+          <label className={styles["error-message"]}>{errorMessage}</label>
+        )}
 
         <button type="submit">로그인</button>
         <br />
@@ -111,7 +114,7 @@ const Login = () => {
         <div>
           <Link to="/user/auth/findPass">비밀번호 찾기</Link>
         </div>
-        <p className="signup-link">
+        <p className={styles["signup-link"]}>
           아직 회원이 아니신가요? <Link to="/user/auth/register">회원가입</Link>
         </p>
       </form>

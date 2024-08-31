@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import styles from "../Style/Coupon.module.css";
 
 export default function Scrap() {
   // 스크랩 리스트 정보 저장용
@@ -63,25 +64,25 @@ export default function Scrap() {
   }, [currentPage]);
 
   return (
-    <div>
+    <div className={styles["scrap-container"]}>
       {scrapList.map((sl) => (
-        <div key={sl.no}>
+        <div key={sl.no} className={styles["scrap-item"]}>
           <Link to={`/user/main/sub/${sl.no}`}>
-            {sl.name}
             <img src={sl.pic} alt={sl.name} />
+            {sl.name}
           </Link>
           <button onClick={() => handleScrapCancel(sl.no)}>스크랩 취소</button>
         </div>
       ))}
       {totalPages > 1 && (
-        <div style={{ marginTop: "10px" }}>
+        <div className={styles.pagination}>
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 0}
           >
             이전
           </button>
-          <span style={{ margin: "0 10px" }}>
+          <span>
             {currentPage + 1} / {totalPages}
           </span>
           <button
