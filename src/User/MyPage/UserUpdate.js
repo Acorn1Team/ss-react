@@ -1,10 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
+import styles from "../Style/UserUpdate.module.css";
 
 import axios from "axios";
 
 const UserUpdate = () => {
-  const { userNo, social } = useParams();
+  const { userNo } = useParams();
+
+  const [social, setSocial] = useState("");
+
+  const [nameNull, setNameNull] = useState(false);
 
   const [user, setUser] = useState({
     id: "",
@@ -72,6 +77,10 @@ const UserUpdate = () => {
         }
         const response = await axios.get(`/user/update/${userNo}`);
         setUser(response.data);
+        if (response.data.name === null) {
+          setNameNull(true);
+        }
+        setSocial(response.data.subpath);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -163,24 +172,49 @@ const UserUpdate = () => {
   };
 
   return (
-    <div className="container">
+    <div className={styles.container}>
       <form onSubmit={handleSubmit} id="updateForm">
-        {social === "kakao" && <div>카카오 아이디로 로그인된 계정입니다.</div>}
-        {social === "naver" && <div>네이버 아이디로 로그인된 계정입니다.</div>}
-        <div id="userId">아이디 : {user.id}</div>
-        {/* 비밀번호 */}
+        <div id={styles.userId}>아이디 : {user.id}</div>
+        {social === "kakao" && (
+          <div>
+            <strong style={{ color: "#f9e000" }}>카카오 아이디</strong>로
+            로그인된 계정입니다.
+          </div>
+        )}
+        {social === "naver" && (
+          <div>
+            <strong style={{ color: "##03cf5d" }}>네이버 아이디</strong>로
+            로그인된 계정입니다.
+          </div>
+        )}
+        <br />{" "}
+        <div className={styles.user_input}>
+          <input
+            type="text"
+            name="name"
+            placeholder="이름"
+            value={user.name}
+            onChange={handleInputChange}
+            disabled={nameNull ? false : true}
+          />
+          {errors.name && (
+            <div className={styles.error_message}>{errors.name}</div>
+          )}
+        </div>
         {!social && (
           <>
-            <div className="user_input">
+            <div className={styles.user_input}>
               <input
                 type="password"
                 name="pwd"
                 placeholder="비밀번호"
                 onChange={handleInputChange}
               />
-              {errors.pwd && <div className="error_message">{errors.pwd}</div>}
+              {errors.pwd && (
+                <div className={styles.error_message}>{errors.pwd}</div>
+              )}
             </div>
-            <div className="user_input">
+            <div className={styles.user_input}>
               <input
                 type="password"
                 name="pwd_chk"
@@ -189,39 +223,26 @@ const UserUpdate = () => {
                 onChange={handleInputChange}
               />
               {errors.pwd_chk && (
-                <div className="error_message">{errors.pwd_chk}</div>
+                <div className={styles.error_message}>{errors.pwd_chk}</div>
               )}
             </div>
           </>
         )}
-
-        {/* 이름 */}
-        <div className="user_input">
-          <input
-            type="text"
-            name="name"
-            placeholder="이름"
-            value={user.name}
-            onChange={handleInputChange}
-          />
-          {errors.name && <div className="error_message">{errors.name}</div>}
-        </div>
-
-        {/* 이메일 */}
-        <div className="email_input">
+        <div className={styles.email_input}>
           <input
             type="text"
             name="email"
             placeholder="이메일"
             value={user.email}
             onChange={handleInputChange}
+            disabled={social === "" ? false : true}
           />
 
-          {errors.email && <div className="error_message">{errors.email}</div>}
+          {errors.email && (
+            <div className={styles.error_message}>{errors.email}</div>
+          )}
         </div>
-
-        {/* 전화번호 */}
-        <div className="user_input">
+        <div className={styles.user_input}>
           <input
             type="text"
             name="tel"
@@ -229,11 +250,13 @@ const UserUpdate = () => {
             value={user.tel}
             onChange={handleInputChange}
           />
-          {errors.tel && <div className="error_message">{errors.tel}</div>}
+          {errors.tel && (
+            <div className={styles.error_message}>{errors.tel}</div>
+          )}
         </div>
-
-        {/* 주소 */}
-        <div>
+        <hr style={{ border: "#3897f0 solid 1px", opacity: "20%" }} />
+        <br />
+        <div className={styles.user_input}>
           <input
             type="text"
             name="zipcode"
@@ -242,10 +265,12 @@ const UserUpdate = () => {
             value={user.zipcode}
             disabled
           />
+          <br />
           <button type="button" onClick={openDaumPostcode}>
             주소 찾기
           </button>
-          <br />
+        </div>
+        <div className={styles.user_input}>
           <input
             type="text"
             name="addr_start"
@@ -254,7 +279,8 @@ const UserUpdate = () => {
             value={user.address}
             disabled
           />
-          <br />
+        </div>
+        <div className={styles.user_input}>
           <input
             type="text"
             name="addr_end"
@@ -264,25 +290,27 @@ const UserUpdate = () => {
             onChange={handleInputChange}
           />
           {errors.address && (
-            <div className="error_message">{errors.address}</div>
+            <div className={styles.error_message}>{errors.address}</div>
           )}
         </div>
-
-        {/* 버튼 */}
-        <div className="button_group">
-          <button type="submit" className="register_button">
+        <div className={styles.button_group}>
+          <button
+            type="button"
+            className={styles.register_button}
+            onClick={() => SubmitEvent()}
+          >
             수정
           </button>
           <button
             type="button"
-            className="register_button"
+            className={styles.register_button}
             onClick={handleCancel}
           >
             취소
           </button>
           <button
             type="button"
-            className="register_button"
+            className={styles.register_button}
             onClick={handleDelete}
           >
             탈퇴

@@ -1,0 +1,112 @@
+/* UserUpdate.module.css */
+.container {
+  text-align: center;
+  max-width: 400px;
+  margin: 40px auto 0 auto; /* 상단에 40px의 여백을 추가 */
+  background-color: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.user_input,
+.email_input,
+.address_input {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.user_input input,
+.email_input input,
+.address_input input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #dbdbdb;
+  border-radius: 5px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  box-sizing: border-box; /* 박스 크기가 컨테이너에 맞춰지도록 설정 */
+}
+
+.address_input {
+  display: flex;
+  align-items: center;
+}
+
+.address_input input[type="text"] {
+  flex: 2; /* 우편번호 입력 필드가 더 넓게 표시되도록 설정 */
+  margin-right: 10px; /* 입력 필드와 버튼 사이의 간격을 설정 */
+}
+
+.address_input button {
+  flex: 1; /* 버튼이 입력 필드와 비율적으로 맞추어짐 */
+  padding: 8px;
+  background-color: #3897f0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-sizing: border-box; /* 버튼 크기가 컨테이너에 맞춰지도록 설정 */
+}
+
+button[type="button"]:hover {
+  background-color: #3071a9;
+}
+
+button[type="button"] {
+  width: 100%;
+  padding: 8px;
+  background-color: #3897f0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+  box-sizing: border-box; /* 버튼 크기가 컨테이너에 맞춰지도록 설정 */
+}
+
+.error_message {
+  color: #ff6f61;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.button_group {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.register_button {
+  flex: 1;
+  background-color: #3897f0;
+  color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-align: center;
+  font-size: 14px;
+  box-sizing: border-box; /* 버튼 크기가 컨테이너에 맞춰지도록 설정 */
+}
+
+.register_button:hover {
+  background-color: #3071a9;
+}
+
+.register_button:disabled {
+  background-color: #dbdbdb;
+  cursor: not-allowed;
+}
+
+#userId {
+  font-weight: bold;
+  font-size: 120%;
+  margin-bottom: 5px;
+}

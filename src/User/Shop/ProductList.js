@@ -1,27 +1,35 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import styles from "../Style/ProductList.module.css";
 
 export default function ProductList() {
+  const { category } = useParams(); // useParams를 사용하여 URL에서 카테고리 가져오기
   const [products, setProducts] = useState([]);
-  const [sortOption, setSortOption] = useState("latest"); // 최신순이 기본값
+  const [sortOption, setSortOption] = useState("latest"); // 기본 정렬 옵션: 최신순
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
   const [pageSize, setPageSize] = useState(12); // 페이지 크기
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
-  
-  const refresh = () => {
-    // ajax 요청 (get 방식)
+  const [selectCategory, setSelectCategory] = useState(category || ""); // 선택된 카테고리
+
+  const categories = ["상의", "하의", "신발", "기타"]; // 카테고리 목록
+
+  const refresh = (selectedCategory, page = 0, size = pageSize) => {
+    const endpoint = selectedCategory
+      ? `/list/category/${selectedCategory}`
+      : "/list";
+
     axios
-      .get("/list", {
+      .get(endpoint, {
         params: {
-          page: currentPage,
-          size: pageSize,
+          page: page,
+          size: size,
         },
       })
       .then((res) => {
-        setProducts(res.data.content); // Page 객체의 content를 가져옴
-        setTotalPages(res.data.totalPages);
+        setProducts(res.data.content); // 제품 목록 업데이트
+        setTotalPages(res.data.totalPages); // 전체 페이지 수 업데이트
+        setCurrentPage(page); // 현재 페이지 업데이트
       })
       .catch((error) => {
         console.log(error);
@@ -35,27 +43,33 @@ export default function ProductList() {
     }
   };
 
-  useEffect(() => {
-    refresh(); //ajax 요청 처리가 됨
-  }, [currentPage]);
+  // 카테고리 변경 함수
+  const handleCategoryChange = (newCategory) => {
+    setSelectCategory(newCategory); // 선택된 카테고리 업데이트
+    setCurrentPage(0); // 페이지를 0으로 초기화
+  };
 
-  // 정렬 옵션
+  useEffect(() => {
+    refresh(selectCategory, currentPage, pageSize); // 카테고리, 페이지, 또는 사이즈 변경 시 제품 목록 새로고침
+  }, [selectCategory, currentPage, pageSize]);
+
+  // 정렬 함수
   const sortProducts = (products, option) => {
     switch (option) {
       case "latest":
-        return products.sort((a, b) => new Date(b.date) - new Date(a.date)); // 최신순
+        return products.sort((a, b) => new Date(b.date) - new Date(a.date)); // 최신순 정렬
       case "sales":
-        return products.sort((a, b) => b.count - a.count); // 판매순
+        return products.sort((a, b) => b.count - a.count); // 판매순 정렬
       case "priceHigh":
-        return products.sort((a, b) => b.price - a.price); // 가격 높은 순
+        return products.sort((a, b) => b.price - a.price); // 높은 가격순 정렬
       case "priceLow":
-        return products.sort((a, b) => a.price - b.price); // 가격 낮은 순
+        return products.sort((a, b) => a.price - b.price); // 낮은 가격순 정렬
       default:
         return products;
     }
   };
 
-  const sortedProducts = sortProducts([...products], sortOption); // 정렬된 리스트
+  const sortedProducts = sortProducts([...products], sortOption); // 정렬된 제품 목록
 
   return (
     <div className={styles.container}>
@@ -77,30 +91,15 @@ export default function ProductList() {
       </div>
 
       <div className={styles.categoryLinks}>
-        <Link
-          to="/user/shop/productlist/category/상의"
-          className={styles.categoryLink}
-        >
-          상의
-        </Link>
-        <Link
-          to="/user/shop/productlist/category/하의"
-          className={styles.categoryLink}
-        >
-          하의
-        </Link>
-        <Link
-          to="/user/shop/productlist/category/신발"
-          className={styles.categoryLink}
-        >
-          신발
-        </Link>
-        <Link
-          to="/user/shop/productlist/category/기타"
-          className={styles.categoryLink}
-        >
-          기타
-        </Link>
+        {categories.map((cate, index) => (
+          <button
+            key={index}
+            className={styles.categoryLink}
+            onClick={() => handleCategoryChange(cate)}
+          >
+            {cate}
+          </button>
+        ))}
       </div>
 
       <div className={styles.productList}>
@@ -114,6 +113,10 @@ export default function ProductList() {
             <div className={styles.productName}>{product.name}</div>
             <div className={styles.productPrice}>{product.price}원</div>
             <div className={styles.productCategory}>{product.category}</div>
+            <div>등록일: {product.date}</div>
+            <div>할인율: {product.discountRate}</div>
+            <div>평점: {product.score}</div>
+            <div>리뷰 수: {product.reviews}</div>
           </div>
         ))}
       </div>

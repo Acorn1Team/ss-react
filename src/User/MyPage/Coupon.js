@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import styles from "../Style/Coupon.module.css";
 
 export default function Coupon() {
   const [couponData, setCouponData] = useState([]);
@@ -46,25 +47,24 @@ export default function Coupon() {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       {couponData.map((cd) => (
-        <div>
-          {cd.name}
-          <br />
-          {cd.discountRate}% 할인
-          <br />~{cd.expiryDate}
+        <div className={styles.couponItem} key={cd.id}>
+          <div className={styles.couponName}>{cd.name}</div>
+          <div className={styles.couponDiscount}>{cd.discountRate}% 할인</div>
+          <div className={styles.couponExpiry}>~{cd.expiryDate}</div>
         </div>
       ))}
       {totalPages > 1 && (
-        <div style={{ marginTop: "10px" }}>
+        <div className={styles.pagination}>
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 0}
           >
             이전
           </button>
-          <span style={{ margin: "0 10px" }}>
-            {currentPage + 1} / {totalPages}{" "}
+          <span>
+            {currentPage + 1} / {totalPages}
           </span>
           <button
             onClick={() => handlePageChange(currentPage + 1)}

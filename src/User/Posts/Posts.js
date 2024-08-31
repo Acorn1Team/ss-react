@@ -356,7 +356,7 @@ export default function Posts() {
   const postUDControl = (val) => {
     if (val === "d") {
       axios
-        .delete(`/posts/detail/${postNo}`)
+        .delete(`/posts/soft-delete/${postNo}`)
         .then((res) => {
           if (res.data.result) {
             navigator(`../list/${userNo}`);
