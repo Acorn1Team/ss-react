@@ -1,3 +1,18 @@
+body {
+    text-align: center;
+}
+
+#admin-header {
+    text-align: center;
+    color: #333;
+    font-size: 3rem;
+}
+
+#admin-header li a:hover {
+    background-color: darkgray;
+    color: #fff;
+}
+
 h1 {
     text-align: center;
     color: #333;
