@@ -61,9 +61,9 @@ export default function NoticeManage() {
 
   return (
     <>
-      <Link to="/admin/help/notices/new">공지 추가</Link>
       <br />
       <h1>공지 목록</h1>
+      <Link to="/admin/help/notices/new">공지 추가하기</Link>
 
       {/* 카테고리 선택 및 전체보기 버튼 */}
       <div style={{ marginBottom: "10px" }}>

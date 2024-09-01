@@ -1,10 +1,14 @@
 import React from 'react';
-import MonthlyRevenueChart from "./AdminStatistics/AdminStatistics";
+import MonthlyRevenueChart from './AdminStatistics/MonthlyRevenue';
+import BestSellerChart from './AdminStatistics/BestSeller';
+import MonthlyBestSellerChart from './AdminStatistics/MonthlyBestSeller';
 
 export default function AdminHome() {
     return (
-        <div style={{ width: '60%', height: '200px', margin: 'auto' }}>
-            <MonthlyRevenueChart />
-        </div>
+        <ul id="statistics">
+            <li><BestSellerChart /></li>
+            <li><MonthlyBestSellerChart /></li>
+            <li><MonthlyRevenueChart /></li>
+        </ul>
     );
 }

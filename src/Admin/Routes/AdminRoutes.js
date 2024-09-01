@@ -17,7 +17,6 @@ import PromotionCoupon from "../AdminPromotion/PromotionCoupon";
 import PromotionAdvertise from "../AdminPromotion/PromotionAdvertise";
 import ActorEdit from "../AdminFashion/ActorEdit";
 import StyleManage from "../AdminFashion/StyleManage";
-import AdminStatistics from "../AdminStatistics/AdminStatistics";
 import AdminChatList from "../AdminHelp/AdminChatList";
 
 export default function AdminRoutes() {
@@ -47,8 +46,6 @@ export default function AdminRoutes() {
       <Route path="/promotion" element={<PromotionManage />} />
       <Route path="/promotion/coupon" element={<PromotionCoupon />} />
       <Route path="/promotion/advertise" element={<PromotionAdvertise />} />
-
-      <Route path="/statistics" element={<AdminStatistics />} />
     </Routes>
   );
 }

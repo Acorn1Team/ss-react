@@ -13,7 +13,7 @@ export default function AdminTop(){
                 <li><Link to="/admin/promotion">프로모션</Link></li>
                 <li><Link to="/admin/help">고객 지원</Link></li>
                 <li><Link to="/">사용자 페이지</Link></li>
-            </ul><br/>
+            </ul>
         </>
         
     )    
