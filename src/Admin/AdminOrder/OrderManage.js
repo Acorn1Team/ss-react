@@ -218,7 +218,13 @@ export default function OrderManage() {
                 <td>{order.userId}</td>
                 <td>{order.state}</td>
                 <td>{new Date(order.date).toLocaleString()}</td>
-                <td>{order.price}</td>
+                <td>
+                  {order.orderProducts.reduce(
+                    (total, product) =>
+                      total + product.price * product.quantity,
+                    0
+                  )}
+                </td>
                 <td>
                   <select
                     value={order.state}

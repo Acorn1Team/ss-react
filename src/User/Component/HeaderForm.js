@@ -491,22 +491,29 @@ function Search() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    let isCancelled = false;
+
     const fetchData = async () => {
       if (inputValue) {
         try {
           const response = await axios.get(
             `http://localhost:8080/user/search/${category}?term=${inputValue}`
           );
-          if (Array.isArray(response.data)) {
-            setFilteredItems(response.data);
-          } else {
-            console.error("Unexpected response data format");
+          if (!isCancelled) {
+            // 취소된 경우 상태 업데이트하지 않음
+            if (Array.isArray(response.data)) {
+              setFilteredItems(response.data);
+            } else {
+              console.error("Unexpected response data format");
+              setFilteredItems([]);
+            }
+            setShowDropdown(true);
+          }
+        } catch (error) {
+          if (!isCancelled) {
+            console.error("Error fetching data:", error);
             setFilteredItems([]);
           }
-          setShowDropdown(true);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-          setFilteredItems([]);
         }
       } else {
         setShowDropdown(false);
@@ -514,6 +521,10 @@ function Search() {
     };
 
     fetchData();
+
+    return () => {
+      isCancelled = true; // 이전 요청 취소
+    };
   }, [inputValue, category]);
 
   const handleChange = (e) => {

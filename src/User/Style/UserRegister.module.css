@@ -1,0 +1,125 @@
+.container {
+  max-width: 600px;
+  margin: 40px auto;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+/* 공통 입력 필드 스타일 */
+.user_input input,
+.user_input select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-size: 15px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+/* 이메일 입력 필드와 도메인 선택 필드 스타일 */
+.email_input {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.email_input input {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-size: 15px;
+  flex-grow: 2; /* 첫 번째 입력 필드가 더 많은 공간을 차지하도록 설정 */
+  min-width: 0; /* flex-grow로 인해 최소 너비가 너무 커지는 것을 방지 */
+}
+
+.email_input span {
+  flex-shrink: 0; /* @ 기호는 크기가 줄어들지 않도록 설정 */
+  font-size: 15px;
+}
+
+.email_input select {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-size: 15px;
+  flex-grow: 1; /* 도메인 선택 필드가 나머지 공간을 차지하도록 설정 */
+  min-width: 120px; /* 도메인 선택 필드의 최소 너비를 설정 */
+  box-sizing: border-box;
+}
+
+/* 아이디 입력 필드와 중복 확인 버튼 스타일 */
+.id_input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.id_input input {
+  padding: 10px;
+  border: 1px solid #dbdbdb;
+  border-radius: 5px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  flex: 3;
+}
+
+.id_input button {
+  background-color: #3897f0;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 14px;
+  margin-top: 0;
+  flex: 1;
+  min-width: 80px;
+  box-sizing: border-box;
+}
+
+.id_input button:hover {
+  background-color: #3071a9;
+}
+
+/* 버튼 스타일 */
+.register_button {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 15px;
+  width: 100%;
+  text-align: center;
+}
+
+.register_button:hover {
+  background-color: #0056b3;
+}
+
+.register_button:disabled {
+  background-color: #d0d0d0;
+  cursor: not-allowed;
+}
+
+/* 오류 메시지 스타일 */
+.error_message {
+  color: #ff6f61;
+  font-size: 13px;
+  margin-top: 5px;
+}

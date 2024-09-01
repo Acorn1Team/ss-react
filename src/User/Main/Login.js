@@ -84,20 +84,21 @@ const Login = () => {
   return (
     <div className={styles["login-container"]}>
       <form className={styles["login-form"]} onSubmit={handleLogin}>
-        <h1>로그인</h1>
-        <label htmlFor="id">아이디</label>
+        <h1>SceneStealer</h1>
+
         <input
           type="text"
+          placeholder="아이디"
           id="id"
           value={id}
           onChange={(e) => setId(e.target.value)}
         />
         <br />
 
-        <label htmlFor="pwd">비밀번호</label>
         <input
           type="password"
           id="pwd"
+          placeholder="비밀번호"
           value={pwd}
           onChange={(e) => setPwd(e.target.value)}
         />
