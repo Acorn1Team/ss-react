@@ -57,6 +57,11 @@ function Search() {
     fetchData(); // 데이터 요청 함수 호출
   }, [name, category, currentPage, pageSize]); // 의존성 배열: 이 값들이 변경될 때마다 데이터 요청
 
+  useEffect(() => {
+    // 검색어가 변경될 때마다 현재 페이지를 0으로 리셋
+    setCurrentPage(0);
+  }, [name, category]); // 검색어와 카테고리가 변경될 때마다 실행
+
   const handlePageChange = (newPage) => {
     // 페이지 변경 함수
     if (newPage >= 0 && newPage < totalPages) {
@@ -179,7 +184,7 @@ function ProductItem({ item }) {
   );
 }
 
-// 사용자 아이템 컴포넌트`
+// 사용자 아이템 컴포넌트
 function UserItem({ item }) {
   return (
     <div className={styles2.profileContainer}>
