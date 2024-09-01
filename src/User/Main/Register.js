@@ -321,7 +321,7 @@ const Register = () => {
   return (
     <div className={styles.container}>
       <form className="register_Form" onSubmit={handleRegister}>
-        <h1>회원가입</h1>
+        <h1>SceneStealer</h1>
 
         {/* 아이디 */}
         <div className={styles.id_input}>
@@ -343,8 +343,6 @@ const Register = () => {
         {errorMessage.id && (
           <div className={styles.error_message}>{errorMessage.id}</div>
         )}
-
-        <hr />
 
         {/* 비밀번호 */}
         <div className={styles.user_input}>
@@ -385,7 +383,7 @@ const Register = () => {
             <div className={styles.error_message}>{errorMessage.name}</div>
           )}
         </div>
-
+        <hr />
         {/* 이메일 */}
         <div className={styles.email_input}>
           <input
@@ -473,7 +471,7 @@ const Register = () => {
         </div>
 
         {/* 주소 */}
-        <div className={styles.user_input}>
+        <div className={styles.id_input}>
           <input
             type="text"
             placeholder="우편번호"
@@ -485,7 +483,7 @@ const Register = () => {
             value={zipcode}
           />
           <button type="button" onClick={openDaumPostcode}>
-            Search
+            검색
           </button>
         </div>
         <input
@@ -522,7 +520,7 @@ const Register = () => {
         )}
 
         <button type="submit" id="btnRegister">
-          Join Up
+          회원가입
         </button>
       </form>
     </div>
