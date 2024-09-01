@@ -108,7 +108,7 @@ const UserUpdate = () => {
 
   const combineAddress = () => {
     const { address, addr_end } = user;
-    return `${address} ${addr_end}`;
+    return addr_end ? `${address} ${addr_end}` : address;
   };
 
   const handleSubmit = async (e) => {
@@ -119,10 +119,16 @@ const UserUpdate = () => {
     }
 
     const combinedAddress = combineAddress();
+
+    // 업데이트할 사용자 객체 생성
     const updatedUser = {
       ...user,
       address: combinedAddress,
       zipcode: user.zipcode,
+      // 비밀번호가 입력된 경우에만 비밀번호 필드 포함
+      ...(user.pwd && user.pwd_chk ? { pwd: user.pwd } : {}),
+      // addr_end가 입력된 경우에만 포함
+      ...(user.addr_end ? { addr_end: user.addr_end } : {}),
     };
 
     try {
