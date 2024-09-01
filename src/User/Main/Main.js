@@ -8,7 +8,11 @@ export default function UserHome() {
   const [review, setReview] = useState([]);
   const [posts, setPosts] = useState([]);
   const [selectReviewIndex, setSelectReviewIndex] = useState(0);
+  const [mainPopup, setMainPopup] = useState([]);
+  const [popupOpen, setPopupOpen] = useState(false);
+
   const userNo = sessionStorage.getItem("id");
+  const cookies = document.cookie;
 
   const imageRef = useRef(null);
 
@@ -59,7 +63,48 @@ export default function UserHome() {
 
   useEffect(() => {
     fetchData();
+
+    const popupCookieCheck = getCookie(`${userNo}_popup`);
+
+    if (popupCookieCheck === null) {
+      axios
+        .get(`/main/popup`)
+        .then((res) => {
+          setMainPopup(res.data);
+          if (res.data) {
+            setPopupOpen(true);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }, []);
+
+  function getCookie(name) {
+    let value = `; ${document.cookie}`;
+    let parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      return parts.pop().split(";").shift();
+    }
+    return null;
+  }
+
+  const closePopup = (day) => {
+    if (day) {
+      axios
+        .get(`/main/popupSet/${userNo}`)
+        .then((res) => {
+          if (!res.date.result) {
+            alert("하루 안 보기 지정 실패");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    setPopupOpen(false);
+  };
 
   return (
     <div className="page-container">
@@ -71,6 +116,24 @@ export default function UserHome() {
           alt="main"
         />
       </div>
+      {popupOpen && (
+        <div className="popup-modal">
+          <div className="popup-content">
+            {mainPopup.map((p) => (
+              <Link to={p.path} key={p.no}>
+                <img src={p.pic} alt={p.no} width={"500px"} />
+              </Link>
+            ))}
+            <br />
+            <button className="popup-close" onClick={() => closePopup("today")}>
+              오늘 하루 보지 않기
+            </button>
+            <button className="popup-close" onClick={() => closePopup()}>
+              닫기
+            </button>
+          </div>
+        </div>
+      )}
       <div className="content">
         <b>SceneStealer</b>
         <b className="mainTextTitle">Choose Your Scene!</b>
@@ -86,6 +149,7 @@ export default function UserHome() {
               </Link>
             ))}
         </div>
+        <Link to="/user/main/show">작품 더보기</Link>
         <b className="mainTextTitle">New Review</b>
         <div id="mainReviews">
           {Array.isArray(review) && review.length > 0 && (

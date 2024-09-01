@@ -68,6 +68,13 @@ export default function Posts() {
   // 신고 여부 체크
   const [isReport, setIsReport] = useState(false);
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getFullYear()}월 ${
+      date.getMonth() + 1
+    }월 ${date.getDate()}일`;
+  };
+
   // 게시글 정보 가져오기
   const getPostDetailInfo = () => {
     setLoading(true);
@@ -291,6 +298,7 @@ export default function Posts() {
 
         if (parentComment) {
           console.log("Current parentComment:", parentComment);
+
           if (parentComment.parentCommentNo !== null) {
             rcm = parentComment.parentCommentNo;
           } else {
@@ -432,6 +440,7 @@ export default function Posts() {
             key={index}
             to={`/user/style/profile/${userNo}`}
             className={styles.link}
+            style={{ color: "#007bff" }}
           >
             {part}
           </Link>
@@ -500,7 +509,7 @@ export default function Posts() {
                 @{userInfo.userNickname}
               </Link>
               <br />
-              {postData.date}
+              {formatDate(postData.date)}
             </div>
             {postData.userNo !== userNo && !isReport && (
               <button onClick={() => postReports()}>신고</button>
@@ -562,7 +571,10 @@ export default function Posts() {
               .filter((pc) => pc.parentCommentNo === null)
               .map((pc) => (
                 <div key={pc.no} className={styles.comment}>
-                  <Link to={`/user/style/profile/${pc.userNo}`}>
+                  <Link
+                    to={`/user/style/profile/${pc.userNo}`}
+                    style={{ color: "#007bff", fontWeight: "bold" }}
+                  >
                     @{pc.userNickname}
                   </Link>
                   : {renderCommentContent(pc.content)} <br />
@@ -579,7 +591,10 @@ export default function Posts() {
                   {pc.replies &&
                     pc.replies.map((reply) => (
                       <div key={reply.no} className={styles.reply}>
-                        <Link to={`/user/style/profile/${reply.userNo}`}>
+                        <Link
+                          to={`/user/style/profile/${reply.userNo}`}
+                          style={{ color: "#007bff" }}
+                        >
                           @{reply.userNickname}
                         </Link>
                         : {renderCommentContent(reply.content)} <br />

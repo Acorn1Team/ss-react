@@ -26,8 +26,9 @@ export default function SocialNaver() {
           return axios.post("/api/naver", { accessToken });
         })
         .then((res) => {
+          console.log("서버 응답:", res.data);
           const { status, user } = res.data;
-          sessionStorage.setItem("id", user.no);
+          sessionStorage.setItem("id", user);
           if (status === "login") {
             navigate("/user");
           } else if (status === "signup") {
