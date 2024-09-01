@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import styles from "../Style/UserUpdate.module.css";
-
 import axios from "axios";
 
 const UserUpdate = () => {
   const { userNo } = useParams();
-
   const [social, setSocial] = useState("");
-
   const [nameNull, setNameNull] = useState(false);
-
   const [user, setUser] = useState({
     id: "",
     pwd: "",
@@ -24,11 +20,11 @@ const UserUpdate = () => {
     addr_end: "",
   });
   const [errors, setErrors] = useState({});
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
 
   const addrStartRef = useRef(null);
   const addrEndRef = useRef(null);
   const zipcodeDisplayRef = useRef(null);
-  const userZipcodeRef = useRef(null);
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -53,7 +49,7 @@ const UserUpdate = () => {
           data.userSelectedType === "R" ? data.roadAddress : data.jibunAddress;
         setUser((prevUser) => ({
           ...prevUser,
-          addr_start: addr,
+          address: addr,
           zipcode: data.zonecode,
         }));
 
@@ -61,8 +57,6 @@ const UserUpdate = () => {
           zipcodeDisplayRef.current.value = data.zonecode;
         if (addrStartRef.current) addrStartRef.current.value = addr;
         if (addrEndRef.current) addrEndRef.current.focus();
-        if (userZipcodeRef.current)
-          userZipcodeRef.current.value = data.zonecode;
       },
     }).open();
   };
@@ -92,21 +86,20 @@ const UserUpdate = () => {
     let formIsValid = true;
     let newErrors = {};
 
-    const userPwdRegex =
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,}$/;
+    if (showPasswordForm) {
+      const userPwdRegex =
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,}$/;
 
-    if (!user.pwd) {
-      newErrors.pwd = "비밀번호를 입력해주세요.";
-      formIsValid = false;
-    } else if (!userPwdRegex.test(user.pwd)) {
-      newErrors.pwd =
-        "비밀번호는 최소 4자, 영문, 숫자, 특수문자를 포함해야 합니다.";
-      formIsValid = false;
-    }
+      if (user.pwd && !userPwdRegex.test(user.pwd)) {
+        newErrors.pwd =
+          "비밀번호는 최소 4자, 영문, 숫자, 특수문자를 포함해야 합니다.";
+        formIsValid = false;
+      }
 
-    if (user.pwd !== user.pwd_chk) {
-      newErrors.pwd_chk = "비밀번호가 일치하지 않습니다.";
-      formIsValid = false;
+      if (user.pwd !== user.pwd_chk) {
+        newErrors.pwd_chk = "비밀번호가 일치하지 않습니다.";
+        formIsValid = false;
+      }
     }
 
     setErrors(newErrors);
@@ -114,38 +107,36 @@ const UserUpdate = () => {
   };
 
   const combineAddress = () => {
-    const { addr_start, addr_end } = user;
-    let address = `${addr_start} ${addr_end}`;
-
-    if (addr_start && addr_end) {
-      address = `${addr_start} ${addr_end}`;
-    }
-    return address;
+    const { address, addr_end } = user;
+    return `${address} ${addr_end}`;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      const combinedAddress = combineAddress();
-      const updatedUser = {
-        ...user,
-        address: combinedAddress,
-        zipcode: user.zipcode,
-      };
 
-      try {
-        console.log("Sending data to server:", updatedUser);
-        const response = await axios.put(`/user/update/${userNo}`, updatedUser);
-        console.log("Server response:", response.data);
-        alert("회원 정보가 수정되었습니다.");
-        window.location.href = "/user/main";
-      } catch (error) {
-        console.error(
-          "Error updating user:",
-          error.response ? error.response.data : error.message
-        );
-        alert("회원 정보 수정 중 오류가 발생했습니다.");
-      }
+    if (!validateForm()) {
+      return;
+    }
+
+    const combinedAddress = combineAddress();
+    const updatedUser = {
+      ...user,
+      address: combinedAddress,
+      zipcode: user.zipcode,
+    };
+
+    try {
+      console.log("Sending data to server:", updatedUser);
+      const response = await axios.put(`/user/update/${userNo}`, updatedUser);
+      console.log("Server response:", response.data);
+      alert("회원 정보가 수정되었습니다.");
+      window.location.href = "/user/main";
+    } catch (error) {
+      console.error(
+        "Error updating user:",
+        error.response ? error.response.data : error.message
+      );
+      alert("회원 정보 수정 중 오류가 발생했습니다.");
     }
   };
 
@@ -172,6 +163,26 @@ const UserUpdate = () => {
     }));
   };
 
+  const handlePasswordToggle = () => {
+    setShowPasswordForm((prev) => !prev);
+    if (!showPasswordForm) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        pwd: "",
+        pwd_chk: "",
+      }));
+    }
+  };
+
+  const handlePasswordCancel = () => {
+    setShowPasswordForm(false);
+    setUser((prevUser) => ({
+      ...prevUser,
+      pwd: "",
+      pwd_chk: "",
+    }));
+  };
+
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit} id="updateForm">
@@ -188,7 +199,7 @@ const UserUpdate = () => {
             로그인된 계정입니다.
           </div>
         )}
-        <br />{" "}
+        <br />
         <div className={styles.user_input}>
           <input
             type="text"
@@ -202,13 +213,14 @@ const UserUpdate = () => {
             <div className={styles.error_message}>{errors.name}</div>
           )}
         </div>
-        {social === "0" && (
+        {showPasswordForm && (
           <>
             <div className={styles.user_input}>
               <input
                 type="password"
                 name="pwd"
                 placeholder="비밀번호"
+                value={user.pwd}
                 onChange={handleInputChange}
               />
               {errors.pwd && (
@@ -227,7 +239,15 @@ const UserUpdate = () => {
                 <div className={styles.error_message}>{errors.pwd_chk}</div>
               )}
             </div>
+            <button type="button" onClick={handlePasswordCancel}>
+              비밀번호 변경 취소
+            </button>
           </>
+        )}
+        {!showPasswordForm && social === "0" && (
+          <button type="button" onClick={handlePasswordToggle}>
+            비밀번호 변경
+          </button>
         )}
         <div className={styles.email_input}>
           <input
@@ -236,9 +256,8 @@ const UserUpdate = () => {
             placeholder="이메일"
             value={user.email}
             onChange={handleInputChange}
-            disabled={social === "0" ? false : true}
+            disabled={social !== "0"}
           />
-
           {errors.email && (
             <div className={styles.error_message}>{errors.email}</div>
           )}
@@ -277,7 +296,7 @@ const UserUpdate = () => {
             name="addr_start"
             ref={addrStartRef}
             placeholder="주소"
-            value={user.addr_start}
+            value={user.address}
             disabled
           />
         </div>
