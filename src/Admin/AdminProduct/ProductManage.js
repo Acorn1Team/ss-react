@@ -212,8 +212,7 @@ export default function ProductManage() {
 
   return (
     <>
-      <Link to="/admin/product/insert">상품 추가</Link>
-
+      <Link to="/admin/product/insert">상품 추가하기</Link>
       <div style={{ marginBottom: "10px" }}>
         <label style={{ display: "inline-block", marginRight: "10px" }}>
           검색 :

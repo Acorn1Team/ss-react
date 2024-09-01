@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-export default function PromotionAdvertise() {
+export default function PromotionPopup() {
     const navigate = useNavigate();
     const [locationCategory, setLocationCategory] = useState("");
     const [inputValue, setInputValue] = useState("");
@@ -43,10 +43,10 @@ export default function PromotionAdvertise() {
         setInputValue(item.name || item.title);
     }
 
-    const addAdvertise = () => {
+    const addPopup = () => {
         console.log('추가할 상태', state)
         axios
-            .post("/admin/advertise", state)
+            .post("/admin/popup", state)
             .then((response) => {
                 if (response.data.isSuccess) {
                     alert("추가 성공");
@@ -60,9 +60,9 @@ export default function PromotionAdvertise() {
 
     return (
         <div>
-            <h2>광고 알림 등록</h2>
+            <h2>팝업 등록</h2>
                 <div>
-                <textarea style={{width:'30%'}} name="content" onChange={handleChange} placeholder='광고 내용을 입력하세요.' /><br/><br/><br/>
+                <textarea style={{width:'30%'}} name="content" onChange={handleChange} placeholder='여기 사진 업로드로 바꿔라' /><br/><br/><br/>
                 <select style={{width:'10%'}} onChange={(e) => setLocationCategory(e.target.value)} value={locationCategory}>
                     <option value="">유도 경로 선택</option>
                     <option value="product">상품 페이지</option>
@@ -87,7 +87,7 @@ export default function PromotionAdvertise() {
                 )}
                 <input type="text" name="path" onChange={handleChange} hidden />
                 </div><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-            <button onClick={addAdvertise}>등록</button>
+            <button onClick={addPopup}>등록</button>
         </div>
     );
 }

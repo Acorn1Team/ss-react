@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Bar } from 'react-chartjs-2';
 import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { useNavigate } from 'react-router-dom';
 
-Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend); // 리액트 차트 필수 components
+Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export default function MonthlyBestSellerChart() {
     const [bestSellerData, setBestSellerData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate(); // Replace useHistory with useNavigate
 
     useEffect(() => {
         axios
@@ -27,15 +29,14 @@ export default function MonthlyBestSellerChart() {
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
 
-    // 데이터 가공
     const chartData = {
-        labels: bestSellerData.map(d => `${d[0]}`), // 상품 이름
+        labels: bestSellerData.map(d => d.name),
         datasets: [
             {
                 label: '판매량',
-                data: bestSellerData.map(d => d[1]), // 판매량
-                backgroundColor: 'lightgray', // 막대 배경색
-                borderColor: 'gray', // 막대 테두리 색
+                data: bestSellerData.map(d => d.quantity),
+                backgroundColor: 'lightgray',
+                borderColor: 'gray',
                 borderWidth: 1
             }
         ]
@@ -43,7 +44,7 @@ export default function MonthlyBestSellerChart() {
 
     const chartOptions = {
         responsive: true,
-        indexAxis: 'y', // 세로 방향 막대 그래프
+        indexAxis: 'y',
         plugins: {
             legend: {
                 position: 'top'
@@ -67,13 +68,21 @@ export default function MonthlyBestSellerChart() {
             y: {
                 beginAtZero: true,
             }
+        },
+        onClick: (event, elements) => {
+            if (elements.length > 0) {
+                const index = elements[0].index;
+                const productNo = bestSellerData[index].no;
+                navigate(`/admin/product/detail/${productNo}`); // Use navigate instead of history.push
+            }
         }
     };
 
     return (
         <div>
-            <h3>이번 달의 베스트 셀러</h3>
+            <h3>이번 달의 인기 상품</h3>
             <Bar data={chartData} options={chartOptions} />
+            <div>각 상품 클릭 시 상세페이지로 이동합니다.</div>
         </div>
     );
-};
+}
