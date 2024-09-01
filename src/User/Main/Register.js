@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import styles from "../Style/UserRegister.module.css";
 
 // 정규 표현식
 const userPwdRegex =
@@ -50,6 +51,71 @@ const idCheck = async (id, setErrorMessage, setIdChecked) => {
   } catch (error) {
     console.error("ID 중복 확인 중 오류 발생:", error);
     setIdChecked(false);
+  }
+};
+
+// 이메일 인증 번호 요청 함수
+const sendEmailVerificationCode = async (
+  email,
+  setVerificationCode,
+  setErrorMessage
+) => {
+  try {
+    const response = await fetch(
+      "http://localhost:8080/user/auth/send-verification-code",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      }
+    );
+
+    const result = await response.json();
+    if (result.status === "success") {
+      setVerificationCode(result.code); // 서버에서 반환한 인증번호
+      alert("인증번호가 이메일로 발송되었습니다.");
+    } else {
+      setErrorMessage({ email: result.message });
+    }
+  } catch (error) {
+    console.error("인증번호 발송 중 오류 발생:", error);
+    setErrorMessage({ email: "인증번호 발송 실패" });
+  }
+};
+
+// 이메일 인증 코드 검증 함수
+const verifyEmailCodeOnServer = async (email, inputCode, setErrorMessage) => {
+  try {
+    const response = await fetch(
+      "http://localhost:8080/user/auth/verify-code",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code: inputCode }),
+      }
+    );
+
+    const result = await response.json();
+    if (response.ok && result.status === "success") {
+      setErrorMessage((prev) => ({
+        ...prev,
+        email: "인증이 완료되었습니다.",
+      }));
+      return true; // 인증 성공
+    } else {
+      setErrorMessage((prev) => ({
+        ...prev,
+        email: result.message || "인증번호가 일치하지 않습니다.",
+      }));
+      return false; // 인증 실패
+    }
+  } catch (error) {
+    console.error("인증번호 검증 중 오류 발생:", error);
+    setErrorMessage((prev) => ({
+      ...prev,
+      email: "인증번호 검증 실패",
+    }));
+    return false; // 오류 발생 시 실패로 처리
   }
 };
 
@@ -109,6 +175,8 @@ const Register = () => {
   ]);
   const [customDomainInput, setCustomDomainInput] = useState("");
   const [idChecked, setIdChecked] = useState(false); // 아이디 중복 체크 여부
+  const [verificationCode, setVerificationCode] = useState(""); // 이메일 인증 코드
+  const [inputVerificationCode, setInputVerificationCode] = useState(""); // 사용자가 입력한 이메일 인증 코드
 
   const navigate = useNavigate();
   const addrStartRef = useRef(null);
@@ -168,11 +236,6 @@ const Register = () => {
       setEmailDomain(selectedValue); // 선택된 도메인으로 설정
     }
   };
-  useEffect(() => {
-    console.log("isCustomDomain:", isCustomDomain);
-    console.log("customDomainInput:", customDomainInput);
-    console.log("emailDomain:", emailDomain);
-  }, [isCustomDomain, customDomainInput, emailDomain]);
 
   const handleCustomDomainInputChange = (event) => {
     setCustomDomainInput(event.target.value);
@@ -210,6 +273,20 @@ const Register = () => {
       return;
     }
 
+    if (
+      !(await verifyEmailCodeOnServer(
+        `${email}@${emailDomain}`,
+        inputVerificationCode,
+        setErrorMessage
+      ))
+    ) {
+      setErrorMessage((prev) => ({
+        ...prev,
+        email: "이메일 인증이 완료되지 않았습니다.",
+      }));
+      return;
+    }
+
     // 요청 데이터
     const registerData = {
       id,
@@ -242,12 +319,12 @@ const Register = () => {
   };
 
   return (
-    <div className="register_Container">
+    <div className={styles.container}>
       <form className="register_Form" onSubmit={handleRegister}>
         <h1>회원가입</h1>
 
         {/* 아이디 */}
-        <div className="register_Form">
+        <div className={styles.id_input}>
           <input
             type="text"
             name="id"
@@ -262,13 +339,15 @@ const Register = () => {
           >
             중복 확인
           </button>
-          {errorMessage.id && (
-            <div className="error_message">{errorMessage.id}</div>
-          )}
         </div>
+        {errorMessage.id && (
+          <div className={styles.error_message}>{errorMessage.id}</div>
+        )}
+
+        <hr />
 
         {/* 비밀번호 */}
-        <div className="user_input">
+        <div className={styles.user_input}>
           <input
             type="password"
             name="pwd"
@@ -277,10 +356,10 @@ const Register = () => {
             onChange={(e) => setPwd(e.target.value)}
           />
           {errorMessage.pwd && (
-            <div className="error_message">{errorMessage.pwd}</div>
+            <div className={styles.error_message}>{errorMessage.pwd}</div>
           )}
         </div>
-        <div className="user_input">
+        <div className={styles.user_input}>
           <input
             type="password"
             name="pwd_chk"
@@ -289,12 +368,12 @@ const Register = () => {
             onChange={(e) => setPwdChk(e.target.value)}
           />
           {errorMessage.pwdChk && (
-            <div className="error_message">{errorMessage.pwdChk}</div>
+            <div className={styles.error_message}>{errorMessage.pwdChk}</div>
           )}
         </div>
 
         {/* 이름 */}
-        <div className="user_input">
+        <div className={styles.user_input}>
           <input
             type="text"
             name="name"
@@ -303,12 +382,12 @@ const Register = () => {
             onChange={(e) => setName(e.target.value)}
           />
           {errorMessage.name && (
-            <div className="error_message">{errorMessage.name}</div>
+            <div className={styles.error_message}>{errorMessage.name}</div>
           )}
         </div>
 
         {/* 이메일 */}
-        <div className="email_input">
+        <div className={styles.email_input}>
           <input
             type="text"
             name="user_email"
@@ -317,9 +396,7 @@ const Register = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <span id="middle" style={{ margin: "7px" }}>
-            @
-          </span>
+          <span id="middle">@</span>
           <input
             type="text"
             name="email_domain"
@@ -342,11 +419,46 @@ const Register = () => {
           </select>
         </div>
         {errorMessage.email && (
-          <div className="error_message">{errorMessage.email}</div>
+          <div className={styles.error_message}>{errorMessage.email}</div>
         )}
+        <button
+          type="button"
+          onClick={() =>
+            sendEmailVerificationCode(
+              `${email}@${emailDomain}`,
+              setVerificationCode,
+              setErrorMessage
+            )
+          }
+          disabled={!email || !emailDomain}
+        >
+          인증번호 발송
+        </button>
+        <div className={styles.user_input}>
+          <label>
+            {" "}
+            <input
+              type="text"
+              placeholder="인증번호"
+              value={inputVerificationCode}
+              onChange={async (e) => {
+                const userCode = e.target.value;
+                setInputVerificationCode(userCode);
+                if (userCode) {
+                  await verifyEmailCodeOnServer(
+                    `${email}@${emailDomain}`,
+                    userCode,
+                    setErrorMessage
+                  );
+                }
+              }}
+            />
+          </label>
+        </div>
+        <hr />
 
         {/* 전화번호 */}
-        <div className="user_input">
+        <div className={styles.user_input}>
           <input
             type="text"
             name="tel"
@@ -356,12 +468,12 @@ const Register = () => {
             onChange={(e) => setTel(e.target.value)}
           />
           {errorMessage.tel && (
-            <div className="error_message">{errorMessage.tel}</div>
+            <div className={styles.error_message}>{errorMessage.tel}</div>
           )}
         </div>
 
         {/* 주소 */}
-        <div className="user_input">
+        <div className={styles.user_input}>
           <input
             type="text"
             placeholder="우편번호"
@@ -384,7 +496,7 @@ const Register = () => {
           ref={userZipcodeRef}
         />
 
-        <div className="user_input">
+        <div className={styles.user_input}>
           <input
             type="text"
             name="addr_start"
@@ -395,7 +507,7 @@ const Register = () => {
             value={addrStart}
           />
         </div>
-        <div className="user_input">
+        <div className={styles.user_input}>
           <input
             type="text"
             name="addr_end"
@@ -406,21 +518,12 @@ const Register = () => {
           />
         </div>
         {errorMessage.address && (
-          <div className="error_message">{errorMessage.address}</div>
+          <div className={styles.error_message}>{errorMessage.address}</div>
         )}
-        <input
-          type="hidden"
-          id="full_addr"
-          name="address"
-          value={`${addrStart} ${addrEnd}`}
-        />
 
-        <button type="submit" className="btnRegister btn-16" id="btnRegister">
+        <button type="submit" id="btnRegister">
           Join Up
         </button>
-        {errorMessage.global && (
-          <div className="error_message">{errorMessage.global}</div>
-        )}
       </form>
     </div>
   );

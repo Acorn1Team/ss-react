@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import styles from "../Style/UserUpdate.module.css";
 import axios from "axios";
@@ -16,7 +16,6 @@ const UserUpdate = () => {
     tel: "",
     zipcode: "",
     address: "",
-    addr_start: "",
     addr_end: "",
   });
   const [errors, setErrors] = useState({});
@@ -35,9 +34,13 @@ const UserUpdate = () => {
       window.daum = window.daum || {};
     };
     document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
+    };
   }, []);
 
-  const openDaumPostcode = () => {
+  const openDaumPostcode = useCallback(() => {
     if (!window.daum.Postcode) {
       console.error("Daum Postcode API가 로드되지 않았습니다.");
       return;
@@ -59,7 +62,7 @@ const UserUpdate = () => {
         if (addrEndRef.current) addrEndRef.current.focus();
       },
     }).open();
-  };
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -71,9 +74,7 @@ const UserUpdate = () => {
         }
         const response = await axios.get(`/user/update/${userNo}`);
         setUser(response.data);
-        if (response.data.name === null) {
-          setNameNull(true);
-        }
+        setNameNull(response.data.name === null);
         setSocial(response.data.subpath);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -96,8 +97,18 @@ const UserUpdate = () => {
         formIsValid = false;
       }
 
-      if (user.pwd !== user.pwd_chk) {
+      if (user.pwd_chk && user.pwd !== user.pwd_chk) {
         newErrors.pwd_chk = "비밀번호가 일치하지 않습니다.";
+        formIsValid = false;
+      }
+
+      if (!user.pwd && user.pwd_chk) {
+        newErrors.pwd = "비밀번호를 입력해 주세요.";
+        formIsValid = false;
+      }
+
+      if (user.pwd && !user.pwd_chk) {
+        newErrors.pwd_chk = "비밀번호 확인을 입력해 주세요.";
         formIsValid = false;
       }
     }
@@ -120,14 +131,11 @@ const UserUpdate = () => {
 
     const combinedAddress = combineAddress();
 
-    // 업데이트할 사용자 객체 생성
     const updatedUser = {
       ...user,
       address: combinedAddress,
       zipcode: user.zipcode,
-      // 비밀번호가 입력된 경우에만 비밀번호 필드 포함
-      ...(user.pwd && user.pwd_chk ? { pwd: user.pwd } : {}),
-      // addr_end가 입력된 경우에만 포함
+      ...(user.pwd ? { pwd: user.pwd } : {}),
       ...(user.addr_end ? { addr_end: user.addr_end } : {}),
     };
 
@@ -213,7 +221,7 @@ const UserUpdate = () => {
             placeholder="이름"
             value={user.name}
             onChange={handleInputChange}
-            disabled={nameNull ? false : true}
+            disabled={!nameNull}
           />
           {errors.name && (
             <div className={styles.error_message}>{errors.name}</div>
