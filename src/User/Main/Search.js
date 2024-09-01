@@ -1,81 +1,75 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, Link } from "react-router-dom"; // 현재 URL의 위치를 확인하고, 페이지 이동을 위한 링크를 import합니다.
+import { useLocation, Link } from "react-router-dom";
 import axios from "axios";
-import styles from "../Style/ActorProfile.module.css"; // 배우 프로필 관련 스타일을 import합니다.
-import styles2 from "../Style/SearchUser.module.css"; // 사용자 검색 관련 스타일을 import합니다.
+import styles from "../Style/ActorProfile.module.css";
+import styles2 from "../Style/SearchUser.module.css";
 
 function Search() {
-  const location = useLocation(); // 현재 URL의 위치 정보 가져오기
-  const query = new URLSearchParams(location.search); // URL의 쿼리 파라미터 추출
-  const name = query.get("name"); // "name" 쿼리 파라미터 값 가져오기
-  const category = query.get("category"); // "category" 쿼리 파라미터 값 가져오기
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const name = query.get("name");
+  const category = query.get("category");
 
-  // 상태 변수들
-  const [dbData, setDbData] = useState([]); // 서버에서 가져온 데이터를 저장할 상태
-  const [loading, setLoading] = useState(true); // 데이터 로딩 상태를 나타내는 변수
-  const [error, setError] = useState(null); // 에러 메시지를 저장할 상태
-  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 번호
-  const [pageSize, setPageSize] = useState(5); // 한 페이지에 표시할 데이터 항목 수
-  const [totalPages, setTotalPages] = useState(1); // 총 페이지 수
+  const [dbData, setDbData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageSize, setPageSize] = useState(5);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    // 데이터 요청과 상태 업데이트를 처리하는 비동기 함수
     const fetchData = async () => {
-      setLoading(true); // 데이터 요청 시작 시 로딩 상태로 설정
-      setError(null); // 에러 상태 초기화
+      setLoading(true);
+      setError(null);
 
       if (name && category) {
-        // "name"과 "category"가 있을 때만 데이터 요청
         try {
           const response = await axios.get(
-            `http://localhost:8080/user/search/${category}/${name}`, // 데이터 요청 URL
+            `http://localhost:8080/user/search/${category}/${name}`,
             {
               params: {
-                page: currentPage, // 요청할 페이지 번호
-                size: pageSize, // 페이지당 데이터 항목 수
-                searchTerm: name, // 검색어
-                searchField: category, // 검색 카테고리
+                page: currentPage,
+                size: pageSize,
+                searchTerm: name,
+                searchField: category,
               },
             }
           );
 
           if (response.data) {
-            setTotalPages(response.data.totalPages); // 서버 응답에서 총 페이지 수 업데이트
-            setDbData(response.data.results || []); // 서버 응답에서 데이터 업데이트
+            setTotalPages(response.data.totalPages);
+            setDbData(response.data.results || []);
           }
         } catch (error) {
-          console.error("Error fetching data:", error.message); // 콘솔에 에러 메시지 출력
-          setError("An error occurred while fetching data."); // 사용자에게 에러 메시지 표시
+          console.error("Error fetching data:", error.message);
+          setError("An error occurred while fetching data.");
         } finally {
-          setLoading(false); // 데이터 요청 완료 후 로딩 상태 종료
+          setLoading(false);
         }
       } else {
-        setLoading(false); // 쿼리 파라미터가 없을 때도 로딩 상태 종료
+        setLoading(false);
       }
     };
 
-    fetchData(); // 데이터 요청 함수 호출
-  }, [name, category, currentPage, pageSize]); // 의존성 배열: 이 값들이 변경될 때마다 데이터 요청
+    fetchData();
+  }, [name, category, currentPage, pageSize]);
 
   useEffect(() => {
-    // 검색어가 변경될 때마다 현재 페이지를 0으로 리셋
     setCurrentPage(0);
-  }, [name, category]); // 검색어와 카테고리가 변경될 때마다 실행
+  }, [name, category]);
 
   const handlePageChange = (newPage) => {
-    // 페이지 변경 함수
     if (newPage >= 0 && newPage < totalPages) {
-      // 유효한 페이지 번호일 때만 상태 업데이트
-      setCurrentPage(newPage); // 현재 페이지 번호를 새 페이지로 변경
+      setCurrentPage(newPage);
     }
   };
 
   if (loading) {
-    return <div>Loading...</div>; // 데이터 로딩 중일 때 화면에 표시
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>{error}</div>; // 에러 발생 시 에러 메시지 화면에 표시
+    return <div>{error}</div>;
   }
 
   return (
@@ -84,7 +78,6 @@ function Search() {
         <div>
           {dbData.map((item, index) => (
             <span key={index}>
-              {/* 카테고리에 따라 적절한 아이템 컴포넌트를 렌더링 */}
               {category === "actor" && <ActorItem item={item} />}
               {category === "show" && <ShowItem item={item} />}
               {category === "product" && <ProductItem item={item} />}
@@ -93,25 +86,24 @@ function Search() {
           ))}
         </div>
       ) : (
-        <div>검색 결과가 없습니다.</div> // 데이터가 없을 때 표시
+        <div>검색 결과가 없습니다.</div>
       )}
       <div>
         {totalPages > 1 && (
           <div style={{ marginTop: "10px" }}>
             <button
-              onClick={() => handlePageChange(currentPage - 1)} // 이전 페이지 버튼 클릭 시 페이지 변경
-              disabled={currentPage === 0 || loading} // 첫 페이지이거나 로딩 중일 때 비활성화
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 0 || loading}
               className={`${styles2.pagingButton} ${styles2.customBtn}`}
             >
               이전
             </button>
             <span style={{ margin: "0 10px" }}>
-              {currentPage + 1} / {totalPages}{" "}
-              {/* 현재 페이지와 총 페이지 수 표시 */}
+              {currentPage + 1} / {totalPages}
             </span>
             <button
-              onClick={() => handlePageChange(currentPage + 1)} // 다음 페이지 버튼 클릭 시 페이지 변경
-              disabled={currentPage + 1 >= totalPages || loading} // 마지막 페이지이거나 로딩 중일 때 비활성화
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage + 1 >= totalPages || loading}
               className={`${styles2.pagingButton} ${styles2.customBtn}`}
             >
               다음
@@ -124,85 +116,82 @@ function Search() {
 }
 
 function ActorItem({ item }) {
+  const showDetails = item.showDetails || [];
+  const actorName = showDetails[0] || "No Name";
+  const actorPic = showDetails[1] || "defaultProfilePic.png"; // 기본 이미지 설정
+
   return (
     <div className={styles.actorsContainer}>
       <span className={styles.profileContainer}>
         <span>
           <Link to={`/user/main/sub/${item.no}`}>
             <img
-              src={item.showDetails[1]} // 배우의 사진 URL
-              alt={`배우 사진`} // 이미지 설명
-              className={styles.profilePic} // 스타일 적용
+              src={actorPic}
+              alt={`배우 사진`}
+              className={styles.profilePic}
             />
           </Link>
         </span>
         <span className={styles.actorName}>
-          <Link to={`/user/main/sub/${item.no}`}>{item.showDetails[0]}</Link>{" "}
-          {/* 배우 이름 링크 */}
+          <Link to={`/user/main/sub/${item.no}`}>{actorName}</Link>
         </span>
       </span>
     </div>
   );
 }
 
-// 쇼 아이템 컴포넌트
 function ShowItem({ item }) {
   return (
     <div className={styles.profileContainer}>
       <span className={styles.actorsContainer}>
         <Link to={`/user/main/sub/${item.no}`} state={{ stateValue: item }}>
           <img
-            src={item.pic} // 쇼의 사진 URL
-            alt={`${item.name}`} // 이미지 설명
-            className={styles.profilePic} // 스타일 적용
+            src={item.pic || "defaultShowPic.png"} // 기본 이미지 설정
+            alt={`${item.name}`}
+            className={styles.profilePic}
           />
         </Link>
       </span>
       <span className={styles.actorName}>
         <Link to={`/user/main/sub/${item.showNo}`} state={{ stateValue: item }}>
-          {item.name}
-        </Link>{" "}
-        {/* 쇼 제목 링크 */}
+          {item.name || "No Name"}
+        </Link>
       </span>
     </div>
   );
 }
 
-// 제품 아이템 컴포넌트
 function ProductItem({ item }) {
   return (
     <div>
       <div>
         <Link to={`/user/shop/productlist/detail/${item.no}`}>
-          Product Name: {item.name || "No data"} {/* 제품 이름 링크 */}
+          Product Name: {item.name || "No data"}
         </Link>
       </div>
-      <div>
-        Price: {item.price || "No data"} {/* 제품 가격 표시 */}
-      </div>
+      <div>Price: {item.price || "No data"}</div>
     </div>
   );
 }
 
-// 사용자 아이템 컴포넌트
 function UserItem({ item }) {
   return (
     <div className={styles2.profileContainer}>
       <img
-        src={item.pic} // 사용자 사진 URL
-        alt={`${item.name}'s picture`} // 이미지 설명
-        className={styles2.profilePic} // 스타일 적용
+        src={item.pic || "defaultUserPic.png"} // 기본 이미지 설정
+        alt={`${item.name}'s picture`}
+        className={styles2.profilePic}
       />
       <div className={styles2.profileInfo}>
         <Link
           to={`/user/style/profile/${item.no}`}
-          style={{ textDecoration: "none", color: "inherit" }} // 링크 스타일 초기화
+          style={{ textDecoration: "none", color: "inherit" }}
         >
-          <div className={styles2.profileId}>{item.id || "No data"}</div>{" "}
-          {/* 사용자 ID 표시 */}
+          <div className={styles2.profileId}>{item.id || "No data"}</div>
         </Link>
-        <div className={styles2.profileNickname}>{item.nickname}</div>{" "}
-        {/* 사용자 닉네임 표시 */}
+        <div className={styles2.profileNickname}>
+          {item.nickname || "No data"}
+        </div>
       </div>
     </div>
   );
