@@ -511,18 +511,50 @@ export default function Posts() {
               <br />
               {formatDate(postData.date)}
             </div>
-            {postData.userNo !== userNo && !isReport && (
-              <button onClick={() => postReports()}>신고</button>
+            {String(postData.userNo) !== userNo && !isReport && (
+              <button
+                className={styles.topButtonBox}
+                onClick={() => postReports()}
+              >
+                신고
+              </button>
             )}
+            &ensp;
             {String(postData.userNo) === String(userNo) && (
               <>
-                <button onClick={() => postUDControl("u")}>수정</button>
-                <button onClick={() => postUDControl("d")}>삭제</button>
+                <button
+                  className={styles.topButtonBox}
+                  onClick={() => postUDControl("u")}
+                >
+                  수정
+                </button>
+                &ensp;
+                <button
+                  className={styles.topButtonBox}
+                  onClick={() => postUDControl("d")}
+                >
+                  삭제
+                </button>
               </>
             )}
             {isAdmin && (
-              <button onClick={() => postUDControl("d")}>삭제</button>
+              <button
+                className={styles.topButtonBox}
+                onClick={() => postUDControl("d")}
+              >
+                삭제
+              </button>
             )}
+            &emsp;
+            <KakaoShareButton
+              title={`${userInfo.userNickname} 님의 포스트 같이 봐요!`}
+              description={`${
+                postData.content && postData.content.length > 30
+                  ? `${postData.content.slice(0, 30)}...`
+                  : postData.content || ""
+              }`}
+              webUrl={`http://192.168.0.12:3000/user/style/detail/${postNo}`}
+            />
           </div>
           <div className={styles.postContent}>
             {postData.pic && (
@@ -534,92 +566,107 @@ export default function Posts() {
             )}
             <div>{postData.content}</div>
             <div className={styles.actionButtons}>
-              <button
-                className={styles.actionButton}
+              <img
+                src={
+                  postLikeStatus
+                    ? "/images/icon/heart1B.png"
+                    : "/images/icon/heart2B.png"
+                }
+                alt="replyIcon"
+                width={"25px"}
                 onClick={() => likeProcHandler()}
-                disabled={loading}
-              >
-                {postLikeStatus ? "좋아요 취소" : "좋아요"}
-              </button>
+              ></img>
               좋아요 {postLike}개
             </div>
-            <KakaoShareButton
-              title={`${userInfo.userNickname} 님의 포스트 같이 봐요!`}
-              description={`${
-                postData.content && postData.content.length > 30
-                  ? `${postData.content.slice(0, 30)}...`
-                  : postData.content || ""
-              }`}
-              webUrl={`http://192.168.0.12:3000/user/style/detail/${postNo}`}
-            />
             {postData.productNo && (
-              <div>
-                <b>이 상품이 마음에 들어요!</b>
-                <img
-                  src={productData.pic}
-                  alt="Product Pic"
-                  className={styles.productImage}
-                />
-                <div>{productData.name}</div>
-                <div>{productData.price}</div>
-              </div>
+              <Link to={`/user/shop/productlist/detail/${productData.no}`}>
+                <div className={styles.productInPost}>
+                  <img
+                    src={productData.pic}
+                    alt="Product Pic"
+                    className={styles.productImage}
+                  />
+                  <div>{productData.name}</div>
+                  <div>{productData.price}</div>
+                </div>
+              </Link>
             )}
           </div>
+          <hr width="90%" />
           <div className={styles.commentSection}>
-            <b>댓글</b>
-            {postCommentData
-              .filter((pc) => pc.parentCommentNo === null)
-              .map((pc) => (
-                <div key={pc.no} className={styles.comment}>
-                  <Link
-                    to={`/user/style/profile/${pc.userNo}`}
-                    style={{ color: "#007bff", fontWeight: "bold" }}
-                  >
-                    @{pc.userNickname}
-                  </Link>
-                  : {renderCommentContent(pc.content)} <br />
-                  <button onClick={() => recomment(pc.no, pc.userNickname)}>
-                    답글
-                  </button>
-                  <button onClick={() => likeProcHandler(pc.no)}>
-                    {commentLikeStatus[pc.no] ? "좋아요 취소" : "좋아요"}
-                  </button>
-                  좋아요 {commentLike[pc.no]}개
-                  {String(pc.userNo) === String(userNo) && (
-                    <button onClick={() => deleteComment(pc.no)}>삭제</button>
-                  )}
-                  {pc.replies &&
-                    pc.replies.map((reply) => (
-                      <div key={reply.no} className={styles.reply}>
-                        <Link
-                          to={`/user/style/profile/${reply.userNo}`}
-                          style={{ color: "#007bff" }}
-                        >
-                          @{reply.userNickname}
-                        </Link>
-                        : {renderCommentContent(reply.content)} <br />
-                        <button
-                          onClick={() =>
-                            recomment(reply.no, reply.userNickname)
+            {postCommentData && postCommentData.length > 0 ? (
+              <div>
+                {postCommentData
+                  .filter((pc) => pc.parentCommentNo === null)
+                  .map((pc) => (
+                    <div key={pc.no} className={styles.comment}>
+                      <Link
+                        to={`/user/style/profile/${pc.userNo}`}
+                        style={{ color: "#007bff", fontWeight: "bold" }}
+                      >
+                        @{pc.userNickname}
+                      </Link>
+                      : {renderCommentContent(pc.content)}
+                      <span id="iconBox">
+                        <img
+                          src="/images/icon/replyB.png"
+                          alt="replyIcon"
+                          width={"25px"}
+                          onClick={() => recomment(pc.no, pc.userNickname)}
+                        ></img>
+                        <img
+                          src={
+                            commentLikeStatus[pc.no]
+                              ? "/images/icon/heart1B.png"
+                              : "/images/icon/heart2B.png"
                           }
-                        >
-                          답글
+                          onClick={() => likeProcHandler(pc.no)}
+                          alt="likeButton"
+                          width={"25px"}
+                        ></img>
+                        좋아요 {commentLike[pc.no]}개
+                      </span>
+                      {String(pc.userNo) === String(userNo) && (
+                        <button onClick={() => deleteComment(pc.no)}>
+                          삭제
                         </button>
-                        <button onClick={() => likeProcHandler(reply.no)}>
-                          {commentLikeStatus[reply.no]
-                            ? "좋아요 취소"
-                            : "좋아요"}
-                        </button>
-                        좋아요 {commentLike[reply.no]}개
-                        {reply.userNo === userNo && (
-                          <button onClick={() => deleteComment(reply.no)}>
-                            삭제
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                </div>
-              ))}
+                      )}
+                      {pc.replies &&
+                        pc.replies.map((reply) => (
+                          <div key={reply.no} className={styles.reply}>
+                            <Link
+                              to={`/user/style/profile/${reply.userNo}`}
+                              style={{ color: "#007bff" }}
+                            >
+                              @{reply.userNickname}
+                            </Link>
+                            : {renderCommentContent(reply.content)} <br />
+                            <button
+                              onClick={() =>
+                                recomment(reply.no, reply.userNickname)
+                              }
+                            >
+                              답글
+                            </button>
+                            <button onClick={() => likeProcHandler(reply.no)}>
+                              {commentLikeStatus[reply.no]
+                                ? "좋아요 취소"
+                                : "좋아요"}
+                            </button>
+                            좋아요 {commentLike[reply.no]}개
+                            {reply.userNo === userNo && (
+                              <button onClick={() => deleteComment(reply.no)}>
+                                삭제
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                    </div>
+                  ))}
+              </div>
+            ) : (
+              <div>작성된 댓글이 없습니다.</div>
+            )}
 
             <textarea
               value={commentContent}
@@ -634,6 +681,7 @@ export default function Posts() {
               댓글 등록
             </button>
           </div>
+
           {isReportModalOpen && (
             <div className={modalStyles.modal}>
               <div className={modalStyles["modal-content"]}>
@@ -673,23 +721,25 @@ export default function Posts() {
               </div>
             </div>
           )}
-          <div style={{ marginTop: "10px" }}>
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 0 || loading}
-            >
-              이전
-            </button>
-            <span style={{ margin: "0 10px" }}>
-              {currentPage + 1} / {totalPages}
-            </span>
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage + 1 >= totalPages || loading}
-            >
-              다음
-            </button>
-          </div>
+          {totalPages > 1 && (
+            <div style={{ marginTop: "10px" }}>
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 0}
+              >
+                이전
+              </button>
+              <span style={{ margin: "0 10px" }}>
+                {currentPage + 1} / {totalPages}
+              </span>
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage + 1 >= totalPages}
+              >
+                다음
+              </button>
+            </div>
+          )}
         </div>
       )}
 

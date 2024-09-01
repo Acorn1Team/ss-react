@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import styles from "../Style/PostListByUser.module.css";
 
 // 로그인된 유저의 내 작성 글 보기
 export default function PostListByUser() {
@@ -128,13 +129,13 @@ export default function PostListByUser() {
   };
 
   return (
-    <>
-      <div>
+    <div className={styles.container}>
+      <div className={styles.buttonGroup}>
         <button onClick={() => setShowTrash(false)}>내 게시물</button>
         <button onClick={() => setShowTrash(true)}>휴지통</button>
       </div>
 
-      <div>
+      <div className={styles.checkboxGroup}>
         <input
           type="checkbox"
           checked={selectAll}
@@ -169,32 +170,33 @@ export default function PostListByUser() {
       {!showTrash ? (
         <>
           <h2>내 게시물</h2>
-          {userPosts.map((up) => (
-            <div key={up.no}>
-              <input
-                type="checkbox"
-                checked={selectedPosts.includes(up.no)}
-                onChange={() => handleCheckboxChange(up.no)}
-              />
-              <img src={up.userPic} alt={up.no}></img>
-              &emsp;@{up.userNickname}
-              <br />
-              <Link to={`/user/style/detail/${up.no}`}>
-                <img width={"300px"} src={up.pic} alt={up.no}></img>
-                {up.content}
-              </Link>
-              <hr />
-            </div>
-          ))}
+          {userPosts && userPosts.length > 0 ? (
+            userPosts.map((up) => (
+              <div key={up.no} className={styles.postContainer}>
+                <input
+                  type="checkbox"
+                  checked={selectedPosts.includes(up.no)}
+                  onChange={() => handleCheckboxChange(up.no)}
+                />
+                <Link to={`/user/style/detail/${up.no}`}>
+                  <img width={"300px"} src={up.pic} alt={up.no}></img>
+                  {up.content}
+                </Link>
+              </div>
+            ))
+          ) : (
+            <p>게시물이 없습니다.</p> // userPosts가 비어 있을 때 보여줄 내용
+          )}
+
           {totalPages > 1 && (
-            <div style={{ marginTop: "10px" }}>
+            <div className={styles.pagination}>
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 0}
               >
                 이전
               </button>
-              <span style={{ margin: "0 10px" }}>
+              <span>
                 {currentPage + 1} / {totalPages}
               </span>
               <button
@@ -211,21 +213,20 @@ export default function PostListByUser() {
           <h2>휴지통 (삭제된 게시물)</h2>
           {deletedPosts.length > 0 ? (
             deletedPosts.map((post) => (
-              <div key={post.no}>
+              <div key={post.no} className={styles.postContainer}>
                 <input
                   type="checkbox"
                   checked={selectedPosts.includes(post.no)}
                   onChange={() => handleCheckboxChange(post.no)}
                 />
                 {post.content}
-                <hr />
               </div>
             ))
           ) : (
-            <p>휴지통이 비어 있습니다.</p>
+            <p className={styles.noPostsMessage}>휴지통이 비어 있습니다.</p>
           )}
         </>
       )}
-    </>
+    </div>
   );
 }

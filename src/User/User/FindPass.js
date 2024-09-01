@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import styles from "../Style/FindPass.module.css";
 
 function FindPass() {
   const [email, setEmail] = useState("");
@@ -23,27 +24,25 @@ function FindPass() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className={styles["form-container"]} onSubmit={handleSubmit}>
       <label>
-        이메일:
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          placeholder="이메일"
           required
         />
       </label>
-      <br />
       <label>
-        아이디:
         <input
           type="text"
           value={id}
           onChange={(e) => setId(e.target.value)}
+          placeholder="아이디"
           required
         />
       </label>
-      <br />
       <button type="submit">임시 비밀번호 요청</button>
     </form>
   );

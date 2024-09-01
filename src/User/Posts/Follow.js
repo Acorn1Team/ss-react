@@ -151,48 +151,56 @@ export default function Follow() {
 
   return (
     <div className={styles.followContainer}>
-      {followInfo === "followee" ? "팔로잉" : "팔로워"}
-      {followData.map((f) => (
-        <div key={f.no} className={styles.followItem}>
-          <img src={f.pic} alt="Profile" className={styles.profilePic} />
-          <Link to={`/user/style/profile/${f.no}`}> @{f.nickname}</Link>
-          {isMyPage && followInfo === "follower" ? (
-            <button
-              onClick={() => deleteFollower(f.no)}
-              className={styles.unfollowButton}
-            >
-              삭제하기
-            </button>
-          ) : (
-            <button
-              onClick={() => followOrCancel(f.no)}
-              className={
-                followStatus[f.no] ? styles.unfollowButton : styles.followButton
-              }
-            >
-              {followStatus[f.no] ? "팔로우 취소하기" : "팔로우 하기"}
-            </button>
+      <h2>{followInfo === "followee" ? "팔로잉" : "팔로워"}</h2>
+      {followData && followData.length > 0 ? (
+        <>
+          {followData.map((f) => (
+            <div key={f.no} className={styles.followItem}>
+              <img src={f.pic} alt="Profile" className={styles.profilePic} />
+              <Link to={`/user/style/profile/${f.no}`}>@{f.nickname}</Link>
+              {isMyPage && followInfo === "follower" ? (
+                <button
+                  onClick={() => deleteFollower(f.no)}
+                  className={styles.unfollowButton}
+                >
+                  삭제하기
+                </button>
+              ) : (
+                <button
+                  onClick={() => followOrCancel(f.no)}
+                  className={
+                    followStatus[f.no]
+                      ? styles.unfollowButton
+                      : styles.followButton
+                  }
+                >
+                  {followStatus[f.no] ? "팔로우 취소하기" : "팔로우 하기"}
+                </button>
+              )}
+            </div>
+          ))}
+          {totalPages > 1 && (
+            <div style={{ marginTop: "10px" }}>
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 0}
+              >
+                이전
+              </button>
+              <span style={{ margin: "0 10px" }}>
+                {currentPage + 1} / {totalPages}
+              </span>
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage + 1 >= totalPages}
+              >
+                다음
+              </button>
+            </div>
           )}
-        </div>
-      ))}
-      {totalPages > 1 && (
-        <div style={{ marginTop: "10px" }}>
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 0}
-          >
-            이전
-          </button>
-          <span style={{ margin: "0 10px" }}>
-            {currentPage + 1} / {totalPages}
-          </span>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage + 1 >= totalPages}
-          >
-            다음
-          </button>
-        </div>
+        </>
+      ) : (
+        <div>팔로우 정보가 없습니다.</div>
       )}
     </div>
   );

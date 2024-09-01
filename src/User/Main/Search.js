@@ -144,7 +144,7 @@ function ShowItem({ item }) {
   return (
     <div className={styles.profileContainer}>
       <span className={styles.actorsContainer}>
-        <Link to={`/user/main/sub/${item.no}`} state={{ stateValue: item }}>
+        <Link to={`/user/main/sub/${item.showNo}`} state={{ stateValue: item }}>
           <img
             src={item.pic || "defaultShowPic.png"} // 기본 이미지 설정
             alt={`${item.name}`}

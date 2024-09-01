@@ -19,7 +19,7 @@ export default function Coupon() {
 
   useEffect(() => {
     getCouponData();
-  }, [userNo]);
+  }, [userNo, currentPage]);
 
   const handlePageChange = (newPage) => {
     if (newPage >= 0 && newPage < totalPages) {
@@ -48,13 +48,23 @@ export default function Coupon() {
 
   return (
     <div className={styles.container}>
-      {couponData.map((cd) => (
-        <div className={styles.couponItem} key={cd.id}>
-          <div className={styles.couponName}>{cd.name}</div>
-          <div className={styles.couponDiscount}>{cd.discountRate}% 할인</div>
-          <div className={styles.couponExpiry}>~{cd.expiryDate}</div>
-        </div>
-      ))}
+      {couponData ? (
+        <>
+          {couponData.map((cd) => (
+            <div className={styles.couponItem} key={cd.id}>
+              <div className={styles.couponName}>{cd.name}</div>
+              <div className={styles.couponDiscount}>
+                {cd.discountRate}% 할인
+              </div>
+              <div className={styles.couponExpiry}>~{cd.expiryDate}</div>
+            </div>
+          ))}
+        </>
+      ) : (
+        <>
+          <b>사용 가능한 쿠폰이 없습니다.</b>
+        </>
+      )}
       {totalPages > 1 && (
         <div className={styles.pagination}>
           <button

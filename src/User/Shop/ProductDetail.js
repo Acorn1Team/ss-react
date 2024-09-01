@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import ProductReviews from "./ProductReviews";
+import styles from "../Style/ProductDetail.module.css";
 
 export default function ProductDetail() {
   // 제품상세보기
@@ -26,8 +27,7 @@ export default function ProductDetail() {
       .catch((error) => {
         console.log(error);
       });
-};
-
+  };
 
   useEffect(() => {
     refresh(no); // 컴포넌트가 마운트될 때, 그리고 no가 변경될 때마다 요청을 보냄
@@ -41,7 +41,6 @@ export default function ProductDetail() {
       return product.price;
     }
   };
-
 
   // 총 가격 계산 (수량에 따른 가격)
   const getTotalPrice = () => {
@@ -58,69 +57,64 @@ export default function ProductDetail() {
     setCount((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
   };
 
-
- // 장바구니에 제품 추가
- const handleAddToCart = () => {
-  dispatch({
-    type: "ADD_TO_CART",
-    payload: { product, quantity: count },
-  });
-  alert("장바구니에 추가되었습니다.");
-  navigate(`/user/shop/cart`); // 장바구니 페이지로 이동
-};
-
-
+  // 장바구니에 제품 추가
+  const handleAddToCart = () => {
+    dispatch({
+      type: "ADD_TO_CART",
+      payload: { product, quantity: count },
+    });
+    alert("장바구니에 추가되었습니다.");
+    navigate(`/user/shop/cart`); // 장바구니 페이지로 이동
+  };
 
   return (
-    <>
+    <div className={styles.container}>
       <h2>상품 상세 정보</h2>
       <div>
-        <label>이름: </label>
-        <span>{product.name}</span>
+        <span className={styles.label}>이름:</span>
+        <span className={styles.value}>{product.name}</span>
       </div>
-      <div>
-        <label>수량: </label>
+      <div className={styles.quantityControls}>
+        <span className={styles.label}>수량:</span>
         <button onClick={decrementQuantity}>-</button>
         <span>{count}</span>
         <button onClick={incrementQuantity}>+</button>
       </div>
       <div>
-        <label>가격: </label>
-        <span>{getTotalPrice()}</span> {/* 수량에 따른 총 가격을 표시 */}
-        {product.discountRate > 0 && <span>{/* {product.price} 원 */}</span>}
+        <span className={styles.label}>가격:</span>
+        <span className={styles.price}>{getTotalPrice()} 원</span>
+        {product.discountRate > 0 && (
+          <span className={styles.discountRate}>
+            할인율: {product.discountRate}%
+          </span>
+        )}
       </div>
-      <div>
-        <label>할인율: </label>
-        <span>{product.discountRate}</span>
-      </div>
-      <div>
-      <button onClick={handleAddToCart}>장바구니에 담기</button>
-      </div>
-      <div>
-        <label>상품 설명: </label>
+      <button className={styles.addToCartButton} onClick={handleAddToCart}>
+        장바구니에 담기
+      </button>
+      <div className={styles.productDescription}>
+        <span className={styles.label}>상품 설명:</span>
         <span>{product.contents}</span>
       </div>
-      <div>
-        <label>카테고리: </label>
+      <div className={styles.productCategory}>
+        <span className={styles.label}>카테고리:</span>
         <span>{product.category}</span>
       </div>
       <div>
-        <label>이미지: </label>
-        <img src={product.pic} alt={product.name} />
+        <span className={styles.label}>이미지:</span>
+        <img
+          src={product.pic}
+          alt={product.name}
+          className={styles.productImage}
+        />
       </div>
-      <div>
-        {/* <label>평점: </label>
-   
-        {/* <div>상품 평점이랑 리뷰 평점이랑 같아야 되 (체크)</div> */}
+      <Link to={`/user/style/write/${no}`} className={styles.communityLink}>
+        커뮤니티 공유하기
+      </Link>
+      <div className={styles.reviewSection}>
+        <h3>리뷰 보기</h3>
+        <ProductReviews setAverageRating={setAverageRating} />
       </div>
-      <Link to={`/user/style/write/${no}`}>커뮤니티 공유하기</Link>
-      <br />
-      <div>
-        <label>리뷰 보기: </label>
-        {/* <ProductReviews /> */}
-        <ProductReviews setAverageRating={setAverageRating} /> {/* 리뷰 컴포넌트에 리뷰 데이터 전달 */}
-      </div>
-      <br />
-    </>
+    </div>
   );
 }

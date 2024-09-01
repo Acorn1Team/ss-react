@@ -8,12 +8,12 @@ export default function Sub() {
   const locationState = useLocation();
 
   // 로그인된 정보라고 가정
-  const userNo = 3;
+  const userNo = sessionStorage.getItem("id");
 
   // 전체 정보 저장용
   const [show, setShow] = useState({});
   const [characters, setCharacters] = useState([]);
-  const [styleData, setStyleData] = useState([]); // 이름을 styleData로 변경
+  const [styleData, setStyleData] = useState([]);
   const [styleItems, setStyleItems] = useState([]);
   const [items, setItems] = useState([]);
 
@@ -30,7 +30,7 @@ export default function Sub() {
       .then((res) => {
         setShow(res.data.show || {});
         setCharacters(res.data.characters || []);
-        setStyleData(res.data.styles || []); // 여기도 styleData로 변경
+        setStyleData(res.data.styles || []);
         setStyleItems(res.data.styleItems || []);
         setItems(res.data.items || []);
 

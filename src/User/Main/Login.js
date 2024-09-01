@@ -93,8 +93,6 @@ const Login = () => {
           value={id}
           onChange={(e) => setId(e.target.value)}
         />
-        <br />
-
         <input
           type="password"
           id="pwd"
@@ -102,15 +100,12 @@ const Login = () => {
           value={pwd}
           onChange={(e) => setPwd(e.target.value)}
         />
-        <br />
 
         {loginCheck && (
           <label className={styles["error-message"]}>{errorMessage}</label>
         )}
 
         <button type="submit">로그인</button>
-        <br />
-        <br />
         <br />
         <div>
           <Link to="/user/auth/findPass">비밀번호 찾기</Link>
