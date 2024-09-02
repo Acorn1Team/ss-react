@@ -4,37 +4,36 @@ import { Link } from "react-router-dom";
 
 export default function PromotionManage() {
   const [coupons, setCoupons] = useState([]);
+  const [popups, setPopups] = useState([]);
 
   // 현재 페이지
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentCouponPage, setCurrentCouponPage] = useState(0);
+  const [currentPopupPage, setCurrentPopupPage] = useState(0);
 
   // 페이지 크기
-  const [pageSize, setPageSize] = useState(10);
+  const [couponPageSize, setCouponPageSize] = useState(8);
+  const [popupPageSize, setPopupPageSize] = useState(8);
 
   // 전체 페이지 수
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalCouponPages, setTotalCouponPages] = useState(1);
+  const [totalPopupPages, setTotalPopupPages] = useState(1);
 
   useEffect(() => {
     axios
-      .get("/admin/coupons", {
-        params: {
-          page: currentPage,
-          size: pageSize,
-        },
-      })
-      .then((response) => {
-        setCoupons(response.data.content);
-        setTotalPages(response.data.totalPages);
-      })
-      .catch((error) => {
-        console.log("쿠폰 목록 조회 오류", error);
-      });
-  }, [currentPage]);
+      .get("/admin/coupons", {params: {page: currentCouponPage,size: couponPageSize,},})
+      .then((response) => {setCoupons(response.data.content); setTotalCouponPages(response.data.totalPages);})
+      .catch((error) => {console.log("쿠폰 목록 조회 오류", error);});
+
+    axios
+      .get("/admin/popups")
+      .then((response) => {setPopups(response.data);})
+      .catch((error) => {console.log("팝업 목록 조회 오류", error);});
+  }, [currentCouponPage]);
 
   // 페이지 변경 함수
   const handlePageChange = (newPage) => {
-    if (newPage >= 0 && newPage < totalPages) {
-      setCurrentPage(newPage);
+    if (newPage >= 0 && newPage < totalCouponPages) {
+      setCurrentCouponPage(newPage);
     }
   };
 
@@ -54,39 +53,19 @@ export default function PromotionManage() {
             <h4>발급한 쿠폰 목록</h4>
             <table>
               <thead>
-                <tr>
-                  <th>쿠폰명</th>
-                  <th>할인율</th>
-                  <th>만료일</th>
-                </tr>
+                <tr><th>쿠폰명</th><th>할인율</th><th>만료일</th></tr>
               </thead>
               <tbody>
                 {coupons.map((coupon) => (
-                  <tr key={coupon.no}>
-                    <td>{coupon.name}</td>
-                    <td>{coupon.discountRate}%</td>
-                    <td>{coupon.expiryDate}까지</td>
-                  </tr>
+                  <tr key={coupon.no}><td>{coupon.name}</td><td>{coupon.discountRate}%</td><td>{coupon.expiryDate}까지</td></tr>
                 ))}
               </tbody>
             </table>
-            {totalPages > 1 && (
+            {totalCouponPages > 1 && (
               <div style={{ marginTop: "10px" }}>
-                <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 0}
-                >
-                  이전
-                </button>
-                <span style={{ margin: "0 10px" }}>
-                  {currentPage + 1} / {totalPages}
-                </span>
-                <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage + 1 >= totalPages}
-                >
-                  다음
-                </button>
+                <button onClick={() => handlePageChange(currentCouponPage - 1)} disabled={currentCouponPage === 0}>이전</button>
+                <span style={{ margin: "0 10px" }}>{currentCouponPage + 1} / {totalCouponPages}</span>
+                <button onClick={() => handlePageChange(currentCouponPage + 1)} disabled={currentCouponPage + 1 >= totalCouponPages}>다음</button>
               </div>
             )}
           </div>
@@ -107,6 +86,21 @@ export default function PromotionManage() {
                 <button style={{ padding: "10px", marginLeft: "10px" }}>팝업 등록하기</button>
               </Link>
             </h3>
+            <h4>팝업 목록</h4>
+            <table>
+              <thead>
+                <tr><th>사진</th><th>경로</th><th>등록</th></tr>
+              </thead>
+              <tbody>
+              {popups.map((popup) => (
+                  <tr key={popup.no}>
+                    <td><img style={{height:'150px'}} src={popup.pic} alt={`${popup.no} 이미지`} /></td>
+                    <td>{popup.path}</td>
+                    <td>{ popup.isShow ? "O" : "숨김"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
