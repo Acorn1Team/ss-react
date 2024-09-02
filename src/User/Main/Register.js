@@ -136,10 +136,8 @@ const validateForm = ({
 
   if (!userIdRegex.test(id))
     errors.id = "아이디는 4~20자의 영문자와 숫자만 허용됩니다.";
-  if (!userPwdRegex.test(pwd))
-    errors.pwd =
-      "비밀번호는 최소 4자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.";
-  if (pwd !== pwdChk) errors.pwdChk = "비밀번호가 일치하지 않습니다.";
+
+  //if (pwd !== pwdChk) errors.pwdChk = "비밀번호가 일치하지 않습니다.";
   if (!name) errors.name = "이름을 입력하세요.";
   if (!email || !emailDomain) errors.email = "이메일을 입력하세요.";
   else if (!emailRegex.test(`${email}@${emailDomain}`))
@@ -183,6 +181,52 @@ const Register = () => {
   const addrEndRef = useRef(null);
   const zipcodeDisplayRef = useRef(null);
   const userZipcodeRef = useRef(null);
+
+  const handlePwdChange = (e) => {
+    const newPwd = e.target.value;
+    setPwd(newPwd);
+
+    // 비밀번호 유효성 검사
+    if (!userPwdRegex.test(newPwd)) {
+      setErrorMessage((prevState) => ({
+        ...prevState,
+        pwd: "비밀번호는 최소 4자 이상, 영문, 숫자, 특수문자를 포함해야 합니다.",
+      }));
+    } else {
+      setErrorMessage((prevState) => ({
+        ...prevState,
+        pwd: "",
+      }));
+    }
+
+    // 비밀번호 확인 검사
+    if (pwdChk && newPwd !== pwdChk) {
+      setErrorMessage((prevState) => ({
+        ...prevState,
+        pwdChk: "비밀번호가 일치하지 않습니다.",
+      }));
+    } else {
+      setErrorMessage((prevState) => ({
+        ...prevState,
+        pwdChk: "",
+      }));
+    }
+  };
+
+  const handlePwdChkChange = (e) => {
+    setPwdChk(e.target.value);
+    if (pwd && e.target.value !== pwd) {
+      setErrorMessage((prevState) => ({
+        ...prevState,
+        pwdChk: "비밀번호가 일치하지 않습니다.",
+      }));
+    } else {
+      setErrorMessage((prevState) => ({
+        ...prevState,
+        pwdChk: "",
+      }));
+    }
+  };
 
   // Daum API 스크립트 로드
   useEffect(() => {
@@ -351,7 +395,7 @@ const Register = () => {
             name="pwd"
             placeholder="비밀번호"
             value={pwd}
-            onChange={(e) => setPwd(e.target.value)}
+            onChange={handlePwdChange}
           />
           {errorMessage.pwd && (
             <div className={styles.error_message}>{errorMessage.pwd}</div>
@@ -363,7 +407,7 @@ const Register = () => {
             name="pwd_chk"
             placeholder="비밀번호 재입력"
             value={pwdChk}
-            onChange={(e) => setPwdChk(e.target.value)}
+            onChange={handlePwdChkChange}
           />
           {errorMessage.pwdChk && (
             <div className={styles.error_message}>{errorMessage.pwdChk}</div>
