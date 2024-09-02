@@ -1,36 +1,58 @@
 import React, { useState, useEffect } from "react";
 import AdminChat from "./AdminChat";
+import axios from "axios";
 
 function AdminChatList() {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [chatRooms, setChatRooms] = useState([]);
+  const [chatNo, setChatNo] = useState();
+
+  const [chatData, setChatData] = useState([]);
 
   useEffect(() => {
-    // 여기에 실제로 DB에서 채팅방 목록을 가져오는 API 호출 로직 추가
-    // 예를 들어 setChatRooms([{ id: "1", name: "User 1" }, { id: "2", name: "User 2" }]);
-    // 여기서는 예시 데이터로 대체
-    setChatRooms([
-      { id: "1", name: "User 1" },
-      { id: "2", name: "User 2" },
-      { id: "28", name: "User 28" },
-    ]);
+    axios
+      .get(`/chat/admin`)
+      .then((res) => {
+        setChatRooms(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
-  const handleUserSelect = (userId) => {
+  const handleUserSelect = (userId, chatNo) => {
     setSelectedUserId(userId);
+    axios
+      .get(`/chat/admin/${chatNo}`)
+      .then((res) => {
+        setChatData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setChatNo(chatNo);
   };
 
   return (
     <div>
-      <h1>Admin Dashboard</h1>
       <ul>
         {chatRooms.map((room) => (
-          <li key={room.id} onClick={() => handleUserSelect(room.id)}>
-            {room.name}
+          <li
+            key={room.no}
+            onClick={() => handleUserSelect(room.userNo, room.no)}
+            style={room.closeChat ? { color: "gray" } : { color: "black" }}
+          >
+            {room.userNo} 번 회원 &emsp; {room.userName} ({room.category})
           </li>
         ))}
       </ul>
-      {selectedUserId && <AdminChat selectedUserId={selectedUserId} />}
+      {selectedUserId && (
+        <AdminChat
+          selectedUserId={selectedUserId}
+          chatNo={chatNo}
+          chatData={chatData}
+        />
+      )}
     </div>
   );
 }

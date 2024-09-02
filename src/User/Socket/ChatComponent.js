@@ -4,23 +4,16 @@ import SockJS from "sockjs-client";
 
 function ChatComponent() {
   const [messages, setMessages] = useState([]);
-  const userId = sessionStorage.getItem("id"); // 세션에서 ID를 가져옴
+  const userId = sessionStorage.getItem("id");
 
   useEffect(() => {
-    let chatRoomId;
+    const chatRoomId = `1_${userId}`;
 
-    if (userId === "1") {
-      chatRoomId = "1"; // 관리자 전용 방이 있을 경우 여기서 설정
-    } else {
-      chatRoomId = `1_${userId}`; // 일반 사용자 채팅방
-    }
-
-    console.log("Chat Room ID:", chatRoomId); // 구독하려는 경로를 확인
-
+    console.log("Chat Room ID:", chatRoomId); // 이 로그가 찍히는지 확인하세요.
     const socket = new SockJS("http://localhost:8080/ws");
     const client = new Client({
       webSocketFactory: () => socket,
-      debug: (str) => console.log(str),
+      debug: (str) => console.log("STOMP Debug: ", str), // STOMP 디버그 로그를 활성화합니다.
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
@@ -29,10 +22,17 @@ function ChatComponent() {
     client.onConnect = () => {
       console.log("Connected, subscribing to:", `/sub/chat/room/${chatRoomId}`);
       client.subscribe(`/sub/chat/room/${chatRoomId}`, (message) => {
+        console.log("Raw message:", message);
         const receivedMessage = JSON.parse(message.body);
-        console.log("Received message:", receivedMessage);
+        console.log("Parsed message:", receivedMessage);
         setMessages((prevMessages) => [...prevMessages, receivedMessage]);
+        alert("Message received: " + receivedMessage.content);
       });
+    };
+
+    client.onStompError = (frame) => {
+      console.error("Broker reported error: " + frame.headers["message"]);
+      console.error("Additional details: " + frame.body);
     };
 
     client.activate();
@@ -55,7 +55,7 @@ function ChatComponent() {
                 <strong>관리자:</strong> {msg.content}
               </span>
             ) : (
-              msg.content // 내가 보낸 메시지
+              msg.content
             )}
           </li>
         ))}

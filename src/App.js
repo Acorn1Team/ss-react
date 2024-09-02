@@ -16,7 +16,7 @@ import { PrivateRoute, AdminRoute } from "./User/Component/PrivateRoute";
 function App() {
   const routeLocation = useLocation();
   const dispatch = useDispatch();
-  const loading = useSelector((state) => state.loading.loading); // 올바른 경로 사용
+  const loading = useSelector((state) => state.loading.loading);
 
   const [stompClient, setStompClient] = useState(null);
 
@@ -26,24 +26,24 @@ function App() {
     const socket = new SockJS("http://localhost:8080/ws");
     const client = new Client({
       webSocketFactory: () => socket,
-      debug: (str) => console.log(str),
+      debug: (str) => console.log("STOMP Debug: ", str),
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
     });
 
-    client.onConnect = () => {
-      const userNo = sessionStorage.getItem("id"); // 사용자 ID를 세션 등에서 가져옴
-      const chatRoomId = `1_${userNo}`; // 관리자와 사용자 간의 고유 경로 생성
+    client.onConnect = (frame) => {
+      console.log("Connected to server:", frame);
+      console.log("Connected server version: ", frame.headers["version"]);
+    };
 
-      client.subscribe(`/sub/chat/room/${chatRoomId}`, (message) => {
-        console.log("Message received: ", JSON.parse(message.body));
-      });
-
-      dispatch({ type: "SET_LOADING", payload: false });
+    client.onStompError = (frame) => {
+      console.error("Broker reported error: " + frame.headers["message"]);
+      console.error("Additional details: " + frame.body);
     };
 
     client.activate();
+
     setStompClient(client);
 
     return () => {
@@ -54,14 +54,14 @@ function App() {
   }, [dispatch]);
 
   const sendMessage = (messageContent) => {
-    const userNo = sessionStorage.getItem("id"); // 사용자 ID를 세션 등에서 가져옴
     if (stompClient && stompClient.connected) {
       stompClient.publish({
         destination: `/pub/chat/message`,
         body: JSON.stringify({
-          userNo: { no: userNo }, // DTO에서 userNo 필드를 맞춤
-          content: messageContent,
-          sendCheck: true,
+          userNo: parseInt(messageContent.userNo),
+          content: messageContent.content,
+          sendAdmin: messageContent.sendAdmin,
+          chatNo: parseInt(messageContent.chatNo),
         }),
       });
     }
@@ -94,7 +94,6 @@ function App() {
               path="/admin/*"
               element={<AdminRoute element={<AdminRoutes />} />}
             />
-
             <Route
               path="/user/chat"
               element={<ChatInput onSendMessage={sendMessage} />}
