@@ -3,13 +3,13 @@ import axios from "axios";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import ProductReviews from "./ProductReviews";
-<<<<<<< Updated upstream
+
 import styles from "../Style/ProductDetail.module.css";
-=======
+
 import Modal from "react-modal";
 
 Modal.setAppElement("#root"); // 모달의 root element를 설정합니다.
->>>>>>> Stashed changes
+
 
 export default function ProductDetail() {
   const { no, productNo } = useParams();
@@ -44,10 +44,6 @@ export default function ProductDetail() {
     }
   };
 
-<<<<<<< Updated upstream
-  // 총 가격 계산 (수량에 따른 가격)
-=======
->>>>>>> Stashed changes
   const getTotalPrice = () => {
     return getDiscountedPrice() * count;
   };
@@ -60,8 +56,6 @@ export default function ProductDetail() {
     setCount((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
   };
 
-<<<<<<< Updated upstream
-=======
   // 모달 열기
   const openModal = () => setModalIsOpen(true);
   // 모달 닫기
@@ -78,19 +72,13 @@ export default function ProductDetail() {
     navigate("/user/shop/cart");
   };
 
->>>>>>> Stashed changes
   // 장바구니에 제품 추가
   const handleAddToCart = () => {
     dispatch({
       type: "ADD_TO_CART",
       payload: { product, quantity: count },
     });
-<<<<<<< Updated upstream
-    alert("장바구니에 추가되었습니다.");
-    navigate(`/user/shop/cart`); // 장바구니 페이지로 이동
-=======
     openModal(); // 제품이 장바구니에 추가되면 모달을 엽니다.
->>>>>>> Stashed changes
   };
 
   return (
@@ -115,23 +103,11 @@ export default function ProductDetail() {
           </span>
         )}
       </div>
-<<<<<<< Updated upstream
       <button className={styles.addToCartButton} onClick={handleAddToCart}>
         장바구니에 담기
       </button>
       <div className={styles.productDescription}>
         <span className={styles.label}>상품 설명:</span>
-=======
-      <div>
-        <label>할인율: </label>
-        <span>{product.discountRate}</span>
-      </div>
-      <div>
-        <button onClick={handleAddToCart}>장바구니에 담기</button>
-      </div>
-      <div>
-        <label>상품 설명: </label>
->>>>>>> Stashed changes
         <span>{product.contents}</span>
       </div>
       <div className={styles.productCategory}>
@@ -146,7 +122,6 @@ export default function ProductDetail() {
           className={styles.productImage}
         />
       </div>
-<<<<<<< Updated upstream
       <Link to={`/user/style/write/${no}`} className={styles.communityLink}>
         커뮤니티 공유하기
       </Link>
@@ -154,41 +129,33 @@ export default function ProductDetail() {
         <h3>리뷰 보기</h3>
         <ProductReviews setAverageRating={setAverageRating} />
       </div>
-    </div>
-=======
-      <Link to={`/user/style/write/${no}`}>커뮤니티 공유하기</Link>
-      <br />
-      <div>
-        <label>리뷰 보기: </label>
-        <ProductReviews setAverageRating={setAverageRating} /> {/* 리뷰 컴포넌트에 리뷰 데이터 전달 */}
-      </div>
       <br />
 
-      {/* 모달 구현 */}
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="장바구니 추가 모달"
-        style={{
-          content: {
-            top: "50%",
-            left: "50%",
-            right: "auto",
-            bottom: "auto",
-            marginRight: "-50%",
-            transform: "translate(-50%, -50%)",
-            textAlign: "center",
-          },
-        }}
-      >
-        <h2>장바구니에 추가되었습니다!</h2>
-        <div>
-          <img src={product.pic} alt="Product" />
-        </div>
-        <button onClick={continueShopping}>계속 쇼핑하기</button>
-        <button onClick={goToCart}>장바구니 보기</button>
-      </Modal>
-    </>
->>>>>>> Stashed changes
+{/* 모달 구현 */}
+<Modal
+  isOpen={modalIsOpen}
+  onRequestClose={closeModal}
+  contentLabel="장바구니 추가 모달"
+  style={{
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      textAlign: "center",
+    },
+  }}
+>
+  <h2>장바구니에 추가되었습니다!</h2>
+  <div>
+    <img src={product.pic} alt="Product" />
+  </div>
+  <button onClick={continueShopping}>계속 쇼핑하기</button>
+  <button onClick={goToCart}>장바구니 보기</button>
+</Modal>
+
+    </div>
   );
 }
