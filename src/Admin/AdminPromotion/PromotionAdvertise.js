@@ -63,12 +63,13 @@ export default function PromotionAdvertise() {
             <h2>광고 알림 등록</h2>
                 <div>
                 <textarea style={{width:'30%'}} name="content" onChange={handleChange} placeholder='광고 내용을 입력하세요.' /><br/><br/><br/>
-                <select style={{width:'10%'}} onChange={(e) => setLocationCategory(e.target.value)} value={locationCategory}>
+                <SearchForm>
+                <SearchSelect onChange={(e) => setLocationCategory(e.target.value)} value={locationCategory}>
                     <option value="">유도 경로 선택</option>
                     <option value="product">상품 페이지</option>
                     <option value="show">작품 등장인물 페이지</option>
                     <option value="character">캐릭터 페이지(회의 후 처리 예정)</option>
-                </select><br/><br/>
+                </SearchSelect><br/><br/>
                 <SearchInput placeholder='어디로?'
                     type="text"
                     value={inputValue}
@@ -85,6 +86,7 @@ export default function PromotionAdvertise() {
                         ))}
                     </AutoSearchContainer>
                 )}
+                </SearchForm>
                 <input type="text" name="path" onChange={handleChange} hidden />
                 </div><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
             <button onClick={addAdvertise}>등록</button>
@@ -120,11 +122,29 @@ const SearchInput = styled.input`
   }
 `;
 
+const SearchForm = styled.form`
+  display: flex;
+  align-items: center;
+  position: relative; /* 드롭다운의 위치를 제대로 설정하기 위해 추가 */
+`;
+
+const SearchSelect = styled.select`
+  font-family: inherit;
+  font-size: inherit;
+  background-color: #f4f2f2;
+  border: none;
+  color: #646464;
+  padding: 0.7rem 1rem;
+  border-radius: 30px;
+  margin-right: 0.5rem;
+  transition: all ease-in-out 0.5s;
+`;
+
 const AutoSearchContainer = styled.div`
   position: absolute;
-  top: 400x;
-  left: 900px;
-  width: 250px;
+  top: calc(100% + 5px); /* 입력 필드 바로 아래에 위치하도록 설정 */
+  left: 0;
+  width: 30%; /* 입력 필드의 너비에 맞게 설정 */
   max-height: 200px;
   overflow-y: auto;
   background-color: #fff;

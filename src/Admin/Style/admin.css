@@ -30,9 +30,9 @@ th, td {
     padding: 0;
     margin: 0 auto; /* 가로로 중앙 정렬 */
     display: flex; /* 옆으로 정렬 플렉스 컨테이너로 설정 */
+    flex-wrap: wrap;
     justify-content: center; /* 플렉스 항목들(메뉴 항목들)을 가운데 정렬 */
     border-radius: 8px;
-
 }
 
 #topmenu li {

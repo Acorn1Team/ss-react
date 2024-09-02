@@ -79,6 +79,7 @@ export default function ReturnRateChart() {
                     onClick: handleClick
                 }}
             />
+            <div>각 상품 클릭 시 상세페이지로 이동합니다.</div>
         </div>
     );
 }

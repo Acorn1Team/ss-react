@@ -7,16 +7,10 @@ export default function PromotionPopup() {
     const navigate = useNavigate();
     const [locationCategory, setLocationCategory] = useState("");
     const [inputValue, setInputValue] = useState("");
-    const [state, setState] = useState({});
+    const [path, setPath] = useState("");
+    const [pic, setPic] = useState(null);
     const [filteredItems, setFilteredItems] = useState([]);
     const [showDropdown, setShowDropdown] = useState(false);
-
-    const handleChange = (e) => {
-        setState({
-            ...state,
-            [e.target.name]: e.target.value
-        });
-    };
 
     const changeInputValue = (e) => {
         setInputValue(e.target.value);
@@ -38,37 +32,47 @@ export default function PromotionPopup() {
     }, [locationCategory, inputValue]);
 
     const selectPath = (item) => {
-        setState(prevState => ({ ...prevState, path: `${locationCategory}/${item.no}` }))
+        setPath(`${locationCategory}/${item.no}`)
         setShowDropdown(false);
         setInputValue(item.name || item.title);
     }
 
+    const changePopupFile = (e) => {
+      setPic(e.target.files[0]);
+    }
+
     const addPopup = () => {
-        console.log('추가할 상태', state)
-        axios
-            .post("/admin/popup", state)
-            .then((response) => {
-                if (response.data.isSuccess) {
-                    alert("추가 성공");
-                    navigate("/admin/promotion");
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+      const formData = new FormData();
+      formData.append("path", path);
+      formData.append("pic", pic);
+  
+      axios
+          .post("/admin/popup", formData, {
+              headers: {
+                  "Content-Type": "multipart/form-data",
+              },
+          })
+          .then(() => {
+            alert("추가 성공");
+            navigate("/admin/promotion");
+          })
+          .catch((error) => {
+              console.log(error);
+          });
     };
 
     return (
         <div>
             <h2>팝업 등록</h2>
                 <div>
-                <textarea style={{width:'30%'}} name="content" onChange={handleChange} placeholder='여기 사진 업로드로 바꿔라' /><br/><br/><br/>
-                <select style={{width:'10%'}} onChange={(e) => setLocationCategory(e.target.value)} value={locationCategory}>
+                <input type="file" onChange={changePopupFile} /><br/><br/><br/>
+                <SearchForm>
+                <SearchSelect onChange={(e) => setLocationCategory(e.target.value)} value={locationCategory}>
                     <option value="">유도 경로 선택</option>
                     <option value="product">상품 페이지</option>
                     <option value="show">작품 등장인물 페이지</option>
                     <option value="character">캐릭터 페이지(회의 후 처리 예정)</option>
-                </select><br/><br/>
+                </SearchSelect><br/><br/>
                 <SearchInput placeholder='어디로?'
                     type="text"
                     value={inputValue}
@@ -85,7 +89,7 @@ export default function PromotionPopup() {
                         ))}
                     </AutoSearchContainer>
                 )}
-                <input type="text" name="path" onChange={handleChange} hidden />
+                </SearchForm>
                 </div><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
             <button onClick={addPopup}>등록</button>
         </div>
@@ -120,11 +124,29 @@ const SearchInput = styled.input`
   }
 `;
 
+const SearchForm = styled.form`
+  display: flex;
+  align-items: center;
+  position: relative; /* 드롭다운의 위치를 제대로 설정하기 위해 추가 */
+`;
+
+const SearchSelect = styled.select`
+  font-family: inherit;
+  font-size: inherit;
+  background-color: #f4f2f2;
+  border: none;
+  color: #646464;
+  padding: 0.7rem 1rem;
+  border-radius: 30px;
+  margin-right: 0.5rem;
+  transition: all ease-in-out 0.5s;
+`;
+
 const AutoSearchContainer = styled.div`
   position: absolute;
-  top: 400x;
-  left: 900px;
-  width: 250px;
+  top: calc(100% + 5px); /* 입력 필드 바로 아래에 위치하도록 설정 */
+  left: 0;
+  width: 30%; /* 입력 필드의 너비에 맞게 설정 */
   max-height: 200px;
   overflow-y: auto;
   background-color: #fff;
