@@ -13,8 +13,8 @@ export default function MyOrderDetail() {
   const [orderProductList, setOrderProductList] = useState([]);
 
   // 로그인 정보라고 가정
-  const userNo = 31;
-  //const userNo = sessionStorage.getItem("id");
+  //const userNo = 31;
+  const userNo = sessionStorage.getItem("id");
 
   const getOrderList = () => {
     axios

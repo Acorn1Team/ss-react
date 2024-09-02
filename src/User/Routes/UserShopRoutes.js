@@ -5,6 +5,7 @@ import ProductList from "../Shop/ProductList";
 import ProductDetail from "../Shop/ProductDetail";
 import Cartlist from "../Shop/Cartlist";
 import CartDetail from "../Shop/CartDetail";
+import PurchasePage from "../Shop/PurchasePage";
 
 export default function UserShopRoutes() {
   return (
@@ -14,6 +15,7 @@ export default function UserShopRoutes() {
       <Route path="/productlist/detail/:no" element={<ProductDetail />} />
       <Route path="/cart" element={<Cartlist />} />
       <Route path="/order/detail/:orderNo" element={<CartDetail />} />
+      <Route path="/purchase" element={<PurchasePage />} />
     </Routes>
   );
 }

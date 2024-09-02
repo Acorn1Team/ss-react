@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 
 export default function MyOrder() {
+
+
   // 현재 페이지
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -17,8 +19,8 @@ export default function MyOrder() {
   const [productList, setProductList] = useState([]);
 
   // 로그인 정보라고 가정함
-  const userNo = 31;
-//const userNo = sessionStorage.getItem("id");
+  //const userNo = 31;
+const userNo = sessionStorage.getItem("id");
 
   const getOrderList = () => {
     axios
@@ -87,6 +89,7 @@ export default function MyOrder() {
           </button>
         </div>
       )}
+      
     </>
   );
 }
