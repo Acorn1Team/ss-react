@@ -68,42 +68,37 @@ export default function UserHome() {
 
     if (popupCookieCheck === null) {
       axios
-        .get(`/main/popup`)
-        .then((res) => {
-          setMainPopup(res.data);
-          if (res.data) {
-            setPopupOpen(true);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      .get(`/main/popup`)
+      .then((res) => {
+        const popupData = res.data.map((p) => ({
+          ...p,
+          popupOpen: getCookie(`${userNo}_popup_${p.no}`) === null,
+        }));
+        setMainPopup(popupData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     }
-  }, []);
+  }, [userNo]);
 
   function getCookie(name) {
     let value = `; ${document.cookie}`;
     let parts = value.split(`; ${name}=`);
-    if (parts.length === 2) {
-      return parts.pop().split(";").shift();
-    }
+    if (parts.length === 2) return parts.pop().split(";").shift();
     return null;
   }
 
-  const closePopup = (day) => {
+  const closePopup = (day, popupNo) => {
     if (day) {
-      axios
-        .get(`/main/popupSet/${userNo}`)
-        .then((res) => {
-          if (!res.date.result) {
-            alert("하루 안 보기 지정 실패");
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      document.cookie = `${userNo}_popup_${popupNo}=true; path=/; max-age=${60 * 60 * 24}`;
+      // 하루(24시간) 동안 유효한 쿠키 설정
     }
-    setPopupOpen(false);
+    setMainPopup((prev) =>
+      prev.map((p) =>
+        p.no === popupNo ? { ...p, popupOpen: false } : p
+      )
+    );
   };
 
   return (
@@ -116,23 +111,16 @@ export default function UserHome() {
           alt="main"
         />
       </div>
-      {popupOpen && (
-        <div className="popup-modal">
-          <div className="popup-content">
-            {mainPopup.map((p) => (
-              <Link to={p.path} key={p.no}>
-                <img src={p.pic} alt={p.no} width={"500px"} />
-              </Link>
-            ))}
-            <br />
-            <button className="popup-close" onClick={() => closePopup("today")}>
-              오늘 하루 보지 않기
-            </button>
-            <button className="popup-close" onClick={() => closePopup()}>
-              닫기
-            </button>
+      {mainPopup.map((p) =>
+        p.popupOpen && (
+          <div key={p.no} className="popup-modal">
+            <div className="popup-content">
+              <Link to={p.path}><img src={p.pic} alt={p.no} width={"500px"} /></Link><br />
+                <button className="popup-close" onClick={() => closePopup(true, p.no)}>오늘 하루 보지 않기</button>
+                <button className="popup-close" onClick={() => closePopup(false, p.no)}>닫기</button>
+            </div>
           </div>
-        </div>
+        )
       )}
       <div className="content">
         <b>SceneStealer</b>

@@ -19,7 +19,6 @@ import ActorEdit from "../AdminFashion/ActorEdit";
 import StyleManage from "../AdminFashion/StyleManage";
 import AdminChat from "../AdminHelp/AdminChat";
 import PromotionPopup from "../AdminPromotion/PromotionPopup";
-import PracticeHaHaHA from "../Practice";
 
 export default function AdminRoutes() {
   return (
@@ -49,8 +48,6 @@ export default function AdminRoutes() {
       <Route path="/promotion/coupon" element={<PromotionCoupon />} />
       <Route path="/promotion/advertise" element={<PromotionAdvertise />} />
       <Route path="/promotion/popup" element={<PromotionPopup />} />
-
-      <Route path="/practiceee" element={<PracticeHaHaHA />} />
     </Routes>
   );
 }
