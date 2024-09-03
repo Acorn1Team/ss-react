@@ -82,7 +82,6 @@ export default function MonthlyBestSellerChart() {
         <div>
             <h3>인기 상품</h3>
             <Bar data={chartData} options={chartOptions} />
-            <div>각 상품 클릭 시 상세페이지로 이동합니다.</div>
         </div>
     );
 }

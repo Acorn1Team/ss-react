@@ -158,32 +158,26 @@ export default function StyleManage() {
       });
   }
 
-  const addItem = async() => {
-    console.log('okok');
+  const addItem = async () => {
     const itemForm = new FormData();
     itemForm.append('file', newItemPic);
     itemForm.append('product', productNo);
     itemForm.append('name', newItemName);
-    
-    await axios
-      .post(`/admin/fashion/${currentStyle.no}/item`, itemForm, {
-        headers: {'Content-Type': 'multipart/form-data'}
-      })
-      .then(axios
-        .get(`/admin/fashion/character/${no}/item`)
-        .then((response) => {
-          setItems(response.data);
-        })
-        .then(
-          setIsNewItemModalOpen(false)
-        )
-        .catch((error) => {
-          console.log(error);
-        }))
-      .catch((error) => {
-        console.log(error);
+  
+    try {
+      await axios.post(`/admin/fashion/${currentStyle.no}/item`, itemForm, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
-  }
+
+      const response = await axios.get(`/admin/fashion/character/${no}/item`);
+      setItems(response.data);
+  
+      setIsNewItemModalOpen(false);
+    } catch (error) {
+      console.error("Error adding item:", error);
+    }
+  };
+  
 
   if (!actorData) { return <p>상세 정보를 불러올 수 없습니다.</p>; }
   return (

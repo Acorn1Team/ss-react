@@ -51,7 +51,7 @@ export default function ReturnRateChart() {
 
     return (
         <div>
-            <h3>상품별 반품율</h3>
+            <h3>불만족 상품</h3>
             <Bar
                 data={chartData}
                 options={{ 
@@ -79,7 +79,6 @@ export default function ReturnRateChart() {
                     onClick: handleClick
                 }}
             />
-            <div>각 상품 클릭 시 상세페이지로 이동합니다.</div>
         </div>
     );
 }
