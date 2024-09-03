@@ -245,21 +245,22 @@ function HeaderForm() {
         .then((res) => {
           if (res.data) {
             console.log(res.data);
+            sessionStorage.removeItem("token_k");
+            sessionStorage.removeItem("id");
             navigate("/user");
           }
         })
         .catch((err) => {
           console.log(err);
         });
-      sessionStorage.removeItem("token_k");
     }
     let naverTokenValue = sessionStorage.getItem("token_n");
     if (naverTokenValue) {
       sessionStorage.removeItem("token_n");
+      sessionStorage.removeItem("id");
+      navigate("/user");
     }
-    sessionStorage.clear();
     setIsLoggedIn(false);
-    navigate("/user/auth/login");
   };
 
   const filteredAlerts = alerts.filter(

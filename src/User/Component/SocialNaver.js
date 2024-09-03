@@ -15,8 +15,6 @@ export default function SocialNaver() {
     const storedCode = sessionStorage.getItem("naver_auth_code");
 
     if (code && code !== storedCode) {
-      sessionStorage.setItem("naver_auth_code", code);
-
       axios
         .post("/api/naver/token", { code, state })
         .then((res) => {
@@ -32,7 +30,7 @@ export default function SocialNaver() {
           if (status === "login") {
             navigate("/user");
           } else if (status === "signup") {
-            navigate(`/user/mypage/update/${user.no}/naver`);
+            navigate(`/user/mypage/update/${user}/naver`);
           }
         })
         .catch((error) => {

@@ -96,7 +96,11 @@ function App() {
             />
             <Route
               path="/user/chat"
-              element={<ChatInput onSendMessage={sendMessage} />}
+              element={
+                <PrivateRoute
+                  element={<ChatInput onSendMessage={sendMessage} />}
+                />
+              }
             />
           </Routes>
         </div>

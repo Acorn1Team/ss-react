@@ -164,6 +164,7 @@ function AdminChat() {
               }}
             />
           </div>
+          2
           <button className={styles.closeButton} onClick={() => chatClose()}>
             채팅 종료
           </button>
