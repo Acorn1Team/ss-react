@@ -17,7 +17,7 @@ import PromotionCoupon from "../AdminPromotion/PromotionCoupon";
 import PromotionAdvertise from "../AdminPromotion/PromotionAdvertise";
 import ActorEdit from "../AdminFashion/ActorEdit";
 import StyleManage from "../AdminFashion/StyleManage";
-import AdminChatList from "../AdminHelp/AdminChatList";
+import AdminChat from "../AdminHelp/AdminChat";
 import PromotionPopup from "../AdminPromotion/PromotionPopup";
 
 export default function AdminRoutes() {
@@ -40,14 +40,14 @@ export default function AdminRoutes() {
       <Route path="/help/notices" element={<NoticeManage />} />
       <Route path="/help/notices/new" element={<NoticeForm />} />
       <Route path="/help/notices/:no" element={<NoticeDetail />} />
-      <Route path="/help/chat" element={<AdminChatList />} />
+      <Route path="/help/chat" element={<AdminChat />} />
 
       <Route path="/community" element={<CommunityManage />} />
 
       <Route path="/promotion" element={<PromotionManage />} />
-        <Route path="/promotion/coupon" element={<PromotionCoupon />} />
-        <Route path="/promotion/advertise" element={<PromotionAdvertise />} />
-        <Route path="promotion/popup" element={<PromotionPopup />} />
+      <Route path="/promotion/coupon" element={<PromotionCoupon />} />
+      <Route path="/promotion/advertise" element={<PromotionAdvertise />} />
+      <Route path="promotion/popup" element={<PromotionPopup />} />
     </Routes>
   );
 }

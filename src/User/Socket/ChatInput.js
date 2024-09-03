@@ -1,20 +1,23 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Client } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
 import styles from "../Style/ChatModel.module.css"; // CSS 모듈 파일 import
+import stylesChat from "../Style/ChatInput.module.css"; // CSS 모듈 파일 import
 
 function ChatInput({ onSendMessage }) {
   const [message, setMessage] = useState("");
   const userNo = Number(sessionStorage.getItem("id"));
-
   const [chatNo, setChatNo] = useState();
-  const [chats, setChats] = useState();
-
+  const [chats, setChats] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [stompClient, setStompClient] = useState(null);
 
   const nv = useNavigate();
 
+  // 메시지 전송 함수
   const handleSend = () => {
     if (message.trim() !== "") {
       const messagePayload = {
@@ -24,21 +27,20 @@ function ChatInput({ onSendMessage }) {
         userNo: userNo,
       };
 
-      // 전송한 메시지를 UI에 즉시 추가
-      setChats([...chats, messagePayload]);
-
-      // console.log("Sending message:", JSON.stringify(messagePayload));
+      console.log("Sending message:", JSON.stringify(messagePayload));
       onSendMessage(messagePayload);
       setMessage("");
     }
   };
 
+  // Enter 키를 눌렀을 때 메시지 전송
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       handleSend();
     }
   };
 
+  // 채팅 종료 함수
   const chatClose = () => {
     if (
       prompt("채팅을 종료하시겠습니까?\n종료된 채팅은 다시 확인할 수 없습니다.")
@@ -56,6 +58,7 @@ function ChatInput({ onSendMessage }) {
     }
   };
 
+  // 상담 구분 선택 함수
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
     axios
@@ -70,17 +73,17 @@ function ChatInput({ onSendMessage }) {
       });
   };
 
+  // 컴포넌트가 마운트될 때 실행되는 useEffect
   useEffect(() => {
+    // 기존 채팅 내역 불러오기
     axios
       .get(`/chat/user/${userNo}`)
       .then((res) => {
         if (res.data.chatNo) {
           setChatNo(res.data.chatNo.no);
-          // alert("1");
         }
         if (res.data.chats) {
           setChats(res.data.chats);
-          // alert("2");
         }
         if (res.data.create) {
           setChatNo(res.data.create.no);
@@ -90,10 +93,40 @@ function ChatInput({ onSendMessage }) {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+
+    // STOMP 클라이언트 설정 및 WebSocket 연결
+    const socket = new SockJS("http://localhost:8080/ws");
+    const client = new Client({
+      webSocketFactory: () => socket,
+      debug: (str) => console.log("STOMP Debug: ", str),
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+    });
+
+    client.onConnect = () => {
+      const chatRoomId = `1_${userNo}`;
+      console.log("Connected, subscribing to:", `/sub/chat/room/${chatRoomId}`);
+      client.subscribe(`/sub/chat/room/${chatRoomId}`, (message) => {
+        const receivedMessage = JSON.parse(message.body);
+        // console.log("Received message:", receivedMessage);
+        setChats((prevMessages) => [...prevMessages, receivedMessage]);
+        // alert("Message received: " + receivedMessage.content);
+      });
+    };
+
+    client.activate();
+    setStompClient(client);
+
+    return () => {
+      if (client) {
+        client.deactivate();
+      }
+    };
+  }, [userNo]);
 
   return (
-    <div>
+    <div className={stylesChat.container}>
       <h2>{selectedCategory}</h2>
       {isModalOpen && (
         <div className={styles.modalOverlay}>
@@ -119,23 +152,36 @@ function ChatInput({ onSendMessage }) {
           </div>
         </div>
       )}
-      {chats &&
-        chats.map((c, index) => (
-          <div key={index}>
-            {c.sendAdmin ? "관리자: " : ""}
-            {c.content}
-          </div>
-        ))}
-      <input
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="메시지를 입력하세요!"
-      />
-      <button onClick={handleSend}>Send</button>
-      <br />
-      <button onClick={chatClose}>채팅 종료</button>
+      <div className={stylesChat.chatMessages}>
+        {chats &&
+          chats.map((c, index) => (
+            <div
+              key={index}
+              className={`${stylesChat.chatMessage} ${
+                c.sendAdmin ? stylesChat.admin : ""
+              }`}
+            >
+              {c.sendAdmin ? "관리자: " : ""}
+              {c.content}
+            </div>
+          ))}
+      </div>
+      <div className={stylesChat.inputContainer}>
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="메시지를 입력하세요!"
+          className={stylesChat.inputField}
+        />
+        <button onClick={handleSend} className={stylesChat.sendButton}>
+          Send
+        </button>
+      </div>
+      <button onClick={chatClose} className={stylesChat.closeButton}>
+        채팅 종료
+      </button>
       <br />
       채팅 종료시, 상담 내역을 다시 확인할 수 없습니다.
     </div>

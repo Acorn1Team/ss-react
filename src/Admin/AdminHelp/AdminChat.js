@@ -1,13 +1,50 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import axios from "axios";
+import styles from "../../User/Style/AdminChat.module.css";
 
-function AdminChat({ selectedUserId, chatNo, chatData }) {
+function AdminChat() {
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [chatRooms, setChatRooms] = useState([]);
+  const [chatNo, setChatNo] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [stompClient, setStompClient] = useState(null);
-  const [messages, setMessages] = useState(chatData || []);
+
+  // 채팅방 목록 불러오기
+  useEffect(() => {
+    axios
+      .get(`/chat/admin`)
+      .then((res) => {
+        setChatRooms(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  const handleUserSelect = (userId, chatNo) => {
+    setSelectedUserId(userId);
+    setChatNo(chatNo);
+  };
 
   useEffect(() => {
+    if (!selectedUserId || !chatNo) return;
+
+    setMessages([]);
+    if (stompClient) {
+      stompClient.deactivate();
+    }
+
+    axios
+      .get(`/chat/admin/${chatNo}`)
+      .then((res) => {
+        setMessages(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     const socket = new SockJS("http://localhost:8080/ws");
     const client = new Client({
       webSocketFactory: () => socket,
@@ -16,7 +53,6 @@ function AdminChat({ selectedUserId, chatNo, chatData }) {
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
     });
-    console.log(messages);
 
     client.onConnect = () => {
       const chatRoomId = `1_${selectedUserId}`;
@@ -34,16 +70,21 @@ function AdminChat({ selectedUserId, chatNo, chatData }) {
         client.deactivate();
       }
     };
-  }, [selectedUserId, chatData]);
+  }, [selectedUserId, chatNo]);
 
   const chatClose = () => {
     if (
-      prompt("채팅을 종료하시겠습니까?\n종료된 채팅은 다시 재개할 수 없습니다.")
+      window.confirm(
+        "채팅을 종료하시겠습니까?\n종료된 채팅은 다시 재개할 수 없습니다."
+      )
     ) {
       axios
         .put(`/chat/user/${selectedUserId}/${chatNo}`)
         .then((res) => {
           if (res.data.result) {
+            setSelectedUserId(null);
+            setChatNo(null);
+            setMessages([]);
           }
         })
         .catch((err) => {
@@ -67,27 +108,62 @@ function AdminChat({ selectedUserId, chatNo, chatData }) {
   };
 
   return (
-    <div>
-      <h2>Admin Chat with User {selectedUserId}</h2>
-      <div>
-        {messages.map((msg, index) => (
-          <div key={index}>
-            {msg.sendAdmin ? "관리자: " : ""}
-            {msg.content}
-          </div>
-        ))}
+    <div className={styles.container}>
+      <div className={styles.chatRoomList}>
+        <ul>
+          {chatRooms.map((room) => (
+            <li
+              key={room.no}
+              onClick={() => handleUserSelect(room.userNo, room.no)}
+              className={`${styles.chatRoomItem} ${
+                room.closeChat ? styles.closed : ""
+              } ${selectedUserId === room.userNo ? styles.active : ""}`}
+            >
+              {room.userNo} 번 회원
+              <br />
+              {room.userName} ({room.category})
+            </li>
+          ))}
+        </ul>
       </div>
-      <input
-        type="text"
-        placeholder="메시지를 입력하세요!"
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            sendMessage(e.target.value);
-            e.target.value = "";
-          }
-        }}
-      />
-      <button onClick={chatClose}>채팅 종료</button>
+
+      {selectedUserId && chatNo && (
+        <div className={styles.chatWindow}>
+          <h2>Admin Chat with User {selectedUserId}</h2>
+          <div className={styles.messageList}>
+            {messages.map((msg, index) => (
+              <div
+                key={index}
+                className={`${styles.messageItem} ${
+                  msg.sendAdmin ? styles.admin : ""
+                }`}
+              >
+                {msg.sendAdmin ? "관리자: " : ""}
+                {msg.content}
+              </div>
+            ))}
+          </div>
+          <div className={styles.inputContainer}>
+            <input
+              type="text"
+              placeholder="메시지를 입력하세요!"
+              className={styles.inputField}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  sendMessage(e.target.value);
+                  e.target.value = "";
+                }
+              }}
+            />
+            <button className={styles.sendButton} onClick={() => sendMessage()}>
+              전송
+            </button>
+          </div>
+          <button className={styles.closeButton} onClick={chatClose}>
+            채팅 종료
+          </button>
+        </div>
+      )}
     </div>
   );
 }
