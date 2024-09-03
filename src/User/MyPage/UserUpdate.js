@@ -303,7 +303,7 @@ const UserUpdate = () => {
           </>
         )}
         {/* {!showPasswordForm && social === "0" && ( */}
-        {!showPasswordForm && user.idN === null && user.idK === null && (
+        {!showPasswordForm && (user.idN === null || user.idK === null) && (
           <button type="button" onClick={handlePasswordToggle}>
             비밀번호 변경
           </button>
