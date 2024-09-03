@@ -23,7 +23,7 @@ function AdminChat() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [selectedUserId, chatNo]);
 
   const handleUserSelect = (userId, chatNo) => {
     setSelectedUserId(userId);
@@ -47,7 +47,7 @@ function AdminChat() {
         console.log(err);
       });
 
-    const socket = new SockJS("http://localhost:8080/ws");
+    const socket = new SockJS("http://192.168.0.19:8080/ws");
     const client = new Client({
       webSocketFactory: () => socket,
       debug: (str) => console.log(str),
@@ -163,9 +163,6 @@ function AdminChat() {
                 }
               }}
             />
-            <button className={styles.sendButton} onClick={() => sendMessage()}>
-              전송
-            </button>
           </div>
           <button className={styles.closeButton} onClick={() => chatClose()}>
             채팅 종료
