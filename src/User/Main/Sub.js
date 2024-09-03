@@ -77,6 +77,7 @@ export default function Sub() {
       axios
         .delete(`/main/scrap/${selectCharacter.no}/${userNo}`)
         .then((res) => {
+          console.log(res);
           if (res.data.result === true) {
             setScrap(false);
           }
@@ -91,6 +92,7 @@ export default function Sub() {
           userNo: userNo,
         })
         .then((res) => {
+          console.log(res);
           if (res.data.result === true) {
             setScrap(true);
           }
@@ -138,9 +140,11 @@ export default function Sub() {
             src={selectCharacter.pic}
             alt={selectCharacter.name}
           />
-          <button className={styles.scrapBtn} onClick={() => scrapProc()}>
-            {scrap ? "스크랩했음" : "스크랩안했음"}
-          </button>
+          {userNo && (
+            <button className={styles.scrapBtn} onClick={() => scrapProc()}>
+              {scrap ? "스크랩했음" : "스크랩안했음"}
+            </button>
+          )}
 
           <div className={styles.styles}>
             {styleData
