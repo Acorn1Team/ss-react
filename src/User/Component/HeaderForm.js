@@ -246,8 +246,6 @@ function HeaderForm() {
           if (res.data) {
             console.log(res.data);
             sessionStorage.removeItem("token_k");
-            sessionStorage.removeItem("id");
-            navigate("/user");
           }
         })
         .catch((err) => {
@@ -257,9 +255,9 @@ function HeaderForm() {
     let naverTokenValue = sessionStorage.getItem("token_n");
     if (naverTokenValue) {
       sessionStorage.removeItem("token_n");
-      sessionStorage.removeItem("id");
-      navigate("/user");
     }
+    sessionStorage.removeItem("id");
+    navigate("/user");
     setIsLoggedIn(false);
   };
 

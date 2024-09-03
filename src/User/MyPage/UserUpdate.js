@@ -303,7 +303,7 @@ const UserUpdate = () => {
           </>
         )}
         {/* {!showPasswordForm && social === "0" && ( */}
-        {!showPasswordForm && (user.idN !== null || user.idK !== null) && (
+        {!showPasswordForm && (user.idN === null || user.idK === null) && (
           <button type="button" onClick={handlePasswordToggle}>
             비밀번호 변경
           </button>
@@ -315,7 +315,7 @@ const UserUpdate = () => {
             placeholder="이메일"
             value={user.email}
             onChange={handleInputChange}
-            disabled={social !== "0"}
+            disabled={user.idK !== null || user.idN !== null}
           />
           {errors.email && (
             <div className={styles.error_message}>{errors.email}</div>
