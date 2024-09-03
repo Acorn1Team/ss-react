@@ -83,33 +83,6 @@ const sendEmailVerificationCode = async (
     setErrorMessage("인증번호 발송 실패");
   }
 };
-// const sendEmailVerificationCode = async (
-//   email,
-//   setVerificationCode,
-//   setErrorMessage
-// ) => {
-//   try {
-//     const response = await fetch(
-//       "http://localhost:8080/user/auth/send-verification-code",
-//       {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({ email }),
-//       }
-//     );
-
-//     const result = await response.json();
-//     if (result.status === "success") {
-//       setVerificationCode(result.code); // 서버에서 반환한 인증번호
-//       alert("인증번호가 이메일로 발송되었습니다.");
-//     } else {
-//       setErrorMessage({ email: result.message });
-//     }
-//   } catch (error) {
-//     console.error("인증번호 발송 중 오류 발생:", error);
-//     setErrorMessage({ email: "인증번호 발송 실패" });
-//   }
-// };
 
 // 이메일 인증 코드 검증 함수
 const verifyEmailCodeOnServer = async (email, inputCode, setErrorMessage) => {

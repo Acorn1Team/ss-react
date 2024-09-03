@@ -17,6 +17,8 @@ const UserUpdate = () => {
     zipcode: "",
     address: "",
     addr_end: "",
+    idK: "",
+    idN: "",
   });
   const [errors, setErrors] = useState({});
   const [showPasswordForm, setShowPasswordForm] = useState(false);
@@ -75,7 +77,7 @@ const UserUpdate = () => {
         const response = await axios.get(`/user/update/${userNo}`);
         setUser(response.data);
         setNameNull(response.data.name === null);
-        setSocial(response.data.subpath);
+        //setSocial(response.data.subpath);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -201,13 +203,13 @@ const UserUpdate = () => {
     <div className={styles.container}>
       <form onSubmit={handleSubmit} id="updateForm">
         <div id={styles.userId}>아이디 : {user.id}</div>
-        {social === "kakao" && (
+        {user.idK !== null && (
           <div>
             <strong style={{ color: "#f9e000" }}>카카오 아이디</strong>로
             로그인된 계정입니다.
           </div>
         )}
-        {social === "naver" && (
+        {user.idN !== null && (
           <div>
             <strong style={{ color: "##03cf5d" }}>네이버 아이디</strong>로
             로그인된 계정입니다.
@@ -258,7 +260,8 @@ const UserUpdate = () => {
             </button>
           </>
         )}
-        {!showPasswordForm && social === "0" && (
+        {/* {!showPasswordForm && social === "0" && ( */}
+        {!showPasswordForm && (user.idN !== null || user.idK !== null) && (
           <button type="button" onClick={handlePasswordToggle}>
             비밀번호 변경
           </button>
