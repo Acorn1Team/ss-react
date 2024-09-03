@@ -43,7 +43,9 @@ function ChatInput({ onSendMessage }) {
   // 채팅 종료 함수
   const chatClose = () => {
     if (
-      prompt("채팅을 종료하시겠습니까?\n종료된 채팅은 다시 확인할 수 없습니다.")
+      window.confirm(
+        "채팅을 종료하시겠습니까?\n종료된 채팅은 다시 확인할 수 없습니다."
+      )
     ) {
       axios
         .put(`/chat/user/${userNo}/${chatNo}`)

@@ -46,11 +46,11 @@ const SocialKakao = () => {
           console.log("서버 응답:", res.data);
           const { status, user } = res.data;
 
-          sessionStorage.setItem("id", user.no);
+          sessionStorage.setItem("id", user);
           if (status === "login") {
             navigate("/user");
           } else if (status === "signup") {
-            navigate(`/user/mypage/update/${user.no}/kakao`);
+            navigate(`/user/mypage/update/${user}/kakao`);
           }
         })
         .catch((error) => {

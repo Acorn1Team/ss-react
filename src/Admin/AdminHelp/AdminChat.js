@@ -11,7 +11,9 @@ function AdminChat() {
   const [messages, setMessages] = useState([]);
   const [stompClient, setStompClient] = useState(null);
 
-  // 채팅방 목록 불러오기
+  const [showClosedChats, setShowClosedChats] = useState(false);
+
+  // 채팅방 목록
   useEffect(() => {
     axios
       .get(`/chat/admin`)
@@ -110,20 +112,26 @@ function AdminChat() {
   return (
     <div className={styles.container}>
       <div className={styles.chatRoomList}>
+        <button onClick={() => setShowClosedChats(!showClosedChats)}>
+          {showClosedChats ? "진행 중인 채팅 보기" : "종료된 채팅 보기"}
+        </button>
         <ul>
-          {chatRooms.map((room) => (
-            <li
-              key={room.no}
-              onClick={() => handleUserSelect(room.userNo, room.no)}
-              className={`${styles.chatRoomItem} ${
-                room.closeChat ? styles.closed : ""
-              } ${selectedUserId === room.userNo ? styles.active : ""}`}
-            >
-              {room.userNo} 번 회원
-              <br />
-              {room.userName} ({room.category})
-            </li>
-          ))}
+          {chatRooms
+            .filter((room) => room.closeChat === showClosedChats)
+            .map((room) => (
+              <li
+                key={room.no}
+                onClick={() => handleUserSelect(room.userNo, room.no)}
+                className={`${styles.chatRoomItem} ${
+                  room.closeChat ? styles.closed : ""
+                } ${chatNo === room.no ? styles.active : ""}`}
+              >
+                {room.no} 번 상담 <br />
+                {room.userNo} 번 회원
+                <br />
+                {room.userName} ({room.category})
+              </li>
+            ))}
         </ul>
       </div>
 
@@ -159,7 +167,7 @@ function AdminChat() {
               전송
             </button>
           </div>
-          <button className={styles.closeButton} onClick={chatClose}>
+          <button className={styles.closeButton} onClick={() => chatClose()}>
             채팅 종료
           </button>
         </div>
