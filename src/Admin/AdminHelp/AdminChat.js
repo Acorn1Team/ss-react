@@ -47,7 +47,7 @@ function AdminChat() {
         console.log(err);
       });
 
-    const socket = new SockJS("http://192.168.0.19:8080/ws");
+    const socket = new SockJS("http://localhost:8080/ws");
     const client = new Client({
       webSocketFactory: () => socket,
       debug: (str) => console.log(str),
