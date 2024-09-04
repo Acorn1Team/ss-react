@@ -451,7 +451,7 @@ function HeaderForm() {
                 </Link>
                 <br />
                 <Link
-                  to={`/user/mypage/review/${userNo}`}
+                  to={`/user/mypage/review`}
                   onClick={() => setShowPopup(false)}
                 >
                   마이리뷰

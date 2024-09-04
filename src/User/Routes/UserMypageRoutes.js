@@ -15,7 +15,7 @@ export default function UserMypageRoutes() {
       <Route path="/scrap" element={<Scrap />} />
       <Route path="/notice" element={<Notice />} />
       <Route path="/notice/:noticeNo" element={<NoticeDetail />} />
-      <Route path="/review/:userNo" element={<Myreview />} />
+      <Route path="/review" element={<Myreview />} />
       <Route path="/coupon" element={<Coupon />} />
       <Route path="/order" element={<MyOrder />} />
       <Route path="/order/:orderNo" element={<MyOrderDetail />} />

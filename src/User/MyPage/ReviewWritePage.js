@@ -1,47 +1,52 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { FaStar} from 'react-icons/fa';
+import { FaStar } from "react-icons/fa";
 
 export default function ReviewWritePage() {
-  const { productNo } = useParams();
-  const location = useLocation();
-  const { orderNo, userNo } = location.state;
-  const {no} = useParams();
-  const navigate = useNavigate(); // useNavigate 훅 사용
- 
+  const { productNo } = useParams(); // URL에서 productNo 추출
+  const location = useLocation(); // location.state에서 다른 데이터를 추출
+  const { userNo } = location.state; // orderNo 제거
+  const navigate = useNavigate(); // 페이지 이동을 위한 훅
 
-  const [contents, setContents] = useState("");
-  const [score, setScore] = useState(0);
-  const [pic, setPic] = useState("");
+  const [contents, setContents] = useState(""); // 리뷰 내용 상태 관리
+  const [score, setScore] = useState(0); // 평점 상태 관리
+  const [pic, setPic] = useState(null); // 이미지 파일 상태 관리
 
+  // 리뷰 작성 시 서버에 데이터를 전송하는 함수
   const handleSubmit = () => {
-    // 여기에 리뷰 제출 로직을 구현
-    console.log("리뷰 작성 중:", { productNo, orderNo, userNo, contents, score, pic });
-   
-      // 작성된 리뷰 데이터를 서버로 전송
-      
-      const reviewData = {
-        productNo,
-        orderNo,
-        userNo,
-        contents,
-        score,
-        pic
-      };
-  
-      axios
-      .post(`/list/review/${productNo}`, reviewData)
+    const formData = new FormData();
+
+    // 리뷰 데이터를 객체로 생성
+    const reviewDto = {
+      productNo,
+      userNo,
+      contents,
+      score,
+    };
+
+    // reviewDto를 JSON 문자열로 변환하여 FormData에 추가
+    formData.append("reviewDto", JSON.stringify(reviewDto));
+
+    // 이미지 파일이 선택된 경우에만 추가
+    if (pic) {
+      formData.append("pic", pic); // 이미지 파일 추가
+    }
+
+    axios
+      .post(`/list/review/${productNo}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // FormData로 전송하기 위한 헤더 설정
+        },
+      })
       .then((response) => {
         console.log("리뷰 제출 성공:", response.data);
-        // 리뷰 제출 후 다른 페이지로 이동
-        navigate(`../review/${productNo}`);
+        navigate(`../review`); // 성공 시 페이지 이동
       })
       .catch((error) => {
-        console.error("리뷰 제출 실패:", error);
+        console.error("리뷰 제출 실패:", error.response?.data || error);
       });
   };
-
 
   return (
     <div>
@@ -49,13 +54,11 @@ export default function ReviewWritePage() {
       <div>
         상품 번호: {productNo}
         <br />
-        주문 번호: {orderNo}
-        <br />
         사용자 번호: {userNo}
       </div>
-      <textarea 
-        placeholder="리뷰 내용을 입력하세요" 
-        value={contents} 
+      <textarea
+        placeholder="리뷰 내용을 입력하세요"
+        value={contents}
         onChange={(e) => setContents(e.target.value)}
       ></textarea>
       <br />
@@ -85,11 +88,11 @@ export default function ReviewWritePage() {
         })}
       </div>
       <br />
-      <input 
-        type="text" 
-        placeholder="사진 URL" 
-        value={pic} 
-        onChange={(e) => setPic(e.target.value)} 
+
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => setPic(e.target.files[0])} // 파일 선택 시 상태 업데이트
       />
       <br />
       <button onClick={handleSubmit}>리뷰 제출</button>
