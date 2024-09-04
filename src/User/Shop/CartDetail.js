@@ -57,11 +57,33 @@ const discountedPrice = selectedCoupon
   ? totalPrice - (totalPrice * selectedCoupon.coupon.discountRate / 100)
   : totalPrice;
 
-    // 구매하기 버튼 클릭 핸들러
-    const handlePurchase = () => {
-      // 구매하기 페이지로 이동 (예: /purchase)
-      navigate("/user/shop/purchase", { state: { items: selectedItems, total: discountedPrice, user, selectedCoupon } });
-    };
+   // 구매하기 버튼 클릭 핸들러
+  const handlePurchase = async () => {
+    try {
+      // 서버로 POST 요청 보내기
+      const orderDto = {
+        userNo: userNo,
+        items: selectedItems.map(item => ({
+          productNo: item.product.no,
+          quantity: item.quantity,
+        })),
+        total: discountedPrice,
+        selectedCoupon: selectedCoupon ? selectedCoupon.coupon.no : null,
+      };
+
+      const response = await axios.post('/purchase', orderDto);
+
+      if (response.status === 200) {
+        // 구매 완료 후 구매 확인 페이지로 이동
+        navigate("/user/shop/purchase", { state: { items: selectedItems, total: discountedPrice, user, selectedCoupon } });
+      } else {
+        console.error("구매 처리 중 오류가 발생했습니다.");
+      }
+    } catch (error) {
+      console.error("구매 요청 중 오류가 발생했습니다.", error);
+    }
+  };
+
 
 
 
