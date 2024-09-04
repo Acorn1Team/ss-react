@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import TranslateWidget from "../../TranslateWidget";
 
 // 이미지 경로 설정
 const leftImage = `${process.env.PUBLIC_URL}/images/side.png`;
@@ -465,6 +466,7 @@ function HeaderForm() {
                   마이쿠폰
                 </Link>
                 <br />
+                <TranslateWidget/>
                 <button onClick={handleLogout}>로그아웃</button>
               </PopupContainer>
             )}
