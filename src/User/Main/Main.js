@@ -68,17 +68,17 @@ export default function UserHome() {
 
     if (popupCookieCheck === null) {
       axios
-      .get(`/main/popup`)
-      .then((res) => {
-        const popupData = res.data.map((p) => ({
-          ...p,
-          popupOpen: getCookie(`${userNo}_popup_${p.no}`) === null,
-        }));
-        setMainPopup(popupData);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        .get(`/main/popup`)
+        .then((res) => {
+          const popupData = res.data.map((p) => ({
+            ...p,
+            popupOpen: getCookie(`${userNo}_popup_${p.no}`) === null,
+          }));
+          setMainPopup(popupData);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }, [userNo]);
 
@@ -91,13 +91,13 @@ export default function UserHome() {
 
   const closePopup = (day, popupNo) => {
     if (day) {
-      document.cookie = `${userNo}_popup_${popupNo}=true; path=/; max-age=${60 * 60 * 24}`;
+      document.cookie = `${userNo}_popup_${popupNo}=true; path=/; max-age=${
+        60 * 60 * 24
+      }`;
       // 하루(24시간) 동안 유효한 쿠키 설정
     }
     setMainPopup((prev) =>
-      prev.map((p) =>
-        p.no === popupNo ? { ...p, popupOpen: false } : p
-      )
+      prev.map((p) => (p.no === popupNo ? { ...p, popupOpen: false } : p))
     );
   };
 
@@ -111,16 +111,30 @@ export default function UserHome() {
           alt="main"
         />
       </div>
-      {mainPopup.map((p) =>
-        p.popupOpen && (
-          <div key={p.no} className="popup-modal">
-            <div className="popup-content">
-              <Link to={p.path}><img src={p.pic} alt={p.no} width={"500px"} /></Link><br />
-                <button className="popup-close" onClick={() => closePopup(true, p.no)}>오늘 하루 보지 않기</button>
-                <button className="popup-close" onClick={() => closePopup(false, p.no)}>닫기</button>
+      {mainPopup.map(
+        (p) =>
+          p.popupOpen && (
+            <div key={p.no} className="popup-modal">
+              <div className="popup-content">
+                <Link to={p.path}>
+                  <img src={p.pic} alt={p.no} width={"500px"} />
+                </Link>
+                <br />
+                <button
+                  className="popup-close"
+                  onClick={() => closePopup(true, p.no)}
+                >
+                  오늘 하루 보지 않기
+                </button>
+                <button
+                  className="popup-close"
+                  onClick={() => closePopup(false, p.no)}
+                >
+                  닫기
+                </button>
+              </div>
             </div>
-          </div>
-        )
+          )
       )}
       <div className="content">
         <b>SceneStealer</b>
@@ -154,6 +168,7 @@ export default function UserHome() {
             </div>
           )}
         </div>
+        <br />
         <b className="mainTextTitle">인기 스타일</b>
         <div id="mainPosts">
           {Array.isArray(posts) &&

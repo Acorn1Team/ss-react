@@ -273,7 +273,7 @@ export default function PostWrite() {
               />
               <span className={styles.productInfoName}>{productInfo.name}</span>
               <span className={styles.productInfoPrice}>
-                {productInfo.price}
+                {productInfo.price.toLocaleString()}원
               </span>
             </div>
           </div>

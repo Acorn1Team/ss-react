@@ -28,7 +28,7 @@ export default function OtherProfile() {
   // 전체 페이지 수
   const [totalPages, setTotalPages] = useState(1);
 
-  const [userCheck, setUserCheck] = useState(false);
+  const [userCheck, setUserCheck] = useState(true);
 
   const nv = useNavigate();
 
@@ -41,8 +41,8 @@ export default function OtherProfile() {
       .get(`/posts/user/${profileUserNo}`)
       .then((res) => {
         setUserInfo(res.data);
-        if (res.data.email !== null) {
-          setUserCheck(true);
+        if (res.data.email === null) {
+          setUserCheck(false);
         }
       })
       .catch((err) => {

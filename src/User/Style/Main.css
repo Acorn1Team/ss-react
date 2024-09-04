@@ -75,7 +75,7 @@ body {
 .mainReviewsBox {
   opacity: 0;
   position: absolute;
-  top: 50px; /* New Review 제목과의 간격 조정 */
+  top: 2px; /* New Review 제목과의 간격 조정 */
   left: 50%;
   transform: translateX(-50%) translateY(20px);
   transition: opacity 0.5s ease, transform 0.5s ease;

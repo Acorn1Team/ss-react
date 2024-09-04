@@ -1,0 +1,187 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.orderItem {
+  padding: 20px;
+  background-color: white;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  transition: box-shadow 0.3s;
+}
+
+.orderItem:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.orderHeader {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.orderDetails {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.orderProductLink {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.orderProductLink:hover {
+  color: #0056b3;
+}
+
+.orderPrice {
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.orderState {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #28a745;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 5px;
+  transition: background-color 0.3s;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 1.1rem;
+  color: #333;
+}
+
+/* 상태에 따른 버튼 스타일링 */
+.orderDetails button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+/* 주문 취소하기 */
+.orderDetails button.cancel {
+  background-color: #dc3545;
+  color: white;
+}
+
+.orderDetails button.cancel:hover {
+  background-color: #c82333;
+}
+
+/* 교환/환불하기 */
+.orderDetails button.exchange {
+  background-color: #ffc107;
+  color: white;
+}
+
+.orderDetails button.exchange:hover {
+  background-color: #e0a800;
+}
+
+/* 팝업 스타일 */
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.popup h3 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.popupButtons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.popupButtons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.popupButtons button.cancel {
+  background-color: #dc3545;
+  color: white;
+}
+
+.popupButtons button.confirm {
+  background-color: #28a745;
+  color: white;
+}
+
+.popupButtons button.cancel:hover {
+  background-color: #c82333;
+}
+
+.popupButtons button.confirm:hover {
+  background-color: #218838;
+}

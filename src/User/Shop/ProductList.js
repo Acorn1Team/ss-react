@@ -104,17 +104,30 @@ export default function ProductList() {
 
       <div className={styles.productList}>
         {sortedProducts.map((product) => (
-          <div key={product.num} className={styles.productItem}>
+          <div
+            key={product.num}
+            className={`${styles.productItem} ${
+              product.stock === 0 ? styles.soldOutOverlay : ""
+            }`}
+          >
+            {product.stock === 0 && (
+              <div className={styles.soldOutMessage}>품절된 상품입니다.</div>
+            )}
             <div className={styles.productImage}>
               <Link to={`/user/shop/productlist/detail/${product.no}`}>
                 <img src={product.pic} alt={`${product.name} 사진`} />
               </Link>
             </div>
             <div className={styles.productName}>{product.name}</div>
-            <div className={styles.productPrice}>{product.price}원</div>
+            <div className={styles.productPrice}>
+              {product.price.toLocaleString()}원
+            </div>
             <div className={styles.productCategory}>{product.category}</div>
-            <div>등록일: {product.date}</div>
-            <div>할인율: {product.discountRate}</div>
+            <div>
+              {product.discountRate === 0
+                ? ""
+                : `${product.discountRate}% 할인`}
+            </div>
             <div>평점: {product.score}</div>
             <div>리뷰 수: {product.reviews}</div>
           </div>

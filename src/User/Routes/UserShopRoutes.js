@@ -14,7 +14,7 @@ export default function UserShopRoutes() {
       <Route path="/productlist" element={<ProductList />} />
       <Route path="/productlist/detail/:no" element={<ProductDetail />} />
       <Route path="/cart" element={<Cartlist />} />
-      <Route path="/order/detail/:orderNo" element={<CartDetail />} />
+      <Route path="/order/detail" element={<CartDetail />} />
       <Route path="/purchase" element={<PurchasePage />} />
     </Routes>
   );

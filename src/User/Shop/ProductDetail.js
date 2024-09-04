@@ -10,7 +10,6 @@ import Modal from "react-modal";
 
 Modal.setAppElement("#root"); // 모달의 root element를 설정합니다.
 
-
 export default function ProductDetail() {
   const { no, productNo } = useParams();
   const [product, setProduct] = useState({});
@@ -96,16 +95,23 @@ export default function ProductDetail() {
       </div>
       <div>
         <span className={styles.label}>가격:</span>
-        <span className={styles.price}>{getTotalPrice()} 원</span>
+        <span className={styles.price}>
+          {getTotalPrice().toLocaleString()} 원
+        </span>
         {product.discountRate > 0 && (
           <span className={styles.discountRate}>
             할인율: {product.discountRate}%
           </span>
         )}
       </div>
-      <button className={styles.addToCartButton} onClick={handleAddToCart}>
-        장바구니에 담기
-      </button>
+      {product.stock > 0 ? (
+        <button className={styles.addToCartButton} onClick={handleAddToCart}>
+          장바구니에 담기
+        </button>
+      ) : (
+        <button className={styles.addToCartButton}>품절된 상품입니다</button>
+      )}
+
       <div className={styles.productDescription}>
         <span className={styles.label}>상품 설명:</span>
         <span>{product.contents}</span>
@@ -131,31 +137,30 @@ export default function ProductDetail() {
       </div>
       <br />
 
-{/* 모달 구현 */}
-<Modal
-  isOpen={modalIsOpen}
-  onRequestClose={closeModal}
-  contentLabel="장바구니 추가 모달"
-  style={{
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      textAlign: "center",
-    },
-  }}
->
-  <h2>장바구니에 추가되었습니다!</h2>
-  <div>
-    <img src={product.pic} alt="Product" />
-  </div>
-  <button onClick={continueShopping}>계속 쇼핑하기</button>
-  <button onClick={goToCart}>장바구니 보기</button>
-</Modal>
-
+      {/* 모달 구현 */}
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="장바구니 추가 모달"
+        style={{
+          content: {
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            marginRight: "-50%",
+            transform: "translate(-50%, -50%)",
+            textAlign: "center",
+          },
+        }}
+      >
+        <h2>장바구니에 추가되었습니다!</h2>
+        <div>
+          <img src={product.pic} alt="Product" />
+        </div>
+        <button onClick={continueShopping}>계속 쇼핑하기</button>
+        <button onClick={goToCart}>장바구니 보기</button>
+      </Modal>
     </div>
   );
 }

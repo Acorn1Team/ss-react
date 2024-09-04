@@ -1,11 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams,useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import styles from "../Style/MyOrderDetail.module.css";
 
 export default function MyOrderDetail() {
   const { orderNo } = useParams();
   const navigate = useNavigate(); // useNavigate 훅 사용
- 
+
   const [orderInfo, setOrderInfo] = useState({});
   const [userInfo, setUserInfo] = useState({});
 
@@ -15,6 +16,11 @@ export default function MyOrderDetail() {
   // 로그인 정보라고 가정
   //const userNo = 31;
   const userNo = sessionStorage.getItem("id");
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+  };
 
   const getOrderList = () => {
     axios
@@ -41,34 +47,62 @@ export default function MyOrderDetail() {
   const goToReviewPage = (productNo) => {
     // 리뷰 데이터를 서버로 전송
     navigate(`/user/mypage/review/write/${productNo}`, {
-      state: { orderNo: orderNo, userNo: userNo }
+      state: { orderNo: orderNo, userNo: userNo },
     });
   };
 
-
-
   return (
-    <div>
-      {orderInfo.no}
-      <br />
-      {orderInfo.state}&emsp;{orderInfo.date}&emsp;{orderInfo.price}
-      <br />
-      {productList.map((pl) => (
-        <div key={pl.no}>
-          {pl.name}&emsp;
-          {orderProductList.find((op) => op.productNo === pl.no)?.quantity}개
-          &emsp;{pl.price}
-          <button onClick={() => goToReviewPage(pl.no)}>리뷰 쓰기</button>
-          {/* <Link to={`/review/write/${productNo}`}>리뷰 쓰기222</Link> */}
-        </div>
-      ))}
-      <div>
-        주문자 정보
+    <div className={styles.container}>
+      <div className={styles.orderInfo}>
+        <span>주문 번호:</span> {orderInfo.no}
         <br />
-        {userInfo.name} 님 <br />
-        {userInfo.zipcode}&emsp;{userInfo.address}
+        <span>주문 상태:</span> {orderInfo.state}
         <br />
-        {userInfo.tel}
+        <span>주문 날짜:</span> {formatDate(orderInfo.date)}
+        <br />
+        <span>총 금액:</span> {orderInfo.price?.toLocaleString()}원
+      </div>
+
+      <div className={styles.productList}>
+        {productList.map((pl) => (
+          <div key={pl.no} className={styles.productItem}>
+            <Link to={`/user/shop/productlist/detail/${pl.no}`}>
+              <div>
+                <span className={styles.productName}>{pl.name}</span>
+                <br />
+                <span className={styles.productQuantity}>
+                  {
+                    orderProductList.find((op) => op.productNo === pl.no)
+                      ?.quantity
+                  }
+                  개
+                </span>
+              </div>
+            </Link>
+            <span className={styles.productPrice}>
+              {pl.price.toLocaleString()}원
+            </span>
+            <button
+              className={styles.reviewButton}
+              onClick={() => goToReviewPage(pl.no)}
+            >
+              리뷰 쓰기
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <div className={styles.userInfo}>
+        <h3>주문자 정보</h3>
+        <p>
+          <span>이름:</span> {userInfo.name}
+        </p>
+        <p>
+          <span>주소:</span> {userInfo.zipcode} {userInfo.address}
+        </p>
+        <p>
+          <span>전화번호:</span> {userInfo.tel}
+        </p>
       </div>
     </div>
   );
