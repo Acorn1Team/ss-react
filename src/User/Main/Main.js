@@ -138,7 +138,7 @@ export default function UserHome() {
             ))}
         </div>
         <Link to="/user/main/show">작품 더보기</Link>
-        <b className="mainTextTitle">New Review</b>
+        <b className="mainTextTitle">최신 리뷰</b>
         <div id="mainReviews">
           {Array.isArray(review) && review.length > 0 && (
             <div className="mainReviewsBox active">
@@ -154,7 +154,7 @@ export default function UserHome() {
             </div>
           )}
         </div>
-        <b className="mainTextTitle">Style Best</b>
+        <b className="mainTextTitle">인기 스타일</b>
         <div id="mainPosts">
           {Array.isArray(posts) &&
             posts.map((p) => (
