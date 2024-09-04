@@ -73,15 +73,13 @@ export default function PromotionManage() {
 
   return (
     <>
-      <div style={{ padding: "20px" }}>
-        <h2>Promotion</h2>
         <h3><hr/>
             🩶 광고 🩶&nbsp;
             <Link to="/admin/promotion/advertise">
               <button style={{ padding: "10px", marginLeft: "10px" }}>광고 알림 보내기</button>
             </Link><hr/>
         </h3>
-
+      <div style={{ padding: "20px" }}>
         <div style={{ display: "flex", gap: "20px", justifyContent: "space-between" }}>
           <div style={{ flex: 1, border: "1px solid #ccc", borderRadius: "8px", padding: "20px" }}>
             <h3>

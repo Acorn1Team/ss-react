@@ -136,9 +136,9 @@ const SearchForm = styled.form`
 const SearchInput = styled.input`
   font-family: inherit;
   font-size: inherit;
-  background-color: white;
+  background-color: rgb(199, 199, 199)
   border: none;
-  color: #646464;
+  color: black;
   padding: 0.7rem 1rem;
   border-radius: 30px;
   width: 12em;
@@ -179,7 +179,7 @@ const SearchButton = styled.button`
 
 const AutoSearchContainer = styled.div`
   position: absolute;
-  top: 45px;
+  top: 50px;
   left: 50%;
   transform: translateX(-50%); /* 중앙 정렬 추가 */
   width: 200px;

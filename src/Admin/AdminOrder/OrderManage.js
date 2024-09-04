@@ -123,7 +123,79 @@ export default function OrderManage() {
 
   return (
     <div>
-      <h2>주문 관리</h2>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>유저 ID</th>
+            <th>상태</th>
+            <th>주문일</th>
+            <th>총액</th>
+            <th>상태 변경</th>
+            <th>상세보기</th>
+          </tr>
+        </thead>
+        <tbody>
+          {orders.length > 0 ? (
+            orders.map((order) => (
+              <tr key={order.no}>
+                <td>{order.no}</td>
+                <td>{order.userId}</td>
+                <td>{order.state}</td>
+                <td>{new Date(order.date).toLocaleString()}</td>
+                <td>
+                  {order.orderProducts.reduce(
+                    (total, product) =>
+                      total + product.price * product.quantity,
+                    0
+                  )}
+                </td>
+                <td>
+                  <select
+                    value={order.state}
+                    onChange={(e) =>
+                      handleStatusChange(order.no, e.target.value)
+                    }
+                  >
+                    <option value="주문접수">주문접수</option>
+                    <option value="배송중">배송중</option>
+                    <option value="배송완료">배송완료</option>
+                    <option value="주문취소">주문취소</option>
+                  </select>
+                </td>
+                <td>
+                  <Link to={`/admin/orders/detail/${order.no}`}>상세보기</Link>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="7" style={{ textAlign: "center", padding: "20px" }}>
+                결과가 없습니다.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+
+      {/* 페이지네이션 */}
+      <div style={{ marginTop: "10px" }}>
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 0}
+        >
+          이전
+        </button>
+        <span style={{ margin: "0 10px" }}>
+          {currentPage + 1} / {totalPages}
+        </span>
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage + 1 === totalPages}
+        >
+          다음
+        </button>
+      </div><br/>
 
       <div style={{ marginBottom: "10px" }}>
         <label style={{ display: "inline-block", marginRight: "10px" }}>
@@ -197,80 +269,6 @@ export default function OrderManage() {
       {error && (
         <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>
       )}
-
-      <table border="1">
-        <thead>
-          <tr>
-            <th>번호</th>
-            <th>유저 ID</th>
-            <th>상태</th>
-            <th>주문일</th>
-            <th>총액</th>
-            <th>상태 변경</th>
-            <th>상세보기</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.length > 0 ? (
-            orders.map((order) => (
-              <tr key={order.no}>
-                <td>{order.no}</td>
-                <td>{order.userId}</td>
-                <td>{order.state}</td>
-                <td>{new Date(order.date).toLocaleString()}</td>
-                <td>
-                  {order.orderProducts.reduce(
-                    (total, product) =>
-                      total + product.price * product.quantity,
-                    0
-                  )}
-                </td>
-                <td>
-                  <select
-                    value={order.state}
-                    onChange={(e) =>
-                      handleStatusChange(order.no, e.target.value)
-                    }
-                  >
-                    <option value="주문접수">주문접수</option>
-                    <option value="배송중">배송중</option>
-                    <option value="배송완료">배송완료</option>
-                    <option value="주문취소">주문취소</option>
-                  </select>
-                </td>
-                <td>
-                  <Link to={`/admin/orders/detail/${order.no}`}>상세보기</Link>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="7" style={{ textAlign: "center", padding: "20px" }}>
-                결과가 없습니다.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-
-      {/* 페이지네이션 */}
-      <div style={{ marginTop: "10px" }}>
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 0}
-        >
-          이전
-        </button>
-        <span style={{ margin: "0 10px" }}>
-          {currentPage + 1} / {totalPages}
-        </span>
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage + 1 === totalPages}
-        >
-          다음
-        </button>
-      </div>
     </div>
   );
 }

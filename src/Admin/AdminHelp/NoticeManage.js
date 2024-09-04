@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function NoticeManage() {
   const [notices, setNotices] = useState([]); // 공지사항 목록을 저장할 상태
@@ -9,6 +9,7 @@ export default function NoticeManage() {
   const [pageSize, setPageSize] = useState(10); // 페이지 크기를 저장할 상태
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수를 저장할 상태
   const [searchTriggered, setSearchTriggered] = useState(false); // 검색 버튼 클릭 여부를 저장할 상태
+  const navigate = useNavigate();
 
   // 서버에서 공지사항 목록을 가져오는 함수
   const fetchNotices = async (page = 0, size = 10, category = "") => {
@@ -61,9 +62,8 @@ export default function NoticeManage() {
 
   return (
     <>
-      <br />
-      <h1>공지 목록</h1>
-      <Link to="/admin/help/notices/new">공지 추가하기</Link>
+      <button onClick={() => navigate("/admin/help/notices/new")}>공지 추가하기</button>
+      <br /><br />
 
       {/* 카테고리 선택 및 전체보기 버튼 */}
       <div style={{ marginBottom: "10px" }}>

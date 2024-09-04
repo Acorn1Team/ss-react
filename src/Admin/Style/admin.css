@@ -35,21 +35,6 @@ th, td {
     border-radius: 8px;
 }
 
-#topmenu {
-    width: 100%;
-    background-color: #ebeaea;
-    list-style-type: none; /* 기본 불릿 제거 */
-    padding: 0;
-    margin: 0 auto; /* 가로로 중앙 정렬 */
-    display: flex; /* 옆으로 정렬 플렉스 컨테이너로 설정 */
-    flex-wrap: wrap;
-    justify-content: center; /* 플렉스 항목들(메뉴 항목들)을 가운데 정렬 */
-    border-radius: 8px;
-}
-
-#topmenu li {
-    margin-right: 5%;
-}
 
 #statistics li {
     width: 30%; margin-right: 7%;
@@ -79,6 +64,23 @@ body {
 }
 
 
+#topmenu {
+    width: 100%;
+    background-color: #ebeaea;
+    list-style-type: none; /* 기본 불릿 제거 */
+    padding: 0;
+    margin: 0 auto; /* 가로로 중앙 정렬 */
+    display: flex; /* 옆으로 정렬 플렉스 컨테이너로 설정 */
+    flex-wrap: wrap;
+    justify-content: space-evenly; /* 메뉴 간의 간격을 균등하게 배치 */
+    border-radius: 8px;
+}
+
+#topmenu li {
+    flex-grow: 1; /* 각 li가 동일한 비율로 공간을 차지 */
+    text-align: center; /* 텍스트를 중앙 정렬 */
+}
+
 #topmenu li a {
     padding: 10px 10px;
     display: block;
@@ -87,6 +89,14 @@ body {
 }
 
 #topmenu li a:hover {
-    background-color: darkgray;
+    background-color: rgb(199, 199, 199);
     color: #fff;
 }
+
+/* 활성화된 링크에 적용할 스타일 */
+#topmenu li a.active-link {
+    background-color: rgb(199, 199, 199);
+    color: #fff;
+    font-weight: bold; /* 강조 표시 */
+}
+

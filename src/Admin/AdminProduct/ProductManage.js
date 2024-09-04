@@ -13,7 +13,7 @@ export default function ProductManage() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(8);
   const [totalPages, setTotalPages] = useState(1);
   const [searchTriggered, setSearchTriggered] = useState(false);
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ export default function ProductManage() {
     endDate = ""
   ) => {
     try {
-      const response = await axios.get(`/admin/product`, {
+      const response = await axios.get('/admin/product', {
         params: {
           page,
           size,
@@ -212,34 +212,6 @@ export default function ProductManage() {
 
   return (
     <>
-      <Link to="/admin/product/insert">상품 추가하기</Link>
-      <div style={{ marginBottom: "10px" }}>
-        <label style={{ display: "inline-block", marginRight: "10px" }}>
-          검색 :
-          <select
-            value={searchField}
-            onChange={(e) => setSearchField(e.target.value)}
-            style={{ marginLeft: "10px", padding: "5px" }}
-          >
-            <option value="name">이름</option>
-            <option value="date">날짜</option>
-            <option value="category">카테고리</option>
-          </select>
-        </label>
-
-        {renderSearchField()}
-
-        <button
-          onClick={handleSearch}
-          style={{ padding: "5px 10px", marginRight: "10px" }}
-        >
-          검색
-        </button>
-        <button onClick={handleReset} style={{ padding: "5px 10px" }}>
-          전체보기
-        </button>
-      </div>
-
       <table border={1}>
         <thead>
           <tr>
@@ -362,6 +334,7 @@ export default function ProductManage() {
         </tbody>
       </table>
 
+
       <div style={{ marginTop: "10px" }}>
         <button
           onClick={() => handlePageChange(currentPage - 1)}
@@ -377,6 +350,33 @@ export default function ProductManage() {
           disabled={currentPage + 1 === totalPages}
         >
           다음
+        </button>
+      </div><br/>
+      <button onClick={() => navigate("/admin/product/insert")}>상품 추가하기</button><br/><br/>
+      <div style={{ marginBottom: "10px" }}>
+        <label style={{ display: "inline-block", marginRight: "10px" }}>
+          검색 :
+          <select
+            value={searchField}
+            onChange={(e) => setSearchField(e.target.value)}
+            style={{ marginLeft: "10px", padding: "5px" }}
+          >
+            <option value="name">이름</option>
+            <option value="date">날짜</option>
+            <option value="category">카테고리</option>
+          </select>
+        </label>
+
+        {renderSearchField()}
+        
+        <button
+          onClick={handleSearch}
+          style={{ padding: "5px 10px", marginRight: "10px" }}
+        >
+          검색
+        </button>
+        <button onClick={handleReset} style={{ padding: "5px 10px" }}>
+          전체보기
         </button>
       </div>
     </>
