@@ -2,6 +2,10 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "../Style/UserUpdate.module.css";
 import axios from "axios";
+import styled from "styled-components";
+import { RiAccountPinCircleFill } from "react-icons/ri";
+import { SiNaver } from "react-icons/si";
+import { SiKakaotalk } from "react-icons/si";
 
 const UserUpdate = () => {
   const { userNo } = useParams();
@@ -21,79 +25,12 @@ const UserUpdate = () => {
   });
   const [errors, setErrors] = useState({});
   const [showPasswordForm, setShowPasswordForm] = useState(false);
-  const [verificationCode, setVerificationCode] = useState(""); // 이메일 인증 코드
-  const [inputVerificationCode, setInputVerificationCode] = useState(""); // 사용자가 입력한 이메일 인증 코드
-  // const [originalEmail, setOriginalEmail] = useState(""); // 원래 이메일
-  const [emailChanged, setEmailChanged] = useState(false); // 이메일이 변경되었는지 여부
   const [currentPassword, setCurrentPassword] = useState("");
-  const [currentPasswordValid, setCurrentPasswordValid] = useState(true);
   const nv = useNavigate();
 
   const addrStartRef = useRef(null);
   const addrEndRef = useRef(null);
   const zipcodeDisplayRef = useRef(null);
-
-  // 이메일 인증 번호 요청 함수
-  const sendEmailVerificationCode = async (email) => {
-    try {
-      const response = await fetch(
-        "http://localhost:8080/user/auth/send-verification-code",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-        }
-      );
-
-      const result = await response.json();
-
-      if (response.ok) {
-        setVerificationCode(result.code); // 서버에서 반환한 인증번호
-        alert("인증번호가 이메일로 발송되었습니다.");
-      } else {
-        setErrors((prev) => ({ ...prev, email: result.message }));
-      }
-    } catch (error) {
-      console.error("인증번호 발송 중 오류 발생:", error);
-      setErrors((prev) => ({ ...prev, email: "인증번호 발송 실패" }));
-    }
-  };
-
-  // 이메일 인증 코드 검증 함수
-  const verifyEmailCodeOnServer = async (email, inputCode) => {
-    try {
-      const response = await fetch(
-        "http://localhost:8080/user/auth/verify-code",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, code: inputCode }),
-        }
-      );
-
-      const result = await response.json();
-      if (response.ok && result.status === "success") {
-        setErrors((prev) => ({
-          ...prev,
-          email: "인증이 완료되었습니다.",
-        }));
-        return true; // 인증 성공
-      } else {
-        setErrors((prev) => ({
-          ...prev,
-          email: result.message || "인증번호가 일치하지 않습니다.",
-        }));
-        return false; // 인증 실패
-      }
-    } catch (error) {
-      console.error("인증번호 검증 중 오류 발생:", error);
-      setErrors((prev) => ({
-        ...prev,
-        email: "인증번호 검증 실패",
-      }));
-      return false; // 오류 발생 시 실패로 처리
-    }
-  };
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -145,12 +82,6 @@ const UserUpdate = () => {
         const response = await axios.get(`/user/update/${userNo}`);
         setUser(response.data);
         setNameNull(response.data.name === null);
-        // setSocial(response.data.subpath);
-
-        // 이메일이 변경되었는지 확인
-        if (response.data.email !== user.email) {
-          setEmailChanged(true);
-        }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -188,11 +119,6 @@ const UserUpdate = () => {
       }
     }
 
-    if (emailChanged && !inputVerificationCode) {
-      newErrors.email = "이메일 인증번호를 입력해 주세요.";
-      formIsValid = false;
-    }
-
     setErrors(newErrors);
     return formIsValid;
   };
@@ -201,19 +127,12 @@ const UserUpdate = () => {
     const { address, addr_end } = user;
     return addr_end ? `${address} ${addr_end}` : address;
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) {
       return;
-    }
-
-    if (emailChanged) {
-      const isVerified = await verifyEmailCodeOnServer(
-        user.email,
-        inputVerificationCode
-      );
-      if (!isVerified) return;
     }
 
     const combinedAddress = combineAddress();
@@ -227,11 +146,26 @@ const UserUpdate = () => {
     };
 
     try {
+      if (showPasswordForm && currentPassword) {
+        const passwordResponse = await axios.post(`/user/validate-password`, {
+          no: userNo, // 사용자 번호도 함께 전달
+          pwd: currentPassword, // 현재 비밀번호를 전달
+        });
+
+        if (!passwordResponse.data.isValid) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            currentPassword: "현재 비밀번호가 일치하지 않습니다.",
+          }));
+          return; // 비밀번호가 일치하지 않으면 폼 제출 중단
+        }
+      }
+
       console.log("Sending data to server:", updatedUser);
       const response = await axios.put(`/user/update/${userNo}`, updatedUser);
       console.log("Server response:", response.data);
       alert("회원 정보가 수정되었습니다.");
-      window.location.href = "/user/main";
+      nv("/user/main");
     } catch (error) {
       console.error(
         "Error updating user:",
@@ -240,50 +174,6 @@ const UserUpdate = () => {
       alert("회원 정보 수정 중 오류가 발생했습니다.");
     }
   };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   if (!validateForm()) {
-  //     return;
-  //   }
-
-  //   const combinedAddress = combineAddress();
-
-  //   const updatedUser = {
-  //     ...user,
-  //     address: combinedAddress,
-  //     zipcode: user.zipcode,
-  //     ...(user.pwd ? { pwd: user.pwd } : {}),
-  //     ...(user.addr_end ? { addr_end: user.addr_end } : {}),
-  //   };
-
-  //   try {
-  //     if (showPasswordForm && currentPassword) {
-  //       const passwordResponse = await axios.post(`/user/validate-password`, {
-  //         no: userNo, // 사용자 번호도 함께 전달
-  //         pwd: currentPassword, // 현재 비밀번호를 전달
-  //       });
-
-  //       if (!passwordResponse.data.isValid) {
-  //         alert("현재 비밀번호가 일치하지 않습니다.");
-  //         return;
-  //       }
-  //     }
-
-  //     console.log("Sending data to server:", updatedUser);
-  //     const response = await axios.put(`/user/update/${userNo}`, updatedUser);
-  //     console.log("Server response:", response.data);
-  //     alert("회원 정보가 수정되었습니다.");
-  //     nv("/user/main");
-  //   } catch (error) {
-  //     console.error(
-  //       "Error updating user:",
-  //       error.response ? error.response.data : error.message
-  //     );
-  //     alert("회원 정보 수정 중 오류가 발생했습니다.");
-  //   }
-  // };
 
   const handleCancel = () => {
     window.history.back();
@@ -346,11 +236,6 @@ const UserUpdate = () => {
       ...prevUser,
       [name]: value,
     }));
-
-    // 이메일이 변경되었는지 확인
-    if (name === "email" && value !== user.email) {
-      setEmailChanged(true);
-    }
   };
 
   const handlePasswordToggle = () => {
@@ -375,10 +260,40 @@ const UserUpdate = () => {
 
   return (
     <div className={styles.container}>
-      {user.id !== null && <div id={styles.userId}>아이디 : {user.id}</div>}
-      {user.idK !== null && <div id={styles.userId}>아이디 : {user.idK}</div>}
-      {user.idN !== null && <div id={styles.userId}>아이디 : {user.idN}</div>}
-      {/* <div id={styles.userId}>아이디 : {user.id}</div> */}
+      <div id={styles.userId}>
+        <table>
+          <tbody>
+            {user.id && (
+              <tr>
+                <td style={{ border: "none" }}>
+                  <RiAccountPinCircleFill />
+                </td>
+                <td style={{ border: "none" }}>{user.id}</td>
+              </tr>
+            )}
+
+            {user.idK && (
+              <tr>
+                <td style={{ border: "none" }}>
+                  <SiKakaotalk size={18} color="#f9e000" />
+                </td>
+                <td style={{ border: "none" }}>{user.idK}</td>
+              </tr>
+            )}
+
+            {user.idN && (
+              <tr>
+                <td style={{ border: "none" }}>
+                  <SiNaver size={15} color="#03cf5d" />
+                </td>
+                <td style={{ border: "none" }}>
+                  <strong style={{ fontSize: "90%" }}>{user.idN}</strong>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
       {user.idK !== null && user.id !== null && (
         <div>
           <strong style={{ color: "black" }}>통합 </strong>
@@ -396,7 +311,7 @@ const UserUpdate = () => {
           <strong style={{ color: "#03cf5d" }}>네이버 아이디</strong>로 로그인된
           계정입니다.
         </div>
-      )}
+      )}{" "}
       <br />
       <div className={styles.user_input}>
         <input
@@ -411,7 +326,6 @@ const UserUpdate = () => {
           <div className={styles.error_message}>{errors.name}</div>
         )}
       </div>
-
       {showPasswordForm && (
         <>
           <div className={styles.user_input}>
@@ -452,7 +366,11 @@ const UserUpdate = () => {
               <div className={styles.error_message}>{errors.pwd_chk}</div>
             )}
           </div>
-          <button type="button" onClick={handlePasswordCancel}>
+          <button
+            type="button"
+            onClick={handlePasswordCancel}
+            style={{ backgroundColor: "whitesmoke", color: "black" }}
+          >
             비밀번호 변경 취소
           </button>
         </>
@@ -460,45 +378,24 @@ const UserUpdate = () => {
       {!showPasswordForm &&
         user.id !== null &&
         (user.idK === null || user.idN === null) && (
-          <button type="button" onClick={handlePasswordToggle}>
+          <button
+            type="button"
+            onClick={handlePasswordToggle}
+            style={{ backgroundColor: "whitesmoke", color: "black" }}
+          >
             비밀번호 변경
           </button>
         )}
       <form onSubmit={handleSubmit}>
-        {/* Email 인증 코드 요청 및 검증 */}
         <div className={styles.email_input}>
           <input
             type="email"
             name="email"
             value={user.email}
-            onChange={(e) => handleInputChange(e)}
-            readOnly={user.idK !== null || user.idN !== null}
+            disabled
+            //readOnly={user.idK !== null || user.idN !== null}
           />
-          {emailChanged && (
-            <>
-              <button
-                type="button"
-                className={styles.register_button}
-                onClick={() => sendEmailVerificationCode(user.email)}
-              >
-                인증번호 받기
-              </button>
-              <input
-                type="text"
-                placeholder="인증번호 입력"
-                value={inputVerificationCode}
-                onChange={(e) => setInputVerificationCode(e.target.value)}
-              />
-              <button
-                type="button"
-                onClick={() =>
-                  verifyEmailCodeOnServer(user.email, inputVerificationCode)
-                }
-              >
-                인증하기
-              </button>
-            </>
-          )}
+
           {errors.email && <p className={styles.error}>{errors.email}</p>}
         </div>
 
@@ -520,7 +417,11 @@ const UserUpdate = () => {
             value={user.zipcode}
             disabled
           />
-          <button type="button" onClick={openDaumPostcode}>
+          <button
+            type="button"
+            onClick={openDaumPostcode}
+            style={{ backgroundColor: "whitesmoke", color: "black" }}
+          >
             주소 검색
           </button>
         </div>
@@ -543,13 +444,21 @@ const UserUpdate = () => {
           />
         </div>
         <div className={styles.buttons}>
-          <button type="button" onClick={handleSubmit}>
+          <button
+            type="button"
+            onClick={handleSubmit}
+            //style={{ backgroundColor: "#BE2E22" }}
+          >
             저장
           </button>
           <button type="button" onClick={handleCancel}>
             취소
           </button>
-          <button type="button" onClick={handleDelete}>
+          <button
+            type="button"
+            onClick={handleDelete}
+            style={{ backgroundColor: "darkgray" }}
+          >
             회원 탈퇴
           </button>
         </div>
