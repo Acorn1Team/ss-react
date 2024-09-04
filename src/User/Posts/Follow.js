@@ -166,16 +166,18 @@ export default function Follow() {
                   삭제하기
                 </button>
               ) : (
-                <button
-                  onClick={() => followOrCancel(f.no)}
-                  className={
-                    followStatus[f.no]
-                      ? styles.unfollowButton
-                      : styles.followButton
-                  }
-                >
-                  {followStatus[f.no] ? "팔로우 취소하기" : "팔로우 하기"}
-                </button>
+                userNo !== String(f.no) && (
+                  <button
+                    onClick={() => followOrCancel(f.no)}
+                    className={
+                      followStatus[f.no]
+                        ? styles.unfollowButton
+                        : styles.followButton
+                    }
+                  >
+                    {followStatus[f.no] ? "팔로우 취소하기" : "팔로우 하기"}
+                  </button>
+                )
               )}
             </div>
           ))}

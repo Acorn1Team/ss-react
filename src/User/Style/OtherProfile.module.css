@@ -1,0 +1,143 @@
+/* Profile container */
+.profileContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.profileContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profileImage {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+
+/* Profile info */
+.profileInfo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profileNickname {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.profileId {
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.profileBio {
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+/* Follow button */
+.followButton {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  transition: background-color 0.3s;
+}
+
+.followButton:hover {
+  background-color: #0056b3;
+}
+
+/* Follow stats */
+.followStats {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 20px;
+}
+
+.followLink {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.followLink:hover {
+  text-decoration: underline;
+}
+
+/* Post list */
+.postList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.postItem {
+  width: 100px;
+  height: 100px;
+}
+
+.postImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.3s;
+}
+
+.postImage:hover {
+  transform: scale(1.05);
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pageButton {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.pageButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.pageInfo {
+  margin: 0 10px;
+}
+
+/* Deleted user message */
+.deletedMessage {
+  font-size: 1.2rem;
+  color: #ff0000;
+  text-align: center;
+  margin-top: 20px;
+}

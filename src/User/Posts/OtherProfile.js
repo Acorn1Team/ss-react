@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import styles from "../Style/OtherProfile.module.css";
 
 export default function OtherProfile() {
   const { profileUserNo } = useParams();
@@ -27,6 +28,8 @@ export default function OtherProfile() {
   // 전체 페이지 수
   const [totalPages, setTotalPages] = useState(1);
 
+  const [userCheck, setUserCheck] = useState(false);
+
   const nv = useNavigate();
 
   // 로그인 정보라고 가정함
@@ -38,6 +41,9 @@ export default function OtherProfile() {
       .get(`/posts/user/${profileUserNo}`)
       .then((res) => {
         setUserInfo(res.data);
+        if (res.data.email !== null) {
+          setUserCheck(true);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -141,62 +147,85 @@ export default function OtherProfile() {
       getUserInfo();
       postInfo();
     }
-  }, [profileUserNo, userNo, currentPage]);
+  }, [profileUserNo, userNo, currentPage, userCheck]);
 
   return (
-    <div>
-      <img src={userInfo.pic} alt={userInfo.nickname}></img>
-      &emsp;@{userInfo.nickname}
-      <br />
-      {userInfo.id}
-      <br />
-      {userInfo.bio}
-      {followState !== null && (
-        <button onClick={followOrCancel}>
-          {followState ? "팔로우 취소" : "팔로우하기"}
-        </button>
-      )}
-      <div>
-        팔로우
-        <Link
-          to={`/user/style/${profileUserNo}/followList/followee`}
-          onClick={followInfo}
-        >
-          {followeeData.length}
-        </Link>
-        &emsp; 팔로워
-        <Link
-          to={`/user/style/${profileUserNo}/followList/follower`}
-          onClick={followInfo}
-        >
-          {followerData.length}
-        </Link>
-      </div>
-      {postList.map((pl) => (
-        <div key={pl.no}>
-          <Link to={`/user/style/detail/${pl.no}`}>
-            <img src={pl.pic} alt={pl.no}></img>
-          </Link>
+    <div className={styles.profileContainer}>
+      {userCheck ? (
+        <div className={styles.profileContent}>
+          <img
+            src={userInfo.pic}
+            alt={userInfo.nickname}
+            className={styles.profileImage}
+          />
+          <div className={styles.profileInfo}>
+            <span className={styles.profileNickname}>@{userInfo.nickname}</span>
+            <br />
+            <span className={styles.profileId}>{userInfo.id}</span>
+            <br />
+            <span className={styles.profileBio}>{userInfo.bio}</span>
+          </div>
+          {followState !== null && (
+            <button className={styles.followButton} onClick={followOrCancel}>
+              {followState ? "팔로우 취소" : "팔로우하기"}
+            </button>
+          )}
+          <div className={styles.followStats}>
+            <span>
+              팔로우{" "}
+              <Link
+                to={`/user/style/${profileUserNo}/followList/followee`}
+                onClick={followInfo}
+                className={styles.followLink}
+              >
+                {followeeData.length}
+              </Link>
+            </span>
+            &emsp;
+            <span>
+              팔로워{" "}
+              <Link
+                to={`/user/style/${profileUserNo}/followList/follower`}
+                onClick={followInfo}
+                className={styles.followLink}
+              >
+                {followerData.length}
+              </Link>
+            </span>
+          </div>
+          <div className={styles.postList}>
+            {postList.map((pl) => (
+              <div key={pl.no} className={styles.postItem}>
+                <Link to={`/user/style/detail/${pl.no}`}>
+                  <img src={pl.pic} alt={pl.no} className={styles.postImage} />
+                </Link>
+              </div>
+            ))}
+          </div>
+          {totalPages > 1 && (
+            <div className={styles.pagination}>
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 0}
+                className={styles.pageButton}
+              >
+                이전
+              </button>
+              <span className={styles.pageInfo}>
+                {currentPage + 1} / {totalPages}
+              </span>
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage + 1 >= totalPages}
+                className={styles.pageButton}
+              >
+                다음
+              </button>
+            </div>
+          )}
         </div>
-      ))}
-      {totalPages > 1 && (
-        <div style={{ marginTop: "10px" }}>
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 0}
-          >
-            이전
-          </button>
-          <span style={{ margin: "0 10px" }}>
-            {currentPage + 1} / {totalPages}
-          </span>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage + 1 >= totalPages}
-          >
-            다음
-          </button>
-        </div>
+      ) : (
+        <div className={styles.deletedMessage}>탈퇴한 회원입니다.</div>
       )}
     </div>
   );

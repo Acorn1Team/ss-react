@@ -4,6 +4,9 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import styles from "../Style/PostDetail.module.css"; // CSS 모듈 임포트
 import modalStyles from "../Style/PostsModal.module.css"; // 모달 CSS 임포트
 import KakaoShareButton from "../Component/KaKaoShareButton";
+import { IoIosHeart } from "react-icons/io";
+import { IoIosHeartEmpty } from "react-icons/io";
+import { FaReply } from "react-icons/fa";
 
 export default function Posts() {
   const { postNo } = useParams();
@@ -566,16 +569,13 @@ export default function Posts() {
             )}
             <div>{postData.content}</div>
             <div className={styles.actionButtons}>
-              <img
-                src={
-                  postLikeStatus
-                    ? "/images/icon/heart1B.png"
-                    : "/images/icon/heart2B.png"
-                }
-                alt="replyIcon"
-                width={"25px"}
-                onClick={() => likeProcHandler()}
-              ></img>
+              <span onClick={() => likeProcHandler()}>
+                {postLikeStatus ? (
+                  <IoIosHeart size={"25"} />
+                ) : (
+                  <IoIosHeartEmpty size={"25"} />
+                )}
+              </span>
               좋아요 {postLike}개
             </div>
             {postData.productNo && (
@@ -608,22 +608,16 @@ export default function Posts() {
                       </Link>
                       : {renderCommentContent(pc.content)}
                       <span id="iconBox">
-                        <img
-                          src="/images/icon/replyB.png"
-                          alt="replyIcon"
-                          width={"25px"}
-                          onClick={() => recomment(pc.no, pc.userNickname)}
-                        ></img>
-                        <img
-                          src={
-                            commentLikeStatus[pc.no]
-                              ? "/images/icon/heart1B.png"
-                              : "/images/icon/heart2B.png"
-                          }
-                          onClick={() => likeProcHandler(pc.no)}
-                          alt="likeButton"
-                          width={"25px"}
-                        ></img>
+                        <span onClick={() => recomment(pc.no, pc.userNickname)}>
+                          <FaReply size={"25"} />
+                        </span>
+                        <span onClick={() => likeProcHandler(pc.no)}>
+                          {commentLikeStatus[pc.no] ? (
+                            <IoIosHeart size={"25"} />
+                          ) : (
+                            <IoIosHeartEmpty size={"25"} />
+                          )}
+                        </span>
                         좋아요 {commentLike[pc.no]}개
                       </span>
                       {String(pc.userNo) === String(userNo) && (

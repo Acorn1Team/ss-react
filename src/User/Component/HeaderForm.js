@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+<<<<<<< Updated upstream
 import TranslateWidget from "../../TranslateWidget";
+=======
+import { FaShoppingCart } from "react-icons/fa";
+import { HiBellAlert } from "react-icons/hi2";
+import { CgProfile } from "react-icons/cg";
+>>>>>>> Stashed changes
 
 // 이미지 경로 설정
 const leftImage = `${process.env.PUBLIC_URL}/images/side.png`;
@@ -349,17 +355,15 @@ function HeaderForm() {
       <RightContainer>
         <Search />
         <Link to="/user/shop/cart">
-          <Icon src={cartImage} alt="Cart" width={"300px"} />
+          <span onClick={handleAlarmClick}>
+            <FaShoppingCart size={"30"} />
+          </span>
         </Link>
         {userNo && (
           <div style={{ position: "relative" }}>
-            <Icon
-              src={alarmImage}
-              alt="Alarm"
-              onClick={handleAlarmClick}
-              width={"500px"}
-              style={{ cursor: "pointer" }}
-            />
+            <span onClick={handleAlarmClick}>
+              <HiBellAlert size={"30"} />
+            </span>
             {hasUnreadAlerts && <RedDot />}{" "}
             {/* 확인되지 않은 알림이 있으면 빨간 점 표시 */}
           </div>
@@ -423,12 +427,10 @@ function HeaderForm() {
         )}
         {isLoggedIn ? (
           <>
-            <Icon
-              src={profileImage}
-              alt="프로필"
-              onClick={handleProfileClick}
-              style={{ cursor: "pointer" }}
-            />
+            <span onClick={handleProfileClick}>
+              <CgProfile size={"30"} />
+            </span>
+
             {showPopup && (
               <PopupContainer>
                 <Link
