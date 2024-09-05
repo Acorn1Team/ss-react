@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Style/SupportButton.css";
+import TranslateWidget from "../../TranslateWidget";
 
 function SupportButton() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,6 +36,7 @@ function SupportButton() {
             >
               채팅 문의
             </button>
+            <TranslateWidget/>
           </div>
         </div>
       )}

@@ -71,6 +71,7 @@ function Myreview() {
         reviews.map((review) => (
           <div key={review.no}>
             <div>상품 번호: {review.productNo}</div>
+            <div>오더프로덕트 번호: {review.orderProductNo}</div>
             <div>사용자: {review.userNickname}</div>
             <div>제품: {review.productName}</div>
             <img
@@ -80,7 +81,7 @@ function Myreview() {
             />
             <div>리뷰 평점: {review.score}</div>
             <div>리뷰 내용: {review.contents}</div>
-            <button onClick={() => navigate(`user/mypage/review/edit/${review.no}`, { state: { review } })}>수정</button>
+            <button onClick={() => navigate(`../review/edit/${review.no}`, { state: { review } })}>수정</button>
             <button onClick={() => deleteReview(review.no)}>삭제</button>
           </div>
         ))

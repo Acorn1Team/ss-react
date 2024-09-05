@@ -7,43 +7,43 @@ export default function ReviewEditPage() {
   const location = useLocation();
   const { no } = useParams();
   const { review } = location.state || {};
+
+  const [orderProductNo] = useState(review.orderProductNo);
+  const [contents, setContents] = useState(review.contents);
+  const [pic, setPic] = useState(review.pic);
+  const [score, setScore] = useState(review.score);
+
   const navigate = useNavigate();
-  const productName = useState(review.productName);
-  const [contents, setContents] = useState(review.contents); // 리뷰 내용 상태 관리
-  const [score, setScore] = useState(review.score); // 평점 상태 관리
-  const [pic, setPic] = useState(review.pic); // 이미지 파일 상태 관리
 
   const handleSubmit = () => {
+    const reviewDto = { no, orderProductNo, contents, score }; // 리뷰 데이터를 객체로 생성
     const formData = new FormData();
-
-    // 리뷰 데이터를 객체로 생성
-    const reviewDto = {no, contents, score, pic};
-
-    // reviewDto를 JSON 문자열로 변환하여 FormData에 추가
-    formData.append("reviewDto", JSON.stringify(reviewDto));
-
-    if (pic) {formData.append("pic", pic); // 이미지 파일이 선택된 경우에만 추가
-
+    formData.append("reviewDto", JSON.stringify(reviewDto)); // reviewDto를 JSON 문자열로 변환하여 FormData에 추가
+    if (pic) {
+      formData.append("pic", pic); // 이미지 파일이 선택된 경우에만 추가
+    }
+  
     axios
-      .post(`/review/update/${no}`, formData, {
-        headers: {"Content-Type": "multipart/form-data",},
-      })
-      .then(() => {
+      .put(`/review/update/${no}`, formData)
+      .then((response) => {
+        console.log("리뷰 제출 성공:", response.data);
         navigate(`../review`); // 성공 시 페이지 이동
       })
       .catch((error) => {
-        console.error("리뷰 수정 실패:", error.response?.data || error);
+        console.error("리뷰 제출 실패:", error.response?.data || error);
       });
   };
+  
+
 
   return (
     <div>
       <h2>리뷰 수정하기</h2>
       <div>
-        상품명: {productName}
+        상품명: {review.productName}
       </div>
-      <textarea value={contents} onChange={(e) => setContents(e.target.value)}
-      ></textarea>
+      <textarea value={contents} onChange={(e) => setContents(e.target.value)} />
+
       <br />
 
       <div>
@@ -82,4 +82,4 @@ export default function ReviewEditPage() {
     </div>
   )
 }
-}
+

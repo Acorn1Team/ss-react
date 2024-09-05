@@ -5,6 +5,7 @@ import axios from "axios";
 import { FaShoppingCart } from "react-icons/fa";
 import { HiBellAlert } from "react-icons/hi2";
 import { CgProfile } from "react-icons/cg";
+import TranslateWidget from "../../TranslateWidget";
 
 // 이미지 경로 설정
 const leftImage = `${process.env.PUBLIC_URL}/images/side.png`;
