@@ -119,6 +119,13 @@
   background-color: #e0e0e0;
 }
 
+/* 활성화된 카테고리 스타일 */
+.activeCategoryLink {
+  background-color: #3897f0;
+  color: white;
+  font-weight: bold;
+}
+
 .pagination button {
   background: none;
   border: 1px solid #dbdbdb;

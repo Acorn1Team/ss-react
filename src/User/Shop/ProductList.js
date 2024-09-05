@@ -48,7 +48,7 @@ export default function ProductList() {
 
   // 카테고리 변경 핸들러
   const handleCategoryChange = (newCategory) => {
-    setSelectCategory(newCategory);
+    setSelectCategory(newCategory); // 선택한 카테고리 업데이트
     setCurrentPage(0); // 페이지 초기화
 
     // 모든 카테고리를 선택하면 sortOption을 "latest"로 설정
@@ -110,10 +110,10 @@ export default function ProductList() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <label id="sortOptions" className={styles.sortOptions}>
+        <label id={styles.sortOptions} className={styles.sortOptions}>
           정렬 기준:
           <select
-            id="sortOptions"
+            id={styles.sortSelect}
             className={styles.sortSelect}
             value={sortOption} // 현재 선택된 정렬 옵션
             onChange={handleSortChange}
@@ -143,7 +143,9 @@ export default function ProductList() {
         {categories.map((cate, index) => (
           <button
             key={index}
-            className={styles.categoryLink}
+            className={`${styles.categoryLink} ${
+              selectCategory === cate ? styles.activeCategoryLink : ""
+            }`} // 선택된 카테고리 활성화
             onClick={() => handleCategoryChange(cate)}
           >
             {cate}
