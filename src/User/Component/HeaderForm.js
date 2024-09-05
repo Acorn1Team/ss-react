@@ -472,12 +472,9 @@ function HeaderForm() {
             )}
           </>
         ) : (
-          <Icon
-            src={profileImage}
-            alt="로그인"
-            onClick={() => checkFor()}
-            style={{ cursor: "pointer" }}
-          />
+          <span onClick={() => checkFor()}>
+            <CgProfile size={"30"} />
+          </span>
         )}
       </RightContainer>
     </Header>

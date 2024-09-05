@@ -49,6 +49,52 @@ const DeleteForm = () => {
     } catch (error) {
       console.error("삭제 중 오류 발생:", error);
     }
+
+    try {
+      const res = await axios.get(`/posts/user/${userNo}`);
+
+      if (res.data.idK) {
+        let kakaoTokenValue = sessionStorage.getItem("token_k");
+
+        axios
+          .post(
+            "https://kapi.kakao.com/v1/user/unlink",
+            {
+              target_id_type: "user_id",
+              target_id: sessionStorage.getItem("id"),
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${kakaoTokenValue}`,
+              },
+            }
+          )
+          .then((res) => {
+            if (res.data) {
+              console.log(res.data);
+              sessionStorage.removeItem("token_k");
+              nv("/user");
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else if (res.data.idN) {
+        let naverTokenValue = sessionStorage.getItem("token_n");
+        axios
+          .post(`/api/naver/delete-token`, { naverTokenValue })
+          .then((res) => {
+            console.log(res.data);
+            sessionStorage.removeItem("token_n");
+            nv("/user");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    } catch (error) {
+      console.error("Error fetching user posts:", error);
+    }
   };
 
   const handleInputChange = (e) => {

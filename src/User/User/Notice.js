@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import styles from "../Style/Notice.module.css";
 
 export default function Notice() {
   const [noticeData, setNoticeData] = useState([]);
@@ -33,34 +34,45 @@ export default function Notice() {
     }
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getFullYear()}년 ${
+      date.getMonth() + 1
+    }월 ${date.getDate()}일`;
+  };
+
   useEffect(() => {
     getNoticeList();
   }, [currentPage]);
 
   return (
-    <div>
+    <div className={styles.container}>
       {loading && <p>로딩 중...</p>}
       {!loading &&
         noticeData.map((nd) => (
-          <div key={nd.no}>
-            {nd.no}&emsp;{nd.category}
-            <br />
-            <Link to={`/user/mypage/notice/${nd.no}`}>{nd.title}</Link>
-            <br />
-            {nd.date}
-            <hr />
+          <div key={nd.no} className={styles.noticeItem}>
+            <div className={styles.noticeCategory}>
+              {nd.no}&emsp;{nd.category}
+            </div>
+            <Link
+              to={`/user/mypage/notice/${nd.no}`}
+              className={styles.noticeTitle}
+            >
+              {nd.title}
+            </Link>
+            <div className={styles.noticeDate}>{formatDate(nd.date)}</div>
           </div>
         ))}
 
       {totalPages > 1 && (
-        <div style={{ marginTop: "10px" }}>
+        <div className={styles.pagination}>
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 0 || loading}
           >
             이전
           </button>
-          <span style={{ margin: "0 10px" }}>
+          <span>
             {currentPage + 1} / {totalPages}
           </span>
           <button
