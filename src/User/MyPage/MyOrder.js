@@ -9,7 +9,7 @@ export default function MyOrder() {
   const [currentPage, setCurrentPage] = useState(0);
 
   // 페이지 크기
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(5);
 
   // 전체 페이지 수
   const [totalPages, setTotalPages] = useState(1);
