@@ -132,7 +132,10 @@ export default function PostList() {
                   <div className="no-image">이미지가 없습니다</div>
                 )}
               </Link>
-              <div className="post-content">{fp.content}</div>
+              {/* 글 내용을 클릭하면 상세 페이지로 이동하도록 Link 추가 */}
+              <Link to={`/user/style/detail/${fp.no}`}>
+                <div className="post-content">{fp.content}</div>
+              </Link>
               <div className="post-nickname">
                 <Link to={`/user/style/profile/${fp.userNo}`}>
                   @{fp.userNickname}
