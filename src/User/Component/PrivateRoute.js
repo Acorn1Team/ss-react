@@ -61,10 +61,10 @@ const AdminRoute = ({ element }) => {
   }
 
   if (!authenticated) {
-    return <Navigate to="/user/auth/login" />;
+    return <Navigate to="/user/admin/auth" />;
   }
 
-  return isAdmin ? element : <Navigate to="/user/auth/login" />;
+  return isAdmin ? element : <Navigate to="/user/admin/auth" />;
 };
 
 export { PrivateRoute, AdminRoute };

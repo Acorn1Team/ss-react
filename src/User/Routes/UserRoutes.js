@@ -10,7 +10,7 @@ import SocialKakao from "../Component/SocialKakao";
 import SocailNaver from "../Component/SocialNaver";
 import { PrivateRoute, AdminRoute } from "../Component/PrivateRoute";
 import SupportButton from "../Component/SupportButton"; // 고객지원 버튼 컴포넌트 import
-
+import NotAdmin from "../User/NotAdmin";
 export default function UserRoutes() {
   return (
     <>
@@ -31,6 +31,7 @@ export default function UserRoutes() {
         <Route path="/callback" element={<SocialKakao />} />
         <Route path="/callback/naver" element={<SocailNaver />} />
         <Route path="/find/*" element={<AuthRoutes />} />
+        <Route path="/admin/auth" element={<NotAdmin />} />
       </Routes>
       <SupportButton />
     </>
