@@ -260,6 +260,7 @@ function HeaderForm() {
     if (naverTokenValue) {
       sessionStorage.removeItem("token_n");
     }
+    sessionStorage.removeItem("token");
     sessionStorage.removeItem("id");
     navigate("/user");
     setIsLoggedIn(false);

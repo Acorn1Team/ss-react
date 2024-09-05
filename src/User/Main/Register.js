@@ -167,7 +167,7 @@ const Register = () => {
     { value: "0", text: "선택하세요" },
     { value: "9", text: "직접입력" },
     { value: "naver.com", text: "naver.com" },
-    { value: "google.com", text: "google.com" },
+    { value: "gmail.com", text: "gmail.com" },
     { value: "hanmail.net", text: "hanmail.net" },
     { value: "nate.com", text: "nate.com" },
     { value: "kakao.com", text: "kakao.com" },

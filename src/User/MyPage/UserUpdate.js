@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import styles from "../Style/UserUpdate.module.css";
 import axios from "axios";
 import styled from "styled-components";
@@ -181,56 +181,54 @@ const UserUpdate = () => {
     window.history.back();
   };
 
-  const handleDelete = async () => {
-    try {
-      await axios.delete(`/user/delete/${userNo}`);
-      alert("회원 탈퇴가 완료되었습니다.");
-      window.location.href = "/loginForm";
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      alert("회원 탈퇴 중 오류가 발생했습니다.");
-    }
+  // const deleteForm = async () => {
+  //   try {
+  //     await axios.delete(`/user/mypage/delete/${userNo}`);
+  //   } catch (error) {
+  //     console.error("Error deleting user:", error);
+  //     alert("회원 탈퇴 중 오류가 발생했습니다.");
+  //   }
 
-    if (user.idK !== null) {
-      let kakaoTokenValue = sessionStorage.getItem("token_k");
-      axios
-        .post(
-          "https://kapi.kakao.com/v1/user/unlink",
-          {
-            target_id_type: "user_id",
-            target_id: sessionStorage.getItem("id"),
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${kakaoTokenValue}`,
-            },
-          }
-        )
-        .then((res) => {
-          if (res.data) {
-            console.log(res.data);
-            sessionStorage.removeItem("token_k");
-            nv("/user");
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-    if (user.idN !== null) {
-      let naverTokenValue = sessionStorage.getItem("token_n");
-      axios
-        .post(`/api/naver/delete-token`, { naverTokenValue })
-        .then((res) => {
-          console.log(res.data);
-          sessionStorage.removeItem("token_n");
-          nv("/user");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  };
+  //   if (user.idK !== null) {
+  //     let kakaoTokenValue = sessionStorage.getItem("token_k");
+  //     axios
+  //       .post(
+  //         "https://kapi.kakao.com/v1/user/unlink",
+  //         {
+  //           target_id_type: "user_id",
+  //           target_id: sessionStorage.getItem("id"),
+  //         },
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${kakaoTokenValue}`,
+  //           },
+  //         }
+  //       )
+  //       .then((res) => {
+  //         if (res.data) {
+  //           console.log(res.data);
+  //           sessionStorage.removeItem("token_k");
+  //           nv("/user");
+  //         }
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   }
+  //   if (user.idN !== null) {
+  //     let naverTokenValue = sessionStorage.getItem("token_n");
+  //     axios
+  //       .post(`/api/naver/delete-token`, { naverTokenValue })
+  //       .then((res) => {
+  //         console.log(res.data);
+  //         sessionStorage.removeItem("token_n");
+  //         nv("/user");
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   }
+  // };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -456,13 +454,11 @@ const UserUpdate = () => {
           <button type="button" onClick={handleCancel}>
             취소
           </button>
-          <button
-            type="button"
-            onClick={handleDelete}
-            style={{ backgroundColor: "darkgray" }}
-          >
-            회원 탈퇴
-          </button>
+          <Link to={`/user/mypage/delete/${userNo}`}>
+            <button type="button" style={{ backgroundColor: "darkgray" }}>
+              회원 탈퇴
+            </button>
+          </Link>
         </div>
       </form>
     </div>

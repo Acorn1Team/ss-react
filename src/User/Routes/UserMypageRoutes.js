@@ -9,6 +9,7 @@ import MyOrderDetail from "../MyPage/MyOrderDetail";
 import ReviewWritePage from "../MyPage/ReviewWritePage";
 import UserUpdate from "../MyPage/UserUpdate";
 import ReviewEditPage from "../MyPage/ReviewEditPage";
+import DeleteForm from "../MyPage/DeleteForm";
 
 export default function UserMypageRoutes() {
   return (
@@ -23,6 +24,7 @@ export default function UserMypageRoutes() {
       <Route path="/review/write/:orderProductNo" element={<ReviewWritePage />} />
       <Route path="/review/edit/:no" element={<ReviewEditPage />} />
       <Route path="/update/:userNo/*" element={<UserUpdate />} />
+      <Route path="/delete/:userNo/*" element={<DeleteForm />} />
     </Routes>
   );
 }
