@@ -155,7 +155,7 @@ export default function PostList() {
           이전
         </button>
         <span>
-          {currentPage + 1} / {totalPages}
+          {totalPages === 0 ? 0 : currentPage + 1} / {totalPages}
         </span>
         <button
           onClick={handleNextPage}
