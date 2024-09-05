@@ -1,0 +1,225 @@
+.header {
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.leftContainer {
+  display: flex;
+  align-items: center;
+}
+
+.styledLink {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+  margin-left: 20px;
+}
+
+.styledLink:hover {
+  color: gray;
+}
+
+.rightContainer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo {
+  width: 55px;
+  height: 60px;
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.icon:hover {
+  transform: scale(1.1);
+}
+
+.notificationWrapper {
+  position: relative;
+}
+
+.redDot {
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+}
+
+.alertPopupContainer {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  z-index: 10;
+  width: 320px;
+  border-radius: 10px;
+}
+
+.alertItem {
+  padding: 15px;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+  cursor: pointer;
+  color: #333;
+}
+
+.alertItem:hover {
+  background-color: #f4f4f4;
+}
+
+.alertCategoryButton {
+  margin-right: 10px;
+  background-color: #e0e0e0;
+  border: none;
+  padding: 7px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.alertCategoryButton:hover {
+  background-color: #bfbfbf;
+}
+
+.noAlerts {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}
+
+.pagination {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popupContainer {
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  z-index: 10;
+  width: 150px;
+}
+
+.searchForm {
+  display: flex;
+  align-items: center;
+  position: relative; /* 드롭다운 위치 조정을 위한 속성 */
+}
+
+.searchSelect {
+  font-family: inherit;
+  font-size: inherit;
+  background-color: #f4f2f2;
+  border: none;
+  color: #646464;
+  padding: 0.7rem 1rem;
+  border-radius: 30px;
+  margin-right: 0.5rem;
+  transition: all 0.5s ease-in-out; /* ease-in-out과 0.5s의 순서 변경 */
+}
+
+.searchInput {
+  font-family: inherit;
+  font-size: inherit;
+  background-color: #f4f2f2;
+  border: none;
+  color: #646464;
+  padding: 0.7rem 1rem;
+  border-radius: 30px;
+  width: 12em;
+  transition: all 0.5s ease-in-out;
+  margin-right: 0.5rem;
+
+  &:hover,
+  &:focus {
+    box-shadow: 0 0 1em #00000013;
+  }
+
+  &:focus {
+    outline: none;
+    background-color: #f0eeee;
+  }
+
+  &::placeholder {
+    /* Webkit 접두사는 현대 브라우저에서 필요 없음 */
+    font-weight: 100;
+    color: #ccc;
+  }
+}
+
+.searchButton {
+  font-family: inherit;
+  font-size: inherit;
+  background-color: #323232 !important;
+  color: #fff !important;
+  border: none !important;
+  padding: 0.7rem 1rem !important;
+  border-radius: 30px !important;
+  transition: background-color 0.3s ease-in-out !important;
+  cursor: pointer !important;
+  margin-top: 0.5rem;
+}
+
+.searchButton:hover {
+  background-color: #505050 !important;
+}
+
+.autoSearchContainer {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  width: 100%; /* 부모 요소의 너비에 맞게 변경 */
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
+  z-index: 3;
+}
+
+.autoSearchItem {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.autoSearchItem:hover {
+  background-color: #edf5f5;
+}
+
+.alertButton {
+  font-size: 0.8rem;
+  border: none;
+  background-color: transparent;
+  color: #ff5c5c;
+  cursor: pointer;
+  float: right;
+  transition: color 0.3s;
+}
+
+.alertButton:hover {
+  color: #ff2d2d;
+}

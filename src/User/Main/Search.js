@@ -179,7 +179,7 @@ function UserItem({ item }) {
     <div className={styles2.profileContainer}>
       <img
         src={item.pic || "defaultUserPic.png"} // 기본 이미지 설정
-        alt={`${item.name}'s picture`}
+        alt={`${item.name}`}
         className={styles2.profilePic}
       />
       <div className={styles2.profileInfo}>
