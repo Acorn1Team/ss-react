@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Myreview() {
   const [reviews, setReviews] = useState([]); // 리뷰 리스트
   const userNo = sessionStorage.getItem("id"); // 세션에서 유저 ID 가져오기
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 총 페이지 수
+  const navigate = useNavigate();
 
   // 리뷰 데이터 가져오기
   const myreviewOnly = (page = 0) => {
@@ -78,6 +80,7 @@ function Myreview() {
             />
             <div>리뷰 평점: {review.score}</div>
             <div>리뷰 내용: {review.contents}</div>
+            <button onClick={() => navigate(`user/mypage/review/edit/${review.no}`, { state: { review } })}>수정</button>
             <button onClick={() => deleteReview(review.no)}>삭제</button>
           </div>
         ))

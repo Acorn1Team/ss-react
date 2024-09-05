@@ -8,6 +8,7 @@ import MyOrder from "../MyPage/MyOrder";
 import MyOrderDetail from "../MyPage/MyOrderDetail";
 import ReviewWritePage from "../MyPage/ReviewWritePage";
 import UserUpdate from "../MyPage/UserUpdate";
+import ReviewEditPage from "../MyPage/ReviewEditPage";
 
 export default function UserMypageRoutes() {
   return (
@@ -20,6 +21,7 @@ export default function UserMypageRoutes() {
       <Route path="/order" element={<MyOrder />} />
       <Route path="/order/:orderNo" element={<MyOrderDetail />} />
       <Route path="/review/write/:productNo" element={<ReviewWritePage />} />
+      <Route path="/review/edit/:no" element={<ReviewEditPage />} />
       <Route path="/update/:userNo/*" element={<UserUpdate />} />
     </Routes>
   );
