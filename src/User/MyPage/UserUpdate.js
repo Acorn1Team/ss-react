@@ -74,11 +74,13 @@ const UserUpdate = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = sessionStorage.getItem("token");
-        if (!token) {
-          window.location.href = "/loginForm";
-          return;
-        }
+        // const token = sessionStorage.getItem("token");
+        // const tokenK = sessionStorage.getItem("token_k");
+        // const tokenN = sessionStorage.getItem("token_n");
+        // if (!token && !tokenK && !tokenN) {
+        //   window.location.href = "/user/auth/login";
+        //   return;
+        // }
         const response = await axios.get(`/user/update/${userNo}`);
         setUser(response.data);
         setNameNull(response.data.name === null);
