@@ -275,6 +275,7 @@ function HeaderForm() {
   };
 
   const navigate = useNavigate();
+  const token = sessionStorage.getItem("token");
   const userNo = sessionStorage.getItem("id"); // 로그인 정보라고 가정
   // const profilePic = userNo ? `userProfilePic경로` : profileImage;
 

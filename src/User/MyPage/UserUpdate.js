@@ -74,8 +74,8 @@ const UserUpdate = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const id = sessionStorage.getItem("id");
-        if (!id) {
+        const token = sessionStorage.getItem("token");
+        if (!token) {
           window.location.href = "/loginForm";
           return;
         }
