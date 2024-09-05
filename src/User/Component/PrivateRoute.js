@@ -70,7 +70,33 @@ const useUserAuthenticated = () => {
             setLoading(false); // 로딩 상태 해제
           });
       } else if (tokenN) {
-        // tokenN 로직
+        axios
+          .post("/api/naver/user-info", { accessToken: tokenN }) // 백엔드로 액세스 토큰 전송
+          .then((res) => {
+            const userInfo = res.data; // 백엔드에서 받은 데이터
+            console.log("Naver user info:", userInfo);
+
+            const userNo = sessionStorage.getItem("id");
+
+            // userInfo.result가 true인 경우 인증 성공
+            if (
+              userInfo &&
+              userInfo.result &&
+              String(userInfo.userNo) === String(userNo)
+            ) {
+              setAuthenticated(true); // 인증 성공
+              setIsAdmin(userNo === "1"); // 관리자 여부 확인
+            } else {
+              setAuthenticated(false); // 인증 실패
+            }
+          })
+          .catch((err) => {
+            console.error("Error fetching Naver user info from backend:", err);
+            setAuthenticated(false); // 인증 실패 시 처리
+          })
+          .finally(() => {
+            setLoading(false); // 로딩 상태 해제
+          });
       }
     } else {
       setAuthenticated(false);
