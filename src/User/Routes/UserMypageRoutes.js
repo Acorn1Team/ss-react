@@ -20,7 +20,7 @@ export default function UserMypageRoutes() {
       <Route path="/coupon" element={<Coupon />} />
       <Route path="/order" element={<MyOrder />} />
       <Route path="/order/:orderNo" element={<MyOrderDetail />} />
-      <Route path="/review/write/:productNo" element={<ReviewWritePage />} />
+      <Route path="/review/write/:orderProductNo" element={<ReviewWritePage />} />
       <Route path="/review/edit/:no" element={<ReviewEditPage />} />
       <Route path="/update/:userNo/*" element={<UserUpdate />} />
     </Routes>

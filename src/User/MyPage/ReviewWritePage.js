@@ -4,7 +4,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 
 export default function ReviewWritePage() {
-  const { productNo } = useParams(); // URL에서 productNo 추출
+  const { orderProductNo } = useParams(); // URL에서 productNo 추출
   const location = useLocation(); // location.state에서 다른 데이터를 추출
   const { userNo } = location.state; // orderNo 제거
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
@@ -19,7 +19,7 @@ export default function ReviewWritePage() {
 
     // 리뷰 데이터를 객체로 생성
     const reviewDto = {
-      productNo,
+      orderProductNo,
       userNo,
       contents,
       score,
@@ -34,7 +34,7 @@ export default function ReviewWritePage() {
     }
 
     axios
-      .post(`/list/review/${productNo}`, formData, {
+      .post(`/list/review/${orderProductNo}`, formData, { // 서버에서 주문상품번호를 가져와야함
         headers: {
           "Content-Type": "multipart/form-data", // FormData로 전송하기 위한 헤더 설정
         },
@@ -52,7 +52,7 @@ export default function ReviewWritePage() {
     <div>
       <h2>리뷰 작성하기</h2>
       <div>
-        상품 번호: {productNo}
+        상품 번호: {orderProductNo}
         <br />
         사용자 번호: {userNo}
       </div>

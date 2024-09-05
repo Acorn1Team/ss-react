@@ -44,9 +44,9 @@ export default function MyOrderDetail() {
     getOrderList();
   }, [orderNo]);
 
-  const goToReviewPage = (productNo) => {
+  const goToReviewPage = (orderProductNo) => { // 리뷰 갈 때 주문상품번호를 가져감
     // 리뷰 데이터를 서버로 전송
-    navigate(`/user/mypage/review/write/${productNo}`, {
+    navigate(`/user/mypage/review/write/${orderProductNo}`, {
       state: { orderNo: orderNo, userNo: userNo },
     });
   };
