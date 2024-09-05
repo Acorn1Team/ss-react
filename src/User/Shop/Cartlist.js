@@ -10,8 +10,9 @@ export default function CartList() {
   const navigate = useNavigate();
 
   const [selectedItems, setSelectedItems] = useState([]);
-
+  // 사용자가 선택한 장바구니 항목을 저장
   const [cartProductInfo, setCartProductInfo] = useState([]);
+  // 장바구니에 담긴 제품 정보 및 재고 상태를 저장
 
   const fetchStockInfo = async () => {
     try {
