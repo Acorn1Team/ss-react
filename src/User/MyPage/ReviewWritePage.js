@@ -4,7 +4,12 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 
 export default function ReviewWritePage() {
-  const { orderProductNo } = useParams(); // URL에서 productNo 추출
+  const { orderProductNo } = useParams(); // URL에서 orderProductNo 추출
+
+  // 디버깅: orderProductNo 확인
+ // console.log("orderProductNo:", orderProductNo); // 이 값을 확인하여 제대로 추출되는지 확인
+
+  
   const location = useLocation(); // location.state에서 다른 데이터를 추출
   const { userNo } = location.state; // orderNo 제거
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
@@ -32,6 +37,10 @@ export default function ReviewWritePage() {
     if (pic) {
       formData.append("pic", pic); // 이미지 파일 추가
     }
+
+      // 디버깅을 위한 로그 출력
+  // console.log("Submitting reviewDto:", reviewDto);
+  // console.log("Submitting pic:", pic);
 
     axios
       .post(`/list/review/${orderProductNo}`, formData, { // 서버에서 주문상품번호를 가져와야함

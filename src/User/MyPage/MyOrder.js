@@ -66,7 +66,29 @@ export default function MyOrder() {
     setShowPopup(true);
   };
 
-  const orderStateChange = () => {};
+   // 주문 상태 변경 함수 (주문 취소 처리)
+   const orderStateChange = () => {
+    if (selectedOrder && selectedOrder.state === "주문접수") {
+      // 주문 취소 요청 (DELETE)
+      axios
+        .delete(`/cancel/${selectedOrder.no}`)
+        .then((res) => {
+          if (res.data.success) {
+            // 성공적으로 취소된 경우 주문 상태 업데이트
+            setOrderList((prevOrderList) =>
+              prevOrderList.map((order) =>
+                order.no === selectedOrder.no
+                  ? { ...order, state: "주문취소" }
+                  : order
+              )
+            );
+          }
+        })
+        .catch((err) => {
+          console.log("주문 취소 중 오류 발생:", err);
+        });
+    }
+  };
 
   // 팝업 닫기 함수
   const handlePopupClose = () => {
@@ -97,13 +119,15 @@ export default function MyOrder() {
                 {ol.price.toLocaleString()}원
               </span>
             </Link>
+
             <span className={styles.orderState}>{ol.state}</span>
             {/* 상태에 따른 버튼 표시 */}
             {ol.state === "주문접수" && (
               <button
                 onClick={() => handlePopupOpen(ol, "주문을 취소하시겠습니까?")}
+                disabled={ol.state === "주문취소"} // 취소된 주문은 비활성화
               >
-                주문 취소하기
+                {ol.state === "주문취소" ? "취소됨" : "주문 취소하기"}
               </button>
             )}
             {["배송중", "배송완료"].includes(ol.state) && (
