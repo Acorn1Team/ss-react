@@ -123,3 +123,61 @@ button[type="submit"] {
   font-size: 120%;
   margin-bottom: 5px;
 }
+
+.modal {
+  /* 모달 창의 내용 부분 */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 500px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  outline: none; /* 포커스 시 기본 윤곽선 제거 */
+}
+
+.overlay {
+  /* 모달 창의 배경 부분 */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* 반투명 검정 배경 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 회원탈퇴 모달*/
+.modal_buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.modal_buttons button {
+  margin-left: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #007bff; /* 기본 버튼 색상 */
+  color: #fff;
+  font-size: 16px;
+}
+
+.modal_buttons button:hover {
+  background-color: #0056b3; /* 버튼 호버 색상 */
+}
+
+.modal_buttons button:nth-child(2) {
+  background-color: darkgray;
+}
+
+.modal_buttons button:nth-child(2):hover {
+  background-color: gray;
+}

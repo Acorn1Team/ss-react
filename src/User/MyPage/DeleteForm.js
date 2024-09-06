@@ -2,13 +2,52 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "../Style/UserUpdate.module.css";
 import axios from "axios";
+import Modal from "react-modal";
 
 const DeleteForm = () => {
   const { userNo } = useParams();
   const [pass, setPass] = useState("");
   const [errors, setErrors] = useState({});
-  const [showModal, setShowModal] = useState(false); // 모달 창 상태 관리
   const nv = useNavigate();
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
+  const passwordCheck = async () => {
+    try {
+      const response = await axios.post(`/user/passwordCheck`, {
+        userNo,
+        pwd: pass,
+      });
+
+      // 서버에서 응답받은 데이터가 result를 포함하고 있는지 확인
+      if (response.data.result) {
+        openModal();
+      } else {
+        setErrors({
+          message: response.data.message,
+        });
+      }
+    } catch (error) {
+      // error.response가 있는지 확인하고, 상태 코드와 메시지를 로깅
+      if (error.response) {
+        setErrors({
+          message:
+            error.response.data.message ||
+            "비밀번호 확인 중 오류가 발생했습니다.",
+        });
+      } else {
+        console.error("비밀번호 확인 중 오류 발생 : ", error.message);
+        setErrors({ message: "비밀번호 확인 중 오류가 발생했습니다." });
+      }
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,7 +65,10 @@ const DeleteForm = () => {
       });
 
       if (response.data.result) {
-        setShowModal(true); // 탈퇴 확인 모달 창 표시
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("id");
+        alert("탈퇴가 완료되었습니다.");
+        nv("/user");
       } else {
         if (response.data.message) {
           setErrors({ message: response.data.message }); // 에러 메시지 설정
@@ -87,25 +129,6 @@ const DeleteForm = () => {
     setPass(e.target.value);
   };
 
-  const handleModalConfirm = async () => {
-    try {
-      setShowModal(false); // 모달 창 닫기
-      const response = await axios.delete(`/user/mypage/delete`, {
-        data: { userNo },
-      });
-
-      if (response.status === 200) {
-        nv("/user"); // 성공적으로 삭제되면 홈으로 이동
-      }
-    } catch (error) {
-      console.error("삭제 중 오류 발생:", error);
-    }
-  };
-
-  const handleModalCancel = () => {
-    setShowModal(false); // 모달 창 닫기
-  };
-
   return (
     <div className={styles.container}>
       <div className={styles.user_input}>
@@ -122,7 +145,7 @@ const DeleteForm = () => {
       </div>
       <form onSubmit={handleSubmit}>
         <div className={styles.buttons}>
-          <button type="button" onClick={() => setShowModal(true)}>
+          <button type="button" onClick={passwordCheck}>
             회원 탈퇴
           </button>
           <button
@@ -136,17 +159,23 @@ const DeleteForm = () => {
       </form>
 
       {/* 모달 창 */}
-      {showModal && (
-        <div className={styles.modal}>
-          <div className={styles.modal_content}>
-            <p>정말 탈퇴하시겠습니까?</p>
-            <div className={styles.modal_buttons}>
-              <button onClick={handleModalConfirm}>확인</button>
-              <button onClick={handleModalCancel}>취소</button>
-            </div>
-          </div>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="회원 탈퇴 확인"
+        className={styles.modal}
+        overlayClassName={styles.overlay}
+      >
+        <h2>회원탈퇴</h2>
+        <p>
+          회원 탈퇴 시 계정 정보 및 보유중인 포인트와 쿠폰은 삭제되어 복구가
+          불가해요. 정말로 탈퇴하시겠어요?
+        </p>
+        <div className={styles.modal_buttons}>
+          <button onClick={handleDelete}>떠날래요</button>
+          <button onClick={closeModal}>더 써볼래요</button>
         </div>
-      )}
+      </Modal>
     </div>
   );
 };

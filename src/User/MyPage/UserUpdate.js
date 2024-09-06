@@ -181,6 +181,32 @@ const UserUpdate = () => {
     window.history.back();
   };
 
+  const handleDelete = async () => {
+    try {
+      console.log("Sending request with userNo:", userNo);
+      const response = await axios.get(
+        "http://localhost:8080/user/passwordCheck",
+        {
+          params: { no: userNo },
+        }
+      );
+
+      console.log("Server response:", response.data); // 서버 응답 확인
+
+      if (response.status === 200) {
+        // 주문이 없는 경우 또는 주문완료만 있는 경우
+        alert("회원 탈퇴 페이지로 이동합니다.");
+        nv(`/user/mypage/delete/${userNo}`);
+      } else if (response.status === 403) {
+        // 주문 처리 중인 상품이 있는 경우
+        alert("주문 처리 중인 상품이 있어 회원 탈퇴를 할 수 없습니다.");
+      }
+    } catch (error) {
+      console.error("회원탈퇴 요청 실패:", error);
+      alert("회원 탈퇴 요청에 실패했습니다.");
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUser((prevUser) => ({
@@ -405,11 +431,14 @@ const UserUpdate = () => {
           <button type="button" onClick={handleCancel}>
             취소
           </button>
-          <Link to={`/user/mypage/delete/${userNo}`}>
-            <button type="button" style={{ backgroundColor: "darkgray" }}>
-              회원 탈퇴
-            </button>
-          </Link>
+          {/* <Link to={`/user/mypage/delete/${userNo}`}> */}
+          <button
+            type="button"
+            style={{ backgroundColor: "darkgray" }}
+            onClick={handleDelete}
+          >
+            회원 탈퇴
+          </button>
         </div>
       </form>
     </div>
