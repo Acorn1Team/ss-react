@@ -27,7 +27,7 @@ export default function ProductManage() {
     endDate = ""
   ) => {
     try {
-      const response = await axios.get('/admin/product', {
+      const response = await axios.get("/admin/product", {
         params: {
           page,
           size,
@@ -293,33 +293,35 @@ export default function ProductManage() {
                         </ul>
                       </td>
                     </tr>
-                    <tr>
-                      <td colSpan="13" style={{ textAlign: "center" }}>
-                        <button
-                          onClick={() =>
-                            handleReviewPageChange(item.no, "prev")
-                          }
-                          disabled={currentReviewPage[item.no] === 0}
-                        >
-                          이전
-                        </button>
-                        <span style={{ margin: "0 10px" }}>
-                          {currentReviewPage[item.no] + 1} /{" "}
-                          {reviewPages[item.no]}
-                        </span>
-                        <button
-                          onClick={() =>
-                            handleReviewPageChange(item.no, "next")
-                          }
-                          disabled={
-                            currentReviewPage[item.no] + 1 >=
-                            reviewPages[item.no]
-                          }
-                        >
-                          다음
-                        </button>
-                      </td>
-                    </tr>
+                    {reviewPages > 1 && (
+                      <tr>
+                        <td colSpan="13" style={{ textAlign: "center" }}>
+                          <button
+                            onClick={() =>
+                              handleReviewPageChange(item.no, "prev")
+                            }
+                            disabled={currentReviewPage[item.no] === 0}
+                          >
+                            이전
+                          </button>
+                          <span style={{ margin: "0 10px" }}>
+                            {currentReviewPage[item.no] + 1} /{" "}
+                            {reviewPages[item.no]}
+                          </span>
+                          <button
+                            onClick={() =>
+                              handleReviewPageChange(item.no, "next")
+                            }
+                            disabled={
+                              currentReviewPage[item.no] + 1 >=
+                              reviewPages[item.no]
+                            }
+                          >
+                            다음
+                          </button>
+                        </td>
+                      </tr>
+                    )}
                   </>
                 )}
               </>
@@ -333,7 +335,6 @@ export default function ProductManage() {
           )}
         </tbody>
       </table>
-
 
       <div style={{ marginTop: "10px" }}>
         <button
@@ -351,8 +352,13 @@ export default function ProductManage() {
         >
           다음
         </button>
-      </div><br/>
-      <button onClick={() => navigate("/admin/product/insert")}>상품 추가하기</button><br/><br/>
+      </div>
+      <br />
+      <button onClick={() => navigate("/admin/product/insert")}>
+        상품 추가하기
+      </button>
+      <br />
+      <br />
       <div style={{ marginBottom: "10px" }}>
         <label style={{ display: "inline-block", marginRight: "10px" }}>
           검색 :
@@ -368,7 +374,7 @@ export default function ProductManage() {
         </label>
 
         {renderSearchField()}
-        
+
         <button
           onClick={handleSearch}
           style={{ padding: "5px 10px", marginRight: "10px" }}

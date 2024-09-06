@@ -116,6 +116,7 @@ export default function ProductUpdateForm() {
         <select name="category" value={state.category} onChange={handleChange}>
           <option value="상의">상의</option>
           <option value="하의">하의</option>
+          <option value="신발">신발</option>
           <option value="기타">기타</option>
         </select>
       </div>
