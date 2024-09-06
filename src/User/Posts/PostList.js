@@ -150,20 +150,23 @@ export default function PostList() {
         )}
       </div>
 
-      <div className="pagination-buttons">
-        <button onClick={handlePreviousPage} disabled={currentPage === 0}>
-          이전
-        </button>
-        <span>
-          {totalPages === 0 ? 0 : currentPage + 1} / {totalPages}
-        </span>
-        <button
-          onClick={handleNextPage}
-          disabled={currentPage + 1 >= totalPages}
-        >
-          다음
-        </button>
-      </div>
+      {/* 게시글이 있을 때만 페이지네이션 표시 */}
+      {followPost.length > 0 && (
+        <div className="pagination-buttons">
+          <button onClick={handlePreviousPage} disabled={currentPage === 0}>
+            이전
+          </button>
+          <span>
+            {totalPages === 0 ? 0 : currentPage + 1} / {totalPages}
+          </span>
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage + 1 >= totalPages}
+          >
+            다음
+          </button>
+        </div>
+      )}
     </div>
   );
 }
