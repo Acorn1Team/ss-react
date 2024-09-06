@@ -108,6 +108,7 @@ const ProductReviews = () => {
       )}
 
       {/* 페이지네이션 버튼 */}
+      {totalPages > 1 && (
       <div style={{ marginTop: "20px" }}>
         <button onClick={goToPreviousPage} disabled={currentPage === 0}>
           이전
@@ -119,6 +120,7 @@ const ProductReviews = () => {
           다음
         </button>
       </div>
+      )}
     </>
   );
 };
