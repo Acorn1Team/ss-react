@@ -90,30 +90,37 @@ export default function ActorEdit() {
 
     return (
         <>
-            <h2>[{show.title}] 등장인물</h2>
-            <div style={{ textAlign: 'center'}}>
-                <img src={show.pic} alt={`${show.title} 이미지`} style={{ width: '200px', height: 'auto' }} />
-            </div>
-            {actors.length > 0 && (
-            <div>
-                <h4>등록된 배우들</h4>
-                <div style={{ display: 'flex', flexWrap: 'wrap'}}>
-                {actors.map((actorData, index) => (
-                    <div key={index}>
-                        <img
-                            src={actorData.pic}
-                            alt={`${actorData.character} 이미지`}
-                            style={{ display: 'block', margin: '0 auto 10px' }}
-                        />
-                        {actorData.actor} ({actorData.character})<br/>
-                        <button onClick={() => navigate(`/admin/fashion/character/${actorData.no}`, { state: actorData })}>스타일 편집</button>
-                        <button onClick={() => deleteCharacter(actorData.no)}>배역 제거</button>&nbsp;
-                    </div>
-                ))}
+            <h2>[{show.title}]</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            {/* 왼쪽: 작품 정보 */}
+            <div style={{ width: '20%' }}>
+                <div style={{ textAlign: 'center' }}>
+                    <img src={show.pic} alt={`${show.title} 이미지`} style={{ width: '70%', height: 'auto' }} />
                 </div>
-                <hr />
             </div>
+
+            {/* 오른쪽: 등록된 배우들 */}
+            {actors.length > 0 && (
+                <div style={{ width: '80%' }}>
+                    <h4>등록된 배우들</h4>
+                    <div style={{ display: 'flex', flexWrap: 'wrap'}}>
+                        {actors.map((actorData, index) => (
+                            <div key={index} style={{ textAlign: 'center'}}>
+                                <img
+                                    src={actorData.pic}
+                                    alt={`${actorData.character} 이미지`}
+                                    style={{ height: '220px', display: 'block', margin: '0 auto' }}
+                                />
+                                {actorData.actor} ({actorData.character})<br />
+                                <button onClick={() => navigate(`/admin/fashion/character/${actorData.no}`, { state: actorData })}>스타일 편집</button><br />
+                                <button onClick={() => deleteCharacter(actorData.no)}>배역 제거</button>&nbsp;
+                            </div>
+                        ))}
+                    </div>
+                </div>
             )}
+        </div>
+            <hr />
             {scrapedDatas.length > 0 ? (
             <div>
                 <h4>등록되지 않은 배우들</h4>
@@ -124,9 +131,9 @@ export default function ActorEdit() {
                         <div key={index} isRegistered={isRegistered}>
                             {!isRegistered && (
                             <>
-                                <img src={data.pic} alt={`${data.character} 이미지`} style={{ display: 'block', margin: '0 auto 10px' }}/>
-                                {data.actor} ({data.character}) &nbsp;
-                                <button onClick={() => addCharacter(data)}>배역 등록</button>
+                                <img src={data.pic} alt={`${data.character} 이미지`} style={{ height:'220px', display: 'block'}}/>
+                                <button onClick={() => addCharacter(data)}>배역 등록</button><br/>
+                                {data.actor}<br/>({data.character})
                             </>
                             )}
                         </div>
