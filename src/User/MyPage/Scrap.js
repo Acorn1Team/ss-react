@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import styles from "../Style/Coupon.module.css";
+import styles from "../Style/Scrap.module.css";
 
 export default function Scrap() {
   // 스크랩 리스트 정보 저장용
@@ -17,7 +17,7 @@ export default function Scrap() {
   const [totalPages, setTotalPages] = useState(1);
 
   // 로그인 정보라고 가정
-  const no = 3;
+  const no = sessionStorage.getItem("id");
 
   // 스크랩한 정보 가져오기
   const getScrapList = () => {
@@ -64,37 +64,44 @@ export default function Scrap() {
   }, [currentPage]);
 
   return (
-    <div className={styles["scrap-container"]}>
-      <h2>마이스크랩</h2>
-      {scrapList.length > 1 ? (
-        scrapList.map((sl) => (
-          <div key={sl.no} className={styles["scrap-item"]}>
-            <Link to={`/user/main/sub/${sl.no}`}>
-              <img src={sl.pic} alt={sl.name} />
-              {sl.name}
-            </Link>
-            <button onClick={() => handleScrapCancel(sl.no)}>
-              스크랩 취소
-            </button>
-          </div>
-        ))
+    <div className={styles.scrapContainer}>
+      <h2 className={styles.title}>마이스크랩</h2>
+      {scrapList.length > 0 ? (
+        <div className={styles.scrapGrid}>
+          {scrapList.map((sl) => (
+            <div key={sl.no} className={styles.scrapItem}>
+              <Link to={`/user/main/sub/${sl.no}`} className={styles.scrapLink}>
+                <img src={sl.pic} alt={sl.name} className={styles.scrapImage} />
+                {sl.name}
+              </Link>
+              <button
+                onClick={() => handleScrapCancel(sl.no)}
+                className={styles.scrapButton}
+              >
+                스크랩 취소
+              </button>
+            </div>
+          ))}
+        </div>
       ) : (
-        <p>스크랩한 배역이 없습니다.</p>
+        <p className={styles.emptyMessage}>스크랩한 배역이 없습니다.</p>
       )}
       {totalPages > 1 && (
         <div className={styles.pagination}>
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 0}
+            className={styles.paginationButton}
           >
             이전
           </button>
-          <span>
+          <span className={styles.paginationText}>
             {currentPage + 1} / {totalPages}
           </span>
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage + 1 >= totalPages}
+            className={styles.paginationButton}
           >
             다음
           </button>
