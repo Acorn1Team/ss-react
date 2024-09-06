@@ -179,6 +179,7 @@ export default function OrderManage() {
       </table>
 
       {/* 페이지네이션 */}
+      {totalPages > 1 && (
       <div style={{ marginTop: "10px" }}>
         <button
           onClick={() => handlePageChange(currentPage - 1)}
@@ -195,7 +196,8 @@ export default function OrderManage() {
         >
           다음
         </button>
-      </div><br/>
+      </div>
+      )}<br/>
 
       <div style={{ marginBottom: "10px" }}>
         <label style={{ display: "inline-block", marginRight: "10px" }}>

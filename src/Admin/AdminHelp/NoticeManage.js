@@ -119,6 +119,7 @@ export default function NoticeManage() {
       </table>
 
       {/* 페이지네이션 */}
+      {totalPages > 1 && (
       <div style={{ marginTop: "10px" }}>
         <button
           onClick={() => handlePageChange(currentPage - 1)}
@@ -136,6 +137,7 @@ export default function NoticeManage() {
           다음
         </button>
       </div>
+      )}
     </>
   );
 }

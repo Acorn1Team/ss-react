@@ -272,6 +272,7 @@ export default function CommunityManage() {
         </button>
       </div>
       {renderContent()}
+      {totalPages > 1 && (
       <div>
         <button
           disabled={currentPage === 0}
@@ -289,6 +290,7 @@ export default function CommunityManage() {
           다음 페이지
         </button>
       </div>
+      )}
     </div>
   );
 }
