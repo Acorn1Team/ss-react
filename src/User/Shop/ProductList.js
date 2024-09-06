@@ -80,9 +80,7 @@ export default function ProductList() {
       case "rating":
         sorted.sort((a, b) => b.score - a.score); // 평점순
         break;
-      case "reviews":
-        sorted.sort((a, b) => b.reviews - a.reviews); // 리뷰 많은 순
-        break;
+
       default:
         break;
     }
@@ -126,7 +124,6 @@ export default function ProductList() {
             <option value="priceHigh">가격 높은 순</option>
             <option value="priceLow">가격 낮은 순</option>
             <option value="rating">평점순</option>
-            <option value="reviews">리뷰 많은 순</option>
           </select>
         </label>
         <label className={styles.excludeSoldOut}>
