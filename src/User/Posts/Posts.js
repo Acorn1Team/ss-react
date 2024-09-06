@@ -4,10 +4,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import styles from "../Style/PostDetail.module.css"; // CSS 모듈 임포트
 import modalStyles from "../Style/PostsModal.module.css"; // 모달 CSS 임포트
 import KakaoShareButton from "../Component/KaKaoShareButton";
-import { IoIosHeart } from "react-icons/io";
-import { IoIosHeartEmpty } from "react-icons/io";
 import { FaReply } from "react-icons/fa";
-
+import "./Posts.css";
 export default function Posts() {
   const { postNo } = useParams();
   const navigator = useNavigate();
@@ -569,13 +567,29 @@ export default function Posts() {
             )}
             <div>{postData.content}</div>
             <div className={styles.actionButtons}>
-              <span onClick={() => likeProcHandler()}>
-                {postLikeStatus ? (
-                  <IoIosHeart size={"25"} />
-                ) : (
-                  <IoIosHeartEmpty size={"25"} />
-                )}
-              </span>
+              {/* 좋아요 버튼을 UI로 교체 */}
+              <label class="ui-bookmark">
+                <input
+                  type="checkbox"
+                  checked={postLikeStatus}
+                  onChange={() => likeProcHandler()}
+                />
+                <div class="bookmark">
+                  <svg
+                    viewBox="0 0 16 16"
+                    style={{ marginTop: "4px" }}
+                    class="bi bi-heart-fill"
+                    height="25"
+                    width="25"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+                      fill-rule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+              </label>
               좋아요 {postLike}개
             </div>
             {postData.productNo && (
@@ -612,11 +626,28 @@ export default function Posts() {
                           <FaReply size={"25"} />
                         </span>
                         <span onClick={() => likeProcHandler(pc.no)}>
-                          {commentLikeStatus[pc.no] ? (
-                            <IoIosHeart size={"25"} />
-                          ) : (
-                            <IoIosHeartEmpty size={"25"} />
-                          )}
+                          <label class="ui-bookmark">
+                            <input
+                              type="checkbox"
+                              checked={commentLikeStatus[pc.no]}
+                              onChange={() => likeProcHandler(pc.no)}
+                            />
+                            <div class="bookmark">
+                              <svg
+                                viewBox="0 0 16 16"
+                                style={{ marginTop: "4px" }}
+                                class="bi bi-heart-fill"
+                                height="25"
+                                width="25"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+                                  fill-rule="evenodd"
+                                ></path>
+                              </svg>
+                            </div>
+                          </label>
                         </span>
                         좋아요 {commentLike[pc.no]}개
                       </span>
@@ -642,11 +673,28 @@ export default function Posts() {
                             >
                               답글
                             </button>
-                            <button onClick={() => likeProcHandler(reply.no)}>
-                              {commentLikeStatus[reply.no]
-                                ? "좋아요 취소"
-                                : "좋아요"}
-                            </button>
+                            <label class="ui-bookmark">
+                              <input
+                                type="checkbox"
+                                checked={commentLikeStatus[reply.no]}
+                                onChange={() => likeProcHandler(reply.no)}
+                              />
+                              <div class="bookmark">
+                                <svg
+                                  viewBox="0 0 16 16"
+                                  style={{ marginTop: "4px" }}
+                                  class="bi bi-heart-fill"
+                                  height="25"
+                                  width="25"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+                                    fill-rule="evenodd"
+                                  ></path>
+                                </svg>
+                              </div>
+                            </label>
                             좋아요 {commentLike[reply.no]}개
                             {reply.userNo === userNo && (
                               <button onClick={() => deleteComment(reply.no)}>
