@@ -65,15 +65,22 @@ export default function Scrap() {
 
   return (
     <div className={styles["scrap-container"]}>
-      {scrapList.map((sl) => (
-        <div key={sl.no} className={styles["scrap-item"]}>
-          <Link to={`/user/main/sub/${sl.no}`}>
-            <img src={sl.pic} alt={sl.name} />
-            {sl.name}
-          </Link>
-          <button onClick={() => handleScrapCancel(sl.no)}>스크랩 취소</button>
-        </div>
-      ))}
+      <h2>마이스크랩</h2>
+      {scrapList.length > 1 ? (
+        scrapList.map((sl) => (
+          <div key={sl.no} className={styles["scrap-item"]}>
+            <Link to={`/user/main/sub/${sl.no}`}>
+              <img src={sl.pic} alt={sl.name} />
+              {sl.name}
+            </Link>
+            <button onClick={() => handleScrapCancel(sl.no)}>
+              스크랩 취소
+            </button>
+          </div>
+        ))
+      ) : (
+        <p>스크랩한 배역이 없습니다.</p>
+      )}
       {totalPages > 1 && (
         <div className={styles.pagination}>
           <button
