@@ -53,7 +53,7 @@ const Register = () => {
 
   const closeModal = (mc) => {
     setModalIsOpen(false);
-    if (!modalContent.includes("가입")) {
+    if (modalContent.includes("가입")) {
       nv("/user/main");
     }
   };
