@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
-import styles from "../Style/ProductList.module.css";
+import styles from "../Style/ProductList.module.css"; // 스타일 임포트
+import "./ProductListCheckbox.css"; // 체크박스 스타일 임포트
 
 export default function ProductList() {
   const { category } = useParams();
@@ -80,7 +81,6 @@ export default function ProductList() {
       case "rating":
         sorted.sort((a, b) => b.score - a.score); // 평점순
         break;
-
       default:
         break;
     }
@@ -126,14 +126,20 @@ export default function ProductList() {
             <option value="rating">평점순</option>
           </select>
         </label>
-        <label className={styles.excludeSoldOut}>
-          <input
-            type="checkbox"
-            checked={excludeSoldOut}
-            onChange={handleExcludeSoldOutChange}
-          />
-          품절 상품 제외
-        </label>
+        <div className={styles.excludeSoldOutContainer}>
+          <div className="cntr">
+            {/* Uiverse 체크박스 스타일 적용 */}
+            <input
+              className="hidden-xs-up"
+              id="cbx"
+              type="checkbox"
+              checked={excludeSoldOut}
+              onChange={handleExcludeSoldOutChange}
+            />
+            <label className="cbx" htmlFor="cbx"></label>
+          </div>
+          <label className={styles.excludeSoldOutLabel}>품절 상품 제외</label>
+        </div>
       </div>
 
       <div className={styles.categoryLinks}>
