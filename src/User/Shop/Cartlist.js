@@ -14,6 +14,9 @@ export default function CartList() {
   const [cartProductInfo, setCartProductInfo] = useState([]);
   // 장바구니에 담긴 제품 정보 및 재고 상태를 저장
 
+  // 로그인 정보라고 가정함
+  //const userNo = sessionStorage.getItem("id");
+
   const fetchStockInfo = async () => {
     try {
       const productNos = cartItems.map((ci) => ci.product.no);
@@ -98,6 +101,7 @@ export default function CartList() {
           product: cartItems.find((item) => item.product.no === productNo)
             .product,
           quantity: 1,
+         // userId: userNo, // userId를 payload에 추가
         },
       });
     }
