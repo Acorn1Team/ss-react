@@ -9,16 +9,23 @@ export default function ShowSearch() {
     const [filteredItems, setFilteredItems] = useState([]);
     const [showDropdown, setShowDropdown] = useState(false);  
     const [show, setShow] = useState({ title: "", pic: "" });
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false); // 작품 정보 웹 스크래핑 성공 시
+    const [isSecondModalOpen, setIsSecondModalOpen] = useState(false); // 작품 정보 웹 스크래핑 실패 시
     const navigate = useNavigate();
+    const [title, setTitle] = useState('');
+    const [file, setFile] = useState(null);
 
     const scrapShow = () => {
         setShow({no: "", title: "", pic: "" }); // 선택한 작품 초기화
         axios
           .get(`/admin/scrap/show/${inputValue}`)
           .then((response) => {
-            setShow(response.data);
-            setIsModalOpen(true); // 모달 열기
+            if(response.data.pic!==null){
+              setShow(response.data);
+              setIsModalOpen(true);
+            } else {
+              setIsSecondModalOpen(true);
+            }
           })
           .catch((error) => {
             console.log(error);
@@ -68,6 +75,25 @@ export default function ShowSearch() {
   const handleBlur = () => {
     setTimeout(() => setShowDropdown(false), 100);
   };
+
+  // 직접 추가 시
+  const addShowDIY = () => {
+    const showForm = new FormData();
+    showForm.append('title', title);
+    showForm.append('file', file);
+
+    axios.post('/admin/show/diy', showForm, {
+        headers: { 'Content-Type': 'multipart/form-data'}
+    })
+    .then((response) => {
+        const showNo = response.data;
+        setShow({ ...show, no: showNo });
+        navigate(`/admin/fashion/show/${showNo}`);
+    })
+    .catch((error) => {
+        console.log(error);
+    }); 
+  }
 
   return (
     <>
@@ -121,6 +147,35 @@ export default function ShowSearch() {
         <img src={show.pic} alt={`${show.title} 이미지`} style={{ maxWidth: "100%", height: "auto" }} />
         <button onClick={addShow}>확인</button>
         <button onClick={() => setIsModalOpen(false)}>닫기</button>
+      </Modal>
+
+      <Modal
+        isOpen={isSecondModalOpen}
+        onRequestClose={() => setIsSecondModalOpen(false)}
+        contentLabel="작품 정보 없을 때"
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          },
+          content: {
+            background: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            textAlign: "center",
+            maxWidth: "600px",
+            margin: "auto",
+          },
+        }}
+      >
+        <h1>작품 [{inputValue}]의 정보 찾기 실패 🥲</h1>
+        <h3>직접 추가하거나, 검색을 다시 시도하세요.</h3><hr/>
+        <h2>직접 추가하기</h2>
+        <label>작품명:</label>
+        <input onChange={(e)=> setTitle(e.target.value)} type="text" name="title" placeholder="작품명 입력하기" /><br/>
+        <label>이미지:</label>
+        <input onChange={(e)=> setFile(e.target.files[0])} type="file" name="pic" accept="image/*" /><br/><br/>
+        <button onClick={addShowDIY}>추가</button><br/><hr/>
+        <button onClick={() => setIsSecondModalOpen(false)}>다시 검색할게요</button>
       </Modal>
     </>
   );

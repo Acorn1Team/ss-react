@@ -2,16 +2,12 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-export default function ActorEdit() {
+export default function ActorEditDiy() {
     const { no } = useParams(); // 스타일 PK
     const [show, setShow] = useState({ title: '', pic: '' });
     const [actors, setActors] = useState([]);
     const [scrapedDatas, setScrapedData] = useState([]);
     const navigate = useNavigate();
-
-    const [actorName, setActorName] = useState('');
-    const [characterName, setCharacterName] = useState('');
-    const [file, setFile] = useState(null);
 
     const scrapActors = (title) => {
         axios
@@ -61,24 +57,6 @@ export default function ActorEdit() {
             });
     }
 
-    // 직접 추가 시
-    const addCharacterDIY = () => {
-        const form = new FormData();
-        form.append('actorName', actorName);
-        form.append('characterName', characterName);
-        form.append('file', file);
-
-        axios.post(`/admin/show/${show.no}/character/diy`, form, {
-            headers: { 'Content-Type': 'multipart/form-data'}
-        })
-        .then((response) => { // 추가된 캐릭터 Dto 반환
-            navigate(`/admin/fashion/character/${response.data.no}`, { state: response.data }); // 배역 정보 들고 감
-        })
-        .catch((error) => {
-            console.log(error);
-        }); 
-    }
-
     const deleteCharacter = (no) => {
         axios
             .delete(`/admin/character/${no}`)
@@ -94,29 +72,23 @@ export default function ActorEdit() {
             <div style={{ textAlign: 'center'}}>
                 <img src={show.pic} alt={`${show.title} 이미지`} style={{ width: '200px', height: 'auto' }} />
             </div>
-            {actors.length > 0 && (
             <div>
                 <h4>등록된 배우들</h4>
                 <div style={{ display: 'flex', flexWrap: 'wrap'}}>
-                {actors.map((actorData, index) => (
-                    <div key={index}>
-                        <img
-                            src={actorData.pic}
-                            alt={`${actorData.character} 이미지`}
-                            style={{ display: 'block', margin: '0 auto 10px' }}
-                        />
-                        {actorData.actor} ({actorData.character})<br/>
-                        <button onClick={() => navigate(`/admin/fashion/character/${actorData.no}`, { state: actorData })}>스타일 편집</button>
-                        <button onClick={() => deleteCharacter(actorData.no)}>배역 제거</button>&nbsp;
-                    </div>
-                ))}
-                </div>
-                <hr />
-            </div>
-            )}
-            {scrapedDatas.length > 0 ? (
-            <div>
-                <h4>등록되지 않은 배우들</h4>
+                    {actors.map((actorData, index) => (
+                        <div key={index}>
+                            <img
+                                src={actorData.pic}
+                                alt={`${actorData.character} 이미지`}
+                                style={{ display: 'block', margin: '0 auto 10px' }}
+                            />
+                            {actorData.actor} ({actorData.character})<br/>
+                            <button onClick={() => navigate(`/admin/fashion/character/${actorData.no}`, { state: actorData })}>스타일 편집</button>
+                            <button onClick={() => deleteCharacter(actorData.no)}>배역 제거</button>&nbsp;
+                        </div>
+                    ))}
+                </div><hr />
+                <h4>전체 배우들</h4>
                 <div style={{ display: 'flex', flexWrap: 'wrap'}}>
                 {scrapedDatas.map((data, index) => {
                     const isRegistered = isActorRegistered(data);
@@ -134,19 +106,6 @@ export default function ActorEdit() {
                 })}
                 </div>
             </div>
-            )
-            : (
-                <>
-                    <h3>직접 추가해주세요.</h3>
-                    <label>배우명:</label>
-                    <input onChange={(e)=> setActorName(e.target.value)} type="text" name="title"/><br/>
-                    <label>배역명:</label>
-                    <input onChange={(e)=> setCharacterName(e.target.value)} type="text" name="title" placeholder="작품명 입력하기" />역<br/>
-                    <label>이미지:</label>
-                    <input onChange={(e)=> setFile(e.target.files[0])} type="file" name="pic" accept="image/*" /><br/><br/>
-                    <button onClick={addCharacterDIY}>추가</button>
-                </>
-            )}
         </>
     );
 }
