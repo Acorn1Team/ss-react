@@ -180,6 +180,7 @@ export default function PostListByUser() {
                 />
                 <Link to={`/user/style/detail/${up.no}`}>
                   <img width={"300px"} src={up.pic} alt={up.no}></img>
+                  <br />
                   {up.content}
                 </Link>
               </div>

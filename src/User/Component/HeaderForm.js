@@ -13,7 +13,7 @@ function HeaderForm() {
   const [alerts, setAlerts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [currentPage, setCurrentPage] = useState(0);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(4);
   const [totalPages, setTotalPages] = useState(1);
 
   const [isLoggedIn, setIsLoggedIn] = useState(true);

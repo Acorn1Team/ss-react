@@ -283,7 +283,11 @@ const UserUpdate = () => {
                   <SiNaver size={15} color="#03cf5d" />
                 </td>
                 <td style={{ border: "none" }}>
-                  <strong style={{ fontSize: "90%" }}>{user.idN}</strong>
+                  <strong style={{ fontSize: "90%" }}>
+                    {user.idN.length > 15
+                      ? `${user.idN.substring(0, 15)}...`
+                      : user.idN.length}
+                  </strong>
                 </td>
               </tr>
             )}

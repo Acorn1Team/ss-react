@@ -109,6 +109,7 @@ export default function UserHome() {
           className="scrollable-image"
           src="../images/mainFinal-01.png"
           alt="main"
+          loading="eager" // 이미지 즉시 로드
         />
       </div>
       {mainPopup.map(

@@ -6,6 +6,7 @@ import modalStyles from "../Style/PostsModal.module.css"; // 모달 CSS 임포�
 import KakaoShareButton from "../Component/KaKaoShareButton";
 import { FaReply } from "react-icons/fa";
 import "./Posts.css";
+import stylesPost from "./Posts.css";
 
 export default function Posts() {
   const { postNo } = useParams();
@@ -40,12 +41,20 @@ export default function Posts() {
   const [blindCheck, setBlindCheck] = useState(false); // 블라인드 여부
   const [isAdmin, setIsAdmin] = useState(false); // 관리자 여부
   const [isReport, setIsReport] = useState(false); // 신고 여부
-
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.getFullYear()}년 ${
       date.getMonth() + 1
     }월 ${date.getDate()}일`;
+  };
+
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
   };
 
   // 게시글 정보 가져오기
@@ -264,30 +273,50 @@ export default function Posts() {
   };
 
   const handleContentChange = (e) => {
-    setCommentContent(e.target.value);
+    const newCommentContent = e.target.value;
+    if (newCommentContent.length <= 100) {
+      setCommentContent(newCommentContent);
+    }
   };
 
   const insertComment = () => {
     let recomment = null;
+
     if (recommentCheck !== 0) {
       let rcm = recommentCheck;
 
       findParent: while (true) {
-        const parentComment = postCommentData.find((cmt) => cmt.no === rcm);
+        const parentComment = postCommentData.find(
+          (cmt) =>
+            cmt.no === rcm ||
+            (cmt.replies && cmt.replies.some((reply) => reply.no === rcm))
+        );
+
         if (parentComment) {
-          if (parentComment.parentCommentNo !== null) {
+          // 현재 댓글이 상위 댓글의 답댓글인 경우
+          if (
+            parentComment.replies &&
+            parentComment.replies.some((reply) => reply.no === rcm)
+          ) {
+            // 상위 댓글로 이동
+            rcm = parentComment.no;
+          } else if (parentComment.parentCommentNo !== null) {
+            // 상위 댓글이 존재하면 상위 댓글로 이동
             rcm = parentComment.parentCommentNo;
           } else {
+            // 상위 댓글이 없으면 현재 댓글이 최상위 댓글
             recomment = parentComment.no;
             break findParent;
           }
         } else {
+          // 댓글 데이터에서 상위 댓글을 찾을 수 없는 경우
           recomment = recommentCheck;
           break findParent;
         }
       }
     }
 
+    // 댓글 등록 요청
     axios
       .post(`/posts/comment`, {
         postNo: postNo,
@@ -300,11 +329,14 @@ export default function Posts() {
           getPostDetailInfo(); // 댓글 등록 후 게시글 정보 다시 가져오기
           setCommentContent("");
           setRecommentCheck(0);
+
+          // 알림 전송
           axios.post(`/alert/reply/post/${userNo}`, {
             userNo: postData.userNo,
             path: postNo,
             isRead: 0,
           });
+
           if (recomment !== null) {
             axios.post(`/alert/reply/recomment/${userNo}`, {
               userNo: recomment,
@@ -332,18 +364,23 @@ export default function Posts() {
       });
   };
 
+  const handleConfirmDelete = () => {
+    axios
+      .delete(`/posts/soft-delete/${postNo}`)
+      .then((res) => {
+        if (res.data.result) {
+          navigator(`../list/${userNo}`);
+        }
+      })
+      .catch((error) => {
+        console.log("삭제 실패 :", error);
+      });
+    closeDeleteModal();
+  };
+
   const postUDControl = (val) => {
     if (val === "d") {
-      axios
-        .delete(`/posts/soft-delete/${postNo}`)
-        .then((res) => {
-          if (res.data.result) {
-            navigator(`../list/${userNo}`);
-          }
-        })
-        .catch((error) => {
-          console.log("삭제 실패 :", error);
-        });
+      openDeleteModal();
     } else if (val === "u") {
       navigator(`../write/edit/${postNo}`);
     }
@@ -381,7 +418,6 @@ export default function Posts() {
       })
       .then((res) => {
         if (res.data.result) {
-          alert("신고가 접수되었습니다.");
           closeReportModal();
         }
       })
@@ -396,7 +432,7 @@ export default function Posts() {
   };
 
   const renderCommentContent = (content) => {
-    const parts = content.split(/(@\w+)/g).map((part, index) => {
+    const parts = content.split(/(@[\p{L}\p{N}_]+)/gu).map((part, index) => {
       if (part.startsWith("@")) {
         const username = part.slice(1);
         const userNo = userMap[username] || "";
@@ -411,10 +447,10 @@ export default function Posts() {
           </Link>
         );
       }
-      return part;
+      return <span key={index}>{part}</span>;
     });
 
-    return parts;
+    return <>{parts}</>;
   };
 
   const handlePageChange = (newPage) => {
@@ -433,7 +469,7 @@ export default function Posts() {
     checkPostLike();
     adminCheck();
     reportCheck();
-  }, [postNo, currentPage, pageSize]);
+  }, [postNo, isReportModalOpen, currentPage, pageSize]);
 
   useEffect(() => {
     if (postData.productNo) {
@@ -444,7 +480,9 @@ export default function Posts() {
   useEffect(() => {
     const map = {};
     postCommentData.forEach((comment) => {
-      map[comment.userNickname] = comment.userNo;
+      if (comment.userNickname) {
+        map[comment.userNickname] = comment.userNo;
+      }
     });
     setUserMap(map);
   }, [postCommentData]);
@@ -509,6 +547,15 @@ export default function Posts() {
                 삭제
               </button>
             )}
+            {isDeleteModalOpen && (
+              <div className={modalStyles.modal}>
+                <div className={modalStyles["modal-content"]}>
+                  <h2>정말 삭제하시겠습니까?</h2>
+                  <button onClick={handleConfirmDelete}>확인</button>
+                  <button onClick={closeDeleteModal}>취소</button>
+                </div>
+              </div>
+            )}
             &emsp;
             <KakaoShareButton
               title={`${userInfo.userNickname} 님의 포스트 같이 봐요!`}
@@ -530,7 +577,6 @@ export default function Posts() {
             )}
             <div>{postData.content}</div>
             <div className={styles.actionButtons}>
-              {/* 좋아요 버튼 */}
               <label class="ui-bookmark">
                 <input
                   type="checkbox"
@@ -555,19 +601,22 @@ export default function Posts() {
               </label>
               좋아요 {postLike}개
             </div>
-            {postData.productNo && (
-              <Link to={`/user/shop/productlist/detail/${productData.no}`}>
-                <div className={styles.productInPost}>
-                  <img
-                    src={productData.pic}
-                    alt="Product Pic"
-                    className={styles.productImage}
-                  />
-                  <div>{productData.name}</div>
-                  <div>{productData.price}</div>
-                </div>
-              </Link>
-            )}
+            {postData.productNo &&
+              productData &&
+              productData.no &&
+              productData.price != null && (
+                <Link to={`/user/shop/productlist/detail/${productData.no}`}>
+                  <div className={styles.productInPost}>
+                    <img
+                      src={productData.pic}
+                      alt="Product Pic"
+                      className={styles.productImage}
+                    />
+                    <div>{productData.name}</div>
+                    <div>{productData.price.toLocaleString()}원</div>
+                  </div>
+                </Link>
+              )}
           </div>
           <hr width="90%" />
           <div className={styles.commentSection}>
@@ -628,37 +677,42 @@ export default function Posts() {
                             >
                               @{reply.userNickname}
                             </Link>
-                            : {renderCommentContent(reply.content)} <br />
-                            <button
+                            : {renderCommentContent(reply.content)}
+                            <br />
+                            <span
                               onClick={() =>
                                 recomment(reply.no, reply.userNickname)
                               }
                             >
-                              답글
-                            </button>
-                            <label class="ui-bookmark">
+                              <FaReply size={"25"} />
+                            </span>
+                            <label className="ui-bookmark">
                               <input
                                 type="checkbox"
                                 checked={commentLikeStatus[reply.no]}
                                 onChange={() => likeProcHandler(reply.no)}
                               />
-                              <div class="bookmark">
+                              <div className="bookmark">
                                 <svg
                                   viewBox="0 0 16 16"
                                   style={{ marginTop: "4px" }}
-                                  class="bi bi-heart-fill"
+                                  className="bi bi-heart-fill"
                                   height="25"
                                   width="25"
                                   xmlns="http://www.w3.org/2000/svg"
                                 >
                                   <path
                                     d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
-                                    fill-rule="evenodd"
+                                    fillRule="evenodd"
                                   ></path>
                                 </svg>
                               </div>
                             </label>
-                            좋아요 {commentLike[reply.no]}개
+                            좋아요{" "}
+                            {commentLike[reply.no] === undefined
+                              ? 0
+                              : commentLike[reply.no]}
+                            개
                             {reply.userNo === userNo && (
                               <button onClick={() => deleteComment(reply.no)}>
                                 삭제
@@ -673,11 +727,20 @@ export default function Posts() {
               <div>작성된 댓글이 없습니다.</div>
             )}
 
-            <textarea
-              value={commentContent}
-              onChange={handleContentChange}
-              placeholder="댓글 입력"
-            />
+            <div>
+              <textarea
+                style={{ width: "550px" }}
+                className={stylesPost.textarea}
+                value={commentContent}
+                onChange={handleContentChange}
+              ></textarea>
+              <div
+                style={{ opacity: "80%", fontSize: "70%" }}
+                className={stylesPost.characterCount}
+              >
+                {commentContent.length} / 100
+              </div>
+            </div>
             <button
               onClick={insertComment}
               className={styles.submitButton}
@@ -721,8 +784,18 @@ export default function Posts() {
                   선정성
                 </label>
                 <br />
-                <button onClick={submitReport}>신고</button>
-                <button onClick={closeReportModal}>취소</button>
+                <button
+                  className={styles.submitButton}
+                  onClick={() => submitReport()}
+                >
+                  신고
+                </button>
+                <button
+                  className={styles.submitButton}
+                  onClick={() => closeReportModal()}
+                >
+                  취소
+                </button>
               </div>
             </div>
           )}
@@ -750,11 +823,12 @@ export default function Posts() {
 
       {blindCheck && (
         <div className={styles.container}>
-          <div className={styles.header}>
-            유저 신고로 관리자가 처리 중인 게시글입니다.
-            <br />
-            <button onClick={() => backPage()}>돌아가기</button>
-          </div>
+          <br />
+          <div>유저 신고로 관리자가 처리 중인 게시글입니다.</div>
+          <br />
+          <button className={styles.submitButton} onClick={() => backPage()}>
+            돌아가기
+          </button>
         </div>
       )}
     </>

@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function SocialNaver() {
+export default function SocialNaver({ props }) {
   const client_id = "bdezpMeUAefIKAYh8VfO";
   const redirect_uri = "http://localhost:3000/user/callback/naver";
   const state = "abcdefg";
@@ -15,6 +15,7 @@ export default function SocialNaver() {
     const storedCode = sessionStorage.getItem("naver_auth_code");
 
     if (code && code !== storedCode) {
+      sessionStorage.setItem("naver_auth_code", code); // 인증 코드를 저장하여 중복 실행 방지
       axios
         .post("/api/naver/token", { code, state })
         .then((res) => {
@@ -49,12 +50,14 @@ export default function SocialNaver() {
 
   return (
     <>
-      <img
-        src={`${process.env.PUBLIC_URL}/images/naverlogin.png`}
-        alt="naverlogin"
-        onClick={handleLogin}
-        width={"200px"}
-      ></img>
+      {props && (
+        <img
+          src={`${process.env.PUBLIC_URL}/images/naverlogin.png`}
+          alt="naverlogin"
+          onClick={handleLogin}
+          width={"200px"}
+        ></img>
+      )}
     </>
   );
 }

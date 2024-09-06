@@ -103,6 +103,27 @@
   color: #666;
 }
 
+.pagination button {
+  padding: 8px 16px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pagination button:disabled {
+  background-color: #dbdbdb;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 14px;
+  color: #333;
+}
+
 .pagination {
   margin-top: 10px;
   display: flex;

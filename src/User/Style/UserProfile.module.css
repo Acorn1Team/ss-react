@@ -1,6 +1,6 @@
 .profileContainer {
   background-color: #f4f4f9;
-  border-radius: 10px; /* 경계선을 둥글게 조정 */
+  border-radius: 10px;
   padding: 20px;
   max-width: 300px;
   text-align: center;
@@ -104,4 +104,28 @@
   margin-bottom: 10px;
   color: #333;
   font-size: 1em;
+}
+
+/* 오류 애니메이션 */
+.error {
+  border-color: red;
+  animation: shake 0.5s;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }

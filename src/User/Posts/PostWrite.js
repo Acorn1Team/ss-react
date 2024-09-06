@@ -93,6 +93,11 @@ export default function PostWrite() {
     const fileInput = document.querySelector("input[type='file']");
     if (fileInput && fileInput.files.length > 0) {
       formData.append("pic", fileInput.files[0]);
+    } else {
+      // 이미지가 없으면 경고 메시지를 표시하고 함수를 종료합니다.
+      document.querySelector("#forFileNull").innerText =
+        "사진을 등록해 주세요!";
+      return;
     }
 
     try {
@@ -120,7 +125,10 @@ export default function PostWrite() {
 
   // 내용 입력했을 경우를 위한 핸들러
   const handleContentChange = (e) => {
-    setContent(e.target.value);
+    const newContent = e.target.value;
+    if (newContent.length <= 500) {
+      setContent(newContent);
+    }
   };
 
   // 수정일 경우 저장되어 있는 post 내용 불러오기
@@ -217,13 +225,18 @@ export default function PostWrite() {
     <div className={styles.container}>
       <div id="photoBox" className={styles.photoBox}></div>
       {!postNo && <input type="file" />}
+      <span style={{ color: "red" }} id="forFileNull"></span>
       <br />
 
-      <textarea
-        className={styles.contentBox}
-        value={content}
-        onChange={handleContentChange}
-      ></textarea>
+      <div className={styles.textareaContainer}>
+        <textarea
+          style={{ width: "580px" }}
+          value={content}
+          onChange={handleContentChange}
+        ></textarea>
+        <div className={styles.characterCount}>{content.length} / 500</div>
+      </div>
+
       <div className={styles.productBox}>
         상품을 검색해 보세요!&emsp;
         <input
@@ -249,19 +262,23 @@ export default function PostWrite() {
             </div>
           </div>
         )}
-        아니면 구매한 상품을 첨부할 수 있어요.
-        <select
-          value={selected}
-          onChange={handleSelectChange}
-          className={styles.productSelect}
-        >
-          <option value="0">구매한 상품을 선택하세요</option>
-          {orderProductList.map((item) => (
-            <option key={item.no} value={item.no}>
-              {item.name}
-            </option>
-          ))}
-        </select>
+        {orderProductList.length > 0 && (
+          <div>
+            아니면 구매한 상품을 첨부할 수 있어요.
+            <select
+              value={selected}
+              onChange={handleSelectChange}
+              className={styles.productSelect}
+            >
+              <option value="0">구매한 상품을 선택하세요</option>
+              {orderProductList.map((item) => (
+                <option key={item.no} value={item.no}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
         {productInfo && productInfo.name && (
           <div className={styles.productInfoContainer}>
             <p>선택한 상품 정보:</p>

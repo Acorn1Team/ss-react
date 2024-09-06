@@ -1,41 +1,53 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styles from "../Style/UserProfile.module.css"; // CSS 모듈 임포트
 
 export default function UserProfile() {
-  // 로그인 유저 데이터
-  const [userData, setUserData] = useState([]);
-
-  // 로그인 유저의 팔로잉, 팔로워 데이터
+  const [userData, setUserData] = useState({
+    nickname: "",
+    bio: "",
+  });
   const [followeeData, setFolloweeData] = useState([]);
   const [followerData, setFollowerData] = useState([]);
-
-  // 수정 모드 온/오프 컨트롤
   const [isEditing, setIsEditing] = useState(false);
+
+  const [nicknameError, setNicknameError] = useState(false);
+  const [bioError, setBioError] = useState(false);
 
   const userNo = sessionStorage.getItem("id");
 
-  // 로그인된 유저 정보 가져오기
   const userInfo = () => {
     axios
       .get(`/posts/user/${userNo}`)
-      .then((res) => setUserData(res.data))
+      .then((res) => {
+        setUserData({
+          nickname: res.data.nickname || "",
+          bio: res.data.bio || "",
+        });
+      })
       .catch((err) => console.log(err));
   };
 
-  // 유저 정보 수정/저장 버튼 클릭시
   const profileEdit = (action) => {
+    const nickname = userData.nickname || "";
+    const bio = userData.bio || "";
+
     if (action === "save") {
-      // 수정 이후 저장 버튼 클릭했을 경우
+      if (nickname.length > 10 || bio.length > 30) {
+        if (nickname.length > 10) setNicknameError(true);
+        if (bio.length > 30) setBioError(true);
+        return;
+      }
+
       const formData = new FormData();
       formData.append(
         "userDto",
         new Blob(
           [
             JSON.stringify({
-              userNickname: userData.nickname,
-              userBio: userData.bio,
+              nickname: nickname,
+              bio: bio,
             }),
           ],
           { type: "application/json" }
@@ -58,19 +70,17 @@ export default function UserProfile() {
         .then((res) => {
           if (res.data.result) {
             setIsEditing(false);
-            userInfo(); // 수정 후 업데이트된 정보를 다시 가져옴
+            userInfo();
           }
         })
         .catch((err) => {
           console.log(err);
         });
     } else {
-      // 수정 버튼 클릭했을 경우
       setIsEditing(true);
     }
   };
 
-  // 팔로잉, 팔로워 정보 가져오기
   const followInfo = () => {
     axios
       .get(`/posts/user/follow/${userNo}`)
@@ -95,18 +105,35 @@ export default function UserProfile() {
           <input type="file" />
           <input
             type="text"
-            className={styles.editInput}
-            value={userData.nickname || ""}
-            onChange={(e) =>
-              setUserData({ ...userData, nickname: e.target.value })
-            }
+            className={`${styles.editInput} ${
+              nicknameError ? styles.error : ""
+            }`}
+            value={userData.nickname}
+            onChange={(e) => {
+              const newValue = e.target.value;
+              if (newValue.length <= 10) {
+                setUserData({ ...userData, nickname: newValue });
+                setNicknameError(false); // 유효성 오류 없앰
+              } else {
+                setNicknameError(true); // 10글자 넘으면 오류
+              }
+            }}
+            placeholder="닉네임 (최대 10자)"
           />
-          <div>{userData.id}</div>
           <input
             type="text"
-            className={styles.editInput}
-            value={userData.bio || ""}
-            onChange={(e) => setUserData({ ...userData, bio: e.target.value })}
+            className={`${styles.editInput} ${bioError ? styles.error : ""}`}
+            value={userData.bio}
+            onChange={(e) => {
+              const newValue = e.target.value;
+              if (newValue.length <= 30) {
+                setUserData({ ...userData, bio: newValue });
+                setBioError(false); // 유효성 오류 없앰
+              } else {
+                setBioError(true); // 30글자 넘으면 오류
+              }
+            }}
+            placeholder="소개글 (최대 30자)"
           />
           <button
             className={styles.editButton}
@@ -143,14 +170,12 @@ export default function UserProfile() {
         <Link
           to={`/user/style/${userNo}/followList/followee`}
           className={styles.followLink}
-          onClick={followInfo}
         >
           팔로우 {followeeData.length}
         </Link>
         <Link
           to={`/user/style/${userNo}/followList/follower`}
           className={styles.followLink}
-          onClick={followInfo}
         >
           팔로워 {followerData.length}
         </Link>

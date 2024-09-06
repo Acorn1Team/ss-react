@@ -84,9 +84,9 @@ const Login = () => {
           아직 회원이 아니신가요? <Link to="/user/auth/register">회원가입</Link>
         </p>
       </form>
-      <SocialKakao />
+      <SocialKakao props="social" />
       <br />
-      <SocailNaver />
+      <SocailNaver props="social" />
     </div>
   );
 };

@@ -28,6 +28,9 @@ body {
   margin: 40px 0 20px;
   color: #333;
 }
+.scrollable-image {
+  background-color: #f5f5f5; /* 기본 배경 색 추가 */
+}
 
 /* 포스트 및 리뷰 박스 스타일 */
 .mainPostsBox,

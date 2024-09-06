@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const SocialKakao = () => {
+const SocialKakao = ({ props }) => {
   const Rest_api_key = "a8472f7278389dd9d8c2ed629df1ad30"; // REST API KEY
   const redirect_uri = "http://localhost:3000/user/callback"; // Redirect URI
   const client_secret = "KI4VoBFOCJ5lsEf26ivoI0QYdAZpSVSl";
@@ -72,12 +72,14 @@ const SocialKakao = () => {
 
   return (
     <>
-      <img
-        src={`${process.env.PUBLIC_URL}/images/kakaologin.png`}
-        alt="kakaologin"
-        onClick={handleLogin}
-        width={"200px"}
-      ></img>
+      {props && (
+        <img
+          src={`${process.env.PUBLIC_URL}/images/kakaologin.png`}
+          alt="kakaologin"
+          onClick={handleLogin}
+          width={"200px"}
+        ></img>
+      )}
     </>
   );
 };

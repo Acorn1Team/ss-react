@@ -10,6 +10,7 @@ function AdminChat() {
   const [chatNo, setChatNo] = useState(null);
   const [messages, setMessages] = useState([]);
   const [stompClient, setStompClient] = useState(null);
+  const [closeState, setCloseState] = useState(false);
 
   const [showClosedChats, setShowClosedChats] = useState(false);
 
@@ -25,9 +26,10 @@ function AdminChat() {
       });
   }, [selectedUserId, chatNo]);
 
-  const handleUserSelect = (userId, chatNo) => {
+  const handleUserSelect = (userId, chatNo, closeState) => {
     setSelectedUserId(userId);
     setChatNo(chatNo);
+    setCloseState(closeState);
   };
 
   useEffect(() => {
@@ -87,6 +89,7 @@ function AdminChat() {
             setSelectedUserId(null);
             setChatNo(null);
             setMessages([]);
+            setCloseState(true);
           }
         })
         .catch((err) => {
@@ -121,7 +124,9 @@ function AdminChat() {
             .map((room) => (
               <li
                 key={room.no}
-                onClick={() => handleUserSelect(room.userNo, room.no)}
+                onClick={() =>
+                  handleUserSelect(room.userNo, room.no, room.closeChat)
+                }
                 className={`${styles.chatRoomItem} ${
                   room.closeChat ? styles.closed : ""
                 } ${chatNo === room.no ? styles.active : ""}`}
@@ -151,23 +156,32 @@ function AdminChat() {
               </div>
             ))}
           </div>
-          <div className={styles.inputContainer}>
-            <input
-              type="text"
-              placeholder="메시지를 입력하세요!"
-              className={styles.inputField}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  sendMessage(e.target.value);
-                  e.target.value = "";
-                }
-              }}
-            />
-          </div>
+          {!closeState ? (
+            <div>
+              <div className={styles.inputContainer}>
+                <input
+                  type="text"
+                  placeholder="메시지를 입력하세요!"
+                  className={styles.inputField}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      sendMessage(e.target.value);
+                      e.target.value = "";
+                    }
+                  }}
+                />
+              </div>
 
-          <button className={styles.closeButton} onClick={() => chatClose()}>
-            채팅 종료
-          </button>
+              <button
+                className={styles.closeButton}
+                onClick={() => chatClose()}
+              >
+                채팅 종료
+              </button>
+            </div>
+          ) : (
+            <div>종료된 채팅입니다.</div>
+          )}
         </div>
       )}
     </div>
