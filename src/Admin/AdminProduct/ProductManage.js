@@ -154,8 +154,8 @@ export default function ProductManage() {
   };
 
   const calculateSellingPrice = (price, discountRate) => {
-    if (discountRate === 0) return "X";
-    return (price * (1 - discountRate / 100)).toFixed(0);
+    if (discountRate === 0) return 'X';
+    return (price * (1 - discountRate / 100)).toFixed(0) + ' (' + discountRate + '% 할인)';
   };
 
   const formatDate = (dateString) => {
@@ -218,14 +218,13 @@ export default function ProductManage() {
             <th>이름</th>
             <th>가격</th>
             <th>할인가격</th>
-            <th>날짜</th>
+            <th>등록일</th>
             <th>카테고리</th>
             <th>이미지</th>
             <th>재고</th>
             <th>평점 / 리뷰</th>
             <th>판매량</th>
-            <th>상세보기</th>
-            <th>삭제</th>
+            <th>관리</th>
           </tr>
         </thead>
         <tbody>
@@ -234,7 +233,10 @@ export default function ProductManage() {
               <>
                 <tr key={item.no}>
                   <td>{item.no}</td>
-                  <td>{item.name}</td>
+                  <td><span
+                      onClick={() => handleDetail(item.no)}
+                      style={{ cursor: "pointer", color: "blue" }}
+                    >{item.name}</span></td>
                   <td>{item.price.toLocaleString('ko-KR')}</td>
                   <td>
                     {calculateSellingPrice(item.price, item.discountRate)}
@@ -259,14 +261,7 @@ export default function ProductManage() {
                   </td>
                   <td>{item.count}건</td>
                   <td>
-                    <span
-                      onClick={() => handleDetail(item.no)}
-                      style={{ cursor: "pointer", color: "blue" }}
-                    >
-                      상세보기
-                    </span>
-                  </td>
-                  <td>
+                    <button onClick={() => navigate(`/admin/product/update/${item.no}`)}>수정하기</button>
                     <button onClick={() => handleDelete(item.no)}>삭제</button>
                   </td>
                 </tr>

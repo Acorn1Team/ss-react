@@ -12,7 +12,6 @@ import NoticeDetail from "../AdminHelp/NoticeDetail";
 import NoticeForm from "../AdminHelp/NoticeForm";
 import ProductInsert from "../AdminProduct/ProductInsert";
 import ProductUpdateForm from "../AdminProduct/ProductUpdateForm";
-import ProductDetail from "../AdminProduct/ProductDetail";
 import PromotionCoupon from "../AdminPromotion/PromotionCoupon";
 import PromotionAdvertise from "../AdminPromotion/PromotionAdvertise";
 import ActorEdit from "../AdminFashion/ActorEdit";
@@ -33,7 +32,6 @@ export default function AdminRoutes() {
       <Route path="/product" element={<ProductManage />} />
         <Route path="/product/insert" element={<ProductInsert />} />
         <Route path="/product/update/:no" element={<ProductUpdateForm />} />
-        <Route path="/product/detail/:no" element={<ProductDetail />} />
 
       <Route path="/orders" element={<OrderManage />} />
         <Route path="/orders/detail/:orderNo" element={<OrderDetail />} />
