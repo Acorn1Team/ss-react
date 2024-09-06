@@ -1,0 +1,84 @@
+.cbx {
+  position: relative;
+  width: 20px; /* 글자 크기에 맞춘 체크박스 크기 */
+  height: 20px;
+  border: 1px solid #475569;
+  border-radius: 5px; /* 모서리를 살짝 둥글게 */
+  transition: background 0.2s ease;
+  cursor: pointer;
+  display: block;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.cbx:after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  width: 7px;
+  height: 14px;
+  opacity: 0;
+  transform: rotate(45deg) scale(0);
+  border-right: 2px solid #040303;
+  border-bottom: 2px solid #030303;
+  transition: all 0.3s ease;
+  transition-delay: 0.15s;
+}
+
+#cbx:checked ~ .cbx {
+  border-color: transparent;
+  background: #ffffff;
+  animation: jelly 0.4s ease;
+}
+
+#cbx:checked ~ .cbx:after {
+  opacity: 1;
+  transform: rotate(45deg) scale(1);
+}
+
+.cntr {
+  position: relative;
+  display: inline-block;
+  margin-right: 10px; /* 체크박스와 라벨 사이 간격 */
+}
+
+.hidden-xs-up {
+  display: none !important;
+}
+
+@keyframes jelly {
+  from {
+    transform: scale(1, 1);
+  }
+
+  20% {
+    transform: scale(1.3, 0.7);
+  }
+
+  40% {
+    transform: scale(0.7, 1.3);
+  }
+
+  60% {
+    transform: scale(1.1, 0.9);
+  }
+
+  80% {
+    transform: scale(0.9, 1.1);
+  }
+
+  to {
+    transform: scale(1, 1);
+  }
+}
+
+/* 스타일 조정 */
+.excludeSoldOutContainer {
+  display: flex;
+  align-items: center;
+}
+
+.excludeSoldOutLabel {
+  font-size: 16px; /* 글자 크기 */
+  margin-left: 5px;
+}
