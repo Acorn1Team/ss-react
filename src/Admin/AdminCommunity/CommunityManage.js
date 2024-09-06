@@ -7,7 +7,7 @@ export default function CommunityManage() {
   const [sortOrder, setSortOrder] = useState("latest"); // "latest"는 최신보기, "mostReported"는 신고 많은 순 보기
   const [posts, setPosts] = useState([]); // 전체 글 데이터를 저장할 상태
   const [filteredPosts, setFilteredPosts] = useState([]); // 신고된 글 데이터 저장
-  const [reportedInfos, setReportedInfos] = useState([]); // 각 filteredPost에 해당하는 신고 내역
+  const [reportedInfos, setReportedInfos] = useState([]); // 각 신고된 게시글의 신고 내역
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [pageSize] = useState(5); // 한 페이지에 보여줄 게시글 수
@@ -41,7 +41,7 @@ export default function CommunityManage() {
     }
   };
 
-  // 신고된 글의 신고내역을 불러오는 함수
+  // 신고된 글의 신고 내역을 불러오는 함수
   const fetchReportedInfos = async () => {
     try {
       const response = await axios.get(`/admin/posts/reportedInfos`);
@@ -93,38 +93,73 @@ export default function CommunityManage() {
         <ul className="post-list-horizontal">
           {displayPosts
             .filter((post) => !post.deleted)
-            .map((post) => (
-              <li key={post.no} className="post-item">
-                <strong>작성자 ID:</strong> {post.userId}
-                <br />
-                {post.pic && (
-                  <div className="image-container">
-                    <strong>사진:</strong>
-                    <img
-                      src={post.pic}
-                      alt="Post"
-                      className="post-image"
-                      style={{ display: "block", margin: "0 auto" }}
-                    />
-                  </div>
-                )}
-                <strong>글 내용:</strong> {post.content}
-                <br />
-                <button
-                  onClick={() => navigate(`/user/style/detail/${post.no}`)}
-                  className="detail-button"
-                >
-                  상세보기
-                </button>
-                &nbsp;&nbsp;
-                <button
-                  onClick={() => deletePost(post.no)}
-                  className="delete-button"
-                >
-                  삭제하기
-                </button>
-              </li>
-            ))}
+            .map((post) => {
+              // 신고 카테고리별 카운트를 저장하기 위한 객체
+              const categoryCounts = {
+                욕설: 0,
+                홍보: 0,
+                선정성: 0,
+              };
+
+              // 해당 포스트의 신고 내역을 필터링
+              const filteredInfos = reportedInfos.filter(
+                (reportedInfo) => reportedInfo.postNo === post.no
+              );
+
+              // 신고 내역을 순회하면서 각 카테고리별로 카운트를 증가시킴
+              filteredInfos.forEach((info) => {
+                if (categoryCounts.hasOwnProperty(info.category)) {
+                  categoryCounts[info.category]++;
+                }
+              });
+
+              // 카운트가 0이 아닌 항목만 표시하도록 필터링
+              const displayedCategories = Object.entries(categoryCounts)
+                .filter(([category, count]) => count > 0)
+                .map(([category, count]) => `${category} ${count}회`)
+                .join(", ");
+
+              return (
+                <li key={post.no} className="post-item">
+                  <strong>작성자 ID:</strong> {post.userId}
+                  <br />
+                  {post.pic && (
+                    <div className="image-container">
+                      <strong>사진:</strong>
+                      <img
+                        src={post.pic}
+                        alt="Post"
+                        className="post-image"
+                        style={{ display: "block", margin: "0 auto" }}
+                      />
+                    </div>
+                  )}
+                  <strong>글 내용:</strong> {post.content}
+                  <br />
+                  {view === "reported" && (
+                    <>
+                      <strong>신고 횟수:</strong> {post.reportsCount}
+                      <br />
+                      <strong>신고 사유:</strong> {displayedCategories}
+                      <br />
+                    </>
+                  )}
+                  <button
+                    onClick={() => navigate(`/user/style/detail/${post.no}`)}
+                    className="detail-button"
+                  >
+                    상세보기
+                  </button>
+                  &nbsp;&nbsp;
+                  <button
+                    onClick={() => deletePost(post.no)}
+                    className="delete-button"
+                  >
+                    삭제하기
+                  </button>
+                </li>
+              );
+            })}
         </ul>
       </div>
     );

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
-import styles from "../Style/ProductList.module.css"; // 스타일 임포트
+import styles from "../Style/ProductList.module.css"; // 기존 스타일
 import "./ProductListCheckbox.css"; // 체크박스 스타일 임포트
 
 export default function ProductList() {
@@ -51,8 +51,6 @@ export default function ProductList() {
   const handleCategoryChange = (newCategory) => {
     setSelectCategory(newCategory); // 선택한 카테고리 업데이트
     setCurrentPage(0); // 페이지 초기화
-
-    // 모든 카테고리를 선택하면 sortOption을 "latest"로 설정
     setSortOption("latest");
     refresh(newCategory, "latest"); // 최신순으로 상품 목록 새로고침
   };
@@ -142,17 +140,19 @@ export default function ProductList() {
         </div>
       </div>
 
-      <div className={styles.categoryLinks}>
+      {/* 카테고리 선택을 위한 라디오 버튼 */}
+      <div className="radio-input">
         {categories.map((cate, index) => (
-          <button
-            key={index}
-            className={`${styles.categoryLink} ${
-              selectCategory === cate ? styles.activeCategoryLink : ""
-            }`} // 선택된 카테고리 활성화
-            onClick={() => handleCategoryChange(cate)}
-          >
-            {cate}
-          </button>
+          <React.Fragment key={index}>
+            <input
+              type="radio"
+              id={`category-${index}`}
+              value={cate}
+              checked={selectCategory === cate}
+              onChange={() => handleCategoryChange(cate)}
+            />
+            <label htmlFor={`category-${index}`}>{cate}</label>
+          </React.Fragment>
         ))}
       </div>
 
