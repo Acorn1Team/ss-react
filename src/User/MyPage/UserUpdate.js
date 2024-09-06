@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { RiAccountPinCircleFill } from "react-icons/ri";
 import { SiNaver } from "react-icons/si";
 import { SiKakaotalk } from "react-icons/si";
+import Modal from "react-modal";
 
 const UserUpdate = () => {
   const { userNo } = useParams();
@@ -27,6 +28,20 @@ const UserUpdate = () => {
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const nv = useNavigate();
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalContent, setModalContent] = useState(""); // 모달 내용 관리
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = (mc) => {
+    setModalIsOpen(false);
+    if (!modalContent.includes("탈퇴")) {
+      nv("/user/main");
+    }
+  };
 
   const addrStartRef = useRef(null);
   const addrEndRef = useRef(null);
@@ -166,8 +181,12 @@ const UserUpdate = () => {
       console.log("Sending data to server:", updatedUser);
       const response = await axios.put(`/user/update/${userNo}`, updatedUser);
       console.log("Server response:", response.data);
-      alert("회원 정보가 수정되었습니다.");
-      nv("/user/main");
+      setModalContent("회원 정보가 수정되었습니다.");
+      // console.log(modalContent);
+      openModal();
+      // console.log(modalIsOpen);
+      // alert("회원 정보가 수정되었습니다.");
+      // nv("/user/main");
     } catch (error) {
       console.error(
         "Error updating user:",
@@ -193,13 +212,13 @@ const UserUpdate = () => {
 
       console.log("Server response:", response.data); // 서버 응답 확인
 
-      if (response.status === 200) {
-        // 주문이 없는 경우 또는 주문완료만 있는 경우
-        alert("회원 탈퇴 페이지로 이동합니다.");
+      if (response.data === false) {
+        setModalContent(
+          "주문 처리 중인 상품이 있어 회원 탈퇴를 할 수 없습니다."
+        );
+        openModal();
+      } else {
         nv(`/user/mypage/delete/${userNo}`);
-      } else if (response.status === 403) {
-        // 주문 처리 중인 상품이 있는 경우
-        alert("주문 처리 중인 상품이 있어 회원 탈퇴를 할 수 없습니다.");
       }
     } catch (error) {
       console.error("회원탈퇴 요청 실패:", error);
@@ -441,6 +460,24 @@ const UserUpdate = () => {
           </button>
         </div>
       </form>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        // contentLabel="알림"
+        className={styles.modal}
+        overlayClassName={styles.overlay}
+      >
+        <h2>{modalContent.includes("탈퇴") ? "회원탈퇴" : "알림"}</h2>
+        <p>{modalContent}</p>
+        <div className={styles.modal_buttons}>
+          <button
+            onClick={() => closeModal(modalContent)}
+            style={{ backgroundColor: "darkred" }}
+          >
+            확인
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };
