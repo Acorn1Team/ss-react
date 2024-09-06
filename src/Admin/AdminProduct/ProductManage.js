@@ -154,15 +154,13 @@ export default function ProductManage() {
   };
 
   const calculateSellingPrice = (price, discountRate) => {
-    if (discountRate === 0) {
-      return "X";
-    }
-    return (price * (1 - discountRate / 100)).toFixed(2);
+    if (discountRate === 0) return "X";
+    return (price * (1 - discountRate / 100)).toFixed(0);
   };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+    return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
   };
 
   const renderSearchField = () => {
@@ -237,7 +235,7 @@ export default function ProductManage() {
                 <tr key={item.no}>
                   <td>{item.no}</td>
                   <td>{item.name}</td>
-                  <td>{item.price}</td>
+                  <td>{item.price.toLocaleString('ko-KR')}</td>
                   <td>
                     {calculateSellingPrice(item.price, item.discountRate)}
                   </td>
@@ -256,10 +254,10 @@ export default function ProductManage() {
                       onClick={() => toggleRowExpansion(item.no)}
                       style={{ cursor: "pointer", color: "blue" }}
                     >
-                      {`${item.score} / ${item.reviewCount || 0}건`}
+                      {`${item.score} (${item.reviewCount || 0}건)`}
                     </span>
                   </td>
-                  <td>{item.count}</td>
+                  <td>{item.count}건</td>
                   <td>
                     <span
                       onClick={() => handleDetail(item.no)}

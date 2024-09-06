@@ -138,25 +138,22 @@ export default function StyleManage() {
       });
   }
 
-  const addExistingItem = async(style_no, item_no) => {
-    await axios
-      .post(`/admin/fashion/${style_no}/item/${item_no}`)
-      .then(
-        axios
-        .get(`/admin/fashion/character/${no}/item`)
-        .then((response) => {
-          setItems(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        }))
-      .then(
-        setIsExistingItemModalOpen(false)
-      )
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+  const addExistingItem = async (style_no, item_no) => {
+    try {
+      // 아이템을 스타일에 연결
+      await axios.post(`/admin/fashion/${style_no}/item/${item_no}`);
+  
+      // 아이템 리스트를 다시 불러오기
+      const response = await axios.get(`/admin/fashion/character/${no}/item`);
+      setItems(response.data);
+  
+      // 모달을 닫기
+      setIsExistingItemModalOpen(false);
+    } catch (error) {
+      console.log("Error adding existing item:", error);
+    }
+  };
+  
 
   const addItem = async () => {
     const itemForm = new FormData();
@@ -211,7 +208,7 @@ export default function StyleManage() {
                   <td key={i}>
                     {filteredItems[i] ? 
                       (<>{filteredItems[i].name}<br/>
-                      <img src={filteredItems[i].pic} alt={`${index}번 스타일 아이템${i+1}`} 
+                      <img src={filteredItems[i].pic} alt={`${index + 1}번 스타일 아이템${i+1}`} 
                       style={{width: '200px', height: '200px', borderRadius: '50%', marginRight: '20px'}}/><br/>
                       <button onClick={() => navigate(`/admin/product/detail/${filteredItems[i].product}`)}>유사상품 조회하기</button></>) 
                     : (<>
