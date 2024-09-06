@@ -92,7 +92,6 @@ const ProductReviews = () => {
             <div>리뷰 번호: {review.no}</div>
             <div>사용자: {review.userNickname}</div>
             <div>제품: {review.productName}</div>
-            <div>사진:</div>
             {/* 이미지가 없는 경우 기본 이미지로 대체 */}
             <img
               src={review.pic ? review.pic : "/path/to/default-image.jpg"} // **이미지가 없는 경우 기본 이미지 표시**

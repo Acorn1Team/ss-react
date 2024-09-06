@@ -121,7 +121,6 @@ export default function ProductDetail() {
         <span>{product.category}</span>
       </div>
       <div>
-        <span className={styles.label}>이미지:</span>
         <img
           src={product.pic}
           alt={product.name}
