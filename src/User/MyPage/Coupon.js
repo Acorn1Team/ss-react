@@ -48,7 +48,8 @@ export default function Coupon() {
 
   return (
     <div className={styles.container}>
-      {couponData ? (
+      {/* couponData 배열이 비어있는지 확인 */}
+      {couponData.length > 0 ? (
         <>
           {couponData.map((cd) => (
             <div className={styles.couponItem} key={cd.id}>
@@ -62,7 +63,7 @@ export default function Coupon() {
         </>
       ) : (
         <>
-          <b>사용 가능한 쿠폰이 없습니다.</b>
+          <div>사용 가능한 쿠폰이 없습니다.</div>
         </>
       )}
       {totalPages > 1 && (

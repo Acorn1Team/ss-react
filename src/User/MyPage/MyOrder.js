@@ -47,7 +47,7 @@ export default function MyOrder() {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+    return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
   };
 
   // 페이지 변경 함수

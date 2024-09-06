@@ -19,8 +19,9 @@ export default function MyOrderDetail() {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+    return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
   };
+
 
   const getOrderList = () => {
     axios
@@ -51,6 +52,8 @@ export default function MyOrderDetail() {
     });
   };
 
+ 
+
   return (
     <div className={styles.container}>
       <div className={styles.orderInfo}>
@@ -61,6 +64,7 @@ export default function MyOrderDetail() {
         <span>주문 날짜:</span> {formatDate(orderInfo.date)}
         <br />
         <span>총 금액:</span> {orderInfo.price?.toLocaleString()}원
+       
       </div>
 
       <div className={styles.productList}>
@@ -78,12 +82,14 @@ export default function MyOrderDetail() {
               </span>
             </div>
             </Link>
-            <span className={styles.productPrice}>
-              {pl.price.toLocaleString()}원
-            </span>
+            {/* <span className={styles.productPrice}>
+            {(pl.price * (orderProduct?.quantity || 1)).toLocaleString()}원
+            </span> */}
+            <sapn className={styles.productPrice}>{orderProduct?.price}원</sapn>
             <button
               className={styles.reviewButton}
               onClick={() => orderProduct && goToReviewPage(orderProduct.no)}
+              disabled={orderInfo.state === "주문취소"} // 주문 상태가 '주문취소'이면 비활성화
             >
             리뷰 쓰기
             </button>

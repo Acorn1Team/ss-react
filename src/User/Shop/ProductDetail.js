@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import ProductReviews from "./ProductReviews";
+import { FiShoppingCart } from "react-icons/fi";
 
 import styles from "../Style/ProductDetail.module.css";
 
@@ -153,10 +154,10 @@ export default function ProductDetail() {
           },
         }}
       >
-        <h2>장바구니에 추가되었습니다!</h2>
         <div>
-          <img src={product.pic} alt="Product" />
+          <FiShoppingCart size={100} color="#007bff" />
         </div>
+        <h3>선택한 상품이 장바구니에 담겼습니다.</h3>
         <button onClick={continueShopping}>계속 쇼핑하기</button>
         <button onClick={goToCart}>장바구니 보기</button>
       </Modal>
