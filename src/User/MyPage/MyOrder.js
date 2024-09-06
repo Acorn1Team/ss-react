@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "../Style/MyOrder.module.css";
 
 export default function MyOrder() {
+
+  const navigate = useNavigate(); // useNavigate 사용 선언
   // 현재 페이지
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -96,6 +98,16 @@ export default function MyOrder() {
     setSelectedOrder(null);
   };
 
+   // 팝업에서 확인 버튼을 클릭했을 때 실행되는 함수
+   const handlePopupConfirm = () => {
+    if (popupMessage === "교환/환불을 신청하시겠습니까?") {
+      navigate("/user/chat"); // 교환/환불일 때 /user/chat으로 이동
+    } else if (popupMessage === "주문을 취소하시겠습니까?") {
+      orderStateChange(); // 주문 취소 처리
+    }
+    handlePopupClose(); // 팝업 닫기
+  };
+
   return (
     <div className={styles.container}>
       <h2>주문 내역</h2>
@@ -171,15 +183,7 @@ export default function MyOrder() {
             <h3>{popupMessage}</h3>
             <div className={styles.popupButtons}>
               <button onClick={handlePopupClose}>취소</button>
-              <button
-                onClick={() => {
-                  orderStateChange();
-                  console.log(`${popupMessage} 처리 중...`);
-                  handlePopupClose();
-                }}
-              >
-                확인
-              </button>
+              <button onClick={handlePopupConfirm}>확인</button> {/* 팝업 확인 버튼 하나로 통합 */}
             </div>
           </div>
         </div>

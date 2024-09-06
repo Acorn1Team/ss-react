@@ -54,7 +54,7 @@ export default function MyOrderDetail() {
   return (
     <div className={styles.container}>
       <div className={styles.orderInfo}>
-        <span>주문 번호:</span> {orderInfo.no}
+        {/* <span>주문 번호:</span> {orderInfo.no} */}
         <br />
         <span>주문 상태:</span> {orderInfo.state}
         <br />
