@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./ProductManage.css"; // CSS 파일 추가
 
@@ -107,29 +107,6 @@ export default function ProductManage() {
     }
   }, [currentPage, pageSize, searchTriggered]);
 
-  const handleDelete = async (no) => {
-    if (window.confirm("정말로 삭제하시겠습니까?")) {
-      try {
-        await axios.delete(`/admin/product/${no}`);
-        alert("상품이 삭제되었습니다.");
-        fetchProducts(
-          currentPage,
-          pageSize,
-          searchTerm,
-          searchField,
-          startDate,
-          endDate
-        );
-      } catch (error) {
-        console.error("Error deleting product:", error);
-        alert("삭제 중 오류가 발생했습니다.");
-      }
-    }
-  };
-
-  const handleDetail = (no) => {
-    navigate(`/admin/product/detail/${no}`);
-  };
 
   const handleSearch = () => {
     setCurrentPage(0);
@@ -154,13 +131,24 @@ export default function ProductManage() {
   };
 
   const calculateSellingPrice = (price, discountRate) => {
-    if (discountRate === 0) return 'X';
-    return (price * (1 - discountRate / 100)).toFixed(0) + ' (' + discountRate + '% 할인)';
+    if (discountRate === 0) return null;
+    return '(' + discountRate + '% 할인) ' + (price * (1 - discountRate / 100)).toFixed(0);
   };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
+  };
+
+  const toSoldOut = async (no) => {
+    try {
+      // axios.put 요청을 완료할 때까지 기다림
+      await axios.put(`/admin/product/soldout/${no}`);
+      // 요청이 완료된 후 fetchProducts 호출
+      fetchProducts(currentPage, pageSize);
+    } catch (error) {
+      console.error("Error updating product to sold out:", error);
+    }
   };
 
   const renderSearchField = () => {
@@ -217,14 +205,12 @@ export default function ProductManage() {
             <th>번호</th>
             <th>이름</th>
             <th>가격</th>
-            <th>할인가격</th>
-            <th>등록일</th>
             <th>카테고리</th>
             <th>이미지</th>
             <th>재고</th>
             <th>평점 / 리뷰</th>
             <th>판매량</th>
-            <th>관리</th>
+            <th>등록일</th>
           </tr>
         </thead>
         <tbody>
@@ -234,23 +220,33 @@ export default function ProductManage() {
                 <tr key={item.no}>
                   <td>{item.no}</td>
                   <td><span
-                      onClick={() => handleDetail(item.no)}
+                      onClick={() => navigate(`/admin/product/update/${item.no}`)}
                       style={{ cursor: "pointer", color: "blue" }}
                     >{item.name}</span></td>
-                  <td>{item.price.toLocaleString('ko-KR')}</td>
                   <td>
-                    {calculateSellingPrice(item.price, item.discountRate)}
+                    {item.discountRate > 0 ? (
+                    <>
+                      <span style={{ textDecoration: "line-through" }}>
+                        {item.price.toLocaleString('ko-KR')}원
+                      </span>{" "}
+                      <span style={{ color: "red", fontWeight: "bold" }}>
+                        {calculateSellingPrice(item.price, item.discountRate)}원
+                      </span>
+                    </>
+                  ) : (
+                    <>{item.price.toLocaleString('ko-KR')}원</>
+                  )}
                   </td>
-                  <td>{formatDate(item.date)}</td>
                   <td>{item.category}</td>
                   <td>
                     <img
                       src={item.pic}
                       alt={item.name}
                       style={{ width: "100px", height: "100px" }}
-                    />
+                      />
                   </td>
-                  <td>{item.stock}</td>
+                  <td>{item.stock}&nbsp; 
+                    <button onClick={() => toSoldOut(item.no)} disabled={item.stock === 0}>품절 처리하기</button></td>
                   <td>
                     <span
                       onClick={() => toggleRowExpansion(item.no)}
@@ -260,10 +256,7 @@ export default function ProductManage() {
                     </span>
                   </td>
                   <td>{item.count}건</td>
-                  <td>
-                    <button onClick={() => navigate(`/admin/product/update/${item.no}`)}>수정하기</button>
-                    <button onClick={() => handleDelete(item.no)}>삭제</button>
-                  </td>
+                  <td>{formatDate(item.date)}</td>
                 </tr>
                 {expandedRows.includes(item.no) && (
                   <>
@@ -295,7 +288,7 @@ export default function ProductManage() {
                               handleReviewPageChange(item.no, "prev")
                             }
                             disabled={currentReviewPage[item.no] === 0}
-                          >
+                            >
                             이전
                           </button>
                           <span style={{ margin: "0 10px" }}>
@@ -310,7 +303,7 @@ export default function ProductManage() {
                               currentReviewPage[item.no] + 1 >=
                               reviewPages[item.no]
                             }
-                          >
+                            >
                             다음
                           </button>
                         </td>
@@ -323,8 +316,8 @@ export default function ProductManage() {
           ) : (
             <tr>
               <td colSpan="13" style={{ textAlign: "center", padding: "20px" }}>
-                결과가 없습니다.
               </td>
+                결과가 없습니다.
             </tr>
           )}
         </tbody>

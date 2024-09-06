@@ -1,6 +1,42 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styled from 'styled-components';
+
+const FormContainer = styled.div`
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const InputField = styled.input`
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+`;
+
+const Button = styled.button`
+  width: 100%;
+  padding: 10px;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #5a31b4;
+  }
+`;
 
 export default function NoticeForm() {
   const navigate = useNavigate();
@@ -43,52 +79,27 @@ export default function NoticeForm() {
   };
 
   return (
-    <>
+    <FormContainer>
       <h2>공지 추가</h2>
-      <table>
-        <tbody>
-          <tr>
-            <td>제목</td>
-            <td>
-              <input
-                onChange={handleChange}
-                type="text"
-                name="title"
-                value={state.title}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>카테고리</td>
-            <td>
-              <select
-                onChange={handleChange}
-                name="category"
-                value={state.category}
-              >
-                <option value="">선택해주세요</option>
-                <option value="주문">주문</option>
-                <option value="결제">결제</option>
-                <option value="반품/환불">반품/환불</option>
-                <option value="배송">배송</option>
-                <option value="프로모션/쿠폰">프로모션/쿠폰</option>
-                <option value="상품문의">상품문의</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <td>내용</td>
-            <td>
-              <textarea
-                onChange={handleChange}
-                name="contents"
-                value={state.contents}
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <button onClick={handleSave}>추가</button>
-    </>
+      <div>
+        제목 <InputField onChange={handleChange} type="text" name="title" value={state.title}/>
+      </div>
+      <div>
+        카테고리
+        <select onChange={handleChange} name="category" value={state.category}>
+          <option value="">선택해주세요</option>
+          <option value="주문">주문</option>
+          <option value="결제">결제</option>
+          <option value="반품/환불">반품/환불</option>
+          <option value="배송">배송</option>
+          <option value="프로모션/쿠폰">프로모션/쿠폰</option>
+          <option value="상품문의">상품문의</option>
+        </select>
+      </div>
+      <div>
+        내용 <textarea onChange={handleChange} name="contents" value={state.contents} />     
+      </div>
+      <Button onClick={handleSave}>추가</Button>
+    </FormContainer>
   );
 }

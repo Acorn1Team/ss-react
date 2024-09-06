@@ -57,7 +57,7 @@ export default function NoticeManage() {
   // 날짜 형식을 변환하는 함수
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+    return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
   };
 
   return (

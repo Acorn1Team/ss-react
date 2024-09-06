@@ -80,56 +80,39 @@ export default function NoticeDetail() {
   return (
     <>
       <h2>공지 수정</h2>
-      <button
-        onClick={() => {
-          navigate(`/admin/help/notices`);
-        }}
-      >
-        목록보기
-      </button>
-      <table>
-        <tbody>
-          <tr>
-            <td>제목</td>
-            <td>
-              <input
-                onChange={handleChange}
-                type="text"
-                name="title"
-                value={state.title}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>카테고리</td>
-            <td>
-              <select
-                onChange={handleChange}
-                name="category"
-                value={state.category}
-              >
-                <option value="주문">주문</option>
-                <option value="결제">결제</option>
-                <option value="반품/환불">반품/환불</option>
-                <option value="배송">배송</option>
-                <option value="프로모션/쿠폰">프로모션/쿠폰</option>
-                <option value="상품문의">상품문의</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <td>내용</td>
-            <td>
-              <textarea
-                onChange={handleChange}
-                name="contents"
-                value={state.contents}
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
+      <button onClick={() => {navigate(`/admin/help/notices`);}}>목록보기</button>
+      <div>
+        제목
+        <input
+          onChange={handleChange}
+          type="text"
+          name="title"
+          value={state.title}
+        />
+      </div>
+      <div>
+        카테고리
+        <select
+          onChange={handleChange}
+          name="category"
+          value={state.category}
+        >
+          <option value="주문">주문</option>
+          <option value="결제">결제</option>
+          <option value="반품/환불">반품/환불</option>
+          <option value="배송">배송</option>
+          <option value="프로모션/쿠폰">프로모션/쿠폰</option>
+          <option value="상품문의">상품문의</option>
+        </select>
+      </div>
+      <div>
+        내용
+        <textarea
+          onChange={handleChange}
+          name="contents"
+          value={state.contents}
+        />
+      </div>
       <button onClick={handleSave}>수정</button>
       <button onClick={handleDelete}>삭제</button>
     </>

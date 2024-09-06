@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./ProductForm.css";
 
 export default function ProductInsert() {
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
@@ -80,9 +81,9 @@ export default function ProductInsert() {
   };
 
   return (
-    <>
-      <h2>상품 추가</h2>
-      <div>
+    <div className="form-container">
+      <h2 className="form-title">상품 추가</h2>
+      <div className="form-group">
         <label>상품명:</label>
         <input
           onChange={handleChange}
@@ -92,7 +93,7 @@ export default function ProductInsert() {
         />
       </div>
       <br />
-      <div>
+      <div className="form-group">
         <label>가격:</label>
         <input
           onChange={handleChange}
@@ -102,7 +103,7 @@ export default function ProductInsert() {
         />
       </div>
       <br />
-      <div>
+      <div className="form-group">
         <label>상품 설명:</label>
         <textarea
           onChange={handleChange}
@@ -111,7 +112,7 @@ export default function ProductInsert() {
         />
       </div>
       <br />
-      <div>
+      <div className="form-group">
         <label>카테고리:</label>
         <select onChange={handleChange} name="category">
           <option value="">선택해주세요</option>
@@ -122,7 +123,7 @@ export default function ProductInsert() {
         </select>
       </div>
       <br />
-      <div>
+      <div className="form-group">
         <label>이미지:</label>
         <input
           onChange={handleFileChange}
@@ -132,7 +133,7 @@ export default function ProductInsert() {
         />
       </div>
       <br />
-      <div>
+      <div className="form-group">
         <label>재고:</label>
         <input
           onChange={handleChange}
@@ -142,7 +143,7 @@ export default function ProductInsert() {
         />
       </div>
       <br />
-      <div>
+      <div className="form-group">
         <label>할인율:</label>
         <input
           onChange={handleChange}
@@ -152,7 +153,7 @@ export default function ProductInsert() {
         />
       </div>
       <br />
-      <button onClick={handleSave}>저장</button>
-    </>
+      <button className="update-button" onClick={handleSave}>추가</button>
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import "./ProductUpdateForm.css"; // 스타일링 추가
+import "./ProductForm.css";
 
 export default function ProductUpdateForm() {
   const { no } = useParams();
@@ -24,6 +24,19 @@ export default function ProductUpdateForm() {
 
   const isFormValid = () => {
     return !errors.stock && !errors.discountRate;
+  };
+
+  const handleDelete = async (no) => {
+    if (window.confirm("정말로 삭제하시겠습니까?")) {
+      try {
+        await axios.delete(`/admin/product/${no}`);
+        alert("상품이 삭제되었습니다.");
+        navigate('/admin/product')
+      } catch (error) {
+        console.error("Error deleting product:", error);
+        alert("삭제 중 오류가 발생했습니다.");
+      }
+    }
   };
 
   useEffect(() => {
@@ -200,12 +213,13 @@ export default function ProductUpdateForm() {
         )}
       </div>
 
+      <button className="delete-button" onClick={() => handleDelete(state.no)}>삭제하기</button>&nbsp;&nbsp;
       <button
-        className="form-button"
+        className="update-button"
         onClick={handleSave}
         disabled={!isFormValid()}
       >
-        수정 확인
+        수정 완료
       </button>
     </div>
   );
