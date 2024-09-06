@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export default function Review() {
   const { no } = useParams();
@@ -22,10 +22,10 @@ export default function Review() {
 
   return (
     <div>
-      {reviewData.productName}
+      <Link to={`/user/shop/productlist/detail/${reviewData.productNo}`}>{reviewData.productName}</Link>
       <br />@{reviewData.userNickname}
       <br />
-      {reviewData.pic}
+      <img src={reviewData.pic} alt={`${reviewData.productName} 사진`} />
       <br />
       {reviewData.contents}
       <br />
