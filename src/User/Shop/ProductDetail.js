@@ -87,12 +87,6 @@ export default function ProductDetail() {
         <span className={styles.label}>이름:</span>
         <span className={styles.value}>{product.name}</span>
       </div>
-      <div className={styles.quantityControls}>
-        <span className={styles.label}>수량:</span>
-        <button onClick={decrementQuantity}>-</button>
-        <span>{count}</span>
-        <button onClick={incrementQuantity}>+</button>
-      </div>
       <div>
         <span className={styles.label}>가격:</span>
         <span className={styles.price}>
@@ -104,6 +98,11 @@ export default function ProductDetail() {
           </span>
         )}
       </div>
+      <div className={styles.quantityControls}>
+        <span className={styles.label}>수량:</span>
+        <button onClick={decrementQuantity}>-</button>
+        <span>{count}</span>
+        <button onClick={incrementQuantity}>+</button>&nbsp;
       {product.stock > 0 ? (
         <button className={styles.addToCartButton} onClick={handleAddToCart}>
           장바구니에 담기
@@ -111,6 +110,7 @@ export default function ProductDetail() {
       ) : (
         <button className={styles.addToCartButton}>품절된 상품입니다</button>
       )}
+      </div>
 
       <div className={styles.productDescription}>
         <span className={styles.label}>상품 설명:</span>
