@@ -4,14 +4,12 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import styles from "../Style/PostDetail.module.css"; // CSS 모듈 임포트
 import modalStyles from "../Style/PostsModal.module.css"; // 모달 CSS 임포트
 import KakaoShareButton from "../Component/KaKaoShareButton";
-import { IoIosHeart } from "react-icons/io";
-import { IoIosHeartEmpty } from "react-icons/io";
 import { FaReply } from "react-icons/fa";
+import "./Posts.css";
 
 export default function Posts() {
   const { postNo } = useParams();
   const navigator = useNavigate();
-
   const userNo = sessionStorage.getItem("id");
 
   // 글 작성자 프로필 사진, 닉네임
@@ -22,58 +20,30 @@ export default function Posts() {
 
   // 글 정보
   const [postData, setPostData] = useState({});
-
-  // 글 댓글 정보
   const [postCommentData, setPostCommentData] = useState([]);
+  const [postLike, setPostLike] = useState(0); // 게시글 좋아요 수
+  const [postLikeStatus, setPostLikeStatus] = useState(false); // 게시글 좋아요 상태
 
-  // 글 좋아요 정보 및 상태 관리
-  const [postLike, setPostLike] = useState(0);
-  const [postLikeStatus, setPostLikeStatus] = useState(false);
-
-  // 댓글 좋아요 정보 및 상태 관리
-  const [commentLike, setCommentLike] = useState({});
-  const [commentLikeStatus, setCommentLikeStatus] = useState({});
-
-  // 인용한 상품 정보
-  const [productData, setProductData] = useState({});
-
-  // 댓글 내용
-  const [commentContent, setCommentContent] = useState("");
-
-  // 신고 modal 관리
-  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const [reportReason, setReportReason] = useState("");
-
-  // 답글 관리
-  const [recommentCheck, setRecommentCheck] = useState(0);
-
-  // 현재 페이지를 저장할 상태
-  const [currentPage, setCurrentPage] = useState(0);
-
-  // 페이지 크기를 저장할 상태
-  const [pageSize, setPageSize] = useState(5);
-
-  // 전체 페이지 수를 저장할 상태
-  const [totalPages, setTotalPages] = useState(1);
-
-  // 로딩 상태
-  const [loading, setLoading] = useState(false);
-
-  // 태그를 위함
-  const [userMap, setUserMap] = useState({});
-
-  // 블라인드 여부
-  const [blindCheck, setBlindCheck] = useState(false);
-
-  // 관리자 여부 체크
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  // 신고 여부 체크
-  const [isReport, setIsReport] = useState(false);
+  // 댓글 관련 상태
+  const [commentLike, setCommentLike] = useState({}); // 댓글 좋아요 수
+  const [commentLikeStatus, setCommentLikeStatus] = useState({}); // 댓글 좋아요 상태
+  const [commentContent, setCommentContent] = useState(""); // 댓글 내용
+  const [productData, setProductData] = useState({}); // 인용된 상품 정보
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false); // 신고 모달 상태
+  const [reportReason, setReportReason] = useState(""); // 신고 사유
+  const [recommentCheck, setRecommentCheck] = useState(0); // 답글 체크
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
+  const [pageSize, setPageSize] = useState(5); // 페이지 사이즈
+  const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
+  const [loading, setLoading] = useState(false); // 로딩 상태
+  const [userMap, setUserMap] = useState({}); // 유저 태그용 맵
+  const [blindCheck, setBlindCheck] = useState(false); // 블라인드 여부
+  const [isAdmin, setIsAdmin] = useState(false); // 관리자 여부
+  const [isReport, setIsReport] = useState(false); // 신고 여부
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return `${date.getFullYear()}월 ${
+    return `${date.getFullYear()}년 ${
       date.getMonth() + 1
     }월 ${date.getDate()}일`;
   };
@@ -100,6 +70,7 @@ export default function Posts() {
         setPostCommentData(res.data.comments);
         setTotalPages(res.data.totalPages);
 
+        // 각 댓글마다 좋아요 수와 상태를 가져옴
         res.data.comments.forEach((comment) => {
           getCommentLike(comment.no);
           checkCommentLike(comment.no);
@@ -120,7 +91,7 @@ export default function Posts() {
     }
   };
 
-  // 인용한 상품 정보 가져오기
+  // 인용된 상품 정보 가져오기
   const getProductInPost = () => {
     axios
       .get(`/list/product/${postData.productNo}`)
@@ -132,7 +103,7 @@ export default function Posts() {
       });
   };
 
-  // 게시글 좋아요 갯수
+  // 게시글 좋아요 갯수 가져오기
   const getPostLike = () => {
     axios
       .get(`/posts/postlike/${postNo}`)
@@ -142,30 +113,29 @@ export default function Posts() {
       });
   };
 
-  // 댓글 좋아요 갯수
+  // 댓글 좋아요 수 가져오기
   const getCommentLike = (commentNo) => {
     axios
       .get(`/posts/commentlike/${commentNo}`)
-      .then(
-        (res) =>
-          setCommentLike((pdata) => ({
-            ...pdata,
-            [commentNo]: res.data.result,
-          }))
-        // 1 : 3, 2 : 6 같은 형식으로 좋아요 갯수 상태 저장해 두는 것
-      )
+      .then((res) => {
+        // 새로운 값으로 상태 초기화 (누적되지 않도록 처리)
+        setCommentLike((prev) => ({
+          ...prev,
+          [commentNo]: res.data.result, // 댓글의 좋아요 수를 갱신
+        }));
+      })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  // 게시글 좋아요 여부 체크
+  // 게시글 좋아요 상태 체크
   const checkPostLike = () => {
     axios
       .get(`/posts/postlike/check/${postNo}/${userNo}`)
       .then((res) => {
         if (res.data.result) {
-          setPostLikeStatus(true);
+          setPostLikeStatus(true); // 사용자가 이미 좋아요를 눌렀다면 true 설정
         }
       })
       .catch((err) => {
@@ -173,59 +143,48 @@ export default function Posts() {
       });
   };
 
-  // 댓글 좋아요 여부 체크
+  // 댓글 좋아요 상태 체크
   const checkCommentLike = (commentNo) => {
     axios
       .get(`/posts/commentlike/check/${commentNo}/${userNo}`)
       .then((res) => {
-        if (res.data.result) {
-          setCommentLikeStatus((pdata) => ({
-            ...pdata,
-            [commentNo]: res.data.result,
-          }));
-          // 1 : true, 2 : false 같은 형식으로 좋아요 여부 상태 저장해 두는 것
-        }
+        // 댓글의 좋아요 상태를 업데이트
+        setCommentLikeStatus((prev) => ({
+          ...prev,
+          [commentNo]: res.data.result,
+        }));
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  // 게시글 좋아요 / 좋아요 취소 작업
+  // 게시글 좋아요 / 좋아요 취소
   const postLikeProc = () => {
     if (postLikeStatus) {
-      // 게시글 좋아요 등록된 상태인 경우
+      // 이미 좋아요가 눌린 상태라면 좋아요 취소
       axios
         .delete(`/posts/postlike/${postNo}/${userNo}`)
-        // 좋아요 취소
         .then((res) => {
           if (res.data.result === true) {
-            setPostLikeStatus(false);
-            getPostLike();
-            // 게시글 좋아요 상태 다시 불러오기
+            setPostLikeStatus(false); // 좋아요 상태를 false로 설정
+            setPostLike((prev) => prev - 1); // 좋아요 수 감소
           }
         })
         .catch((error) => {
           console.log("좋아요 취소 실패 :", error);
         });
     } else {
-      // 게시글 좋아요 등록되지 않은 경우
+      // 좋아요가 눌리지 않은 상태라면 좋아요 추가
       axios
         .post("/posts/postlike", {
-          // 좋아요 등록
           postNo: postNo,
           userNo: userNo,
         })
         .then((res) => {
           if (res.data.result === true) {
-            setPostLikeStatus(true);
-            getPostLike();
-            // 게시글 좋아요 상태 다시 불러오기
-            axios.post(`/alert/like/post/${userNo}`, {
-              userNo: postData.userNo,
-              path: postNo,
-              isRead: 0,
-            });
+            setPostLikeStatus(true); // 좋아요 상태를 true로 설정
+            setPostLike((prev) => prev + 1); // 좋아요 수 증가
           }
         })
         .catch((error) => {
@@ -234,25 +193,38 @@ export default function Posts() {
     }
   };
 
-  // 댓글 좋아요
+  // 댓글 좋아요 / 좋아요 취소 작업
   const commentLikeProc = (commentNo) => {
+    // 이미 좋아요 처리 중인 경우 중복 호출을 방지
+    if (loading) return;
+
+    setLoading(true); // 로딩 상태를 true로 설정해 중복 처리 방지
+
     if (commentLikeStatus[commentNo]) {
-      // 댓글 좋아요 여부 확인 후 좋아요 / 좋아요 취소 작업
+      // 이미 좋아요가 눌린 댓글이라면 좋아요 취소
       axios
         .delete(`/posts/commentlike/${commentNo}/${userNo}`)
         .then((res) => {
           if (res.data.result) {
-            setCommentLikeStatus((pstatus) => ({
-              ...pstatus,
+            // 상태를 갱신하여 좋아요 상태를 false로 설정하고 좋아요 수 1 감소
+            setCommentLikeStatus((prevStatus) => ({
+              ...prevStatus,
               [commentNo]: false,
             }));
-            getCommentLike(commentNo);
+            setCommentLike((prevLikes) => ({
+              ...prevLikes,
+              [commentNo]: Math.max(0, prevLikes[commentNo] - 1), // 최소 0으로 유지
+            }));
           }
         })
         .catch((error) => {
-          console.log("좋아요 취소 실패 :", error);
+          console.log("댓글 좋아요 취소 실패 :", error);
+        })
+        .finally(() => {
+          setLoading(false); // 로딩 상태를 다시 false로 설정
         });
     } else {
+      // 좋아요가 눌리지 않은 댓글이라면 좋아요 추가
       axios
         .post("/posts/commentlike", {
           commentNo: commentNo,
@@ -260,63 +232,61 @@ export default function Posts() {
         })
         .then((res) => {
           if (res.data.result) {
-            setCommentLikeStatus((pstatus) => ({
-              ...pstatus,
+            // 상태를 갱신하여 좋아요 상태를 true로 설정하고 좋아요 수 1 증가
+            setCommentLikeStatus((prevStatus) => ({
+              ...prevStatus,
               [commentNo]: true,
             }));
-            getCommentLike(commentNo);
+            setCommentLike((prevLikes) => ({
+              ...prevLikes,
+              [commentNo]: (prevLikes[commentNo] || 0) + 1, // 누적되지 않도록 1씩 증가
+            }));
           }
         })
         .catch((error) => {
-          console.log("좋아요 실패 :", error);
+          console.log("댓글 좋아요 실패 :", error);
+        })
+        .finally(() => {
+          setLoading(false); // 로딩 상태를 다시 false로 설정
         });
     }
   };
 
-  // 좋아요 핸들링 함수
+  // 좋아요 처리 핸들러 (게시글 또는 댓글에 따라 다르게 처리)
   const likeProcHandler = (commentNo) => {
     if (commentNo === undefined) {
-      // commentNo 없을 경우 게시글 삭제
+      // commentNo가 없으면 게시글 좋아요 처리
       postLikeProc();
     } else {
-      // commentNo 있을 경우 해당 댓글 삭제
+      // commentNo가 있으면 해당 댓글에 대한 좋아요 처리
       commentLikeProc(commentNo);
     }
   };
 
-  // 댓글 내용 핸들링 함수
   const handleContentChange = (e) => {
     setCommentContent(e.target.value);
   };
 
-  // 댓글 등록
   const insertComment = () => {
     let recomment = null;
     if (recommentCheck !== 0) {
       let rcm = recommentCheck;
 
       findParent: while (true) {
-        // findParent라는 레이블을 지정
         const parentComment = postCommentData.find((cmt) => cmt.no === rcm);
-
         if (parentComment) {
-          console.log("Current parentComment:", parentComment);
-
           if (parentComment.parentCommentNo !== null) {
             rcm = parentComment.parentCommentNo;
           } else {
             recomment = parentComment.no;
-            break findParent; // 최상위 댓글을 찾았을 때 루프 종료
+            break findParent;
           }
         } else {
-          console.log("Parent comment not found, exiting loop.");
           recomment = recommentCheck;
-          break findParent; // parentComment를 찾지 못하면 루프 종료
+          break findParent;
         }
       }
     }
-
-    console.log("Final recomment value:", recomment);
 
     axios
       .post(`/posts/comment`, {
@@ -327,7 +297,7 @@ export default function Posts() {
       })
       .then((res) => {
         if (res.data.result) {
-          getPostDetailInfo();
+          getPostDetailInfo(); // 댓글 등록 후 게시글 정보 다시 가져오기
           setCommentContent("");
           setRecommentCheck(0);
           axios.post(`/alert/reply/post/${userNo}`, {
@@ -349,13 +319,12 @@ export default function Posts() {
       });
   };
 
-  // 댓글 삭제
   const deleteComment = (commentNo) => {
     axios
       .delete(`/posts/comment/${commentNo}`)
       .then((res) => {
         if (res.data.result) {
-          getPostDetailInfo();
+          getPostDetailInfo(); // 댓글 삭제 후 게시글 정보 다시 가져오기
         }
       })
       .catch((err) => {
@@ -363,7 +332,6 @@ export default function Posts() {
       });
   };
 
-  // 게시글 수정 / 삭제 핸들링 함수
   const postUDControl = (val) => {
     if (val === "d") {
       axios
@@ -381,7 +349,6 @@ export default function Posts() {
     }
   };
 
-  // 신고 여부 확인하기
   const reportCheck = () => {
     axios
       .get(`/posts/report/${userNo}/${postNo}`)
@@ -393,22 +360,18 @@ export default function Posts() {
       });
   };
 
-  // 신고 모달 열기
   const postReports = () => {
     setIsReportModalOpen(true);
   };
 
-  // 신고 모달 닫기
   const closeReportModal = () => {
     setIsReportModalOpen(false);
   };
 
-  // 신고 사유 핸들러 함수
   const handleReportReasonChange = (e) => {
     setReportReason(e.target.value);
   };
 
-  // 신고 접수하기
   const submitReport = () => {
     axios
       .post("/posts/report", {
@@ -436,8 +399,7 @@ export default function Posts() {
     const parts = content.split(/(@\w+)/g).map((part, index) => {
       if (part.startsWith("@")) {
         const username = part.slice(1);
-        const userNo = userMap[username] || ""; // userMap에서 userNo를 가져옴
-
+        const userNo = userMap[username] || "";
         return (
           <Link
             key={index}
@@ -455,7 +417,6 @@ export default function Posts() {
     return parts;
   };
 
-  // 페이지 변경 함수
   const handlePageChange = (newPage) => {
     if (newPage >= 0 && newPage < totalPages) {
       setCurrentPage(newPage);
@@ -569,13 +530,29 @@ export default function Posts() {
             )}
             <div>{postData.content}</div>
             <div className={styles.actionButtons}>
-              <span onClick={() => likeProcHandler()}>
-                {postLikeStatus ? (
-                  <IoIosHeart size={"25"} />
-                ) : (
-                  <IoIosHeartEmpty size={"25"} />
-                )}
-              </span>
+              {/* 좋아요 버튼 */}
+              <label class="ui-bookmark">
+                <input
+                  type="checkbox"
+                  checked={postLikeStatus}
+                  onChange={() => likeProcHandler()}
+                />
+                <div class="bookmark">
+                  <svg
+                    viewBox="0 0 16 16"
+                    style={{ marginTop: "4px" }}
+                    class="bi bi-heart-fill"
+                    height="25"
+                    width="25"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+                      fill-rule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+              </label>
               좋아요 {postLike}개
             </div>
             {postData.productNo && (
@@ -612,11 +589,28 @@ export default function Posts() {
                           <FaReply size={"25"} />
                         </span>
                         <span onClick={() => likeProcHandler(pc.no)}>
-                          {commentLikeStatus[pc.no] ? (
-                            <IoIosHeart size={"25"} />
-                          ) : (
-                            <IoIosHeartEmpty size={"25"} />
-                          )}
+                          <label class="ui-bookmark">
+                            <input
+                              type="checkbox"
+                              checked={commentLikeStatus[pc.no]}
+                              onChange={() => likeProcHandler(pc.no)}
+                            />
+                            <div class="bookmark">
+                              <svg
+                                viewBox="0 0 16 16"
+                                style={{ marginTop: "4px" }}
+                                class="bi bi-heart-fill"
+                                height="25"
+                                width="25"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+                                  fill-rule="evenodd"
+                                ></path>
+                              </svg>
+                            </div>
+                          </label>
                         </span>
                         좋아요 {commentLike[pc.no]}개
                       </span>
@@ -642,11 +636,28 @@ export default function Posts() {
                             >
                               답글
                             </button>
-                            <button onClick={() => likeProcHandler(reply.no)}>
-                              {commentLikeStatus[reply.no]
-                                ? "좋아요 취소"
-                                : "좋아요"}
-                            </button>
+                            <label class="ui-bookmark">
+                              <input
+                                type="checkbox"
+                                checked={commentLikeStatus[reply.no]}
+                                onChange={() => likeProcHandler(reply.no)}
+                              />
+                              <div class="bookmark">
+                                <svg
+                                  viewBox="0 0 16 16"
+                                  style={{ marginTop: "4px" }}
+                                  class="bi bi-heart-fill"
+                                  height="25"
+                                  width="25"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+                                    fill-rule="evenodd"
+                                  ></path>
+                                </svg>
+                              </div>
+                            </label>
                             좋아요 {commentLike[reply.no]}개
                             {reply.userNo === userNo && (
                               <button onClick={() => deleteComment(reply.no)}>

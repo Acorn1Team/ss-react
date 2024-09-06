@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "./PostList.css"; // CSS 파일을 import
+import styles from "./PostList.css"; // CSS 파일을 import
 
 export default function PostList() {
   const [followPost, setFollowPost] = useState([]);
@@ -152,7 +152,7 @@ export default function PostList() {
 
       {/* 게시글이 있을 때만 페이지네이션 표시 */}
       {followPost.length > 0 && (
-        <div className="pagination-buttons">
+        <div className="pagination">
           <button onClick={handlePreviousPage} disabled={currentPage === 0}>
             이전
           </button>
