@@ -6,8 +6,8 @@ import Modal from "react-modal";
 
 const DeleteForm = () => {
   const { userNo } = useParams();
-  const [pass, setPass] = useState("");
-  const [errors, setErrors] = useState({});
+  const [email, setEmail] = useState("");
+  const [errorMessage, setErrorMessage] = useState({});
   const nv = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -19,33 +19,54 @@ const DeleteForm = () => {
     setModalIsOpen(false);
   };
 
-  const passwordCheck = async () => {
+  // const passwordCheck = async () => {
+  //   try {
+  //     const response = await axios.post(`/user/passwordCheck`, {
+  //       userNo,
+  //       pwd: pass,
+  //     });
+
+  //     // 서버에서 응답받은 데이터가 result를 포함하고 있는지 확인
+  //     if (response.data.result) {
+  //       openModal();
+  //     } else {
+  //       setErrors({
+  //         message: response.data.message,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     // error.response가 있는지 확인하고, 상태 코드와 메시지를 로깅
+  //     if (error.response) {
+  //       setErrors({
+  //         message:
+  //           error.response.data.message ||
+  //           "비밀번호 확인 중 오류가 발생했습니다.",
+  //       });
+  //     } else {
+  //       console.error("비밀번호 확인 중 오류 발생 : ", error.message);
+  //       setErrors({ message: "비밀번호 확인 중 오류가 발생했습니다." });
+  //     }
+  //   }
+  // };
+
+  const emailCheck = async (email, setErrorMessage) => {
     try {
-      const response = await axios.post(`/user/passwordCheck`, {
-        userNo,
-        pwd: pass,
+      const response = await axios.get("/user/emailCheck", {
+        params: { email }, // 파라미터로 이메일 전달
       });
 
-      // 서버에서 응답받은 데이터가 result를 포함하고 있는지 확인
-      if (response.data.result) {
+      console.log("Email Check Response:", response.data); // 응답 확인
+
+      if (response.data.exists) {
         openModal();
+        // setErrorMessage({ email: "이미 등록된 이메일입니다." });
+        // return false;
       } else {
-        setErrors({
-          message: response.data.message,
-        });
+        setErrorMessage({ email: "이메일이 일치하지 않습니다." });
       }
     } catch (error) {
-      // error.response가 있는지 확인하고, 상태 코드와 메시지를 로깅
-      if (error.response) {
-        setErrors({
-          message:
-            error.response.data.message ||
-            "비밀번호 확인 중 오류가 발생했습니다.",
-        });
-      } else {
-        console.error("비밀번호 확인 중 오류 발생 : ", error.message);
-        setErrors({ message: "비밀번호 확인 중 오류가 발생했습니다." });
-      }
+      setErrorMessage("서버 오류가 발생했습니다.");
+      return false;
     }
   };
 
@@ -61,7 +82,7 @@ const DeleteForm = () => {
     try {
       const response = await axios.put(`/user/mypage/delete`, {
         userNo: userNo,
-        password: pass,
+        email: email,
       });
 
       if (response.data.result) {
@@ -71,7 +92,7 @@ const DeleteForm = () => {
         nv("/user");
       } else {
         if (response.data.message) {
-          setErrors({ message: response.data.message }); // 에러 메시지 설정
+          setErrorMessage({ email: "이메일이 일치하지 않습니다." });
         }
       }
     } catch (error) {
@@ -126,7 +147,7 @@ const DeleteForm = () => {
   };
 
   const handleInputChange = (e) => {
-    setPass(e.target.value);
+    setEmail(e.target.value);
   };
 
   return (
@@ -135,17 +156,20 @@ const DeleteForm = () => {
         <input
           type="password"
           name="pass"
-          placeholder="비밀번호"
-          value={pass}
+          placeholder="이메일"
+          value={email}
           onChange={handleInputChange}
         />
-        {errors.message && (
-          <div className={styles.error_message}>{errors.message}</div>
+        {errorMessage.email && (
+          <div className={styles.error_message}>{errorMessage.email}</div>
         )}
       </div>
       <form onSubmit={handleSubmit}>
         <div className={styles.buttons}>
-          <button type="button" onClick={passwordCheck}>
+          <button
+            type="button"
+            onClick={() => emailCheck(email, setErrorMessage)}
+          >
             회원 탈퇴
           </button>
           <button
@@ -168,11 +192,11 @@ const DeleteForm = () => {
       >
         <h2>회원탈퇴</h2>
         <p>
-          회원 탈퇴 시 계정 정보 및 보유중인 포인트와 쿠폰은 삭제되어 복구가
-          불가해요. 정말로 탈퇴하시겠어요?
+          탈퇴 시 계정 정보 및 보유중인 포인트와 쿠폰은 삭제되어 복구가
+          불가합니다. 정말로 탈퇴하시겠습니까?
         </p>
         <div className={styles.modal_buttons}>
-          <button onClick={handleDelete}>떠날래요</button>
+          <button onClick={handleDelete}>떠날래요 ㅠㅠ</button>
           <button onClick={closeModal}>더 써볼래요</button>
         </div>
       </Modal>

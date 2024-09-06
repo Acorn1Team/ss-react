@@ -454,7 +454,6 @@ const UserUpdate = () => {
           <button type="button" onClick={handleCancel}>
             취소
           </button>
-          {/* <Link to={`/user/mypage/delete/${userNo}`}> */}
           <button
             type="button"
             style={{ backgroundColor: "darkgray" }}
