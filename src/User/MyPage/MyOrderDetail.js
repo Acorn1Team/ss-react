@@ -64,32 +64,32 @@ export default function MyOrderDetail() {
       </div>
 
       <div className={styles.productList}>
-        {productList.map((pl) => (
+      {productList.map((pl) => {
+        const orderProduct = orderProductList.find((op) => op.productNo === pl.no);
+
+        return (
           <div key={pl.no} className={styles.productItem}>
             <Link to={`/user/shop/productlist/detail/${pl.no}`}>
-              <div>
-                <span className={styles.productName}>{pl.name}</span>
-                <br />
-                <span className={styles.productQuantity}>
-                  {
-                    orderProductList.find((op) => op.productNo === pl.no)
-                      ?.quantity
-                  }
-                  개
-                </span>
-              </div>
+            <div>
+              <span className={styles.productName}>{pl.name}</span>
+              <br />
+              <span className={styles.productQuantity}>
+                {orderProduct?.quantity}개
+              </span>
+            </div>
             </Link>
             <span className={styles.productPrice}>
               {pl.price.toLocaleString()}원
             </span>
             <button
               className={styles.reviewButton}
-              onClick={() => goToReviewPage(pl.no)}
+              onClick={() => orderProduct && goToReviewPage(orderProduct.no)}
             >
-              리뷰 쓰기
+            리뷰 쓰기
             </button>
           </div>
-        ))}
+        );
+      })}
       </div>
 
       <div className={styles.userInfo}>
