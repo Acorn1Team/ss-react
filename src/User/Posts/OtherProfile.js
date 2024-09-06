@@ -73,8 +73,13 @@ export default function OtherProfile() {
         },
       })
       .then((res) => {
-        setPostList(res.data.content);
-        setTotalPages(res.data.totalPages);
+        // 삭제된 글(deleted 값이 1 이상)을 제외한 글 리스트로 필터링
+        const filteredPosts = res.data.content.filter(
+          (post) => post.deleted < 1
+        );
+
+        setPostList(filteredPosts); // 필터링된 게시글 리스트 설정
+        setTotalPages(res.data.totalPages); // 전체 페이지 수 설정
       })
       .catch((err) => {
         console.log(err);

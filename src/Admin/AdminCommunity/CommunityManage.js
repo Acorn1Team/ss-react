@@ -2,6 +2,14 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+// 문자열을 잘라주는 함수
+const truncateText = (text, maxLength) => {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + "...";
+  }
+  return text;
+};
+
 export default function CommunityManage() {
   const [view, setView] = useState("all"); // "all"은 전체 글, "reported"는 신고 글을 의미
   const [sortOrder, setSortOrder] = useState("latest"); // "latest"는 최신보기, "mostReported"는 신고 많은 순 보기
@@ -11,31 +19,46 @@ export default function CommunityManage() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [pageSize] = useState(5); // 한 페이지에 보여줄 게시글 수
+  const [selectedPost, setSelectedPost] = useState(null); // 선택된 게시글의 상세 내용
   const navigate = useNavigate();
 
-  // 전체 글 데이터를 불러오는 함수
   const fetchPosts = async (page = 0) => {
     try {
       const response = await axios.get(
         `/admin/posts?page=${page}&size=${pageSize}`
       );
-      setPosts(response.data.content);
-      setTotalPages(response.data.totalPages);
-      setCurrentPage(response.data.number);
+
+      // 서버에서 삭제되지 않은 게시물 개수와 페이지 수를 받아옴
+      const { content, totalElements, totalPages } = response.data;
+
+      // 삭제되지 않은 게시물만 필터링
+      const filteredPosts = content.filter((post) => !post.deleted);
+
+      setPosts(filteredPosts);
+      setTotalPages(totalPages); // 서버에서 계산된 총 페이지 수
+      setCurrentPage(page);
+      setSelectedPost(null); // 페이지 변경 시 상세 내용 초기화
     } catch (error) {
       console.error("글 데이터를 불러오는 중 오류 발생:", error);
     }
   };
 
   // 신고된 글 데이터를 불러오는 함수
-  const fetchFilterdPosts = async (page = 0, sort = "latest") => {
+  const fetchFilteredPosts = async (page = 0, sort = "latest") => {
     try {
       const response = await axios.get(
         `/admin/posts/reported?page=${page}&size=${pageSize}&sort=${sort}`
       );
-      setFilteredPosts(response.data.content);
+
+      // 삭제되지 않은 신고 글만 필터링
+      const filteredPosts = response.data.content.filter(
+        (post) => !post.deleted
+      );
+
+      setFilteredPosts(filteredPosts);
       setTotalPages(response.data.totalPages);
-      setCurrentPage(response.data.number);
+      setCurrentPage(page);
+      setSelectedPost(null); // 페이지 변경 시 상세 내용 초기화
     } catch (error) {
       console.error("신고 글 데이터를 불러오는 중 오류 발생:", error);
     }
@@ -57,7 +80,10 @@ export default function CommunityManage() {
       const response = await axios.delete(`/admin/posts/${postNo}`);
 
       if (response.data.isSuccess) {
+        // 삭제 성공시 상태에서 해당 게시물 제거
         setPosts(posts.filter((post) => post.no !== postNo));
+        setFilteredPosts(filteredPosts.filter((post) => post.no !== postNo));
+        setSelectedPost(null); // 삭제 후 상세 내용 초기화
         console.log("삭제 성공");
       }
     } catch (error) {
@@ -65,102 +91,120 @@ export default function CommunityManage() {
     }
   };
 
+  // 게시글 상세 내용 가져오는 함수
+  const fetchPostDetail = async (postNo) => {
+    try {
+      const response = await axios.get(`/admin/posts/detail/${postNo}`);
+      setSelectedPost(response.data); // 선택된 게시글의 상세 내용 설정
+    } catch (error) {
+      console.error("게시글 상세 내용을 불러오는 중 오류 발생:", error);
+    }
+  };
+
   // 컴포넌트가 처음 렌더링될 때 데이터 불러옴
   useEffect(() => {
     if (view === "all") {
-      fetchPosts();
+      fetchPosts(currentPage); // 전체 글 보기에서 삭제된 글을 제외하고 가져옴
     } else if (view === "reported") {
-      fetchFilterdPosts(0, sortOrder);
+      fetchFilteredPosts(currentPage, sortOrder); // 신고된 글 보기에서 삭제된 글을 제외하고 가져옴
       fetchReportedInfos();
     }
-  }, [view, sortOrder]);
+  }, [view, sortOrder, currentPage]);
 
   // 페이지 변경 함수
   const handlePageChange = (newPage) => {
     if (newPage >= 0 && newPage < totalPages) {
-      if (view === "all") {
-        fetchPosts(newPage);
-      } else if (view === "reported") {
-        fetchFilterdPosts(newPage, sortOrder);
-      }
+      setCurrentPage(newPage); // 페이지 번호 상태를 업데이트
+      setSelectedPost(null); // 페이지 변경 시 상세 내용 초기화
     }
   };
 
   const renderContent = () => {
     const displayPosts = view === "all" ? posts : filteredPosts;
+
+    // 신고 카테고리별 카운트를 저장하기 위한 객체
+    const categoryCounts = {};
+    reportedInfos.forEach((info) => {
+      if (!categoryCounts[info.postNo]) {
+        categoryCounts[info.postNo] = {
+          욕설: 0,
+          홍보: 0,
+          선정성: 0,
+        };
+      }
+      categoryCounts[info.postNo][info.category]++;
+    });
+
     return (
       <div>
         <ul className="post-list-horizontal">
-          {displayPosts
-            .filter((post) => !post.deleted)
-            .map((post) => {
-              // 신고 카테고리별 카운트를 저장하기 위한 객체
-              const categoryCounts = {
-                욕설: 0,
-                홍보: 0,
-                선정성: 0,
-              };
+          {displayPosts.map((post) => {
+            const counts = categoryCounts[post.no] || {
+              욕설: 0,
+              홍보: 0,
+              선정성: 0,
+            };
 
-              // 해당 포스트의 신고 내역을 필터링
-              const filteredInfos = reportedInfos.filter(
-                (reportedInfo) => reportedInfo.postNo === post.no
-              );
+            // 카운트가 0이 아닌 항목만 표시하도록 필터링
+            const displayedCategories = Object.entries(counts)
+              .filter(([category, count]) => count > 0)
+              .map(([category, count]) => `${category} ${count}회`)
+              .join(", ");
 
-              // 신고 내역을 순회하면서 각 카테고리별로 카운트를 증가시킴
-              filteredInfos.forEach((info) => {
-                if (categoryCounts.hasOwnProperty(info.category)) {
-                  categoryCounts[info.category]++;
-                }
-              });
-
-              // 카운트가 0이 아닌 항목만 표시하도록 필터링
-              const displayedCategories = Object.entries(categoryCounts)
-                .filter(([category, count]) => count > 0)
-                .map(([category, count]) => `${category} ${count}회`)
-                .join(", ");
-
-              return (
-                <li key={post.no} className="post-item">
-                  <strong>작성자 ID:</strong> {post.userId}
-                  <br />
-                  {post.pic && (
-                    <div className="image-container">
-                      <strong>사진:</strong>
-                      <img
-                        src={post.pic}
-                        alt="Post"
-                        className="post-image"
-                        style={{ display: "block", margin: "0 auto" }}
-                      />
-                    </div>
-                  )}
-                  <strong>글 내용:</strong> {post.content}
-                  <br />
-                  {view === "reported" && (
-                    <>
-                      <strong>신고 횟수:</strong> {post.reportsCount}
-                      <br />
-                      <strong>신고 사유:</strong> {displayedCategories}
-                      <br />
-                    </>
-                  )}
-                  <button
-                    onClick={() => navigate(`/user/style/detail/${post.no}`)}
-                    className="detail-button"
-                  >
-                    상세보기
-                  </button>
-                  &nbsp;&nbsp;
-                  <button
-                    onClick={() => deletePost(post.no)}
-                    className="delete-button"
-                  >
-                    삭제하기
-                  </button>
-                </li>
-              );
-            })}
+            return (
+              <li key={post.no} className="post-item">
+                <strong>작성자 ID:</strong> {post.userId}
+                <br />
+                {post.pic && (
+                  <div className="image-container">
+                    <strong>사진:</strong>
+                    <img
+                      src={post.pic}
+                      alt="Post"
+                      className="post-image"
+                      style={{ display: "block", margin: "0 auto" }}
+                    />
+                  </div>
+                )}
+                <strong>글 내용:</strong> {truncateText(post.content, 20)}
+                <br />
+                {view === "reported" && (
+                  <>
+                    <strong>신고 횟수:</strong> {post.reportsCount}
+                    <br />
+                    <strong>신고 사유:</strong> {displayedCategories}
+                    <br />
+                  </>
+                )}
+                {post.deleted > 0 && view === "reported" && (
+                  <strong>휴지통에 있는 게시물입니다</strong>
+                )}
+                <button
+                  onClick={() => fetchPostDetail(post.no)}
+                  className="detail-button"
+                >
+                  상세보기
+                </button>
+                &nbsp;&nbsp;
+                <button
+                  onClick={() => deletePost(post.no)}
+                  className="delete-button"
+                >
+                  삭제하기
+                </button>
+              </li>
+            );
+          })}
         </ul>
+        {/* 선택된 게시글의 상세 내용 표시 */}
+        {selectedPost && (
+          <div className="post-detail">
+            <h3>상세 내용</h3>
+
+            <strong>글 내용:</strong>
+            <p>{selectedPost.content}</p>
+          </div>
+        )}
       </div>
     );
   };
@@ -209,57 +253,54 @@ export default function CommunityManage() {
             margin-top: 10px;
             padding: 5px 10px;
             margin-left: 10px;
-            background-color: skyblue;
+            background-color: lightblue;
             border: none;
             border-radius: 4px;
             cursor: pointer;
           }
 
-          .sort-button {
-            padding: 5px 10px;
-            margin-right: 10px;
-            background-color: initial;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            cursor: pointer;
+          .post-detail {
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+            margin-top: 20px;
           }
 
-          .sort-button.active {
-            background-color: #ccc;
+          .post-detail img {
+            width: 100px;
+            height: 100px;
           }
         `}
       </style>
-      <div style={{ marginBottom: "10px" }}>
-        <button
-          style={{ padding: "10px", marginRight: "10px" }}
-          onClick={() => setView("all")}
+      <h1>게시글 관리</h1>
+      <button onClick={() => setView("all")}>전체 글 보기</button>
+      <button onClick={() => setView("reported")}>신고된 글 보기</button>
+      {view === "reported" && (
+        <select
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value)}
         >
-          전체보기
+          <option value="latest">최신순</option>
+          <option value="mostReported">신고 많은 순</option>
+        </select>
+      )}
+      {renderContent()}
+      <div>
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 0}
+        >
+          이전
         </button>
-        <button style={{ padding: "10px" }} onClick={() => setView("reported")}>
-          신고글 보기
+        <span>
+          {currentPage + 1} / {totalPages}
+        </span>
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage >= totalPages - 1}
+        >
+          다음
         </button>
       </div>
-      {renderContent()}
-      {totalPages > 1 && (
-        <div>
-          <button
-            disabled={currentPage === 0}
-            onClick={() => handlePageChange(currentPage - 1)}
-          >
-            이전 페이지
-          </button>
-          <span>
-            {currentPage + 1} / {totalPages}
-          </span>
-          <button
-            disabled={currentPage + 1 === totalPages}
-            onClick={() => handlePageChange(currentPage + 1)}
-          >
-            다음 페이지
-          </button>
-        </div>
-      )}
     </div>
   );
 }
