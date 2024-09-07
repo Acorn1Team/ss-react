@@ -79,7 +79,7 @@ export default function ShowSearch() {
   };
 
   const handleBlur = () => {
-    setTimeout(() => setShowDropdown(false), 100);
+    setTimeout(() => setShowDropdown(false), 300);
   };
 
   // 직접 추가 시
@@ -133,7 +133,7 @@ export default function ShowSearch() {
             ))}
             <AutoSearchItem>
               {inputValue}{" "}
-              <button onClick={scrapShow}>네이버 웹 스크래핑</button>
+              <SearchButtonN onClick={scrapShow}>정보 찾기</SearchButtonN>
             </AutoSearchItem>
           </AutoSearchContainer>
         )}
@@ -218,21 +218,23 @@ export default function ShowSearch() {
 }
 
 const SearchForm = styled.form`
+  width: 40% !important; /* 너비를 강제로 적용 */
   display: flex;
-  align-items: center;
-  justify-content: center; /* 중앙 정렬 추가 */
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
+  width: 100%; /* 부모 컨테이너 너비에 맞게 설정 */
+  margin: 0 auto; /* 가운데 정렬 */
   position: relative; /* 드롭다운의 위치를 제대로 설정하기 위해 추가 */
 `;
 
 const SearchInput = styled.input`
   font-family: inherit;
   font-size: inherit;
-  background-color: rgb(199, 199, 199)
+  background-color: rgb(199, 199, 199);
   border: none;
   color: black;
   padding: 0.7rem 1rem;
   border-radius: 30px;
-  width: 12em;
   transition: all ease-in-out 0.5s;
   margin-right: 0.5rem;
 
@@ -252,7 +254,23 @@ const SearchInput = styled.input`
   }
 `;
 
+
 const SearchButton = styled.button`
+  font-family: inherit;
+  font-size: inherit;
+  background-color: gray;
+  color: #white;
+  padding: 0.7rem 1rem;
+  border-radius: 30px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #505050;
+    cursor: pointer;
+  }
+`;
+
+const SearchButtonN = styled.button`
   font-family: inherit;
   font-size: inherit;
   background-color: #323232;
@@ -269,18 +287,20 @@ const SearchButton = styled.button`
 `;
 
 const AutoSearchContainer = styled.div`
-  position: absolute;
-  top: 50px;
-  left: 50%;
-  transform: translateX(-50%); /* 중앙 정렬 추가 */
-  width: 200px;
+  width: 70%; /* 드롭다운 너비 설정 */
   max-height: 500px;
   overflow-y: auto;
   background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.3);
   box-shadow: 0 10px 10px rgb(0, 0, 0, 0.3);
   z-index: 3;
+  margin: 0 auto; /* 중앙 정렬을 위해 추가 */
+  top: 50px;
+  position: absolute; /* 위치를 고정 */
+  left: 0; /* 부모 요소 기준으로 왼쪽부터 중앙으로 정렬 */
+  right: 0; /* 부모 요소 기준으로 오른쪽을 동일하게 정렬 */
 `;
+
 
 const AutoSearchItem = styled.div`
   padding: 10px;
