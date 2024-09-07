@@ -3,14 +3,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import styles from "../Style/UserUpdate.module.css";
 import axios from "axios";
 import Modal from "react-modal";
+import Loading from "../User/Loading";
 
 const DeleteForm = () => {
   const { userNo } = useParams();
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState({});
   const nv = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
+  const [modalContent, setModalContent] = useState("");
   const openModal = () => {
     setModalIsOpen(true);
   };
@@ -18,36 +20,6 @@ const DeleteForm = () => {
   const closeModal = () => {
     setModalIsOpen(false);
   };
-
-  // const passwordCheck = async () => {
-  //   try {
-  //     const response = await axios.post(`/user/passwordCheck`, {
-  //       userNo,
-  //       pwd: pass,
-  //     });
-
-  //     // 서버에서 응답받은 데이터가 result를 포함하고 있는지 확인
-  //     if (response.data.result) {
-  //       openModal();
-  //     } else {
-  //       setErrors({
-  //         message: response.data.message,
-  //       });
-  //     }
-  //   } catch (error) {
-  //     // error.response가 있는지 확인하고, 상태 코드와 메시지를 로깅
-  //     if (error.response) {
-  //       setErrors({
-  //         message:
-  //           error.response.data.message ||
-  //           "비밀번호 확인 중 오류가 발생했습니다.",
-  //       });
-  //     } else {
-  //       console.error("비밀번호 확인 중 오류 발생 : ", error.message);
-  //       setErrors({ message: "비밀번호 확인 중 오류가 발생했습니다." });
-  //     }
-  //   }
-  // };
 
   const emailCheck = async (email, setErrorMessage) => {
     try {
@@ -59,8 +31,6 @@ const DeleteForm = () => {
 
       if (response.data.exists) {
         openModal();
-        // setErrorMessage({ email: "이미 등록된 이메일입니다." });
-        // return false;
       } else {
         setErrorMessage({ email: "이메일이 일치하지 않습니다." });
       }
@@ -79,11 +49,14 @@ const DeleteForm = () => {
   };
 
   const handleDelete = async () => {
+    setLoading(true);
     try {
       const response = await axios.put(`/user/mypage/delete`, {
         userNo: userNo,
         email: email,
       });
+
+      <Loading />;
 
       if (response.data.result) {
         sessionStorage.removeItem("token");
@@ -144,6 +117,8 @@ const DeleteForm = () => {
       }
     } catch (error) {
       console.error("Error fetching user posts:", error);
+    } finally {
+      setLoading(false); // 로딩 종료
     }
   };
 
@@ -153,6 +128,7 @@ const DeleteForm = () => {
 
   return (
     <div className={styles.container}>
+      {loading && <Loading />}
       <div className={styles.user_input}>
         <input
           type="text"

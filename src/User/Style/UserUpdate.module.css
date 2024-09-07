@@ -82,12 +82,6 @@ button[type="submit"] {
   box-sizing: border-box; /* 버튼 크기가 컨테이너에 맞춰지도록 설정 */
 }
 
-.error_message {
-  color: #ff6f61;
-  font-size: 12px;
-  margin-top: 5px;
-}
-
 .button_group {
   display: flex;
   justify-content: space-between;
@@ -180,4 +174,12 @@ button[type="submit"] {
 
 .modal_buttons button:nth-child(2):hover {
   background-color: gray;
+}
+
+.error {
+  text-align: left;
+  color: #ff6f61;
+  font-size: 13px;
+  margin-top: -3px;
+  margin-bottom: 10px;
 }

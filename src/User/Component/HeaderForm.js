@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FaShoppingCart } from "react-icons/fa";
-import { HiBellAlert } from "react-icons/hi2";
-import { CgProfile } from "react-icons/cg";
+import { FiShoppingCart } from "react-icons/fi";
+// import { FaShoppingCart } from "react-icons/fa";
+// import { HiBellAlert } from "react-icons/hi2";
+import { LiaBellSolid } from "react-icons/lia";
+// import { CgProfile } from "react-icons/cg";
+// import { BsPersonHearts } from "react-icons/bs";
+import { GoPerson } from "react-icons/go";
 import styles from "../Style/HeaderForm.module.css";
 import AutoSearch from "./AutoSearch";
+import { IoCartOutline } from "react-icons/io5";
 
 function HeaderForm() {
   const [showPopup, setShowPopup] = useState(false);
@@ -135,11 +140,11 @@ function HeaderForm() {
       <div className={styles.rightContainer}>
         <AutoSearch />
         <Link to="/user/shop/cart">
-          <FaShoppingCart className={styles.icon} />
+          <IoCartOutline className={styles.icon} />
         </Link>
         {sessionStorage.getItem("id") && (
           <div className={styles.notificationWrapper}>
-            <HiBellAlert onClick={handleAlarmClick} className={styles.icon} />
+            <LiaBellSolid onClick={handleAlarmClick} className={styles.icon} />
             {alerts.some((alert) => !alert.isRead) && (
               <div className={styles.redDot}></div>
             )}
@@ -224,7 +229,11 @@ function HeaderForm() {
         )}
         {isLoggedIn ? (
           <>
-            <CgProfile className={styles.icon} onClick={handleProfileClick} />
+            <GoPerson
+              className={styles.icon}
+              onClick={handleProfileClick}
+              style={{ marginBottom: "5px", marginLeft: "-2px" }}
+            />
             {showPopup && (
               <div className={styles.popupContainer}>
                 <Link
@@ -268,7 +277,7 @@ function HeaderForm() {
           </>
         ) : (
           <span onClick={() => checkFor()}>
-            <CgProfile size={"30"} />
+            <GoPerson size={"30"} />
           </span>
         )}
       </div>

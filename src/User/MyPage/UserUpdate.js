@@ -28,6 +28,7 @@ const UserUpdate = () => {
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const nv = useNavigate();
+  const [showAddrEnd, setShowAddrEnd] = useState(false); // 상세 주소 입력 필드 표시 여부 관리
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState(""); // 모달 내용 관리
@@ -46,6 +47,14 @@ const UserUpdate = () => {
   const addrStartRef = useRef(null);
   const addrEndRef = useRef(null);
   const zipcodeDisplayRef = useRef(null);
+
+  const [errorMessage, setErrorMessage] = useState("");
+  const updateErrorMessage = (field, message) => {
+    setErrorMessage((prevState) => ({
+      ...prevState,
+      [field]: message,
+    }));
+  };
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -81,6 +90,7 @@ const UserUpdate = () => {
         if (zipcodeDisplayRef.current)
           zipcodeDisplayRef.current.value = data.zonecode;
         if (addrStartRef.current) addrStartRef.current.value = addr;
+        setShowAddrEnd(true); // 상세 주소 입력 필드 표시
         if (addrEndRef.current) addrEndRef.current.focus();
       },
     }).open();
@@ -136,6 +146,21 @@ const UserUpdate = () => {
       }
     }
 
+    if (!user.zipcode || !user.address) {
+      updateErrorMessage("address", "주소는 필수 입력 항목입니다.");
+      formIsValid = false;
+    }
+
+    if (!user.name) {
+      updateErrorMessage("name", "이름은 필수 입력 항목입니다.");
+      formIsValid = false;
+    }
+
+    if (!user.tel) {
+      updateErrorMessage("tel", "전화번호는 필수 입력 항목입니다.");
+      formIsValid = false;
+    }
+
     setErrors(newErrors);
     return formIsValid;
   };
@@ -147,6 +172,8 @@ const UserUpdate = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // zipcodeDisplayRef 및 addrStartRef가 비어 있는지 확인
 
     if (!validateForm()) {
       return;
@@ -165,28 +192,22 @@ const UserUpdate = () => {
     try {
       if (showPasswordForm && currentPassword) {
         const passwordResponse = await axios.post(`/user/validate-password`, {
-          no: userNo, // 사용자 번호도 함께 전달
-          pwd: currentPassword, // 현재 비밀번호를 전달
+          no: userNo,
+          pwd: currentPassword,
         });
 
         if (!passwordResponse.data.isValid) {
-          setErrors((prevErrors) => ({
-            ...prevErrors,
-            currentPassword: "현재 비밀번호가 일치하지 않습니다.",
-          }));
-          return; // 비밀번호가 일치하지 않으면 폼 제출 중단
+          updateErrorMessage(
+            "currentPassword",
+            "현재 비밀번호가 일치하지 않습니다."
+          );
+          return;
         }
       }
 
-      console.log("Sending data to server:", updatedUser);
       const response = await axios.put(`/user/update/${userNo}`, updatedUser);
-      console.log("Server response:", response.data);
       setModalContent("회원 정보가 수정되었습니다.");
-      // console.log(modalContent);
       openModal();
-      // console.log(modalIsOpen);
-      // alert("회원 정보가 수정되었습니다.");
-      // nv("/user/main");
     } catch (error) {
       console.error(
         "Error updating user:",
@@ -322,8 +343,9 @@ const UserUpdate = () => {
           onChange={handleInputChange}
           disabled={!nameNull}
         />
-        {errors.name && (
-          <div className={styles.error_message}>{errors.name}</div>
+
+        {errorMessage.name && (
+          <div className={styles.error}>{errorMessage.name}</div>
         )}
       </div>
       {showPasswordForm && (
@@ -408,6 +430,7 @@ const UserUpdate = () => {
             onChange={handleInputChange}
           />
         </div>
+        {errorMessage.tel && <p className={styles.error}>{errorMessage.tel}</p>}
         <div className={styles.user_input}>
           <input
             type="text"
@@ -417,6 +440,7 @@ const UserUpdate = () => {
             value={user.zipcode}
             disabled
           />
+
           <button
             type="button"
             onClick={openDaumPostcode}
@@ -424,6 +448,9 @@ const UserUpdate = () => {
           >
             주소 검색
           </button>
+          {errorMessage.address && (
+            <p className={styles.error}>{errorMessage.address}</p>
+          )}
         </div>
         <div className={styles.user_input}>
           <input
@@ -434,14 +461,17 @@ const UserUpdate = () => {
             value={user.address}
             disabled
           />
-          <input
-            type="text"
-            ref={addrEndRef}
-            name="addr_end"
-            placeholder="상세주소"
-            value={user.addr_end}
-            onChange={handleInputChange}
-          />
+          {showAddrEnd && (
+            <input
+              type="text"
+              ref={addrEndRef}
+              name="addr_end"
+              placeholder="상세 주소"
+              onChange={handleInputChange}
+              value={user.addr_end || ""}
+              style={{ marginTop: "5px" }}
+            />
+          )}
         </div>
         <div className={styles.buttons}>
           <button

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "../Style/UserRegister.module.css";
 import axios from "axios";
 import Modal from "react-modal";
+import Loading from "../User/Loading";
 
 const Register = () => {
   const [id, setId] = useState("");
@@ -35,12 +36,10 @@ const Register = () => {
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,}$/; // 최소 4자, 영문, 숫자, 특수문자 포함
   const userIdRegex = /^[a-zA-Z0-9]{4,20}$/; // 4~20자의 영문, 숫자만 허용
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // 이메일 형식 검증 정규 표현식
-  // const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
-  // const [modalMessage, setModalMessage] = useState(""); // 모달에 표시할 메시지
   const nv = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState(""); // 모달 내용 관리
-
+  const [loading, setLoading] = useState(false); // 로딩 상태 추가
   const updateErrorMessage = (field, message) => {
     setErrorMessage((prevState) => ({
       ...prevState,
@@ -140,7 +139,7 @@ const Register = () => {
       // 이메일 중복인 경우 인증번호 발송 중지
       return;
     }
-
+    setLoading(true);
     try {
       const response = await fetch(
         "http://localhost:8080/user/auth/send-verification-code",
@@ -153,6 +152,7 @@ const Register = () => {
 
       const result = await response.json();
       console.log("Verification Code Response:", result); // 응답 확인
+      <Loading />;
 
       if (response.ok) {
         setVerificationCode(result.code); // 서버에서 반환한 인증번호
@@ -166,6 +166,8 @@ const Register = () => {
     } catch (error) {
       console.error("인증번호 발송 중 오류 발생:", error);
       setErrorMessage("인증번호 발송 실패");
+    } finally {
+      setLoading(false); // 로딩 종료
     }
   };
 
@@ -375,7 +377,7 @@ const Register = () => {
       }));
       return;
     }
-
+    setLoading(true); // 로딩 시작
     if (
       !(await verifyEmailCodeOnServer(
         `${email}@${emailDomain}`,
@@ -387,6 +389,7 @@ const Register = () => {
         ...prev,
         email: "이메일 인증이 완료되지 않았습니다.",
       }));
+      setLoading(false); // 로딩 종료
       return;
     }
 
@@ -414,17 +417,19 @@ const Register = () => {
       }
 
       await response.json();
-      setModalContent("회원가입 완료!");
+      setModalContent("회원가입이 완료되었습니다.");
       openModal();
-      //navigate("/"); // 회원가입 성공 시 홈으로 이동
     } catch (error) {
       console.error("회원가입 요청 중 오류 발생:", error);
       setErrorMessage({ global: error.message });
+    } finally {
+      setLoading(false); // 로딩 종료
     }
   };
 
   return (
     <div className={styles.container}>
+      {loading && <Loading />} {/* 로딩 컴포넌트 표시 */}
       <form className="register_Form" onSubmit={handleRegister}>
         <h1>SceneStealer</h1>
 
@@ -637,7 +642,6 @@ const Register = () => {
           회원가입
         </button>
       </form>
-
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
