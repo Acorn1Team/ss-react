@@ -11,6 +11,7 @@ export default function PostList() {
   const [isLoading, setIsLoading] = useState(false);
   const [viewMode, setViewMode] = useState("follow"); // "follow" 또는 "all"
   const [hasFollows, setHasFollows] = useState(false); // 팔로우 여부 확인
+  const [initialLoad, setInitialLoad] = useState(true); // 초기 로드 여부 체크
 
   const userNo = sessionStorage.getItem("id");
 
@@ -31,9 +32,15 @@ export default function PostList() {
       .then((res) => {
         if (res.data.followeeList && res.data.followeeList.length > 0) {
           setHasFollows(true); // 팔로우가 있으면 true로 설정
-          setViewMode("follow"); // 기본은 팔로우 게시물 보기로 설정
+          if (initialLoad) {
+            setViewMode("follow"); // 초기 로드일 때 팔로우 게시물 보기로 설정
+            setInitialLoad(false); // 초기 로드 완료
+          }
         } else {
-          setViewMode("all");
+          if (initialLoad) {
+            setViewMode("all"); // 초기 로드일 때 팔로우 게시물이 없으면 전체보기로 설정
+            setInitialLoad(false); // 초기 로드 완료
+          }
           setHasFollows(false);
         }
         setCurrentPage(0); // 페이지를 0으로 초기화
@@ -61,10 +68,16 @@ export default function PostList() {
       .then((res) => {
         // 삭제된 게시물을 제외하고 불러옴
         const filteredPosts = res.data.content.filter(
-          (post) => post.deleted < 1
+          (post) => post.deleted < 1 || post.reports_count <= 5
         );
         setFollowPost(filteredPosts); // 페이지를 변경할 때마다 갱신
         setTotalPages(res.data.totalPages);
+
+        // 팔로우 게시글이 없으면 viewMode를 "all"로 전환
+        if (viewMode === "follow" && filteredPosts.length === 0) {
+          setViewMode("all");
+          setCurrentPage(0); // 페이지를 0으로 초기화
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -76,6 +89,14 @@ export default function PostList() {
 
   const handleImageLoadError = (e) => {
     e.target.style.display = "none";
+  };
+
+  // 글 내용을 100자 제한으로 자르기
+  const truncateContent = (content, limit = 100) => {
+    if (content.length > limit) {
+      return content.slice(0, limit) + "...";
+    }
+    return content;
   };
 
   // 페이지 전환 함수
@@ -93,8 +114,10 @@ export default function PostList() {
 
   // 뷰 모드 전환 함수
   const handleViewModeChange = (mode) => {
-    setViewMode(mode); // viewMode만 업데이트하고, 게시글 로드는 useEffect에서 처리
-    setCurrentPage(0); // 페이지를 0으로 초기화
+    if (viewMode !== mode) {
+      setViewMode(mode); // viewMode만 업데이트하고, 게시글 로드는 useEffect에서 처리
+      setCurrentPage(0); // 페이지를 0으로 초기화
+    }
   };
 
   return (
@@ -134,7 +157,9 @@ export default function PostList() {
               </Link>
               {/* 글 내용을 클릭하면 상세 페이지로 이동하도록 Link 추가 */}
               <Link to={`/user/style/detail/${fp.no}`}>
-                <div className="post-content">{fp.content}</div>
+                <div className="post-content">
+                  {truncateContent(fp.content, 100)}
+                </div>
               </Link>
               <div className="post-nickname">
                 <Link to={`/user/style/profile/${fp.userNo}`}>
