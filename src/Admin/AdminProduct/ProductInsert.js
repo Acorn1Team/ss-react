@@ -15,6 +15,8 @@ export default function ProductInsert() {
     discountRate: 0, // 할인율
   });
 
+  const [errors, setErrors] = useState({}); // 에러 메시지 상태
+
   // 입력값 변경 처리
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,16 +41,34 @@ export default function ProductInsert() {
     }));
   };
 
+  // 유효성 검사
+  const validate = () => {
+    const newErrors = {};
+    if (!state.name) newErrors.name = "상품명을 입력하세요.";
+    if (!state.price || state.price <= 0) newErrors.price = "유효한 가격을 입력하세요.";
+    if (!state.contents) newErrors.contents = "상품 설명을 입력하세요.";
+    if (!state.category) newErrors.category = "카테고리를 선택하세요.";
+    if (!state.stock || state.stock < 0) newErrors.stock = "유효한 재고를 입력하세요.";
+    if (state.discountRate < 0 || state.discountRate > 100) {
+      newErrors.discountRate = "할인율은 0과 100 사이여야 합니다.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // 에러가 없으면 true 반환
+  };
+
   // 저장 버튼 클릭 시 실행되는 함수
   const handleSave = () => {
-    const formData = new FormData();
+    // 유효성 검사
+    if (!validate()) {
+      return; // 유효성 검사가 통과되지 않으면 종료
+    }
 
-    // 오늘 날짜를 생성하여 productDto에 추가
-    const today = new Date().toISOString(); // ISO 형식으로 변환
+    const formData = new FormData();
     const { pic, ...otherData } = state;
     formData.append(
       "productDto",
-      JSON.stringify({ ...otherData, date: today })
+      JSON.stringify({ ...otherData })
     );
 
     // 파일이 있는 경우 파일을 추가
@@ -84,47 +104,47 @@ export default function ProductInsert() {
     <div className="form-container">
       <h2 className="form-title">상품 추가</h2>
       <div className="form-group">
-        <label>상품명:</label>
         <input
           onChange={handleChange}
           type="text"
           name="name"
           placeholder="상품명을 입력하세요"
         />
+        {errors.name && <p className="error-message">{errors.name}</p>}
       </div>
       <br />
       <div className="form-group">
-        <label>가격:</label>
         <input
           onChange={handleChange}
           type="text"
           name="price"
           placeholder="가격을 입력하세요"
         />
+        {errors.price && <p className="error-message">{errors.price}</p>}
       </div>
       <br />
       <div className="form-group">
-        <label>상품 설명:</label>
         <textarea
           onChange={handleChange}
           name="contents"
           placeholder="상품 설명을 입력하세요"
         />
+        {errors.contents && <p className="error-message">{errors.contents}</p>}
       </div>
       <br />
       <div className="form-group">
-        <label>카테고리:</label>
         <select onChange={handleChange} name="category">
-          <option value="">선택해주세요</option>
+          <option value="">카테고리를 선택해주세요</option>
           <option value="상의">상의</option>
           <option value="하의">하의</option>
           <option value="신발">신발</option>
           <option value="기타">기타</option>
         </select>
+        {errors.category && <p className="error-message">{errors.category}</p>}
       </div>
       <br />
       <div className="form-group">
-        <label>이미지:</label>
+        이미지:{" "}
         <input
           onChange={handleFileChange}
           type="file"
@@ -134,26 +154,33 @@ export default function ProductInsert() {
       </div>
       <br />
       <div className="form-group">
-        <label>재고:</label>
         <input
           onChange={handleChange}
           type="text"
           name="stock"
           placeholder="재고를 입력하세요"
         />
+        {errors.stock && <p className="error-message">{errors.stock}</p>}
       </div>
       <br />
       <div className="form-group">
-        <label>할인율:</label>
         <input
           onChange={handleChange}
           type="text"
           name="discountRate"
           placeholder="할인율을 입력하세요"
         />
+        {errors.discountRate && (
+          <p className="error-message">{errors.discountRate}</p>
+        )}
       </div>
       <br />
-      <button className="update-button" onClick={handleSave}>추가</button>
+      <button
+        className="update-button"
+        onClick={handleSave} // 버튼이 클릭될 때마다 유효성 검사 수행
+      >
+        추가
+      </button>
     </div>
   );
 }

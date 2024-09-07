@@ -35,6 +35,7 @@ export default function ProductManage() {
           searchField,
           startDate,
           endDate,
+          sort:"no,DESC"
         },
       });
       setProducts(response.data.content);
@@ -196,25 +197,24 @@ export default function ProductManage() {
   return (
     <>
       <style>
-        {`
-          .product-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
+      {
+          `.product-container {
+            display: block; /* flex 대신 block 레이아웃 사용 */
           }
 
           .product-card {
+            width: 100%; /* 한 줄에 하나씩 차지하도록 전체 너비 설정 */
+            max-width: 600px; /* 각 카드의 최대 너비 제한 */
+            margin: 0 auto 20px; /* 가운데 정렬 및 아래쪽 간격 추가 */
             border: 1px solid #ccc;
             border-radius: 10px;
             padding: 20px;
-            margin: 10px;
-            width: 250px;
-            height: auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
           }
+
 
           .product-card img {
             margin: 10px 0;
@@ -225,22 +225,21 @@ export default function ProductManage() {
             margin-top: 20px;
           }
 
-          .button {
+          button {
             padding: 10px 20px;
-            color: black;
             cursor: pointer;
           }
 
-          .button:hover {
-            background-color: #45a049;
+          button:hover {
+            background-color: blue;
           }
 
           .reviews-container {
             padding: 10px;
             background-color: #f9f9f9;
             border-top: 1px solid #ccc;
-          }
-        `}
+          }`
+        }
       </style>
       <div className="button-container">
         <button className="button" onClick={() => navigate("/admin/product/insert")}>
@@ -250,7 +249,6 @@ export default function ProductManage() {
 
       <div style={{ marginBottom: "10px" }}>
         <label style={{ display: "inline-block", marginRight: "10px" }}>
-          검색 :
           <select
             value={searchField}
             onChange={(e) => setSearchField(e.target.value)}
@@ -275,24 +273,11 @@ export default function ProductManage() {
         {products.length > 0 ? (
           products.map((item) => (
             <div key={item.no} className="product-card">
-              <div> 
-                <span
-                  onClick={() => navigate(`/admin/product/update/${item.no}`)}
-                  style={{ cursor: "pointer", color: "blue" }}
-                >
-                  {item.no}.{item.name}
-                </span>
+              <div>
+                <h3>{item.no}. {item.name}</h3>
               </div>
               <div>
-                <strong>평점: </strong>
-                <span
-                  onClick={() => toggleRowExpansion(item.no)}
-                  style={{ cursor: "pointer", color: "blue" }}
-                >
-                  {item.score}점 (리뷰 총 {item.reviewCount || 0}건)
-                </span>
-              </div>
-              <div>
+                <strong>가격: </strong>
                 {item.discountRate > 0 ? (
                   <>
                     <span style={{ textDecoration: "line-through" }}>
@@ -311,8 +296,17 @@ export default function ProductManage() {
                 <img
                   src={item.pic}
                   alt={item.name}
-                  style={{ width: "100px", height: "100px" }}
+                  style={{ height: "100px" }}
                 />
+              </div>
+              <div>
+                <strong>평점: </strong>
+                <span
+                  onClick={() => toggleRowExpansion(item.no)}
+                  style={{ cursor: "pointer", color: "blue" }}
+                >
+                  {item.score}점 (리뷰 총 {item.reviewCount || 0}건)
+                </span>
               </div>
               <div>
                 <strong>재고:</strong> {item.stock} 
@@ -345,6 +339,9 @@ export default function ProductManage() {
               <div>
                 <strong>등록일:</strong> {formatDate(item.date)}
               </div>
+              <button onClick={() => navigate(`/admin/product/update/${item.no}`)}>
+                  수정하기
+              </button>
             </div>
           ))
         ) : (

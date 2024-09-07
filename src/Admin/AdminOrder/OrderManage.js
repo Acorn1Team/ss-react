@@ -130,6 +130,72 @@ export default function OrderManage() {
 
   return (
     <div>
+      <div style={{ marginBottom: "10px" }}>
+        <label style={{ display: "inline-block", marginRight: "10px" }}>
+          <select
+            value={searchField}
+            onChange={handleSearchFieldChange}
+            style={{ marginLeft: "10px", padding: "5px" }}
+          >
+            <option value="userId">유저 ID</option>
+            <option value="state">상태</option>
+            <option value="date">날짜</option>
+          </select>
+        </label>
+
+        {searchField === "date" ? (
+          <div>
+            <input
+              type="date"
+              placeholder="시작 날짜"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              style={{ padding: "5px", marginRight: "10px" }}
+            />
+            <input
+              type="date"
+              placeholder="종료 날짜"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              style={{ padding: "5px" }}
+            />
+          </div>
+        ) : searchField === "state" ? (
+          <select
+            value={status}
+            onChange={handleStatusFilterChange}
+            style={{ padding: "5px", marginRight: "10px" }}
+          >
+            <option value="">상태 선택</option>
+            <option value="배송중">배송중</option>
+            <option value="배송완료">배송완료</option>
+            <option value="주문취소">주문취소</option>
+          </select>
+        ) : (
+          <input
+            type="text"
+            placeholder={`검색어를 입력하세요 (${searchField === "userId"
+                ? "유저 ID"
+                : searchField === "state"
+                  ? "상태"
+                  : "날짜"
+              })`}
+            value={searchTerm}
+            onChange={handleSearchChange}
+            style={{ padding: "5px", width: "300px", marginRight: "10px" }}
+          />
+        )}
+
+        <button
+          onClick={handleSearch}
+          style={{ padding: "5px 10px", marginRight: "10px" }}
+        >
+          검색
+        </button>
+        <button onClick={handleReset} style={{ padding: "5px 10px" }}>
+          전체보기
+        </button>
+      </div>
       <table border="1">
         <thead>
           <tr>
@@ -225,76 +291,6 @@ export default function OrderManage() {
           </button>
         </div>
       )}
-      <br />
-
-      <div style={{ marginBottom: "10px" }}>
-        <label style={{ display: "inline-block", marginRight: "10px" }}>
-          검색 :
-          <select
-            value={searchField}
-            onChange={handleSearchFieldChange}
-            style={{ marginLeft: "10px", padding: "5px" }}
-          >
-            <option value="userId">유저 ID</option>
-            <option value="state">상태</option>
-            <option value="date">날짜</option>
-          </select>
-        </label>
-
-        {searchField === "date" ? (
-          <div>
-            <input
-              type="date"
-              placeholder="시작 날짜"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              style={{ padding: "5px", marginRight: "10px" }}
-            />
-            <input
-              type="date"
-              placeholder="종료 날짜"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              style={{ padding: "5px" }}
-            />
-          </div>
-        ) : searchField === "state" ? (
-          <select
-            value={status}
-            onChange={handleStatusFilterChange}
-            style={{ padding: "5px", marginRight: "10px" }}
-          >
-            <option value="">상태 선택</option>
-            <option value="배송중">배송중</option>
-            <option value="배송완료">배송완료</option>
-            <option value="주문취소">주문취소</option>
-          </select>
-        ) : (
-          <input
-            type="text"
-            placeholder={`검색어를 입력하세요 (${
-              searchField === "userId"
-                ? "유저 ID"
-                : searchField === "state"
-                ? "상태"
-                : "날짜"
-            })`}
-            value={searchTerm}
-            onChange={handleSearchChange}
-            style={{ padding: "5px", width: "300px", marginRight: "10px" }}
-          />
-        )}
-
-        <button
-          onClick={handleSearch}
-          style={{ padding: "5px 10px", marginRight: "10px" }}
-        >
-          검색
-        </button>
-        <button onClick={handleReset} style={{ padding: "5px 10px" }}>
-          전체보기
-        </button>
-      </div>
 
       {error && (
         <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>

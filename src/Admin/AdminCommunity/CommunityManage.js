@@ -238,6 +238,16 @@ export default function CommunityManage() {
   width: 100%;
 }
 
+.button-disabled {
+  background-color: rgb(199, 199, 199); /* disabled일 때의 색상 */
+  cursor: not-allowed; /* 마우스 포인터를 not-allowed로 변경 */
+}
+
+.button-abled {
+  background-color: #ebeaea; /* disabled일 때의 색상 */
+  color: black;
+}
+
 .delete-button,
 .detail-button {
   padding: 5px 10px;
@@ -271,10 +281,10 @@ export default function CommunityManage() {
         `}
       </style>
       <h1>게시글 관리</h1>
-      <button onClick={() => {setCurrentPage(0); setView("all");}} disabled={view === "all"}>
+      <button className={view === "all" ? "button-disabled" : "button-abled"} onClick={() => {setCurrentPage(0); setView("all");}} disabled={view === "all"}>
         전체 글 보기
       </button>
-      <button onClick={() => {setCurrentPage(0); setView("reported")}} disabled={view === "reported"}>
+      <button className={view === "reported" ? "button-disabled" : "button-abled"} onClick={() => {setCurrentPage(0); setView("reported")}} disabled={view === "reported"}>
         신고된 글 보기
       </button><br/>
       {view === "reported" && (

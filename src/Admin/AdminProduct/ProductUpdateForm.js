@@ -139,7 +139,6 @@ export default function ProductUpdateForm() {
     <div className="form-container">
       <h2 className="form-title">상품 정보 수정</h2>
       <div className="form-group">
-        <label>이름 :</label>
         <input
           type="text"
           name="name"
@@ -149,7 +148,6 @@ export default function ProductUpdateForm() {
         />
       </div>
       <div className="form-group">
-        <label>가격 :</label>
         <input
           type="text"
           name="price"
@@ -159,7 +157,6 @@ export default function ProductUpdateForm() {
         />
       </div>
       <div className="form-group">
-        <label>콘텐츠 :</label>
         <input
           type="text"
           name="contents"
@@ -169,7 +166,6 @@ export default function ProductUpdateForm() {
         />
       </div>
       <div className="form-group">
-        <label>카테고리 :</label>
         <select
           name="category"
           value={state.category}
@@ -183,8 +179,7 @@ export default function ProductUpdateForm() {
         </select>
       </div>
       <div className="form-group">
-        <label>이미지 :</label>
-        <input type="file" name="pic" onChange={handleFileChange} />
+        이미지: <input type="file" name="pic" onChange={handleFileChange} />
       </div>
       <div className="form-group">
         <label>재고 :</label>
