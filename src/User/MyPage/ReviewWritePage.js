@@ -57,9 +57,10 @@ export default function ReviewWritePage() {
     <div>
       <h2>리뷰 작성하기</h2>
       <div>
-        상품 번호: {orderProductNo}
+        {/* 상품 번호: {orderProductNo}
         <br />
-        사용자 번호: {userNo}
+        사용자 번호: {userNo} */}
+         상품명: 
       </div>
       <textarea
         placeholder="리뷰 내용을 입력하세요"
