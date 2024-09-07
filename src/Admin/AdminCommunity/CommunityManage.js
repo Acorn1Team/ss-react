@@ -33,7 +33,7 @@ export default function CommunityManage() {
       const filteredPosts = content.filter((post) => !post.deleted);
 
       setPosts(filteredPosts);
-      setTotalPages(totalPages); 
+      setTotalPages(totalPages);
       setCurrentPage(page);
       setSelectedPost(null);
     } catch (error) {
@@ -141,11 +141,24 @@ export default function CommunityManage() {
 
             return (
               <li key={post.no} className="post-item">
+                <button onClick={() => deletePost(post.no)}>
+                  삭제하기
+                </button><br/><br/><hr/>
+                {view === "reported" && (
+                  <>
+                    <strong>신고 횟수:</strong> {post.reportsCount}
+                    <br />
+                    <strong>신고 사유:</strong> {displayedCategories}
+                    <br />
+                  </>
+                )}<hr/>
+                {post.deleted > 0 && view === "reported" && (
+                  <strong>휴지통에 있는 게시물입니다</strong>
+                )}
                 <strong>작성자 ID:</strong> {post.userId}
                 <br />
                 {post.pic && (
                   <div className="image-container">
-                    <strong>사진:</strong>
                     <img
                       src={post.pic}
                       alt="Post"
@@ -154,54 +167,37 @@ export default function CommunityManage() {
                     />
                   </div>
                 )}
-                <strong>글 내용:</strong> {truncateText(post.content, 20)}
-                <br />
-                {view === "reported" && (
-                  <>
-                    <strong>신고 횟수:</strong> {post.reportsCount}
-                    <br />
-                    <strong>신고 사유:</strong> {displayedCategories}
-                    <br />
-                  </>
-                )}
-                {post.deleted > 0 && view === "reported" && (
-                  <strong>휴지통에 있는 게시물입니다</strong>
-                )}
-                <div className="button-container">
-                  <button
-                    onClick={() => fetchPostDetail(post.no)}
-                    className="detail-button"
+                {selectedPost?.no === post.no ? post.content : truncateText(post.content, 20)}
+                {post.content.length > 20 && (
+                  <span
+                    style={{ cursor: "pointer", color: "blue" }} // 클릭 가능한 스타일 추가
+                    onClick={() => {
+                      if (selectedPost?.no === post.no) {
+                        setSelectedPost(null); // 이미 선택된 게시글이라면 취소
+                      } else {
+                        fetchPostDetail(post.no); // 새로 선택
+                      }
+                    }}
                   >
-                    상세보기
-                  </button>
-                  <button
-                    onClick={() => deletePost(post.no)}
-                    className="delete-button"
-                  >
-                    삭제하기
-                  </button>
-                </div>
+                    {selectedPost?.no === post.no ? "닫기" : "상세보기"}
+                  </span>
+                )}
+
+
               </li>
             );
           })}
         </ul>
-        {selectedPost && (
-          <div className="post-detail">
-            <h3>상세 내용</h3>
-
-            <strong>글 내용:</strong>
-            <p>{selectedPost.content}</p>
-          </div>
-        )}
       </div>
     );
   };
 
+
   return (
     <div style={{ padding: "20px" }}>
-      <style>
-        {`
-          .post-list-horizontal {
+    <style>{`
+
+.post-list-horizontal {
   display: flex;
   justify-content: flex-start;
   list-style-type: none;
@@ -217,7 +213,7 @@ export default function CommunityManage() {
   margin-right: 10px;
   margin-bottom: 10px;
   width: 250px;
-  height: 300px;
+  height: 500px;
 }
 
 .image-container {
@@ -226,16 +222,8 @@ export default function CommunityManage() {
 }
 
 .post-image {
-  width: 100px;
-  height: 100px;
-}
-
-.button-container {
-  display: flex;
-  margin-top: 10px;
-  position: absolute;
-  bottom: 10px;
-  width: 100%;
+  height: 150px;
+  width: auto;
 }
 
 .button-disabled {
@@ -248,25 +236,6 @@ export default function CommunityManage() {
   color: black;
 }
 
-.delete-button,
-.detail-button {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
-  width: 100px;
-}
-
-.delete-button {
-  background-color: pink;
-}
-
-.detail-button {
-  background-color: lightblue;
-}
-
 .post-detail {
   border-top: 1px solid #ccc;
   padding-top: 20px;
@@ -274,19 +243,18 @@ export default function CommunityManage() {
 }
 
 .post-detail img {
-  width: 100px;
-  height: 100px;
+  height: 200px;
 }
 
         `}
       </style>
       <h1>게시글 관리</h1>
-      <button className={view === "all" ? "button-disabled" : "button-abled"} onClick={() => {setCurrentPage(0); setView("all");}} disabled={view === "all"}>
+      <button className={view === "all" ? "button-disabled" : "button-abled"} onClick={() => { setCurrentPage(0); setView("all"); }} disabled={view === "all"}>
         전체 글 보기
       </button>
-      <button className={view === "reported" ? "button-disabled" : "button-abled"} onClick={() => {setCurrentPage(0); setView("reported")}} disabled={view === "reported"}>
+      <button className={view === "reported" ? "button-disabled" : "button-abled"} onClick={() => { setCurrentPage(0); setView("reported") }} disabled={view === "reported"}>
         신고된 글 보기
-      </button><br/>
+      </button><br /><br />
       {view === "reported" && (
         <select
           value={sortOrder}
