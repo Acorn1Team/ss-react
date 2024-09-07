@@ -28,29 +28,25 @@ export default function CommunityManage() {
         `/admin/posts?page=${page}&size=${pageSize}`
       );
 
-      // 서버에서 삭제되지 않은 게시물 개수와 페이지 수를 받아옴
       const { content, totalElements, totalPages } = response.data;
 
-      // 삭제되지 않은 게시물만 필터링
       const filteredPosts = content.filter((post) => !post.deleted);
 
       setPosts(filteredPosts);
-      setTotalPages(totalPages); // 서버에서 계산된 총 페이지 수
+      setTotalPages(totalPages); 
       setCurrentPage(page);
-      setSelectedPost(null); // 페이지 변경 시 상세 내용 초기화
+      setSelectedPost(null);
     } catch (error) {
       console.error("글 데이터를 불러오는 중 오류 발생:", error);
     }
   };
 
-  // 신고된 글 데이터를 불러오는 함수
   const fetchFilteredPosts = async (page = 0, sort = "latest") => {
     try {
       const response = await axios.get(
         `/admin/posts/reported?page=${page}&size=${pageSize}&sort=${sort}`
       );
 
-      // 삭제되지 않은 신고 글만 필터링
       const filteredPosts = response.data.content.filter(
         (post) => !post.deleted
       );
@@ -58,13 +54,12 @@ export default function CommunityManage() {
       setFilteredPosts(filteredPosts);
       setTotalPages(response.data.totalPages);
       setCurrentPage(page);
-      setSelectedPost(null); // 페이지 변경 시 상세 내용 초기화
+      setSelectedPost(null);
     } catch (error) {
       console.error("신고 글 데이터를 불러오는 중 오류 발생:", error);
     }
   };
 
-  // 신고된 글의 신고 내역을 불러오는 함수
   const fetchReportedInfos = async () => {
     try {
       const response = await axios.get(`/admin/posts/reportedInfos`);
@@ -74,16 +69,14 @@ export default function CommunityManage() {
     }
   };
 
-  // 신고글 삭제 함수
   const deletePost = async (postNo) => {
     try {
       const response = await axios.delete(`/admin/posts/${postNo}`);
 
       if (response.data.isSuccess) {
-        // 삭제 성공시 상태에서 해당 게시물 제거
         setPosts(posts.filter((post) => post.no !== postNo));
         setFilteredPosts(filteredPosts.filter((post) => post.no !== postNo));
-        setSelectedPost(null); // 삭제 후 상세 내용 초기화
+        setSelectedPost(null);
         console.log("삭제 성공");
       }
     } catch (error) {
@@ -91,38 +84,34 @@ export default function CommunityManage() {
     }
   };
 
-  // 게시글 상세 내용 가져오는 함수
   const fetchPostDetail = async (postNo) => {
     try {
       const response = await axios.get(`/admin/posts/detail/${postNo}`);
-      setSelectedPost(response.data); // 선택된 게시글의 상세 내용 설정
+      setSelectedPost(response.data);
     } catch (error) {
       console.error("게시글 상세 내용을 불러오는 중 오류 발생:", error);
     }
   };
 
-  // 컴포넌트가 처음 렌더링될 때 데이터 불러옴
   useEffect(() => {
     if (view === "all") {
-      fetchPosts(currentPage); // 전체 글 보기에서 삭제된 글을 제외하고 가져옴
+      fetchPosts(currentPage);
     } else if (view === "reported") {
-      fetchFilteredPosts(currentPage, sortOrder); // 신고된 글 보기에서 삭제된 글을 제외하고 가져옴
+      fetchFilteredPosts(currentPage, sortOrder);
       fetchReportedInfos();
     }
   }, [view, sortOrder, currentPage]);
 
-  // 페이지 변경 함수
   const handlePageChange = (newPage) => {
     if (newPage >= 0 && newPage < totalPages) {
-      setCurrentPage(newPage); // 페이지 번호 상태를 업데이트
-      setSelectedPost(null); // 페이지 변경 시 상세 내용 초기화
+      setCurrentPage(newPage);
+      setSelectedPost(null);
     }
   };
 
   const renderContent = () => {
     const displayPosts = view === "all" ? posts : filteredPosts;
 
-    // 신고 카테고리별 카운트를 저장하기 위한 객체
     const categoryCounts = {};
     reportedInfos.forEach((info) => {
       if (!categoryCounts[info.postNo]) {
@@ -145,7 +134,6 @@ export default function CommunityManage() {
               선정성: 0,
             };
 
-            // 카운트가 0이 아닌 항목만 표시하도록 필터링
             const displayedCategories = Object.entries(counts)
               .filter(([category, count]) => count > 0)
               .map(([category, count]) => `${category} ${count}회`)
@@ -155,6 +143,19 @@ export default function CommunityManage() {
               <li key={post.no} className="post-item">
                 <strong>작성자 ID:</strong> {post.userId}
                 <br />
+                {post.pic && (
+                  <div className="image-container">
+                    <strong>사진:</strong>
+                    <img
+                      src={post.pic}
+                      alt="Post"
+                      className="post-image"
+                      style={{ display: "block", margin: "0 auto" }}
+                    />
+                  </div>
+                )}
+                <strong>글 내용:</strong> {truncateText(post.content, 20)}
+                <br />
                 {view === "reported" && (
                   <>
                     <strong>신고 횟수:</strong> {post.reportsCount}
@@ -163,18 +164,6 @@ export default function CommunityManage() {
                     <br />
                   </>
                 )}
-                <br />
-                {post.pic && (
-                  <div className="image-container">
-                    <img
-                      src={post.pic}
-                      alt="Post"
-                      className="post-image"
-                      style={{ display: "block", margin: "0 auto" }}
-                      />
-                  </div>
-                )}
-                <strong>글 내용:</strong> {truncateText(post.content, 12)}
                 {post.deleted > 0 && view === "reported" && (
                   <strong>휴지통에 있는 게시물입니다</strong>
                 )}
@@ -196,7 +185,6 @@ export default function CommunityManage() {
             );
           })}
         </ul>
-        {/* 선택된 게시글의 상세 내용 표시 */}
         {selectedPost && (
           <div className="post-detail">
             <h3>상세 내용</h3>
@@ -215,21 +203,21 @@ export default function CommunityManage() {
         {`
           .post-list-horizontal {
   display: flex;
-  justify-content: flex-start; /* 게시글을 왼쪽 정렬 */
+  justify-content: flex-start;
   list-style-type: none;
   padding: 0;
-  flex-wrap: wrap; /* 화면 크기에 따라 줄바꿈 허용 */
+  flex-wrap: wrap;
 }
 
 .post-item {
-  position: relative; /* 버튼의 절대 위치를 설정할 수 있도록 상대적 위치 사용 */
+  position: relative;
   border: 1px solid #ccc;
   padding: 10px;
   border-radius: 8px;
   margin-right: 10px;
-  margin-bottom: 10px; /* 세로 간격 추가 */
-  width: 250px; /* 고정된 가로 크기 */
-  height: 300px; /* 고정된 세로 크기 */
+  margin-bottom: 10px;
+  width: 250px;
+  height: 300px;
 }
 
 .image-container {
@@ -244,11 +232,10 @@ export default function CommunityManage() {
 
 .button-container {
   display: flex;
-  
-  margin-top: 10px; /* 버튼과 게시글 내용 사이의 간격 */
+  margin-top: 10px;
   position: absolute;
-  bottom: 10px; /* 카드의 아래쪽에 버튼 배치 */
-  width: 100%; /* 버튼 컨테이너가 카드 너비에 맞게 확장 */
+  bottom: 10px;
+  width: 100%;
 }
 
 .delete-button,
@@ -257,9 +244,9 @@ export default function CommunityManage() {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 14px; /* 글꼴 크기 통일 */
+  font-size: 14px;
   font-weight: bold;
-  width: 100px; /* 버튼의 너비를 고정하여 크기 일관되게 설정 */
+  width: 100px;
 }
 
 .delete-button {
@@ -284,8 +271,12 @@ export default function CommunityManage() {
         `}
       </style>
       <h1>게시글 관리</h1>
-      <button onClick={() => setView("all")}>전체 글 보기</button>
-      <button onClick={() => setView("reported")}>신고된 글 보기</button>
+      <button onClick={() => {setCurrentPage(0); setView("all");}} disabled={view === "all"}>
+        전체 글 보기
+      </button>
+      <button onClick={() => {setCurrentPage(0); setView("reported")}} disabled={view === "reported"}>
+        신고된 글 보기
+      </button><br/>
       {view === "reported" && (
         <select
           value={sortOrder}
