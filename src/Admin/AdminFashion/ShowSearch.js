@@ -22,7 +22,6 @@ export default function ShowSearch() {
     await axios
       .get(`/admin/scrap/show/${inputValue}`)
       .then((response) => {
-        console.log("스크래핑 응답:", response.data);
         if (response.data.pic !== null) {
           setShow(response.data);
           setIsModalOpen(true);

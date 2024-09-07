@@ -7,6 +7,8 @@ export default function ActorEditDiy() {
     const [show, setShow] = useState({ title: '', pic: '' });
     const [actors, setActors] = useState([]);
     const [scrapedDatas, setScrapedData] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false); // 삭제 확인 모달
+    const [selectedActor, setSelectedActor] = useState(null); // 선택된 actorData
     const navigate = useNavigate();
 
     const scrapActors = (title) => {
@@ -57,14 +59,20 @@ export default function ActorEditDiy() {
             });
     }
 
+    const openModal = (actorData) => {
+        setSelectedActor(actorData);
+        setIsModalOpen(true);
+    };
+
     const deleteCharacter = (no) => {
         axios
             .delete(`/admin/character/${no}`)
             .then(getShowInfo)
+            .then(setIsModalOpen(false))
             .catch((error) => {
                 console.log(error);
             });
-    }
+    };
 
     return (
         <>
@@ -84,7 +92,7 @@ export default function ActorEditDiy() {
                             />
                             {actorData.actor} ({actorData.character})<br/>
                             <button onClick={() => navigate(`/admin/fashion/character/${actorData.no}`, { state: actorData })}>스타일 편집</button>
-                            <button onClick={() => deleteCharacter(actorData.no)}>배역 제거</button>&nbsp;
+                            <button onClick={() => openModal(actorData)}>배역 제거</button>&nbsp;
                         </div>
                     ))}
                 </div><hr />
@@ -106,6 +114,40 @@ export default function ActorEditDiy() {
                 })}
                 </div>
             </div>
+
+            <Modal
+                isOpen={isModalOpen}
+                onRequestClose={() => setIsModalOpen(false)}
+                contentLabel="배역 삭제 확인"
+                style={{
+                    overlay: {
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    },
+                    content: {
+                        background: "white",
+                        padding: "20px",
+                        borderRadius: "8px",
+                        textAlign: "center",
+                        maxWidth: "500px",
+                        height: "600px",
+                        margin: "auto",
+                    },
+                }}
+            >
+                {selectedActor && (
+                    <><br/>
+                        <img
+                            src={selectedActor.pic}
+                            alt={`${selectedActor.character} 이미지`}
+                            style={{ maxWidth: '70%', height: 'auto' }}
+                            /><br/>
+                        <h2>{selectedActor.character} ({selectedActor.actor} 배우)</h2>
+                        <h3>관련 데이터를 모두 삭제할까요?</h3>
+                        <button onClick={() => deleteCharacter(selectedActor.no)}>삭제</button>&nbsp;&nbsp;
+                        <button onClick={() => setIsModalOpen(false)}>닫기</button>
+                    </>
+                )}
+            </Modal>
         </>
     );
 }

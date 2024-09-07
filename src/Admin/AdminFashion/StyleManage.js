@@ -215,12 +215,12 @@ export default function StyleManage() {
                           <button onClick={() => {
                             setCurrentStyle(styleData);
                             setIsNewItemModalOpen(true);
-                          }}>🛍️새로운 아이템으로 추가하기🛍️</button>
+                          }}>새로운 아이템으로 추가</button>
                           <br/><br/>
                           <button onClick={() => {
                             setCurrentStyle(styleData);
                             setIsExistingItemModalOpen(true);
-                          }}>🛍️기존 아이템으로 추가하기🛍️</button>
+                          }}>기존 아이템으로 추가</button>
                       </>)}
                   </td>
                 ))}
