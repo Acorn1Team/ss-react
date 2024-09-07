@@ -183,7 +183,6 @@ export default function ProductList() {
                 : `${product.discountRate}% 할인`}
             </div>
             <div>평점: {product.score}</div>
-          
           </div>
         ))}
       </div>

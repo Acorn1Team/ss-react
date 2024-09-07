@@ -179,19 +179,20 @@ export default function CommunityManage() {
                 {post.deleted > 0 && view === "reported" && (
                   <strong>휴지통에 있는 게시물입니다</strong>
                 )}
-                <button
-                  onClick={() => fetchPostDetail(post.no)}
-                  className="detail-button"
-                >
-                  상세보기
-                </button>
-                &nbsp;&nbsp;
-                <button
-                  onClick={() => deletePost(post.no)}
-                  className="delete-button"
-                >
-                  삭제하기
-                </button>
+                <div className="button-container">
+                  <button
+                    onClick={() => fetchPostDetail(post.no)}
+                    className="detail-button"
+                  >
+                    상세보기
+                  </button>
+                  <button
+                    onClick={() => deletePost(post.no)}
+                    className="delete-button"
+                  >
+                    삭제하기
+                  </button>
+                </div>
               </li>
             );
           })}
@@ -214,61 +215,73 @@ export default function CommunityManage() {
       <style>
         {`
           .post-list-horizontal {
-            display: flex;
-            justify-content: flex-start; /* 게시글을 왼쪽 정렬 */
-            list-style-type: none;
-            padding: 0;
-            flex-wrap: wrap; /* 화면 크기에 따라 줄바꿈 허용 */
-          }
+  display: flex;
+  justify-content: flex-start; /* 게시글을 왼쪽 정렬 */
+  list-style-type: none;
+  padding: 0;
+  flex-wrap: wrap; /* 화면 크기에 따라 줄바꿈 허용 */
+}
 
-          .post-item {
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 8px;
-            margin-right: 10px;
-            margin-bottom: 10px; /* 세로 간격 추가 */
-            width: 250px; /* 고정된 가로 크기 */
-          }
+.post-item {
+  position: relative; /* 버튼의 절대 위치를 설정할 수 있도록 상대적 위치 사용 */
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 8px;
+  margin-right: 10px;
+  margin-bottom: 10px; /* 세로 간격 추가 */
+  width: 250px; /* 고정된 가로 크기 */
+  height: 300px; /* 고정된 세로 크기 */
+}
 
-          .image-container {
-            text-align: center;
-            margin-bottom: 10px;
-          }
+.image-container {
+  text-align: center;
+  margin-bottom: 10px;
+}
 
-          .post-image {
-            width: 100px;
-            height: 100px;
-          }
+.post-image {
+  width: 100px;
+  height: 100px;
+}
 
-          .delete-button {
-            margin-top: 10px;
-            padding: 5px 10px;
-            background-color: pink;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-          }
+.button-container {
+  display: flex;
+  
+  margin-top: 10px; /* 버튼과 게시글 내용 사이의 간격 */
+  position: absolute;
+  bottom: 10px; /* 카드의 아래쪽에 버튼 배치 */
+  width: 100%; /* 버튼 컨테이너가 카드 너비에 맞게 확장 */
+}
 
-          .detail-button {
-            margin-top: 10px;
-            padding: 5px 10px;
-            margin-left: 10px;
-            background-color: lightblue;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-          }
+.delete-button,
+.detail-button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px; /* 글꼴 크기 통일 */
+  font-weight: bold;
+  width: 100px; /* 버튼의 너비를 고정하여 크기 일관되게 설정 */
+}
 
-          .post-detail {
-            border-top: 1px solid #ccc;
-            padding-top: 20px;
-            margin-top: 20px;
-          }
+.delete-button {
+  background-color: pink;
+}
 
-          .post-detail img {
-            width: 100px;
-            height: 100px;
-          }
+.detail-button {
+  background-color: lightblue;
+}
+
+.post-detail {
+  border-top: 1px solid #ccc;
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
+.post-detail img {
+  width: 100px;
+  height: 100px;
+}
+
         `}
       </style>
       <h1>게시글 관리</h1>
