@@ -154,7 +154,7 @@ const DeleteForm = () => {
     <div className={styles.container}>
       <div className={styles.user_input}>
         <input
-          type="password"
+          type="text"
           name="pass"
           placeholder="이메일"
           value={email}

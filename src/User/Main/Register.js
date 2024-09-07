@@ -416,7 +416,7 @@ const Register = () => {
       await response.json();
       setModalContent("회원가입 완료!");
       openModal();
-      navigate("/"); // 회원가입 성공 시 홈으로 이동
+      //navigate("/"); // 회원가입 성공 시 홈으로 이동
     } catch (error) {
       console.error("회원가입 요청 중 오류 발생:", error);
       setErrorMessage({ global: error.message });
@@ -645,7 +645,7 @@ const Register = () => {
         className={styles.modal}
         overlayClassName={styles.overlay}
       >
-        <h2>{modalContent.includes("탈퇴") ? "회원탈퇴" : "알림"}</h2>
+        <h2>알림</h2>
         <p>{modalContent}</p>
         <div className={styles.modal_buttons}>
           <button
