@@ -41,10 +41,16 @@ export default function PromotionAdvertise() {
   }, [locationCategory, inputValue]);
 
   const selectPath = (item) => {
+
+    const newPath = (locationCategory==="product") 
+    ? `/user/shop/productlist/detail/${item.no}`
+    : `/user/main/sub/${item.no}`;
+
     setState((prevState) => ({
       ...prevState,
-      path: `${locationCategory}/${item.no}`,
+      path: newPath,
     }));
+    
     setShowDropdown(false);
     setInputValue(item.name || item.title);
   };
@@ -82,10 +88,9 @@ export default function PromotionAdvertise() {
             onChange={(e) => setLocationCategory(e.target.value)}
             value={locationCategory}
           >
-            <option value="">유도 경로 선택</option>
+            <option value="">유도 경로 종류 선택</option>
             <option value="product">상품 페이지</option>
-            <option value="show">작품 등장인물 페이지</option>
-            <option value="character">캐릭터 페이지(회의 후 처리 예정)</option>
+            <option value="show">작품 페이지</option>
           </select>
 
           <input

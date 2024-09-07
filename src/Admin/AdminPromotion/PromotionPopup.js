@@ -35,7 +35,10 @@ export default function PromotionPopup() {
   }, [locationCategory, inputValue]);
 
   const selectPath = (item) => {
-    setPath(`${locationCategory}/${item.no}`);
+    const newPath = (locationCategory==="product") 
+    ? `/user/shop/productlist/detail/${item.no}`
+    : `/user/main/sub/${item.no}`;
+    setPath(newPath);
     setShowDropdown(false);
     setInputValue(item.name || item.title);
   };
@@ -83,7 +86,6 @@ export default function PromotionPopup() {
           <option value="">유도 경로 선택</option>
           <option value="product">상품 페이지</option>
           <option value="show">작품 등장인물 페이지</option>
-          <option value="character">캐릭터 페이지</option>
         </select>
         <input
           placeholder="어디로?"
