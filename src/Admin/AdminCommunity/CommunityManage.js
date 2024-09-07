@@ -155,19 +155,6 @@ export default function CommunityManage() {
               <li key={post.no} className="post-item">
                 <strong>작성자 ID:</strong> {post.userId}
                 <br />
-                {post.pic && (
-                  <div className="image-container">
-                    <strong>사진:</strong>
-                    <img
-                      src={post.pic}
-                      alt="Post"
-                      className="post-image"
-                      style={{ display: "block", margin: "0 auto" }}
-                    />
-                  </div>
-                )}
-                <strong>글 내용:</strong> {truncateText(post.content, 20)}
-                <br />
                 {view === "reported" && (
                   <>
                     <strong>신고 횟수:</strong> {post.reportsCount}
@@ -176,6 +163,18 @@ export default function CommunityManage() {
                     <br />
                   </>
                 )}
+                <br />
+                {post.pic && (
+                  <div className="image-container">
+                    <img
+                      src={post.pic}
+                      alt="Post"
+                      className="post-image"
+                      style={{ display: "block", margin: "0 auto" }}
+                      />
+                  </div>
+                )}
+                <strong>글 내용:</strong> {truncateText(post.content, 12)}
                 {post.deleted > 0 && view === "reported" && (
                   <strong>휴지통에 있는 게시물입니다</strong>
                 )}

@@ -62,31 +62,28 @@ export default function NoticeManage() {
 
   return (
     <>
-      <button onClick={() => navigate("/admin/help/notices/new")}>공지 추가하기</button>
-      <br /><br />
-
-      {/* 카테고리 선택 및 전체보기 버튼 */}
-      <div style={{ marginBottom: "10px" }}>
-        <label htmlFor="category">카테고리:</label>
-        <select
-          id="category"
-          value={selectedCategory}
-          onChange={handleCategoryChange}
-          style={{ marginLeft: "10px", padding: "5px" }}
-        >
-          <option value="">전체</option>
-          <option value="주문">주문</option>
-          <option value="결제">결제</option>
-          <option value="반품/환불">반품/환불</option>
-          <option value="배송">배송</option>
-          <option value="프로모션/쿠폰">프로모션/쿠폰</option>
-          <option value="상품문의">상품문의</option>
-        </select>
-      </div>
-
-      {/* 공지사항 목록을 테이블로 표시 */}
-      <table border={1}>
+      <table border={1} style={{ fontSize: "12px" }}>
         <thead>
+          <tr>
+            <td colSpan={4}>
+              {/* 카테고리 선택 및 전체보기 버튼 */}
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px", alignItems: "center", padding: "0 20px", fontSize: "20px" }}>
+              <select id="category" value={selectedCategory} onChange={handleCategoryChange} style={{ padding: "5px", fontSize: "12px" }}>
+                <option value="">전체</option>
+                <option value="주문">주문 상태</option>
+                <option value="결제">결제</option>
+                <option value="반품/환불">반품/환불</option>
+                <option value="배송">배송</option>
+                <option value="프로모션/쿠폰">프로모션/쿠폰</option>
+                <option value="상품문의">상품문의</option>
+              </select>
+              공지 목록
+              <button onClick={() => navigate("/admin/help/notices/new")}>
+                공지 추가하기
+              </button>
+              </div>
+            </td>
+          </tr>
           <tr>
             <th>번호</th>
             <th>분류</th>
@@ -100,7 +97,7 @@ export default function NoticeManage() {
               <tr key={notice.no}>
                 <td>{notice.no}</td>
                 <td>{notice.category}</td>
-                <td>
+                <td> 
                   <Link to={`/admin/help/notices/${notice.no}`}>
                     {notice.title}
                   </Link>
@@ -120,7 +117,7 @@ export default function NoticeManage() {
 
       {/* 페이지네이션 */}
       {totalPages > 1 && (
-      <div style={{ marginTop: "10px" }}>
+      <div style={{ marginTop: "10px", fontSize: "12px" }}>
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 0}

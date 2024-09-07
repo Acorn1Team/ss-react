@@ -17,7 +17,7 @@ export default function AdminTop() {
                 <li><NavLink to="/admin/promotion" className={({ isActive }) => isActive ? 'active-link' : ''}>프로모션</NavLink></li>
                 <li><NavLink to="/admin/help" className={({ isActive }) => isActive ? 'active-link' : ''}>고객 지원</NavLink></li>
                 <li><NavLink to="/" className={({ isActive }) => isActive ? 'active-link' : ''}>사용자 페이지</NavLink></li>
-            </ul><br/><br/>
+            </ul>
         </>
     )
 }
