@@ -13,6 +13,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [emailDomain, setEmailDomain] = useState("");
   const [isCustomDomain, setIsCustomDomain] = useState(false);
+  const [result, setResult] = useState(null); // 이메일 체크를 위한 변수
   const [tel, setTel] = useState("");
   const [zipcode, setZipcode] = useState("");
   const [addrStart, setAddrStart] = useState("");
@@ -36,10 +37,11 @@ const Register = () => {
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,}$/; // 최소 4자, 영문, 숫자, 특수문자 포함
   const userIdRegex = /^[a-zA-Z0-9]{4,20}$/; // 4~20자의 영문, 숫자만 허용
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // 이메일 형식 검증 정규 표현식
-  const nv = useNavigate();
+  const navigate = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState(""); // 모달 내용 관리
   const [loading, setLoading] = useState(false); // 로딩 상태 추가
+
   const updateErrorMessage = (field, message) => {
     setErrorMessage((prevState) => ({
       ...prevState,
@@ -53,9 +55,46 @@ const Register = () => {
   const closeModal = (mc) => {
     setModalIsOpen(false);
     if (modalContent.includes("가입")) {
-      nv("/user/main");
+      navigate("/user/main");
     }
   };
+
+  // Daum API 스크립트 로드
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src =
+      "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+    script.async = true;
+    script.onload = () => {
+      window.daum = window.daum || {};
+    };
+    document.head.appendChild(script);
+  }, []);
+
+  // Daum 주소 검색 API 호출
+  const openDaumPostcode = () => {
+    if (!window.daum.Postcode) {
+      console.error("Daum Postcode API가 로드되지 않았습니다.");
+      return;
+    }
+
+    new window.daum.Postcode({
+      oncomplete: (data) => {
+        const addr =
+          data.userSelectedType === "R" ? data.roadAddress : data.jibunAddress;
+        setAddrStart(addr);
+        setZipcode(data.zonecode);
+
+        if (zipcodeDisplayRef.current)
+          zipcodeDisplayRef.current.value = data.zonecode;
+        if (addrStartRef.current) addrStartRef.current.value = addr;
+        if (addrEndRef.current) addrEndRef.current.focus();
+        if (userZipcodeRef.current)
+          userZipcodeRef.current.value = data.zonecode;
+      },
+    }).open();
+  };
+
   // 아이디 중복 검사 함수
   const idCheck = async (id, setErrorMessage, setIdChecked) => {
     if (!id) {
@@ -237,7 +276,6 @@ const Register = () => {
     return errors;
   };
 
-  const navigate = useNavigate();
   const addrStartRef = useRef(null);
   const addrEndRef = useRef(null);
   const zipcodeDisplayRef = useRef(null);
@@ -287,42 +325,6 @@ const Register = () => {
         pwdChk: "",
       }));
     }
-  };
-
-  // Daum API 스크립트 로드
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src =
-      "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
-    script.async = true;
-    script.onload = () => {
-      window.daum = window.daum || {};
-    };
-    document.head.appendChild(script);
-  }, []);
-
-  // Daum 주소 검색 API 호출
-  const openDaumPostcode = () => {
-    if (!window.daum.Postcode) {
-      console.error("Daum Postcode API가 로드되지 않았습니다.");
-      return;
-    }
-
-    new window.daum.Postcode({
-      oncomplete: (data) => {
-        const addr =
-          data.userSelectedType === "R" ? data.roadAddress : data.jibunAddress;
-        setAddrStart(addr);
-        setZipcode(data.zonecode);
-
-        if (zipcodeDisplayRef.current)
-          zipcodeDisplayRef.current.value = data.zonecode;
-        if (addrStartRef.current) addrStartRef.current.value = addr;
-        if (addrEndRef.current) addrEndRef.current.focus();
-        if (userZipcodeRef.current)
-          userZipcodeRef.current.value = data.zonecode;
-      },
-    }).open();
   };
 
   const handleEmailDomainChange = (event) => {

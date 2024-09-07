@@ -1,67 +1,65 @@
 .form-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    display: block;
-    font-weight: bold;
-  }
-  
-  .form-control {
-    width: 70%;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-  }
-  
-  .update-button {
-    width: 20%;
-    padding: 10px;
-    background-color: rgb(132, 173, 196);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .update-button:hover {
-    background-color: blue;
-  }
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+}
 
-  .delete-button {
-    width: 20%;
-    padding: 10px;
-    background-color: pink;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .delete-button:hover {
-    background-color: fuchsia;
-  }
-  
-  input[type="file"] {
-    padding: 5px;
-  }
+.form-group {
+  margin-bottom: 15px;
+}
 
-  .error-message {
-    color: red;
-    font-size: 12px;
-    margin-top: 5px;
-  }
-  
-  
+.form-group label {
+  display: block;
+  font-weight: bold;
+}
+
+.form-control {
+  width: 70%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.update-button {
+  width: 20%;
+  padding: 10px;
+  background-color: rgb(132, 173, 196);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.update-button:hover {
+  background-color: blue;
+}
+
+.delete-button {
+  width: 20%;
+  padding: 10px;
+  background-color: pink;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.delete-button:hover {
+  background-color: fuchsia;
+}
+
+input[type="file"] {
+  padding: 5px;
+}
+
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}

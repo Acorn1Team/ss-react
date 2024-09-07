@@ -34,6 +34,7 @@ export default function UserRoutes() {
         <Route path="/callback/google" element={<SocialGoogle />} />
         <Route path="/find/*" element={<AuthRoutes />} />
         <Route path="/admin/auth" element={<NotAdmin />} />
+        {/* <Route path="/auth/*" element={<AuthRoutes />} /> */}
       </Routes>
       <SupportButton />
     </>
