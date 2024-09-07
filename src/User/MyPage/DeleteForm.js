@@ -104,30 +104,31 @@ const DeleteForm = () => {
 
       if (res.data.idK) {
         let kakaoTokenValue = sessionStorage.getItem("token_k");
-
-        axios
-          .post(
-            "https://kapi.kakao.com/v1/user/unlink",
-            {
-              target_id_type: "user_id",
-              target_id: sessionStorage.getItem("id"),
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${kakaoTokenValue}`,
-              },
-            }
-          )
-          .then((res) => {
-            if (res.data) {
-              console.log(res.data);
-              sessionStorage.removeItem("token_k");
-              nv("/user");
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        console.log(res.data);
+        console.log(res.data.idk);
+        // axios
+        //   .post(
+        //     "https://kapi.kakao.com/v1/user/unlink",
+        //     {
+        //       target_id_type: "user_id",
+        //       target_id: sessionStorage.getItem("id"),
+        //     },
+        //     {
+        //       headers: {
+        //         Authorization: `Bearer ${kakaoTokenValue}`,
+        //       },
+        //     }
+        //   )
+        //   .then((res) => {
+        //     if (res.data) {
+        //       console.log(res.data);
+        //       sessionStorage.removeItem("token_k");
+        //       nv("/user");
+        //     }
+        //   })
+        //   .catch((err) => {
+        //     console.log(err);
+        //   });
       } else if (res.data.idN) {
         let naverTokenValue = sessionStorage.getItem("token_n");
         axios

@@ -15,11 +15,14 @@ export default function ShowSearch() {
   const [title, setTitle] = useState("");
   const [file, setFile] = useState(null);
 
-  const scrapShow = () => {
+  const scrapShow = async (e) => {
+    e.preventDefault(); // 폼 제출 방지
+    console.log("스크래핑 시작");
     setShow({ no: "", title: "", pic: "" }); // 선택한 작품 초기화
-    axios
+    await axios
       .get(`/admin/scrap/show/${inputValue}`)
       .then((response) => {
+        console.log("스크래핑 응답:", response.data);
         if (response.data.pic !== null) {
           setShow(response.data);
           setIsModalOpen(true);
@@ -120,7 +123,7 @@ export default function ShowSearch() {
               <AutoSearchItem key={index}>
                 {item.title}{" "}
                 <SearchButton
-                  onMouseDown={() => {
+                  onClick={() => {
                     navigate(`/admin/fashion/show/${item.no}`);
                   }}
                 >
@@ -130,8 +133,7 @@ export default function ShowSearch() {
             ))}
             <AutoSearchItem>
               {inputValue}{" "}
-              <button onMouseDown={scrapShow}>네이버 웹 스크래핑</button>
-              {/* onClick으로 하면 onBlur 이벤트가 먼저 트리거되므로 여기서는 onMouseDown으로 처리 */}
+              <button onClick={scrapShow}>네이버 웹 스크래핑</button>
             </AutoSearchItem>
           </AutoSearchContainer>
         )}
