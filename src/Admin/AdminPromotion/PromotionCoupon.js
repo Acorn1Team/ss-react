@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styles from "../Style/PromotionCoupon.module.css";
 
 export default function PromotionCoupon() {
   const navigate = useNavigate();
@@ -73,38 +74,44 @@ export default function PromotionCoupon() {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <h2>쿠폰 등록</h2>
-      <div>
+      <div className={styles.formGroup}>
         <label>쿠폰 이름</label>
         <input
           type="text"
           name="name"
           value={state.name}
           onChange={handleChange}
+          className={styles.input}
         />
       </div>
-      <div>
+      <div className={styles.formGroup}>
         <label>할인율</label>
-        <input
-          type="number"
-          name="discountRate"
-          value={state.discountRate}
-          onChange={handleChange}
-          min="0" // HTML5에서 음수 입력 방지
-        />
-        <span>%</span>
+        <div className={styles.inline}>
+          <input
+            type="number"
+            name="discountRate"
+            value={state.discountRate}
+            onChange={handleChange}
+            className={styles.input}
+          />
+          <span>%</span>
+        </div>
       </div>
-      <div>
+      <div className={styles.formGroup}>
         <label>유효기간</label>
         <input
           type="date"
           name="expiryDate"
           value={state.expiryDate}
           onChange={handleChange}
+          className={styles.input}
         />
       </div>
-      <button onClick={addCoupon}>등록</button>
+      <button onClick={addCoupon} className={styles.button}>
+        등록
+      </button>
     </div>
   );
 }

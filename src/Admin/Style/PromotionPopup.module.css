@@ -1,0 +1,96 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+h2 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.formGroup {
+  width: 96%;
+  max-width: 700px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  position: relative; /* 드롭다운 위치 조정 */
+}
+
+input[type="file"] {
+  padding: 10px;
+  font-size: 16px;
+}
+
+select {
+  width: 100%; /* 동일한 너비 설정 */
+  padding: 12px;
+  border: 1px solid #d1d9e6;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #333;
+  transition: border-color 0.3s ease;
+  background-color: transparent;
+  margin-bottom: 10px;
+}
+
+input[type="text"] {
+  width: 96.5%; /* 동일한 너비 설정 */
+  padding: 12px;
+  border: 1px solid #d1d9e6;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #333;
+  transition: border-color 0.3s ease;
+  background-color: transparent;
+  margin-bottom: 10px;
+}
+
+input[type="text"]:focus,
+select:focus {
+  border-color: #a4c0e4;
+  outline: none;
+}
+
+button {
+  background-color: #4a4a4a;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+button:hover {
+  background-color: #333;
+}
+
+.autoSearchContainer {
+  position: absolute;
+  top: 100%; /* 입력 필드 바로 아래에 위치하도록 수정 */
+  left: 0;
+  width: 96%; /* 부모 요소와 동일한 너비 */
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #f9f9f9;
+  border: 1px solid #d1d9e6;
+  z-index: 10;
+}
+
+.autoSearchItem {
+  padding: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.autoSearchItem:hover {
+  background-color: #edf5f5;
+}

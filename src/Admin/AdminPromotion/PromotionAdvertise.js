@@ -1,97 +1,125 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import styles from "../Style/PromotionAdverise.module.css";
 
 export default function PromotionAdvertise() {
-    const navigate = useNavigate();
-    const [locationCategory, setLocationCategory] = useState("");
-    const [inputValue, setInputValue] = useState("");
-    const [state, setState] = useState({});
-    const [filteredItems, setFilteredItems] = useState([]);
-    const [showDropdown, setShowDropdown] = useState(false);
+  const navigate = useNavigate();
+  const [locationCategory, setLocationCategory] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [state, setState] = useState({});
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
-    const handleChange = (e) => {
-        setState({
-            ...state,
-            [e.target.name]: e.target.value
-        });
+  const handleChange = (e) => {
+    setState({
+      ...state,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const changeInputValue = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `/admin/promotion/autocomplete/${locationCategory}/${inputValue}`
+        );
+        setFilteredItems(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setFilteredItems([]);
+      }
     };
-
-    const changeInputValue = (e) => {
-        setInputValue(e.target.value);
-    };
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(`/admin/promotion/autocomplete/${locationCategory}/${inputValue}`);
-                setFilteredItems(response.data);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setFilteredItems([]);
-            }
-        };
-        if (locationCategory && inputValue) {
-            fetchData();
-        }
-    }, [locationCategory, inputValue]);
-
-    const selectPath = (item) => {
-        setState(prevState => ({ ...prevState, path: `${locationCategory}/${item.no}` }))
-        setShowDropdown(false);
-        setInputValue(item.name || item.title);
+    if (locationCategory && inputValue) {
+      fetchData();
     }
+  }, [locationCategory, inputValue]);
 
-    const addAdvertise = () => {
-        console.log('추가할 상태', state)
-        axios
-            .post("/admin/advertise", state)
-            .then((response) => {
-                if (response.data.isSuccess) {
-                    alert("추가 성공");
-                    navigate("/admin/promotion");
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
+  const selectPath = (item) => {
+    setState((prevState) => ({
+      ...prevState,
+      path: `${locationCategory}/${item.no}`,
+    }));
+    setShowDropdown(false);
+    setInputValue(item.name || item.title);
+  };
 
-    return (
-        <div>
-            <h2>광고 알림 등록</h2>
-                <div>
-                <textarea style={{width:'30%'}} name="content" onChange={handleChange} placeholder='광고 내용을 입력하세요.' /><br/><br/><br/>
-                <SearchForm>
-                <SearchSelect onChange={(e) => setLocationCategory(e.target.value)} value={locationCategory}>
-                    <option value="">유도 경로 선택</option>
-                    <option value="product">상품 페이지</option>
-                    <option value="show">작품 등장인물 페이지</option>
-                    <option value="character">캐릭터 페이지(회의 후 처리 예정)</option>
-                </SearchSelect><br/><br/>
-                <SearchInput placeholder='어디로?'
-                    type="text"
-                    value={inputValue}
-                    onChange={changeInputValue}
-                    onBlur={() => setShowDropdown(false)}
-                    onFocus={() => setShowDropdown(true)}
-                />
-                {showDropdown && (
-                    <AutoSearchContainer>
-                        {filteredItems.map((item, index) => (
-                            <AutoSearchItem key={index} onMouseDown={() => selectPath(item)}>
-                                {item.name || item.title}
-                            </AutoSearchItem>
-                        ))}
-                    </AutoSearchContainer>
-                )}
-                </SearchForm>
-                <input type="text" name="path" onChange={handleChange} hidden />
-                </div><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-            <button onClick={addAdvertise}>등록</button>
-        </div>
-    );
+  const addAdvertise = () => {
+    console.log("추가할 상태", state);
+    axios
+      .post("/admin/advertise", state)
+      .then((response) => {
+        if (response.data.isSuccess) {
+          alert("추가 성공");
+          navigate("/admin/promotion");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  return (
+    <div className={styles.container}>
+      <h2 className={styles.title}>광고 알림 등록</h2>
+      <div className={styles.inputContainer}>
+        <textarea
+          className={styles.textarea}
+          name="content"
+          onChange={handleChange}
+          placeholder="광고 내용을 입력하세요."
+        />
+        <br />
+        <br />
+        <form className={styles.form}>
+          <select
+            className={styles.select}
+            onChange={(e) => setLocationCategory(e.target.value)}
+            value={locationCategory}
+          >
+            <option value="">유도 경로 선택</option>
+            <option value="product">상품 페이지</option>
+            <option value="show">작품 등장인물 페이지</option>
+            <option value="character">캐릭터 페이지(회의 후 처리 예정)</option>
+          </select>
+
+          <input
+            className={styles.input}
+            placeholder="어디로?"
+            type="text"
+            value={inputValue}
+            onChange={changeInputValue}
+            onBlur={() => setShowDropdown(false)}
+            onFocus={() => setShowDropdown(true)}
+          />
+          {showDropdown && (
+            <div className={styles.dropdown}>
+              {filteredItems.map((item, index) => (
+                <div
+                  className={styles.dropdownItem}
+                  key={index}
+                  onMouseDown={() => selectPath(item)}
+                >
+                  {item.name || item.title}
+                </div>
+              ))}
+            </div>
+          )}
+        </form>
+        <input type="text" name="path" onChange={handleChange} hidden />
+      </div>
+      <br />
+      <br />
+      <button className={styles.button} onClick={addAdvertise}>
+        등록
+      </button>
+    </div>
+  );
 }
 
 const SearchInput = styled.input`

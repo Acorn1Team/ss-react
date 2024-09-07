@@ -103,6 +103,12 @@
   color: #666;
 }
 
+/* 읽은 알림 스타일 */
+.readAlert {
+  background-color: #f4f4f4; /* 예시: 회색 계열 배경 */
+  font-weight: normal; /* 읽은 알림은 글씨 굵기 기본 */
+}
+
 .pagination button {
   padding: 8px 16px;
   margin: 0 5px;

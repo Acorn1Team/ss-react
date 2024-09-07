@@ -72,7 +72,7 @@ export default function Posts() {
           userPic: res.data.userPic,
           userNickname: res.data.userNickname,
         });
-        if (res.data.posts.reportsCount > 3) {
+        if (res.data.posts.reportsCount > 5) {
           setBlindCheck(true);
         }
         setPostData(res.data.posts);

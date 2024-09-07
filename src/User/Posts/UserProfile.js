@@ -14,6 +14,7 @@ export default function UserProfile() {
 
   const [nicknameError, setNicknameError] = useState(false);
   const [bioError, setBioError] = useState(false);
+  const [isSaveDisabled, setIsSaveDisabled] = useState(false); // 저장 버튼 상태
 
   const userNo = sessionStorage.getItem("id");
 
@@ -94,6 +95,11 @@ export default function UserProfile() {
   };
 
   useEffect(() => {
+    // nicknameError나 bioError가 변경될 때 저장 버튼 상태 업데이트
+    setIsSaveDisabled(nicknameError || bioError);
+  }, [nicknameError, bioError]);
+
+  useEffect(() => {
     userInfo();
     followInfo();
   }, [userNo]);
@@ -102,7 +108,12 @@ export default function UserProfile() {
     <div className={styles.profileContainer}>
       {isEditing ? (
         <div id="userPicNicknameEdit">
-          <input type="file" />
+          <input type="file" />{" "}
+          {isSaveDisabled && (
+            <span style={{ color: "red", fontSize: "60%" }}>
+              이미 사용 중인 닉네임입니다.
+            </span>
+          )}
           <input
             type="text"
             className={`${styles.editInput} ${
@@ -112,6 +123,18 @@ export default function UserProfile() {
             onChange={(e) => {
               const newValue = e.target.value;
               if (newValue.length <= 10) {
+                axios
+                  .get(`/nickname/check/${newValue}`)
+                  .then((res) => {
+                    if (res.data.result) {
+                      setNicknameError(true);
+                    } else {
+                      setNicknameError(false);
+                    }
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
                 setUserData({ ...userData, nickname: newValue });
                 setNicknameError(false); // 유효성 오류 없앰
               } else {
@@ -138,6 +161,7 @@ export default function UserProfile() {
           <button
             className={styles.editButton}
             onClick={() => profileEdit("save")}
+            disabled={isSaveDisabled}
           >
             저장
           </button>

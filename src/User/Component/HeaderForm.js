@@ -177,7 +177,9 @@ function HeaderForm() {
               filteredAlerts.map((alert, index) => (
                 <div
                   key={alert.no || index}
-                  className={styles.alertItem}
+                  className={`${styles.alertItem} ${
+                    alert.isRead ? styles.readAlert : styles.unreadAlert
+                  }`} // 읽음 상태에 따라 클래스 추가
                   onClick={() => markAsRead(alert.no)}
                 >
                   <Link to={alert.path}>
@@ -198,6 +200,7 @@ function HeaderForm() {
             ) : (
               <div className={styles.noAlerts}>알림 내역이 없습니다.</div>
             )}
+
             {totalPages > 1 && (
               <div className={styles.pagination}>
                 <button
