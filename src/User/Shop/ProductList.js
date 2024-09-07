@@ -16,6 +16,11 @@ export default function ProductList() {
 
   const categories = ["전체", "상의", "하의", "신발", "기타"];
 
+    // 할인가격 계산 함수
+    const calculateSellingPrice = (price, discountRate) => {
+      return price - (price * discountRate) / 100;
+    };
+
   // 데이터 새로고침: 카테고리 및 정렬 기준에 따라
   const refresh = (selectedCategory, sortOption) => {
     const endpoint =
@@ -173,16 +178,22 @@ export default function ProductList() {
               </Link>
             </div>
             <div className={styles.productName}>{product.name}</div>
+            {/* 할인가격 적용 */}
             <div className={styles.productPrice}>
-              {product.price.toLocaleString()}원
+              {product.discountRate > 0 ? (
+                <>
+                  <span style={{ textDecoration: "line-through" }}>
+                    {product.price.toLocaleString()}원
+                  </span>&nbsp;
+                  <span style={{ color: "skyblue", fontWeight: "bold" }}>
+                    {calculateSellingPrice(product.price, product.discountRate).toLocaleString()}원
+                    ({product.discountRate}% 할인)
+                  </span>
+                </>
+              ) : (
+                <>{product.price.toLocaleString()}원</>
+              )}
             </div>
-            <div className={styles.productCategory}>{product.category}</div>
-            <div>
-              {product.discountRate === 0
-                ? ""
-                : `${product.discountRate}% 할인`}
-            </div>
-            <div>평점: {product.score}</div>
           </div>
         ))}
       </div>
