@@ -14,6 +14,7 @@ export default function OrderManage() {
   const [endDate, setEndDate] = useState("");
   const [status, setStatus] = useState("");
 
+  // 서버에서 데이터를 가져오는 함수
   const fetchOrders = async (
     page = 0,
     size = 10,
@@ -32,8 +33,10 @@ export default function OrderManage() {
           searchField,
           startDate,
           endDate,
+          sort: "date,DESC", // 최신순으로 정렬 요청
         },
       });
+
       setOrders(response.data.content);
       setTotalPages(response.data.totalPages);
       setCurrentPage(response.data.number);
@@ -43,16 +46,9 @@ export default function OrderManage() {
     }
   };
 
+  // 컴포넌트가 처음 렌더링될 때 최신순으로 데이터를 로드
   useEffect(() => {
-    fetchOrders(
-      currentPage,
-      pageSize,
-      searchTerm,
-      searchField,
-      startDate,
-      endDate,
-      status
-    );
+    fetchOrders(currentPage, pageSize);
   }, [currentPage, pageSize]);
 
   const handleStatusChange = async (orderNo, status) => {
