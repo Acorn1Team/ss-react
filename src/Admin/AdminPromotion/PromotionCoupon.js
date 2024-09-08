@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../Style/PromotionCoupon.module.css";
 import Modal from "react-modal";
+import LoadingScreen from "../../User/Component/Loading";
 
 export default function PromotionCoupon() {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ export default function PromotionCoupon() {
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [discountRateError, setDiscountRateError] = useState("");
 
   const handleChange = (e) => {
@@ -39,23 +40,19 @@ export default function PromotionCoupon() {
 
   const addCoupon = () => {
     const { name, discountRate } = state;
-
     if (!discountRate) {
       setDiscountRateError("할인율을 입력해 주세요.");
       return;
     }
 
     const expiryDate = state.expiryDate || getFutureDate(7);
-
-    const couponData = {
-      ...state,
-      expiryDate,
-    };
-
+    const couponData = {...state,expiryDate,};
+    setIsLoading(true);
     axios
       .post("/admin/coupon", couponData)
       .then((response) => {
         if (response.data.isSuccess) {
+          setIsLoading(false);
           setIsModalOpen(true);
         }
       })
@@ -115,6 +112,7 @@ export default function PromotionCoupon() {
       <button onClick={addCoupon} className={styles.button}>
         등록
       </button>
+      {isLoading && <LoadingScreen />}
 
       <Modal
         isOpen={isModalOpen}
