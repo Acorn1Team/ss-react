@@ -299,7 +299,7 @@ export default function ProductManage() {
                   style={{ height: "100px" }}
                 />
               </div>
-              <div>
+              {item.reviewCount > 0 && (<div>
                 <strong>평점: </strong>
                 <span
                   onClick={() => toggleRowExpansion(item.no)}
@@ -307,7 +307,7 @@ export default function ProductManage() {
                 >
                   {item.score}점 (리뷰 총 {item.reviewCount || 0}건)
                 </span>
-              </div>
+              </div>)}
               <div>
                 <strong>재고:</strong> {item.stock} 
                 &nbsp; 
