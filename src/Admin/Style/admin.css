@@ -1,102 +1,101 @@
 body {
-    text-align: center;
+  text-align: center;
 }
 
 table {
-    margin: 0 auto; /* 테이블을 가로로 중앙에 배치 */
-    border-collapse: collapse; /* 테이블 셀 테두리 병합 */
+  margin: 0 auto; /* 테이블을 가로로 중앙에 배치 */
+  border-collapse: collapse; /* 테이블 셀 테두리 병합 */
 }
 
 /* 테이블 헤더 및 셀 스타일 */
-th, td {
-    padding: 8px; /* 패딩 추가 */
-    text-align: left; /* 텍스트 정렬 기본값 */
-    border: 1px solid #ddd; /* 셀 테두리 스타일 */
+th,
+td {
+  padding: 8px; /* 패딩 추가 */
+  text-align: left; /* 텍스트 정렬 기본값 */
+  border: 1px solid #ddd; /* 셀 테두리 스타일 */
 }
 
 #admin-header {
-    color: #333;
-    font-size: 3rem;
+  color: #333;
+  font-size: 3rem;
 }
 
 #admin-header li a:hover {
-    background-color: darkgray;
-    color: #fff;
+  background-color: darkgray;
+  color: #fff;
 }
 
 #statistics {
-    width: 90%;
-    list-style-type: none; /* 기본 불릿 제거 */
-    padding: 0;
-    margin: 0 auto; /* 가로로 중앙 정렬 */
-    display: flex; /* 옆으로 정렬 플렉스 컨테이너로 설정 */
-    flex-wrap: wrap;
-    justify-content: center; /* 플렉스 항목들(메뉴 항목들)을 가운데 정렬 */
-    border-radius: 8px;
+  width: 90%;
+  list-style-type: none; /* 기본 불릿 제거 */
+  padding: 0;
+  margin: 0 auto; /* 가로로 중앙 정렬 */
+  display: flex; /* 옆으로 정렬 플렉스 컨테이너로 설정 */
+  flex-wrap: wrap;
+  justify-content: center; /* 플렉스 항목들(메뉴 항목들)을 가운데 정렬 */
+  border-radius: 8px;
 }
 
-
 #statistics li {
-    width: 30%; margin-right: 7%;
+  width: 30%;
+  margin-right: 7%;
 }
 
 /* 마지막 li 요소의 오른쪽 제거 */
 #topmenu li:last-child {
-    margin-right: 0;
+  margin-right: 0;
 }
 
 /* Link 요소 */
 a {
-    text-decoration: none;
-    color: black;
-    font-size: 18px;
-    font-weight: bold;
+  text-decoration: none;
+  color: black;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 a:hover {
-    background-color: #f4f4f4;
+  background-color: #f4f4f4;
 }
 
 body {
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
 }
 
-
 #topmenu {
-    width: 100%;
-    background-color: #ebeaea;
-    list-style-type: none; /* 기본 불릿 제거 */
-    padding: 0;
-    margin: 0 auto; /* 가로로 중앙 정렬 */
-    display: flex; /* 옆으로 정렬 플렉스 컨테이너로 설정 */
-    flex-wrap: wrap;
-    justify-content: space-evenly; /* 메뉴 간의 간격을 균등하게 배치 */
-    border-radius: 8px;
+  width: 100%;
+  background-color: #ebeaea;
+  list-style-type: none; /* 기본 불릿 제거 */
+  padding: 0;
+  margin: 0 auto; /* 가로로 중앙 정렬 */
+  display: flex; /* 옆으로 정렬 플렉스 컨테이너로 설정 */
+  flex-wrap: wrap;
+  justify-content: space-evenly; /* 메뉴 간의 간격을 균등하게 배치 */
+  border-radius: 8px;
 }
 
 #topmenu li {
-    flex-grow: 1; /* 각 li가 동일한 비율로 공간을 차지 */
-    text-align: center; /* 텍스트를 중앙 정렬 */
+  flex-grow: 1; /* 각 li가 동일한 비율로 공간을 차지 */
+  text-align: center; /* 텍스트를 중앙 정렬 */
 }
 
 #topmenu li a {
-    padding: 10px 10px;
-    display: block;
-    border-radius: 4px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+  padding: 10px 10px;
+  display: block;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #topmenu li a:hover {
-    background-color: rgb(199, 199, 199);
-    color: #fff;
+  background-color: rgb(199, 199, 199);
+  color: #fff;
 }
 
 /* 활성화된 링크에 적용할 스타일 */
 #topmenu li a.active-link {
-    background-color: rgb(199, 199, 199);
-    color: #fff;
-    font-weight: bold; /* 강조 표시 */
+  background-color: rgb(199, 199, 199);
+  color: #fff;
+  font-weight: bold; /* 강조 표시 */
 }
-

@@ -62,7 +62,7 @@ const DeleteForm = () => {
         sessionStorage.removeItem("token");
         sessionStorage.removeItem("id");
         alert("탈퇴가 완료되었습니다.");
-        nv("/user");
+        //nv("/user");
       } else {
         if (response.data.message) {
           setErrorMessage({ email: "이메일이 일치하지 않습니다." });
@@ -79,29 +79,29 @@ const DeleteForm = () => {
         let kakaoTokenValue = sessionStorage.getItem("token_k");
         console.log(res.data);
         console.log(res.data.idk);
-        // axios
-        //   .post(
-        //     "https://kapi.kakao.com/v1/user/unlink",
-        //     {
-        //       target_id_type: "user_id",
-        //       target_id: sessionStorage.getItem("id"),
-        //     },
-        //     {
-        //       headers: {
-        //         Authorization: `Bearer ${kakaoTokenValue}`,
-        //       },
-        //     }
-        //   )
-        //   .then((res) => {
-        //     if (res.data) {
-        //       console.log(res.data);
-        //       sessionStorage.removeItem("token_k");
-        //       nv("/user");
-        //     }
-        //   })
-        //   .catch((err) => {
-        //     console.log(err);
-        //   });
+        axios
+          .post(
+            "https://kapi.kakao.com/v1/user/unlink",
+            {
+              target_id_type: "user_id",
+              target_id: sessionStorage.getItem("id"),
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${kakaoTokenValue}`,
+              },
+            }
+          )
+          .then((res) => {
+            if (res.data) {
+              console.log(res.data);
+              sessionStorage.removeItem("token_k");
+              nv("/user");
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       } else if (res.data.idN) {
         let naverTokenValue = sessionStorage.getItem("token_n");
         axios
@@ -138,7 +138,7 @@ const DeleteForm = () => {
           onChange={handleInputChange}
         />
         {errorMessage.email && (
-          <div className={styles.error_message}>{errorMessage.email}</div>
+          <div className={styles.error}>{errorMessage.email}</div>
         )}
       </div>
       <form onSubmit={handleSubmit}>

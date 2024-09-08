@@ -17,6 +17,8 @@ const Register = () => {
   const [zipcode, setZipcode] = useState("");
   const [addrStart, setAddrStart] = useState("");
   const [addrEnd, setAddrEnd] = useState("");
+  const [showAddrEnd, setShowAddrEnd] = useState(false);
+  const [showEmail, setShowEmail] = useState(true);
   const [errorMessage, setErrorMessage] = useState({});
   const [emailOptions, setEmailOptions] = useState([
     { value: "0", text: "선택하세요" },
@@ -27,7 +29,10 @@ const Register = () => {
     { value: "nate.com", text: "nate.com" },
     { value: "kakao.com", text: "kakao.com" },
   ]);
+
   const [customDomainInput, setCustomDomainInput] = useState("");
+  const [result, setResult] = useState(null); // 이메일 체크를 위한 변수
+  const fullEmail = `${email}@${emailDomain}`;
   const [idChecked, setIdChecked] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [inputVerificationCode, setInputVerificationCode] = useState("");
@@ -37,25 +42,69 @@ const Register = () => {
   const userIdRegex = /^[a-zA-Z0-9]{4,20}$/; // 4~20자의 영문, 숫자만 허용
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // 이메일 형식 검증 정규 표현식
   const nv = useNavigate();
+
+  // Modal과 Loading
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalContent, setModalContent] = useState(""); // 모달 내용 관리
-  const [loading, setLoading] = useState(false); // 로딩 상태 추가
+  const [modalType, setModalType] = useState("");
+  const [modalContent, setModalContent] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const updateErrorMessage = (field, message) => {
     setErrorMessage((prevState) => ({
       ...prevState,
       [field]: message,
     }));
   };
-  const openModal = () => {
+
+  const openModal = (type, content) => {
+    setModalType(type);
+    setModalContent(content);
     setModalIsOpen(true);
   };
 
-  const closeModal = (mc) => {
+  // 통합 회원가입 모달 띄우기 함수
+  const showIntegratedSignupModal = () => {
+    openModal(
+      "integrated",
+      "소셜 계정으로 가입된 메일입니다. 통합으로 가입을 진행하시겠습니까?"
+    );
+  };
+
+  const showCodeModal = () => {
+    openModal("code", "인증번호가 이메일로 전송되었습니다.");
+  };
+
+  const closeModal = () => {
     setModalIsOpen(false);
-    if (modalContent.includes("가입")) {
-      nv("/user/main");
+  };
+
+  const loginModal = () => {
+    setModalIsOpen(false);
+    navigate("/user/auth/login");
+  };
+
+  const updateModal = async () => {
+    setModalIsOpen(false);
+
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/user/emailCheck",
+        { params: { email: fullEmail } } // 이메일을 파라미터로 전달
+      ); // API 엔드포인트와 이메일 파라미터를 적절히 설정하세요
+      const userInfo = response.data;
+
+      // 상태 업데이트
+      setName(userInfo.name || "");
+      setTel(userInfo.tel || "");
+      setZipcode(userInfo.zipcode || "");
+      setAddrStart(userInfo.addrStart || "");
+      setShowAddrEnd(false);
+      setShowEmail(false);
+    } catch (error) {
+      console.error("Error fetching user info:", error);
     }
   };
+
   // 아이디 중복 검사 함수
   const idCheck = async (id, setErrorMessage, setIdChecked) => {
     if (!id) {
@@ -102,25 +151,35 @@ const Register = () => {
     }
   };
 
-  // 이메일 중복 체크 함수
+  // 이메일 중복 확인 함수
   const checkEmailDuplication = async (email, setErrorMessage) => {
     try {
       const response = await axios.get("/user/emailCheck", {
         params: { email }, // 파라미터로 이메일 전달
       });
+      const data = response.data;
 
-      console.log("Email Check Response:", response.data); // 응답 확인
-
-      if (response.data.exists) {
-        setErrorMessage({ email: "이미 등록된 이메일입니다." });
-        return false;
+      if (data.exists) {
+        if (data.id_n || data.id_k || data.id_g) {
+          // 통합 회원가입 모달 띄우기
+          showIntegratedSignupModal();
+        } else {
+          updateErrorMessage("email", "이미 등록된 이메일입니다.");
+          return false;
+        }
       } else {
-        setErrorMessage("");
-        return true;
+        // 이메일이 없는 경우
+        await sendEmailVerificationCode(
+          email,
+          setVerificationCode,
+          setErrorMessage
+        );
       }
+
+      setResult(data);
     } catch (error) {
-      setErrorMessage("서버 오류가 발생했습니다.");
-      return false;
+      console.error("Error:", error);
+      setErrorMessage("이메일 확인 중 오류가 발생했습니다.");
     }
   };
 
@@ -130,16 +189,8 @@ const Register = () => {
     setVerificationCode,
     setErrorMessage
   ) => {
-    const isEmailAvailable = await checkEmailDuplication(
-      email,
-      setErrorMessage
-    );
-
-    if (!isEmailAvailable) {
-      // 이메일 중복인 경우 인증번호 발송 중지
-      return;
-    }
     setLoading(true);
+    console.log(email, setVerificationCode, setErrorMessage);
     try {
       const response = await fetch(
         "http://localhost:8080/user/auth/send-verification-code",
@@ -149,15 +200,14 @@ const Register = () => {
           body: JSON.stringify({ email }),
         }
       );
-
       const result = await response.json();
       console.log("Verification Code Response:", result); // 응답 확인
       <Loading />;
 
       if (response.ok) {
         setVerificationCode(result.code); // 서버에서 반환한 인증번호
-        setModalContent("인증번호가 이메일로 전송되었습니다.");
-        openModal();
+        // setModalContent("인증번호가 이메일로 전송되었습니다.");
+        showCodeModal();
 
         // alert("인증번호가 이메일로 발송되었습니다.");
       } else {
@@ -170,8 +220,6 @@ const Register = () => {
       setLoading(false); // 로딩 종료
     }
   };
-
-  // 이메일 인증 코드 검증 함수
   const verifyEmailCodeOnServer = async (email, inputCode, setErrorMessage) => {
     try {
       const response = await fetch(
@@ -369,7 +417,6 @@ const Register = () => {
       setErrorMessage(errors);
       return;
     }
-
     if (!idChecked) {
       setErrorMessage((prev) => ({
         ...prev,
@@ -377,20 +424,27 @@ const Register = () => {
       }));
       return;
     }
-    setLoading(true); // 로딩 시작
-    if (
-      !(await verifyEmailCodeOnServer(
+
+    // 이메일 인증 체크
+    if (showEmail) {
+      // setLoading(true); // 로딩 시작
+      const isVerified = await verifyEmailCodeOnServer(
         `${email}@${emailDomain}`,
         inputVerificationCode,
         setErrorMessage
-      ))
-    ) {
-      setErrorMessage((prev) => ({
-        ...prev,
-        email: "이메일 인증이 완료되지 않았습니다.",
-      }));
-      setLoading(false); // 로딩 종료
-      return;
+      );
+
+      // 콘솔에 인증 상태 확인
+      console.log("Email Verified:", isVerified);
+
+      if (!isVerified) {
+        setErrorMessage((prev) => ({
+          ...prev,
+          email: "이메일 인증이 완료되지 않았습니다.",
+        }));
+        // setLoading(false); // 로딩 종료
+        return;
+      }
     }
 
     // 요청 데이터
@@ -403,7 +457,7 @@ const Register = () => {
       address: `${addrStart} ${addrEnd}`,
       zipcode,
     };
-
+    setLoading(true);
     try {
       const response = await fetch("http://localhost:8080/user/auth/register", {
         method: "POST",
@@ -415,10 +469,9 @@ const Register = () => {
         const errorText = await response.text();
         throw new Error(`회원가입 요청이 실패했습니다: ${errorText}`);
       }
-
+      <Loading />;
       await response.json();
-      setModalContent("회원가입이 완료되었습니다.");
-      openModal();
+      navigate("/user/register/success");
     } catch (error) {
       console.error("회원가입 요청 중 오류 발생:", error);
       setErrorMessage({ global: error.message });
@@ -513,7 +566,74 @@ const Register = () => {
             onChange={handleCustomDomainInputChange}
             disabled={!isCustomDomain}
           />
-          <select
+        </div>
+
+        {showEmail && (
+          <div>
+            <select
+              name="email_select"
+              id="email_select"
+              onChange={handleEmailDomainChange}
+              value={emailDomain}
+            >
+              {emailOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.text}
+                </option>
+              ))}
+            </select>
+            {errorMessage.email && (
+              <div className={styles.error_message}>{errorMessage.email}</div>
+            )}
+
+            <button
+              type="button"
+              onClick={async () => {
+                if (!email || !emailDomain) {
+                  setErrorMessage((prev) => ({
+                    ...prev,
+                    email: "이메일을 입력하세요.",
+                  }));
+                  return;
+                }
+
+                // 이메일 중복 체크 및 인증번호 발송
+                await checkEmailDuplication(
+                  fullEmail,
+                  setVerificationCode,
+                  setErrorMessage
+                );
+              }}
+              disabled={!email || !emailDomain}
+            >
+              인증번호 발송
+            </button>
+
+            <div className={styles.user_input}>
+              <label>
+                {" "}
+                <input
+                  type="text"
+                  placeholder="인증번호"
+                  value={inputVerificationCode}
+                  onChange={async (e) => {
+                    const userCode = e.target.value;
+                    setInputVerificationCode(userCode);
+                    if (userCode) {
+                      await verifyEmailCodeOnServer(
+                        `${email}@${emailDomain}`,
+                        userCode,
+                        setErrorMessage
+                      );
+                    }
+                  }}
+                />
+              </label>
+            </div>
+          </div>
+        )}
+
+        {/* <select
             name="email_select"
             id="email_select"
             onChange={handleEmailDomainChange}
@@ -571,7 +691,10 @@ const Register = () => {
               }}
             />
           </label>
-        </div>
+        </div> */}
+        {errorMessage.email && (
+          <div className={styles.error_message}>{errorMessage.email}</div>
+        )}
         <hr />
 
         {/* 전화번호 */}
@@ -644,21 +767,40 @@ const Register = () => {
       </form>
       <Modal
         isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        // contentLabel="알림"
         className={styles.modal}
+        onRequestClose={closeModal}
         overlayClassName={styles.overlay}
+        // contentLabel={modalType === "integrated" ? "통합 가입" : "번호"}
       >
         <h2>알림</h2>
         <p>{modalContent}</p>
-        <div className={styles.modal_buttons}>
+        {modalType === "integrated" && (
+          <>
+            <button
+              onClick={updateModal}
+              className={styles.modal_buttons}
+              style={{ backgroundColor: "darkred" }}
+            >
+              확인
+            </button>
+            <button
+              onClick={loginModal}
+              className={styles.modal_buttons}
+              style={{ backgroundColor: "gray" }}
+            >
+              로그인
+            </button>
+          </>
+        )}
+        {modalType === "code" && (
           <button
-            onClick={() => closeModal(modalContent)}
-            style={{ backgroundColor: "darkred" }}
+            onClick={closeModal}
+            className={styles.modal_buttons}
+            style={{ backgroundColor: "darkblue" }}
           >
             확인
           </button>
-        </div>
+        )}
       </Modal>
     </div>
   );
