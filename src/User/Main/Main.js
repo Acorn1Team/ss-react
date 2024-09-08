@@ -11,6 +11,11 @@ export default function UserHome() {
   const [mainPopup, setMainPopup] = useState([]);
   const [popupOpen, setPopupOpen] = useState(false);
 
+  // 이미지 전환을 위한 상태 추가
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false); // 전환 상태 관리
+  const images = ["../images/newmain-text.png", "../images/newmain.png"]; // 두 개의 이미지 경로
+
   const userNo = sessionStorage.getItem("id");
   const cookies = document.cookie;
 
@@ -30,18 +35,17 @@ export default function UserHome() {
     return () => clearInterval(interval);
   }, [review]);
 
-  // 스크롤에 따른 이미지 이동
-  useEffect(() => {
-    const handleScroll = () => {
-      if (imageRef.current) {
-        const scrollPosition = window.scrollY;
-        imageRef.current.style.transform = `translateY(${scrollPosition}px)`;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  // 클릭 시 이미지 전환
+  const handleImageClick = () => {
+    if (!isTransitioning) {
+      // 전환 중일 때는 클릭을 막음
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+        setIsTransitioning(false); // 전환 완료 후 다시 전환 가능하게 함
+      }, 500); // 이미지 전환 시간 (500ms)
+    }
+  };
 
   // 데이터 가져오기
   const fetchData = () => {
@@ -103,13 +107,14 @@ export default function UserHome() {
 
   return (
     <div className="page-container">
-      <div className="image-wrapper">
+      <div className="image-wrapper" onClick={handleImageClick}>
         <img
-          ref={imageRef}
-          className="scrollable-image"
-          src="../images/mainFinal-01.png"
+          className={`scrollable-image ${
+            isTransitioning ? "fade-out" : "fade-in"
+          }`}
+          src={images[currentImageIndex]} // 전환된 이미지 표시
           alt="main"
-          loading="eager" // 이미지 즉시 로드
+          loading="eager"
         />
       </div>
       {mainPopup.map(
@@ -139,7 +144,8 @@ export default function UserHome() {
       )}
       <div className="content">
         <b>SceneStealer</b>
-        <b className="mainTextTitle">Choose Your Scene!</b>
+        <b className="mainTextTitle">Choose Your Scene</b>
+        당신의 장면을 골라 보세요!
         <div id="mainPosts">
           {Array.isArray(show) &&
             show.map((s) => (

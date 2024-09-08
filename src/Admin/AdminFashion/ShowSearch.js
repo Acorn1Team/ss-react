@@ -17,6 +17,7 @@ export default function ShowSearch() {
 
   const scrapShow = async (e) => {
     e.preventDefault(); // 폼 제출 방지
+    setShowDropdown(false);
     console.log("스크래핑 시작");
     setShow({ no: "", title: "", pic: "" }); // 선택한 작품 초기화
     await axios
@@ -77,10 +78,6 @@ export default function ShowSearch() {
     setInputValue(e.target.value);
   };
 
-  const handleBlur = () => {
-    setTimeout(() => setShowDropdown(false), 300);
-  };
-
   // 직접 추가 시
   const addShowDIY = () => {
     const showForm = new FormData();
@@ -110,7 +107,6 @@ export default function ShowSearch() {
           type="text"
           value={inputValue}
           onChange={handleChange}
-          onBlur={handleBlur}
           onFocus={() => setShowDropdown(true)}
           name="inputValue"
           placeholder="작품명을 입력하세요"
@@ -253,7 +249,6 @@ const SearchInput = styled.input`
   }
 `;
 
-
 const SearchButton = styled.button`
   font-family: inherit;
   font-size: inherit;
@@ -299,7 +294,6 @@ const AutoSearchContainer = styled.div`
   left: 0; /* 부모 요소 기준으로 왼쪽부터 중앙으로 정렬 */
   right: 0; /* 부모 요소 기준으로 오른쪽을 동일하게 정렬 */
 `;
-
 
 const AutoSearchItem = styled.div`
   padding: 10px;

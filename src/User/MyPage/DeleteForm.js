@@ -13,6 +13,7 @@ const DeleteForm = () => {
   const [loading, setLoading] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
+
   const openModal = () => {
     setModalIsOpen(true);
   };
@@ -51,17 +52,44 @@ const DeleteForm = () => {
   const handleDelete = async () => {
     setLoading(true);
     try {
+      const res = await axios.get(`/posts/user/${userNo}`);
+
+      if (res.data.idK) {
+        let kakaoTokenValue = sessionStorage.getItem("token_k");
+        console.log(res.data);
+        console.log(res.data.idk);
+        await axios.post(
+          "https://kapi.kakao.com/v1/user/unlink",
+          {
+            target_id_type: "user_id",
+            target_id: sessionStorage.getItem("id"),
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${kakaoTokenValue}`,
+            },
+          }
+        );
+        sessionStorage.removeItem("token_k");
+      }
+
+      if (res.data.idN) {
+        let naverTokenValue = sessionStorage.getItem("token_n");
+        await axios.post(`/api/naver/delete-token`, { naverTokenValue });
+        sessionStorage.removeItem("token_n");
+      }
+
       const response = await axios.put(`/user/mypage/delete`, {
         userNo: userNo,
         email: email,
       });
 
-      <Loading />;
-
       if (response.data.result) {
+        // openModal();
+        //alert("탈퇴가 완료되었습니다.");
         sessionStorage.removeItem("token");
         sessionStorage.removeItem("id");
-        alert("탈퇴가 완료되었습니다.");
+        nv("/user/success/delete");
         //nv("/user");
       } else {
         if (response.data.message) {
@@ -70,53 +98,6 @@ const DeleteForm = () => {
       }
     } catch (error) {
       console.error("삭제 중 오류 발생:", error);
-    }
-
-    try {
-      const res = await axios.get(`/posts/user/${userNo}`);
-
-      if (res.data.idK) {
-        let kakaoTokenValue = sessionStorage.getItem("token_k");
-        console.log(res.data);
-        console.log(res.data.idk);
-        axios
-          .post(
-            "https://kapi.kakao.com/v1/user/unlink",
-            {
-              target_id_type: "user_id",
-              target_id: sessionStorage.getItem("id"),
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${kakaoTokenValue}`,
-              },
-            }
-          )
-          .then((res) => {
-            if (res.data) {
-              console.log(res.data);
-              sessionStorage.removeItem("token_k");
-              nv("/user");
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } else if (res.data.idN) {
-        let naverTokenValue = sessionStorage.getItem("token_n");
-        axios
-          .post(`/api/naver/delete-token`, { naverTokenValue })
-          .then((res) => {
-            console.log(res.data);
-            sessionStorage.removeItem("token_n");
-            nv("/user");
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-    } catch (error) {
-      console.error("Error fetching user posts:", error);
     } finally {
       setLoading(false); // 로딩 종료
     }
