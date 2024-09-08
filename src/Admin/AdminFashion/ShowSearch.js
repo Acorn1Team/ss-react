@@ -148,18 +148,20 @@ export default function ShowSearch() {
             borderRadius: "8px",
             textAlign: "center",
             maxWidth: "500px",
+            height:"600px",
             margin: "auto",
           },
         }}
       >
-        <h2>[{show.title}] 작품을 추가하고 등장인물을 불러올까요?</h2>
+        <h2>[{show.title}] 정보 불러오기 성공!</h2>
         <img
           src={show.pic}
           alt={`${show.title} 이미지`}
           style={{ maxWidth: "100%", height: "auto" }}
-        />
+        /><br/>
+        <h3>작품을 추가하고 등장인물을 불러올까요?</h3>
+        <button onClick={() => setIsModalOpen(false)}>취소</button>&nbsp;&nbsp;
         <button onClick={addShow}>확인</button>
-        <button onClick={() => setIsModalOpen(false)}>닫기</button>
       </Modal>
 
       <Modal

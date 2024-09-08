@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import Modal from "react-modal";
 
 // 문자열을 잘라주는 함수
 const truncateText = (text, maxLength) => {
@@ -19,8 +19,10 @@ export default function CommunityManage() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [pageSize] = useState(5); // 한 페이지에 보여줄 게시글 수
-  const [selectedPost, setSelectedPost] = useState(null); // 선택된 게시글의 상세 내용
-  const navigate = useNavigate();
+  const [selectedPost, setSelectedPost] = useState(null); // 선택된 게시글
+  
+  const [postToDelete, setPostToDelete] = useState(null); // 삭제할 게시글
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const fetchPosts = async (page = 0) => {
     try {
@@ -60,6 +62,11 @@ export default function CommunityManage() {
     }
   };
 
+  const openDeleteModal = (postData) => {
+    setPostToDelete(postData);
+    setIsDeleteModalOpen(true);
+  }
+
   const fetchReportedInfos = async () => {
     try {
       const response = await axios.get(`/admin/posts/reportedInfos`);
@@ -77,7 +84,7 @@ export default function CommunityManage() {
         setPosts(posts.filter((post) => post.no !== postNo));
         setFilteredPosts(filteredPosts.filter((post) => post.no !== postNo));
         setSelectedPost(null);
-        console.log("삭제 성공");
+        setIsDeleteModalOpen(false);
       }
     } catch (error) {
       console.error("신고 글 삭제 중 오류 발생:", error);
@@ -141,7 +148,7 @@ export default function CommunityManage() {
 
             return (
               <li key={post.no} className="post-item">
-                <button onClick={() => deletePost(post.no)}>
+                <button onClick={() => openDeleteModal(post)}>
                   삭제하기
                 </button><br/><br/><hr/>
                 {view === "reported" && (
@@ -188,6 +195,38 @@ export default function CommunityManage() {
             );
           })}
         </ul>
+        <Modal
+                isOpen={isDeleteModalOpen}
+                onRequestClose={() => setIsDeleteModalOpen(false)}
+                contentLabel="게시글 삭제 확인"
+                style={{
+                    overlay: {
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    },
+                    content: {
+                        background: "white",
+                        padding: "20px",
+                        borderRadius: "8px",
+                        textAlign: "center",
+                        maxWidth: "400px",
+                        height: "500px",
+                        margin: "auto",
+                    },
+                }}
+            >
+                {postToDelete && (
+                    <><br/>
+                        <img
+                            src={postToDelete.pic}
+                            alt={`${postToDelete.no} 이미지`}
+                            style={{ maxWidth: '70%', height: 'auto' }}
+                            /><br/>
+                        <h3>해당 게시글을 삭제 조치할까요?</h3>
+                        <button onClick={() => deletePost(postToDelete.no)}>삭제</button>&nbsp;&nbsp;
+                        <button onClick={() => setIsDeleteModalOpen(false)}>닫기</button>
+                    </>
+                )}
+            </Modal>
       </div>
     );
   };

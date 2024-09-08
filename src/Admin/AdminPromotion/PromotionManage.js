@@ -1,9 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "../Style/PromotionManage.module.css";
+import Modal from "react-modal";
 
 export default function PromotionManage() {
+  const navigate = useNavigate();
   const [coupons, setCoupons] = useState([]);
   const [popups, setPopups] = useState([]);
 
@@ -18,6 +20,10 @@ export default function PromotionManage() {
   // 전체 페이지 수
   const [totalCouponPages, setTotalCouponPages] = useState(1);
   const [totalPopupPages, setTotalPopupPages] = useState(1);
+
+  // 팝업 삭제 관련
+  const [popupToDelete, setPopupToDelete] = useState(null);
+  const [isDeletePopupModal, setIsDeletePopupModalOpen] = useState(false);
 
   const fetchCoupons = () => {
     axios
@@ -81,10 +87,16 @@ export default function PromotionManage() {
     }
   };
 
+  const openDeletePopupModal = (popupData) => {
+    setPopupToDelete(popupData);
+    setIsDeletePopupModalOpen(true);
+  }
+
   const deletePopup = async (no) => {
     try {
       await axios.delete(`/admin/popup/${no}`);
       fetchPopups();
+      setIsDeletePopupModalOpen(false);
     } catch (error) {
       console.error("팝업 삭제 중 오류 발생:", error);
     }
@@ -158,22 +170,22 @@ export default function PromotionManage() {
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th>사진</th>
-                  <th>경로</th>
-                  <th colSpan={"2"}>관리</th>
+                  <th>내용 (클릭 시 설정 경로 이동)</th>
+                  <th>상태 변경</th>
+                  <th>삭제</th>
                 </tr>
               </thead>
               <tbody>
                 {popups.map((popup) => (
                   <tr key={popup.no}>
                     <td>
-                      <img
+                      <img onClick={() => navigate(`${popup.path}`)}
                         className={styles.image}
+                        style={{cursor: "pointer"}}
                         src={popup.pic}
                         alt={`${popup.no} 이미지`}
                       />
                     </td>
-                    <td>{popup.path}</td>
                     <td>
                       <select
                         value={popup.isShow.toString()}
@@ -187,7 +199,7 @@ export default function PromotionManage() {
                     </td>
                     <td>
                       <i
-                        onClick={() => deletePopup(popup.no)}
+                        onClick={() => openDeletePopupModal(popup)}
                         className={styles.buttonDelete} // CSS 클래스 적용
                       >
                         삭제
@@ -218,6 +230,38 @@ export default function PromotionManage() {
             )}
           </div>
         </div>
+        <Modal
+                isOpen={isDeletePopupModal}
+                onRequestClose={() => isDeletePopupModal(false)}
+                contentLabel="게시글 삭제 확인"
+                style={{
+                    overlay: {
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    },
+                    content: {
+                        background: "white",
+                        padding: "20px",
+                        borderRadius: "8px",
+                        textAlign: "center",
+                        maxWidth: "400px",
+                        height: "300px",
+                        margin: "auto",
+                    },
+                }}
+            >
+                {popupToDelete && (
+                    <><br/>
+                        <img
+                            src={popupToDelete.pic}
+                            alt={`${popupToDelete.no} 이미지`}
+                            style={{ maxWidth: '70%', maxHeight: '30%' }}
+                            /><br/>
+                        <h3>해당 팝업을 삭제할까요?</h3>
+                        <button onClick={() => deletePopup(popupToDelete.no)}>삭제</button>&nbsp;&nbsp;
+                        <button onClick={() => isDeletePopupModal(false)}>취소</button>
+                    </>
+                )}
+            </Modal>
       </div>
     </>
   );

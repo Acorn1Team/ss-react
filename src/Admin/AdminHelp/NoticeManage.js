@@ -68,7 +68,7 @@ export default function NoticeManage() {
             <td colSpan={4}>
               {/* 카테고리 선택 및 전체보기 버튼 */}
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px", alignItems: "center", padding: "0 20px", fontSize: "20px" }}>
-              <select id="category" value={selectedCategory} onChange={handleCategoryChange} style={{ padding: "5px", fontSize: "12px" }}>
+              <select id="category" value={selectedCategory} onChange={handleCategoryChange} style={{ padding: "5px", fontSize: "12px", width:"100px" }}>
                 <option value="">전체</option>
                 <option value="주문">주문 상태</option>
                 <option value="결제">결제</option>

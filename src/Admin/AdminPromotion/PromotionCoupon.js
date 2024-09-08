@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../Style/PromotionCoupon.module.css";
+import Modal from "react-modal";
 
 export default function PromotionCoupon() {
   const navigate = useNavigate();
@@ -11,19 +12,22 @@ export default function PromotionCoupon() {
     expiryDate: "",
   });
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [discountRateError, setDiscountRateError] = useState("");
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // 할인율이 음수로 입력되는 것을 방지
     if (name === "discountRate") {
       if (value < 0) {
-        alert("할인율은 0 이상이어야 합니다.");
+        setDiscountRateError("할인율은 0 이상이어야 합니다.");
         return;
-      }
-      // 할인율을 1~100 사이로 제한
-      if (value > 100) {
-        alert("할인율은 100 이하이어야 합니다.");
+      } else if (value >= 100) {
+        setDiscountRateError("할인율은 100 미만이어야 합니다.");
         return;
+      } else {
+        setDiscountRateError(""); // 에러 없을 시 초기화
       }
     }
 
@@ -36,13 +40,11 @@ export default function PromotionCoupon() {
   const addCoupon = () => {
     const { name, discountRate } = state;
 
-    // 할인율이 비어 있는지 확인
     if (!discountRate) {
-      alert("할인율을 입력해 주세요.");
+      setDiscountRateError("할인율을 입력해 주세요.");
       return;
     }
 
-    // 유효기간이 비어 있으면 기본값으로 1주일 후 날짜를 설정
     const expiryDate = state.expiryDate || getFutureDate(7);
 
     const couponData = {
@@ -54,8 +56,7 @@ export default function PromotionCoupon() {
       .post("/admin/coupon", couponData)
       .then((response) => {
         if (response.data.isSuccess) {
-          alert("추가 성공");
-          navigate("/admin/promotion");
+          setIsModalOpen(true);
         }
       })
       .catch((error) => {
@@ -63,7 +64,6 @@ export default function PromotionCoupon() {
       });
   };
 
-  // 현재 날짜에 지정한 일수를 더하여 반환하는 함수
   const getFutureDate = (days) => {
     const today = new Date();
     today.setDate(today.getDate() + days);
@@ -98,6 +98,9 @@ export default function PromotionCoupon() {
           />
           <span>%</span>
         </div>
+        {discountRateError && (
+          <p className={styles.errorMessage} style={{color:"red"}}>{discountRateError}</p>
+        )}
       </div>
       <div className={styles.formGroup}>
         <label>유효기간</label>
@@ -112,6 +115,27 @@ export default function PromotionCoupon() {
       <button onClick={addCoupon} className={styles.button}>
         등록
       </button>
+
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        contentLabel="쿠폰 등록 완료 확인"
+        style={{overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)",},
+                content: {
+                background: "white",
+                padding: "20px",
+                borderRadius: "8px",
+                textAlign: "center",
+                maxWidth: "300px",
+                height: "180px",
+                margin: "auto",
+                },
+        }}>
+          <><br/>
+              <h3>쿠폰 발급이 완료되었습니다!</h3>
+              <button onClick={() => navigate("/admin/promotion")}>목록으로 돌아가기</button>
+          </>
+        </Modal>
     </div>
   );
 }

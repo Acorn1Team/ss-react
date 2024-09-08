@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Modal from "react-modal";
 import styled from "styled-components";
 import styles from "../Style/PromotionAdverise.module.css";
 
@@ -11,6 +12,7 @@ export default function PromotionAdvertise() {
   const [state, setState] = useState({});
   const [filteredItems, setFilteredItems] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleChange = (e) => {
     setState({
@@ -61,8 +63,7 @@ export default function PromotionAdvertise() {
       .post("/admin/advertise", state)
       .then((response) => {
         if (response.data.isSuccess) {
-          alert("추가 성공");
-          navigate("/admin/promotion");
+          setIsModalOpen(true);
         }
       })
       .catch((error) => {
@@ -123,6 +124,26 @@ export default function PromotionAdvertise() {
       <button className={styles.button} onClick={addAdvertise}>
         등록
       </button>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        contentLabel="광고 알림 전송 완료 확인"
+        style={{overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)",},
+                content: {
+                background: "white",
+                padding: "20px",
+                borderRadius: "8px",
+                textAlign: "center",
+                maxWidth: "300px",
+                height: "180px",
+                margin: "auto",
+                },
+        }}>
+          <><br/>
+              <h3>광고 알림 전송이 완료되었습니다!</h3>
+              <button onClick={() => navigate("/admin/promotion")}>목록으로 돌아가기</button>
+          </>
+        </Modal>
     </div>
   );
 }
