@@ -258,7 +258,7 @@ export default function PromotionManage() {
                             /><br/>
                         <h3>해당 팝업을 삭제할까요?</h3>
                         <button onClick={() => deletePopup(popupToDelete.no)}>삭제</button>&nbsp;&nbsp;
-                        <button onClick={() => isDeletePopupModal(false)}>취소</button>
+                        <button onClick={() => setIsDeletePopupModalOpen(false)}>취소</button>
                     </>
                 )}
             </Modal>
