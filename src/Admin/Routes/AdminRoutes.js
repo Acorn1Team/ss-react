@@ -6,7 +6,6 @@ import HelpManage from "../AdminHelp/HelpManage";
 import PromotionManage from "../AdminPromotion/PromotionManage";
 import CommunityManage from "../AdminCommunity/CommunityManage";
 import OrderManage from "../AdminOrder/OrderManage";
-import OrderDetail from "../AdminOrder/OrderDetail";
 import NoticeManage from "../AdminHelp/NoticeManage";
 import NoticeDetail from "../AdminHelp/NoticeDetail";
 import NoticeForm from "../AdminHelp/NoticeForm";
@@ -34,7 +33,6 @@ export default function AdminRoutes() {
         <Route path="/product/update/:no" element={<ProductUpdateForm />} />
 
       <Route path="/orders" element={<OrderManage />} />
-        <Route path="/orders/detail/:orderNo" element={<OrderDetail />} />
 
       <Route path="/help" element={<HelpManage />} />
         <Route path="/help/notices" element={<NoticeManage />} />
