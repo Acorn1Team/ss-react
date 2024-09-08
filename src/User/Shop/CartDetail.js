@@ -28,27 +28,28 @@ export default function CartDetail() {
       });
   }, [userNo]);
 
- // 쿠폰 정보 받기
- useEffect(() => {
-  getCouponData(); // 쿠폰 목록 가져오는 함수 호출
-}, [userNo]);
+  // 쿠폰 정보 받기
+  useEffect(() => {
+    getCouponData(); // 쿠폰 목록 가져오는 함수 호출
+  }, [userNo]);
 
-// 쿠폰데이터
-const getCouponData = () => {
-  axios
-    .get(`/coupon/order/${userNo}`)
-    .then((response) => {
-      const couponData = response.data;
-      // 사용되지 않은 쿠폰만 필터링
-      const unusedCoupons = couponData.filter(
-        (c) => !c.couponUser.isUsed // isUsed가 false인 쿠폰만 필터링
-      );
-      setCoupons(unusedCoupons); // 사용되지 않은 쿠폰만 상태로 설정
-    })
-    .catch((error) => {
-      console.error("쿠폰 데이터를 불러오는 데 실패했습니다.", error);
-    });
-};
+  // 쿠폰데이터
+  const getCouponData = () => {
+    axios
+      .get(`/coupon/order/${userNo}`)
+      .then((response) => {
+        const couponData = response.data;
+        // 사용되지 않은 쿠폰만 필터링
+        const unusedCoupons = couponData.filter(
+          (c) => !c.couponUser.isUsed // isUsed가 false인 쿠폰만 필터링
+        );
+        setCoupons(unusedCoupons); // 사용되지 않은 쿠폰만 상태로 설정
+      })
+      .catch((error) => {
+        console.error("쿠폰 데이터를 불러오는 데 실패했습니다.", error);
+      });
+  };
+
   const orderProc = () => {
     axios
       .post(`/order`, {
@@ -70,9 +71,10 @@ const getCouponData = () => {
           // 장바구니 비우기
           dispatch({
             type: "CLEAR_CART",
+            payload: { userNo }, // userNo를 포함시킵니다.
           });
 
-             // 선택한 쿠폰을 사용 후 쿠폰 목록에서 제거
+          // 선택한 쿠폰을 사용 후 쿠폰 목록에서 제거
           if (selectedCoupon) {
             setCoupons((prevCoupons) =>
               prevCoupons.filter(
@@ -145,7 +147,6 @@ const getCouponData = () => {
           )}
         </select>
       </div>
-
 
       <div className={styles.totalPrice}>
         <h3>총 가격: {orderTotal.toLocaleString()}원</h3>

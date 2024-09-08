@@ -22,20 +22,25 @@ export default function ProductUpdateForm() {
     discountRate: "",
   });
 
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
+  const [modalLoading, setModalLoading] = useState(false); // 모달 안에서의 삭제 로딩 상태
+
   const isFormValid = () => {
     return !errors.stock && !errors.discountRate;
   };
 
   const handleDelete = async (no) => {
-    if (window.confirm("정말로 삭제하시겠습니까?")) {
-      try {
-        await axios.delete(`/admin/product/${no}`);
-        alert("상품이 삭제되었습니다.");
-        navigate('/admin/product')
-      } catch (error) {
-        console.error("Error deleting product:", error);
-        alert("삭제 중 오류가 발생했습니다.");
-      }
+    setModalLoading(true);
+    try {
+      await axios.delete(`/admin/product/${no}`);
+      alert("상품이 삭제되었습니다.");
+      navigate("/admin/product");
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      alert("삭제 중 오류가 발생했습니다.");
+    } finally {
+      setModalLoading(false);
+      setIsModalOpen(false);
     }
   };
 
@@ -135,6 +140,14 @@ export default function ProductUpdateForm() {
       });
   };
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="form-container">
       <h2 className="form-title">상품 정보 수정</h2>
@@ -207,8 +220,10 @@ export default function ProductUpdateForm() {
           <p className="error-message">{errors.discountRate}</p>
         )}
       </div>
-
-      <button className="delete-button" onClick={() => handleDelete(state.no)}>삭제하기</button>&nbsp;&nbsp;
+      <button className="delete-button" onClick={openModal}>
+        삭제하기
+      </button>
+      &nbsp;&nbsp;
       <button
         className="update-button"
         onClick={handleSave}
@@ -216,6 +231,23 @@ export default function ProductUpdateForm() {
       >
         수정 완료
       </button>
+      {/* 모달 */}
+      {isModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <p>정말로 삭제하시겠습니까?</p>
+            <button onClick={closeModal} disabled={modalLoading}>
+              취소
+            </button>
+            <button
+              onClick={() => handleDelete(state.no)}
+              disabled={modalLoading}
+            >
+              {modalLoading ? "삭제 중..." : "삭제"}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -9,17 +9,17 @@ import styles from "../Style/ProductDetail.module.css";
 
 import Modal from "react-modal";
 
-Modal.setAppElement("#root"); // 모달의 root element를 설정합니다.
+Modal.setAppElement("#root");
 
 export default function ProductDetail() {
   const { no, productNo } = useParams();
   const [product, setProduct] = useState({});
-  const [count, setCount] = useState(1); // 수량을 상태로 관리
-  const [averageRating, setAverageRating] = useState(0); // 평균 평점 상태 추가
-  const dispatch = useDispatch(); // Redux의 dispatch 함수 사용
-  const navigate = useNavigate(); // useNavigate 훅 사용
+  const [count, setCount] = useState(1);
+  const [averageRating, setAverageRating] = useState(0);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const [modalIsOpen, setModalIsOpen] = useState(false); // 모달 상태 추가
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const refresh = (no) => {
     axios
@@ -56,17 +56,13 @@ export default function ProductDetail() {
     setCount((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
   };
 
-  // 모달 열기
   const openModal = () => setModalIsOpen(true);
-  // 모달 닫기
   const closeModal = () => setModalIsOpen(false);
 
-  // 계속 쇼핑하기 버튼 동작
   const continueShopping = () => {
     closeModal();
   };
 
-  // 장바구니 보기 버튼 동작
   const goToCart = () => {
     closeModal();
     navigate("/user/shop/cart");
@@ -74,11 +70,45 @@ export default function ProductDetail() {
 
   // 장바구니에 제품 추가
   const handleAddToCart = () => {
+    const userNo = sessionStorage.getItem("id");
     dispatch({
       type: "ADD_TO_CART",
-      payload: { product, quantity: count },
+      payload: { product, quantity: count, userNo },
     });
-    openModal(); // 제품이 장바구니에 추가되면 모달을 엽니다.
+    openModal();
+  };
+
+  // 주문 완료 후 장바구니 비우기
+  const handleOrder = () => {
+    const userNo = sessionStorage.getItem("id");
+    const total = getTotalPrice();
+    const selectedCartItems = [
+      {
+        productNo: product.no,
+        name: product.name,
+        quantity: count,
+        price: product.price,
+        discountRate: product.discountRate,
+        resultPrice: getDiscountedPrice() * count,
+      },
+    ];
+
+    // 주문 생성 액션 디스패치
+    dispatch({
+      type: "CREATE_ORDER",
+      payload: { items: selectedCartItems, total: total, userNo },
+    });
+
+    // 주문 후 장바구니 비우기
+    dispatch({
+      type: "CLEAR_CART",
+      payload: { userNo },
+    });
+
+    // 로컬 스토리지에서도 해당 장바구니 비우기
+    localStorage.removeItem("cart");
+
+    navigate(`/user/shop/order/detail`);
   };
 
   return (
@@ -104,13 +134,13 @@ export default function ProductDetail() {
         <button onClick={decrementQuantity}>-</button>
         <span>{count}</span>
         <button onClick={incrementQuantity}>+</button>&nbsp;
-      {product.stock > 0 ? (
-        <button className={styles.addToCartButton} onClick={handleAddToCart}>
-          장바구니에 담기
-        </button>
-      ) : (
-        <button className={styles.addToCartButton}>품절된 상품입니다</button>
-      )}
+        {product.stock > 0 ? (
+          <button className={styles.addToCartButton} onClick={handleAddToCart}>
+            장바구니에 담기
+          </button>
+        ) : (
+          <button className={styles.addToCartButton}>품절된 상품입니다</button>
+        )}
       </div>
 
       <div className={styles.productDescription}>

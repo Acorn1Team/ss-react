@@ -5,28 +5,27 @@ import { useParams, useNavigate } from "react-router-dom";
 import styles from "../Style/CartList.module.css";
 
 export default function CartList() {
-  const cartItems = useSelector((state) => state.cart.cartItems); // Redux 스토어의 장바구니 항목 가져오기
+  const userNo = sessionStorage.getItem("id"); // 로그인한 사용자 ID를 세션에서 가져옴
+  const cartItems = useSelector((state) => state.cart.cartItems[userNo] || []); // 사용자 ID별 장바구니 항목 가져오기
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [selectedItems, setSelectedItems] = useState([]);
-  // 사용자가 선택한 장바구니 항목을 저장
   const [cartProductInfo, setCartProductInfo] = useState([]);
-  // 장바구니에 담긴 제품 정보 및 재고 상태를 저장
-
-  // 로그인 정보라고 가정함
-  //const userNo = sessionStorage.getItem("id");
 
   const fetchStockInfo = async () => {
     try {
       const productNos = cartItems.map((ci) => ci.product.no);
-      const response = await axios.post("/cart/stock", productNos, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.post(
+        "/cart/stock",
+        { productNos, userNo },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const stockData = response.data;
-      // console.log(stockData);
       setCartProductInfo(
         cartItems.map((ci) => {
           const stockInfo = stockData.find(
@@ -47,19 +46,21 @@ export default function CartList() {
                   (1 - ci.product.discountRate / 100) *
                   ci.quantity
                 : ci.product.price * ci.quantity,
-            stock: availableStock, // 서버에서 받은 재고 정보를 사용
+            stock: availableStock,
             purchaseCheck: ci.quantity <= availableStock,
           };
         })
       );
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching stock info:", error);
     }
   };
 
   useEffect(() => {
-    fetchStockInfo(); // 컴포넌트가 로드될 때 재고 정보 불러오기
-  }, [cartItems]);
+    if (userNo) {
+      fetchStockInfo(); // 컴포넌트가 로드될 때 재고 정보 불러오기
+    }
+  }, [cartItems, userNo]);
 
   const getTotalCartPrice = () => {
     return selectedItems.reduce((total, productNo) => {
@@ -73,7 +74,6 @@ export default function CartList() {
   const handleCheckboxChange = (productNo) => {
     const selectedItem = cartProductInfo.find((item) => item.no === productNo);
 
-    // 재고보다 많은 수량이 선택됐을 때 선택을 해제하거나, 재고가 0이면 체크 안되도록 함
     if (selectedItem && selectedItem.purchaseCheck) {
       if (selectedItems.includes(productNo)) {
         setSelectedItems(selectedItems.filter((no) => no !== productNo));
@@ -85,7 +85,10 @@ export default function CartList() {
 
   const handleRemoveSelected = () => {
     selectedItems.forEach((productNo) =>
-      dispatch({ type: "REMOVE_FROM_CART", payload: productNo })
+      dispatch({
+        type: "REMOVE_FROM_CART",
+        payload: { productNo, userNo },
+      })
     );
     setSelectedItems([]); // 선택 목록 초기화
   };
@@ -93,7 +96,6 @@ export default function CartList() {
   const incrementQuantity = (productNo) => {
     const selectedItem = cartProductInfo.find((item) => item.no === productNo);
 
-    // 재고 초과 시 더 이상 수량을 추가하지 않음
     if (selectedItem && selectedItem.quantity < selectedItem.stock) {
       dispatch({
         type: "ADD_TO_CART",
@@ -101,7 +103,7 @@ export default function CartList() {
           product: cartItems.find((item) => item.product.no === productNo)
             .product,
           quantity: 1,
-         // userId: userNo, // userId를 payload에 추가
+          userNo, // userNo를 payload에 추가
         },
       });
     }
@@ -112,7 +114,7 @@ export default function CartList() {
     if (item.quantity > 1) {
       dispatch({
         type: "ADD_TO_CART",
-        payload: { product: item.product, quantity: -1 },
+        payload: { product: item.product, quantity: -1, userNo },
       });
     }
   };
@@ -127,13 +129,12 @@ export default function CartList() {
         quantity: item.quantity,
         price: item.price,
         discountRate: item.discountRate,
-        resultPrice: item.resultPrice, // 할인 적용된 가격
+        resultPrice: item.resultPrice,
       }));
 
-    // 주문 생성 액션 디스패치
     dispatch({
       type: "CREATE_ORDER",
-      payload: { items: selectedCartItems, total: total }, // 필요한 정보들을 저장
+      payload: { items: selectedCartItems, total: total, userNo }, // 필요한 정보들을 저장
     });
 
     navigate(`/user/shop/order/detail`); // 주문 페이지로 이동
