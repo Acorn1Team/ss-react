@@ -10,7 +10,7 @@ import AdminTop from "./Admin/AdminTop";
 import ChatInput from "./User/Socket/ChatInput";
 
 import { useDispatch, useSelector } from "react-redux";
-import LoadingScreen from "./User/Component/Loding";
+import LoadingScreen from "./User/Component/Loading";
 import { PrivateRoute, AdminRoute } from "./User/Component/PrivateRoute";
 
 function App() {

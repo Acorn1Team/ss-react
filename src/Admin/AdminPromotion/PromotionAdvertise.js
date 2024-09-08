@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 import styled from "styled-components";
 import styles from "../Style/PromotionAdverise.module.css";
+import LoadingScreen from "../../User/Component/Loading";
 
 export default function PromotionAdvertise() {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ export default function PromotionAdvertise() {
   const [filteredItems, setFilteredItems] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setState({
@@ -58,11 +60,12 @@ export default function PromotionAdvertise() {
   };
 
   const addAdvertise = () => {
-    console.log("추가할 상태", state);
+    setIsLoading(true);
     axios
       .post("/admin/advertise", state)
       .then((response) => {
         if (response.data.isSuccess) {
+          setIsLoading(false);
           setIsModalOpen(true);
         }
       })
@@ -121,9 +124,10 @@ export default function PromotionAdvertise() {
       </div>
       <br />
       <br />
-      <button className={styles.button} onClick={addAdvertise}>
-        등록
+      <button className={styles.button} onClick={addAdvertise} disabled={isLoading}>
+        {isLoading ? "Loading..." : "등록"}
       </button>
+      {isLoading && <LoadingScreen />}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}

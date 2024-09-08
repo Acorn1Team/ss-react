@@ -210,7 +210,13 @@ export default function StyleManage() {
                       (<>{filteredItems[i].name}<br/>
                       <img src={filteredItems[i].pic} alt={`${index + 1}번 스타일 아이템${i+1}`} 
                       style={{width: '200px', height: '200px', borderRadius: '50%', marginRight: '20px'}}/><br/>
-                      <button onClick={() => navigate(`/admin/product/detail/${filteredItems[i].product}`)}>유사상품 조회하기</button></>) 
+                      <button onClick={() => navigate(`/admin/product/detail/${filteredItems[i].product}`)}>
+                        유사상품 조회하기
+                      </button>
+                      <button /*{onClick={()=>{openDeleteItemPopup(filteredItems[i])}}*/>
+                        아이템 정보 삭제
+                      </button>
+                      </>)
                     : (<>
                           <button onClick={() => {
                             setCurrentStyle(styleData);
