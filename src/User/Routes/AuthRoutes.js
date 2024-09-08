@@ -4,6 +4,7 @@ import Login from "../Main/Login";
 import Register from "../Main/Register";
 import FindPass from "../User/FindPass";
 import RegisterSuccess from "../Result/RegisterSuccess";
+import DeleteSuccess from "../Result/DeleteSuccess";
 
 export default function AuthRoutes() {
   const location = useLocation();
@@ -17,6 +18,7 @@ export default function AuthRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/findPass" element={<FindPass />} />
       <Route path="/success" element={<RegisterSuccess />} />
+      <Route path="/delete" element={<DeleteSuccess />} />
     </Routes>
   );
 }
