@@ -463,6 +463,41 @@ export default function Posts() {
     window.history.back();
   };
 
+  const [isDeleteCommentModalOpen, setIsDeleteCommentModalOpen] =
+    useState(false); // 댓글 삭제 확인 모달 상태
+  const [commentToDelete, setCommentToDelete] = useState(null); // 삭제할 댓글 번호 저장
+
+  // 댓글 삭제 확인 모달 열기
+  const openDeleteCommentModal = (commentNo) => {
+    setCommentToDelete(commentNo); // 삭제할 댓글 번호 설정
+    setIsDeleteCommentModalOpen(true); // 모달 열기
+  };
+
+  // 댓글 삭제 확인 모달 닫기
+  const closeDeleteCommentModal = () => {
+    setIsDeleteCommentModalOpen(false); // 모달 닫기
+    setCommentToDelete(null); // 삭제할 댓글 번호 초기화
+  };
+
+  // 댓글 삭제 확인 핸들러
+  const handleConfirmDeleteComment = () => {
+    if (commentToDelete !== null) {
+      axios
+        .delete(`/posts/comment/${commentToDelete}`)
+        .then((res) => {
+          if (res.data.result) {
+            getPostDetailInfo(); // 댓글 삭제 후 게시글 정보 다시 가져오기
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          closeDeleteCommentModal(); // 모달 닫기
+        });
+    }
+  };
+
   useEffect(() => {
     getPostDetailInfo();
     getPostLike();
@@ -553,6 +588,15 @@ export default function Posts() {
                   <h2>정말 삭제하시겠습니까?</h2>
                   <button onClick={handleConfirmDelete}>확인</button>
                   <button onClick={closeDeleteModal}>취소</button>
+                </div>
+              </div>
+            )}{" "}
+            {isDeleteCommentModalOpen && (
+              <div className={modalStyles.modal}>
+                <div className={modalStyles["modal-content"]}>
+                  <h2>정말 삭제하시겠습니까?</h2>
+                  <button onClick={handleConfirmDeleteComment}>확인</button>
+                  <button onClick={closeDeleteCommentModal}>취소</button>
                 </div>
               </div>
             )}
@@ -664,7 +708,7 @@ export default function Posts() {
                         좋아요 {commentLike[pc.no]}개
                       </span>
                       {String(pc.userNo) === String(userNo) && (
-                        <button onClick={() => deleteComment(pc.no)}>
+                        <button onClick={() => openDeleteCommentModal(pc.no)}>
                           삭제
                         </button>
                       )}
@@ -714,7 +758,9 @@ export default function Posts() {
                               : commentLike[reply.no]}
                             개
                             {reply.userNo === userNo && (
-                              <button onClick={() => deleteComment(reply.no)}>
+                              <button
+                                onClick={() => openDeleteCommentModal(reply.no)}
+                              >
                                 삭제
                               </button>
                             )}
