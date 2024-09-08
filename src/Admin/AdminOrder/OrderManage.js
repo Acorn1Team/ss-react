@@ -101,7 +101,15 @@ export default function OrderManage() {
 
   const handleSearch = () => {
     setCurrentPage(0);
-    fetchOrders(0, pageSize, searchTerm, searchField, startDate, endDate, status);
+    fetchOrders(
+      0,
+      pageSize,
+      searchTerm,
+      searchField,
+      startDate,
+      endDate,
+      status
+    );
   };
 
   const handleReset = () => {
@@ -114,13 +122,23 @@ export default function OrderManage() {
   };
 
   const handleStatusChange = async (orderNo, status) => {
-    const confirmation = window.confirm(`주문 상태를 '${status}'로 변경하시겠습니까?`);
+    const confirmation = window.confirm(
+      `주문 상태를 '${status}'로 변경하시겠습니까?`
+    );
     if (!confirmation) return;
 
     try {
       await axios.put(`/admin/orders/${orderNo}/status`, { status });
       setError(null);
-      fetchOrders(currentPage, pageSize, searchTerm, searchField, startDate, endDate, status);
+      fetchOrders(
+        currentPage,
+        pageSize,
+        searchTerm,
+        searchField,
+        startDate,
+        endDate,
+        status
+      );
     } catch (error) {
       console.error("주문 상태를 업데이트하는 중 오류가 발생했습니다!", error);
       setError("주문 상태 업데이트에 실패했습니다.");
@@ -192,14 +210,19 @@ export default function OrderManage() {
         ) : (
           <input
             type="text"
-            placeholder={`검색어를 입력하세요 (${searchField === "userId" ? "유저 ID" : "날짜"})`}
+            placeholder={`검색어를 입력하세요 (${
+              searchField === "userId" ? "유저 ID" : "날짜"
+            })`}
             value={searchTerm}
             onChange={handleSearchChange}
             style={{ padding: "5px", width: "300px", marginRight: "10px" }}
           />
         )}
 
-        <button onClick={handleSearch} style={{ padding: "5px 10px", marginRight: "10px" }}>
+        <button
+          onClick={handleSearch}
+          style={{ padding: "5px 10px", marginRight: "10px" }}
+        >
           검색
         </button>
         <button onClick={handleReset} style={{ padding: "5px 10px" }}>
@@ -229,7 +252,8 @@ export default function OrderManage() {
                   <td>
                     {order.orderProducts
                       .reduce(
-                        (total, product) => total + product.price * product.quantity,
+                        (total, product) =>
+                          total + product.price * product.quantity,
                         0
                       )
                       .toLocaleString("ko-KR")}
@@ -238,7 +262,9 @@ export default function OrderManage() {
                   <td>
                     <select
                       value={order.state}
-                      onChange={(e) => handleStatusChange(order.no, e.target.value)}
+                      onChange={(e) =>
+                        handleStatusChange(order.no, e.target.value)
+                      }
                     >
                       <option
                         value="주문접수"
@@ -279,7 +305,9 @@ export default function OrderManage() {
                   <tr>
                     <td colSpan="6">
                       <div>
-                        {orderDetails[order.no] && userInfo[order.no] && productInfo[order.no] ? (
+                        {orderDetails[order.no] &&
+                        userInfo[order.no] &&
+                        productInfo[order.no] ? (
                           <table>
                             <thead>
                               <tr>
@@ -307,7 +335,9 @@ export default function OrderManage() {
                                   <td
                                     style={{ cursor: "pointer", color: "blue" }}
                                     onClick={() =>
-                                      navigate(`/admin/product/update/${p.productNo}`)
+                                      navigate(
+                                        `/admin/product/update/${p.productNo}`
+                                      )
                                     }
                                   >
                                     {productInfo[order.no][p.productNo]}
@@ -357,7 +387,9 @@ export default function OrderManage() {
         </div>
       )}
 
-      {error && <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>}
+      {error && (
+        <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>
+      )}
     </div>
   );
 }
