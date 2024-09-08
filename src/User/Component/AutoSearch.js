@@ -47,6 +47,12 @@ function AutoSearch() {
     };
   }, [inputValue, category]);
 
+  useEffect(() => {
+    // 페이지 이동 시 입력값 초기화
+    setInputValue("");
+    setShowDropdown(false);
+  }, [navigate]);
+
   const handleChange = (e) => {
     setInputValue(e.target.value);
   };
@@ -67,6 +73,7 @@ function AutoSearch() {
     navigate(
       `/user/search?category=${encodedCategory}&name=${encodedInputValue}`
     );
+    setInputValue("");
   };
 
   return (

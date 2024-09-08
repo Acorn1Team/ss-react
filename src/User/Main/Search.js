@@ -24,17 +24,22 @@ function Search() {
 
       if (name && category) {
         try {
+          const validPage = Math.max(currentPage, 0); // 페이지 인덱스가 0보다 작지 않도록 설정
+          console.log("Fetching page:", validPage); // 페이지 값 확인
+
           const response = await axios.get(
             `http://localhost:8080/user/search/${category}/${name}`,
             {
               params: {
-                page: currentPage,
+                page: validPage,
                 size: pageSize,
                 searchTerm: name,
                 searchField: category,
               },
             }
           );
+
+          console.log("API Response:", response.data); // API 응답 데이터 확인
 
           if (response.data) {
             setTotalPages(response.data.totalPages);
@@ -55,10 +60,11 @@ function Search() {
   }, [name, category, currentPage, pageSize]);
 
   useEffect(() => {
-    setCurrentPage(0);
+    setCurrentPage(0); // Reset to first page on new search
   }, [name, category]);
 
   const handlePageChange = (newPage) => {
+    // Ensure newPage is valid and within the page range
     if (newPage >= 0 && newPage < totalPages) {
       setCurrentPage(newPage);
     }
@@ -117,14 +123,17 @@ function Search() {
 
 function ActorItem({ item }) {
   const showDetails = item.showDetails || [];
-  const actorName = showDetails[0] || "No Name";
-  const actorPic = showDetails[1] || "defaultProfilePic.png"; // 기본 이미지 설정
+  console.log("Show Details:", showDetails); // 데이터 확인
+
+  const actorName = showDetails[1] || "No Name";
+  const actorPic = showDetails[2] || "defaultProfilePic.png"; // 기본 이미지 설정
+  const showNo = showDetails[0] || "Unknown No"; // showDetails의 첫 번째 항목을 showNo로 사용
 
   return (
     <div className={styles.actorsContainer}>
       <span className={styles.profileContainer}>
         <span>
-          <Link to={`/user/main/sub/${item.no}`}>
+          <Link to={`/user/main/sub/${showNo}`}>
             <img
               src={actorPic}
               alt={`배우 사진`}
