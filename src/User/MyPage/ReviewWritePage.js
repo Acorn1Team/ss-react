@@ -13,6 +13,7 @@ export default function ReviewWritePage() {
   const location = useLocation(); // location.state에서 다른 데이터를 추출
   const { userNo } = location.state; // orderNo 제거
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
+  const [productName, setProductName] = useState("");
 
   const [contents, setContents] = useState(""); // 리뷰 내용 상태 관리
   const [score, setScore] = useState(0); // 평점 상태 관리
@@ -28,6 +29,7 @@ export default function ReviewWritePage() {
       userNo,
       contents,
       score,
+      productName,
     };
 
     // reviewDto를 JSON 문자열로 변환하여 FormData에 추가
@@ -57,16 +59,23 @@ export default function ReviewWritePage() {
     <div>
       <h2>리뷰 작성하기</h2>
       <div>
-        {/* 상품 번호: {orderProductNo}
+        {/* 주문상품 번호: {orderProductNo}
         <br />
         사용자 번호: {userNo} */}
-         상품명: 
+        상품 정보 : {productName}
       </div>
       <textarea
-        placeholder="리뷰 내용을 입력하세요"
-        value={contents}
-        onChange={(e) => setContents(e.target.value)}
-      ></textarea>
+  placeholder="리뷰 내용을 입력하세요"
+  value={contents}
+  onChange={(e) => {
+    const input = e.target.value;
+    if (input.length <= 40) {  // 글자 수를 40자로 제한
+      setContents(input);
+    }
+    
+  }}
+></textarea>
+<div>{contents.length} / 40 글자</div>
       <br />
 
       <div>

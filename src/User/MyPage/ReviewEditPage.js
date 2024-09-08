@@ -42,8 +42,16 @@ export default function ReviewEditPage() {
       <div>
         상품명: {review.productName}
       </div>
-      <textarea value={contents} onChange={(e) => setContents(e.target.value)} />
-
+      <textarea
+  value={contents}
+  onChange={(e) => {
+    const input = e.target.value;
+    if (input.length <= 40) { // 글자 수를 40자로 제한
+      setContents(input);
+    }
+  }}
+/>
+<div>{contents.length} / 40 글자</div> {/* 글자 수 표시 */}
       <br />
 
       <div>

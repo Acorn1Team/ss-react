@@ -68,18 +68,18 @@ export default function MyOrder() {
     setShowPopup(true);
   };
 
-  // 주문 취소시 쿠폰 재사용
-  // const getCouponData = () => {
+  //주문 취소시 쿠폰 재사용
+  const getCouponData = () => {
     
-  //   axios.get(`/coupon/${userNo}`)
-  //     .then((response) => {
-  //       console.log("쿠폰 데이터 갱신:", response.data);
+    axios.get(`/coupon/${userNo}`)
+      .then((response) => {
+        console.log("쿠폰 데이터 갱신:", response.data);
         
-  //     })
-  //     .catch((err) => {
-  //       console.log("쿠폰 데이터를 불러오는 중 오류 발생:", err);
-  //     });
-  // };
+      })
+      .catch((err) => {
+        console.log("쿠폰 데이터를 불러오는 중 오류 발생:", err);
+      });
+  };
 
    // 주문 상태 변경 함수 (주문 취소 처리)
    const orderStateChange = () => {
@@ -97,8 +97,8 @@ export default function MyOrder() {
                   : order
               )
             );
-
-            // getCouponData(); // 쿠폰재사용
+           
+            getCouponData(); // 쿠폰재사용
           }
         })
         .catch((err) => {
@@ -106,6 +106,13 @@ export default function MyOrder() {
         });
     }
   };
+
+  // 주문취소 후 새로고침안해도 주문취소 처리되게 useEffect 추가
+useEffect(() => {
+  if (orderList.some(order => order.state === "주문취소")) {
+    getOrderList(); // 주문 목록을 다시 가져옴
+  }
+}, [orderList]); // orderList 상태가 변경되면 실행됨
 
   // 팝업 닫기 함수
   const handlePopupClose = () => {

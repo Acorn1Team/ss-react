@@ -59,7 +59,8 @@ export default function MyOrderDetail() {
       <div className={styles.orderInfo}>
         {/* <span>주문 번호:</span> {orderInfo.no} */}
         <br />
-        <span>주문 상태:</span> {orderInfo.state}
+        {/* <span>주문 상태:</span> {orderInfo.state} */}
+        <span>주문 상세 페이지</span>
         <br />
         <span>주문 날짜:</span> {formatDate(orderInfo.date)}
         <br />
