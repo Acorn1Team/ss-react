@@ -24,7 +24,7 @@ function Search() {
 
       if (name && category) {
         try {
-          const validPage = Math.max(currentPage, 0); // 페이지 인덱스가 0보다 작지 않도록 설정
+          const validPage = Math.max(currentPage - 1, 0); // 페이지 인덱스가 0보다 작지 않도록 설정
           console.log("Fetching page:", validPage); // 페이지 값 확인
 
           const response = await axios.get(
@@ -33,8 +33,8 @@ function Search() {
               params: {
                 page: validPage,
                 size: pageSize,
-                searchTerm: name,
-                searchField: category,
+                // searchTerm: name,
+                // searchField: category,
               },
             }
           );
@@ -60,11 +60,11 @@ function Search() {
   }, [name, category, currentPage, pageSize]);
 
   useEffect(() => {
-    setCurrentPage(0); // Reset to first page on new search
+    setCurrentPage(0);
+    setTotalPages(1); // 검색 조건이 변경되면 페이지 총수도 초기화
   }, [name, category]);
 
   const handlePageChange = (newPage) => {
-    // Ensure newPage is valid and within the page range
     if (newPage >= 0 && newPage < totalPages) {
       setCurrentPage(newPage);
     }
@@ -98,7 +98,7 @@ function Search() {
         {totalPages > 1 && (
           <div style={{ marginTop: "10px" }}>
             <button
-              onClick={() => handlePageChange(currentPage - 1)}
+              onClick={() => handlePageChange(currentPage)}
               disabled={currentPage === 0 || loading}
               className={`${styles2.pagingButton} ${styles2.customBtn}`}
             >
@@ -123,11 +123,9 @@ function Search() {
 
 function ActorItem({ item }) {
   const showDetails = item.showDetails || [];
-  console.log("Show Details:", showDetails); // 데이터 확인
-
+  const showNo = showDetails[0] || "Unknown No";
   const actorName = showDetails[1] || "No Name";
-  const actorPic = showDetails[2] || "defaultProfilePic.png"; // 기본 이미지 설정
-  const showNo = showDetails[0] || "Unknown No"; // showDetails의 첫 번째 항목을 showNo로 사용
+  const actorPic = showDetails[2] || "defaultProfilePic.png";
 
   return (
     <div className={styles.actorsContainer}>

@@ -485,68 +485,6 @@ const Register = () => {
       {loading && <Loading />} {/* 로딩 컴포넌트 표시 */}
       <form className="register_Form" onSubmit={handleRegister}>
         <h1>SceneStealer</h1>
-
-        {/* 아이디 */}
-        <div className={styles.id_input}>
-          <input
-            type="text"
-            name="id"
-            placeholder="아이디"
-            value={id}
-            onChange={(e) => setId(e.target.value)}
-          />
-          <button
-            type="button"
-            id="idCheck"
-            onClick={() => idCheck(id, setErrorMessage, setIdChecked)}
-          >
-            중복 확인
-          </button>
-        </div>
-        {errorMessage.id && (
-          <div className={styles.error_message}>{errorMessage.id}</div>
-        )}
-
-        {/* 비밀번호 */}
-        <div className={styles.user_input}>
-          <input
-            type="password"
-            name="pwd"
-            placeholder="비밀번호"
-            value={pwd}
-            onChange={handlePwdChange}
-          />
-          {errorMessage.pwd && (
-            <div className={styles.error_message}>{errorMessage.pwd}</div>
-          )}
-        </div>
-        <div className={styles.user_input}>
-          <input
-            type="password"
-            name="pwd_chk"
-            placeholder="비밀번호 재입력"
-            value={pwdChk}
-            onChange={handlePwdChkChange}
-          />
-          {errorMessage.pwdChk && (
-            <div className={styles.error_message}>{errorMessage.pwdChk}</div>
-          )}
-        </div>
-
-        {/* 이름 */}
-        <div className={styles.user_input}>
-          <input
-            type="text"
-            name="name"
-            placeholder="이름"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          {errorMessage.name && (
-            <div className={styles.error_message}>{errorMessage.name}</div>
-          )}
-        </div>
-        <hr />
         {/* 이메일 */}
         <div className={styles.email_input}>
           <input
@@ -633,68 +571,70 @@ const Register = () => {
           </div>
         )}
 
-        {/* <select
-            name="email_select"
-            id="email_select"
-            onChange={handleEmailDomainChange}
-            value={emailDomain}
+        {errorMessage.email && (
+          <div className={styles.error_message}>{errorMessage.email}</div>
+        )}
+        <hr />
+        {/* 아이디 */}
+        <div className={styles.id_input}>
+          <input
+            type="text"
+            name="id"
+            placeholder="아이디"
+            value={id}
+            onChange={(e) => setId(e.target.value)}
+          />
+          <button
+            type="button"
+            id="idCheck"
+            onClick={() => idCheck(id, setErrorMessage, setIdChecked)}
           >
-            {emailOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.text}
-              </option>
-            ))}
-          </select>
+            중복 확인
+          </button>
         </div>
-        {errorMessage.email && (
-          <div className={styles.error_message}>{errorMessage.email}</div>
+        {errorMessage.id && (
+          <div className={styles.error_message}>{errorMessage.id}</div>
         )}
-        <button
-          type="button"
-          onClick={async () => {
-            if (!email || !emailDomain) {
-              setErrorMessage((prev) => ({
-                ...prev,
-                email: "이메일을 입력하세요.",
-              }));
-              return;
-            }
 
-            // 이메일 중복 체크 및 인증번호 발송
-            await sendEmailVerificationCode(
-              `${email}@${emailDomain}`,
-              setVerificationCode,
-              setErrorMessage
-            );
-          }}
-          disabled={!email || !emailDomain}
-        >
-          인증번호 발송
-        </button>
+        {/* 비밀번호 */}
         <div className={styles.user_input}>
-          <label>
-            {" "}
-            <input
-              type="text"
-              placeholder="인증번호"
-              value={inputVerificationCode}
-              onChange={async (e) => {
-                const userCode = e.target.value;
-                setInputVerificationCode(userCode);
-                if (userCode) {
-                  await verifyEmailCodeOnServer(
-                    `${email}@${emailDomain}`,
-                    userCode,
-                    setErrorMessage
-                  );
-                }
-              }}
-            />
-          </label>
-        </div> */}
-        {errorMessage.email && (
-          <div className={styles.error_message}>{errorMessage.email}</div>
-        )}
+          <input
+            type="password"
+            name="pwd"
+            placeholder="비밀번호"
+            value={pwd}
+            onChange={handlePwdChange}
+          />
+          {errorMessage.pwd && (
+            <div className={styles.error_message}>{errorMessage.pwd}</div>
+          )}
+        </div>
+        <div className={styles.user_input}>
+          <input
+            type="password"
+            name="pwd_chk"
+            placeholder="비밀번호 재입력"
+            value={pwdChk}
+            onChange={handlePwdChkChange}
+          />
+          {errorMessage.pwdChk && (
+            <div className={styles.error_message}>{errorMessage.pwdChk}</div>
+          )}
+        </div>
+
+        {/* 이름 */}
+        <div className={styles.user_input}>
+          <input
+            type="text"
+            name="name"
+            placeholder="이름"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          {errorMessage.name && (
+            <div className={styles.error_message}>{errorMessage.name}</div>
+          )}
+        </div>
         <hr />
 
         {/* 전화번호 */}
