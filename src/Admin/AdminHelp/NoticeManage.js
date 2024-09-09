@@ -68,16 +68,7 @@ export default function NoticeManage() {
             <td colSpan={4}>
               {/* 카테고리 선택 및 전체보기 버튼 */}
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px", alignItems: "center", padding: "0 20px", fontSize: "20px" }}>
-              <select id="category" value={selectedCategory} onChange={handleCategoryChange} style={{ padding: "5px", fontSize: "12px", width:"100px" }}>
-                <option value="">전체</option>
-                <option value="주문">주문 상태</option>
-                <option value="결제">결제</option>
-                <option value="반품/환불">반품/환불</option>
-                <option value="배송">배송</option>
-                <option value="프로모션/쿠폰">프로모션/쿠폰</option>
-                <option value="상품문의">상품문의</option>
-              </select>
-              공지 목록
+              공지 목록<br/>
               <button onClick={() => navigate("/admin/help/notices/new")}>
                 공지 추가하기
               </button>
@@ -86,7 +77,17 @@ export default function NoticeManage() {
           </tr>
           <tr>
             <th>번호</th>
-            <th>분류</th>
+            <th>
+              <select id="category" value={selectedCategory} onChange={handleCategoryChange} style={{ padding: "5px", fontSize: "12px", width:"100px" }}>
+                <option value="">카테고리</option>
+                <option value="주문">주문 상태</option>
+                <option value="결제">결제</option>
+                <option value="반품/환불">반품/환불</option>
+                <option value="배송">배송</option>
+                <option value="프로모션/쿠폰">프로모션/쿠폰</option>
+                <option value="상품문의">상품문의</option>
+              </select>
+            </th>
             <th>제목</th>
             <th>등록일시</th>
           </tr>
