@@ -2,15 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
 import { Chart, CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend } from 'chart.js';
-import { useNavigate } from 'react-router-dom';
 
 Chart.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend); // 리액트 차트 필수 components
 
-export default function MonthlyRevenueChart(){
+export default function MonthlyRevenueDetail(){
     const [monthlyData, setMonthlyData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const navigate = useNavigate();
 
     useEffect(() => {
         axios
@@ -31,8 +29,22 @@ export default function MonthlyRevenueChart(){
     return (
         <div>
             <h3>2024년 월별 매출</h3>
-            <Line data={chartData} options={{ responsive: true }} />
-            <strong style={{color:"green", cursor:"pointer"}} onClick={() => navigate('/admin/statistics/monthly-revenue')}>자세히</strong>
+            <table>
+                <tbody>
+                {monthlyData.map((data) => (
+                    <tr key={data.month}>
+                        <td>{data.month}월</td>
+                        <td>{data.totalRevenue.toLocaleString()}원</td>
+                    </tr>
+                ))}
+                </tbody><br/>
+            </table>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', 
+                            width: '100%', height: '100%' }}>
+                <div style={{ width: '600px', height: '400px' }}>
+                <Line data={chartData} options={{ responsive: true }} />
+                </div>
+            </div>
         </div>
     );
 };
