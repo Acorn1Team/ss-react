@@ -9,11 +9,14 @@ export default function UserHome() {
   const [posts, setPosts] = useState([]);
   const [selectReviewIndex, setSelectReviewIndex] = useState(0);
   const [mainPopup, setMainPopup] = useState([]);
+  const [productData, setProductData] = useState([]);
+  const [forMainRandom, setForMainRandom] = useState({});
+  const [showCount, setShowCount] = useState(0);
+  const [randomStyle, setRandomStyle] = useState(null); // 추가된 상태
+  const [randomCharacter, setRandomCharacter] = useState(null); // 랜덤 캐릭터 상태 추가
+  const [randomItems, setRandomItems] = useState([]); // 랜덤 아이템 상태 추가
 
-  // 이미지 전환을 위한 상태 추가
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false); // 전환 상태 관리
-  const images = ["../images/newmain-text.png", "../images/newmain.png"]; // 두 개의 이미지 경로
+  const images = ["../images/newmain-text.png", "../images/newmain.png"];
 
   const userNo = sessionStorage.getItem("id");
   const cookies = document.cookie;
@@ -22,33 +25,19 @@ export default function UserHome() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setSelectReviewIndex((prevIndex) => (prevIndex + 1) % review.length); // 다음 슬라이드로 이동, 마지막 인덱스에서 처음으로 돌아옴
-    }, 5000); // 5초마다 슬라이드 변경
+      setSelectReviewIndex((prevIndex) => (prevIndex + 1) % review.length);
+    }, 5000);
 
-    return () => clearInterval(interval); // 컴포넌트가 언마운트될 때 인터벌 정리
+    return () => clearInterval(interval);
   }, [review]);
 
-  // 슬라이드 이동 스타일을 계산하는 함수
   const getTransformStyle = () => {
     return {
-      transform: `translateX(-${selectReviewIndex * 100}%)`, // 현재 인덱스에 따라 슬라이드 이동
-      transition: "transform 0.5s ease-in-out", // 자연스러운 이동
+      transform: `translateX(-${selectReviewIndex * 100}%)`,
+      transition: "transform 0.5s ease-in-out",
     };
   };
 
-  // 이미지 전환을 위한 상태 추가
-  const handleImageMouseOver = () => {
-    if (!isTransitioning) {
-      // 전환 중일 때는 전환을 막음
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-        setIsTransitioning(false); // 전환 완료 후 다시 전환 가능하게 함
-      }, 500); // 이미지 전환 시간 (500ms)
-    }
-  };
-
-  // 데이터 가져오기
   const fetchData = () => {
     axios
       .get("/main/showData")
@@ -69,6 +58,70 @@ export default function UserHome() {
   useEffect(() => {
     fetchData();
 
+    axios
+      .get(`/main/forRandom`)
+      .then((res) => setShowCount(res.data))
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (showCount > 0) {
+      const n = Math.floor(Math.random() * showCount) + 1;
+
+      axios
+        .get(`/main/sub/${n}`)
+        .then((res) => {
+          setForMainRandom(res.data);
+
+          // 랜덤 캐릭터 선택
+          if (res.data.characters && res.data.characters.length > 0) {
+            const randomCharacter =
+              res.data.characters[
+                Math.floor(Math.random() * res.data.characters.length)
+              ];
+            setRandomCharacter(randomCharacter);
+
+            // 랜덤 스타일 선택
+            if (res.data.styles && res.data.styles.length > 0) {
+              const characterStyles = res.data.styles.filter(
+                (style) => style.characterNo === randomCharacter.no
+              );
+              if (characterStyles.length > 0) {
+                const randomStyle =
+                  characterStyles[
+                    Math.floor(Math.random() * characterStyles.length)
+                  ];
+                setRandomStyle(randomStyle);
+
+                // 랜덤 스타일과 연관된 아이템 설정
+                const relatedItems = res.data.items.filter((item) =>
+                  res.data.styleItems.some(
+                    (styleItem) =>
+                      styleItem.styleNo === randomStyle.no &&
+                      styleItem.itemNo === item.no
+                  )
+                );
+                setRandomItems(relatedItems); // 관련된 아이템 업데이트
+              }
+            } else {
+              setRandomStyle(null); // 스타일이 없을 경우
+              setRandomItems([]); // 아이템도 비움
+            }
+          } else {
+            setRandomCharacter(null); // 캐릭터가 없을 경우
+            setRandomStyle(null);
+            setRandomItems([]);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [showCount]);
+
+  useEffect(() => {
     const popupCookieCheck = getCookie(`${userNo}_popup`);
 
     if (popupCookieCheck === null) {
@@ -86,10 +139,6 @@ export default function UserHome() {
         });
     }
   }, [userNo]);
-
-  useEffect(() => {
-    console.log(mainPopup); // 팝업 데이터 확인
-  }, [mainPopup]);
 
   function getCookie(name) {
     let value = `; ${document.cookie}`;
@@ -109,18 +158,20 @@ export default function UserHome() {
     );
   };
 
+  const [currentIndex, setCurrentIndex] = useState(0); // currentIndex 상태 추가
+
+  // 슬라이드 이전 버튼 동작
+  const handlePrev = () => {
+    setCurrentIndex((prevIndex) => (prevIndex === 0 ? 1 : prevIndex - 1));
+  };
+
+  // 슬라이드 다음 버튼 동작
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex === 1 ? 0 : prevIndex + 1));
+  };
+
   return (
     <div className="page-container">
-      <div className="image-wrapper" onMouseOver={handleImageMouseOver}>
-        <img
-          className={`scrollable-image ${
-            isTransitioning ? "fade-out" : "fade-in"
-          }`}
-          src={images[currentImageIndex]} // 전환된 이미지 표시
-          alt="main"
-          loading="eager"
-        />
-      </div>
       {mainPopup.map(
         (p) =>
           p.popupOpen && (
@@ -146,49 +197,139 @@ export default function UserHome() {
             </div>
           )
       )}
-      <div className="content">
-        <b>SceneStealer</b>
-        <b className="mainTextTitle">Choose Your Scene</b>
-        당신의 장면을 골라 보세요!
-        <div id="mainPosts">
-          {Array.isArray(show) &&
-            show.map((s) => (
-              <Link to={`/user/main/sub/${s.no}`} key={s.no}>
-                <div className="mainPostsBox">
-                  <img src={s.pic} alt={s.title} />
+      <div className="mainPhotoSlide">
+        <div
+          className="slide-content"
+          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+        >
+          <div className="slide">
+            <img
+              className="scrollable-image"
+              src={images[1]}
+              alt="slide-0"
+              loading="eager"
+            />
+          </div>
+
+          <div className="slide">
+            <div className="content-wrapper">
+              <div className="content">
+                <h2>CHOOSE YOUR SCENE!</h2>
+                <p>어떤 장면을 당신의 것으로 만들까요?</p>
+
+                <div className="horizontal-container">
+                  <section id="card1" className="card">
+                    <img src={forMainRandom.show?.pic} alt="mainpic"></img>
+                    <div className="card__content">
+                      <p className="card__title">
+                        {forMainRandom.show?.title || "제목 없음"}
+                      </p>
+                      <p className="card__description">
+                        {forMainRandom.characters &&
+                        forMainRandom.characters.length > 0 ? (
+                          forMainRandom.characters.map((c) => (
+                            <div key={c.name}>{c.name.slice(0, -2)}</div>
+                          ))
+                        ) : (
+                          <p>캐릭터 정보가 없습니다.</p>
+                        )}
+                      </p>
+                    </div>
+                  </section>
+
+                  <div className="random-character">
+                    <img src={randomCharacter?.pic} alt="characterPic"></img>
+                    {randomCharacter?.name.slice(0, -2)}
+                  </div>
+
+                  <div className="random-style-container">
+                    이 스타일 어때요?
+                    {randomStyle ? (
+                      <div>
+                        <img
+                          src={randomStyle.pic}
+                          alt={`style-${randomStyle.no}`}
+                        />
+                        <div className="random-style-items">
+                          {randomItems.length > 0 ? (
+                            randomItems.map((item) => (
+                              <div key={item.no}>
+                                <Link
+                                  to={`/user/shop/productlist/detail/${item.productNo}`}
+                                >
+                                  <img src={item.pic} alt={`item-${item.no}`} />
+                                </Link>
+                              </div>
+                            ))
+                          ) : (
+                            <p>아이템 정보가 없습니다.</p>
+                          )}
+                          <br />
+                          <div style={{ fontSize: "80%" }}>
+                            SceneStealer에서 비슷한 상품을 <br />
+                            구매할 수 있어요. <br />
+                            마음에 드는 상품을 클릭해 보세요!
+                          </div>
+                          <Link to="/user/main/show">작품 더보기</Link>
+                        </div>
+                      </div>
+                    ) : (
+                      <p>스타일 정보가 없습니다.</p>
+                    )}
+                  </div>
+                </div>
+
+                <h3>
+                  FIND THE STYLE YOU LOVE!
                   <br />
-                  {s.title}
-                </div>
-              </Link>
-            ))}
-        </div>
-        <Link to="/user/main/show">작품 더보기</Link>
-        <b className="mainTextTitle">최신 리뷰</b>
-        <div id="mainReviewsContainer">
-          <div id="mainReviews" style={getTransformStyle()}>
-            {Array.isArray(review) &&
-              review.map((r, index) => (
-                <div className="mainReviewsBox" key={r.no}>
-                  <Link to={`/user/shop/review/${r.no}`}>
-                    <img src={r.pic} alt={r.no} />
-                  </Link>
-                </div>
-              ))}
+                  BUY IT IF YOU WANT OR JUST SCRAP
+                </h3>
+                <p>마음에 드는 스타일을 찾으셨다면, 사거나 담거나!</p>
+              </div>
+            </div>
           </div>
         </div>
-        <br />
-        <b className="mainTextTitle">인기 스타일</b>
-        <div id="mainPosts">
-          {Array.isArray(posts) &&
-            posts.map((p) => (
-              <Link to={`/user/style/detail/${p.no}`} key={p.no}>
-                <div className="mainPostsBox">
-                  <img src={p.pic} alt={p.no} />
-                  {p.userNickname}
-                </div>
-              </Link>
-            ))}
+
+        {/* 슬라이드 버튼 */}
+        <button className="slide-button prev" onClick={handlePrev}>
+          🎧
+        </button>
+        <button className="slide-button next" onClick={handleNext}>
+          📻
+        </button>
+      </div>
+
+      <b className="mainTextTitle">최신 리뷰</b>
+      <div id="mainReviewsContainer">
+        <div id="mainReviews" style={getTransformStyle()}>
+          {Array.isArray(review) && review.length > 0 ? (
+            review.map((r) => (
+              <div className="mainReviewsBox" key={r.no}>
+                <Link to={`/user/shop/review/${r.no}`}>
+                  <img src={r.pic} alt={r.no} />
+                </Link>
+              </div>
+            ))
+          ) : (
+            <p>리뷰가 없습니다.</p>
+          )}
         </div>
+      </div>
+      <br />
+      <b className="mainTextTitle">인기 스타일</b>
+      <div id="mainPosts">
+        {Array.isArray(posts) && posts.length > 0 ? (
+          posts.map((p) => (
+            <Link to={`/user/style/detail/${p.no}`} key={p.no}>
+              <div className="mainPostsBox">
+                <img src={p.pic} alt={p.no} />
+                {p.userNickname}
+              </div>
+            </Link>
+          ))
+        ) : (
+          <p>인기 스타일이 없습니다.</p>
+        )}
       </div>
       {userNo === "1" && <Link to="/admin">관리자</Link>}
     </div>

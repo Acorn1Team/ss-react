@@ -143,6 +143,52 @@ function HeaderForm() {
             )}
           </div>
         )}
+        {showAlertPopup && (
+          <div className={styles.alertPopupContainer}>
+            <h4>알림 목록</h4>
+            {filteredAlerts.length > 0 ? (
+              filteredAlerts.map((alert) => (
+                <div
+                  key={alert.alertNo}
+                  className={`${styles.alertItem} ${
+                    alert.isRead ? styles.readAlert : ""
+                  }`}
+                  onClick={() => markAsRead(alert.alertNo)}
+                >
+                  <span>{alert.message}</span>
+                  <span
+                    className={styles.alertButton}
+                    onClick={() => deleteAlert(alert.alertNo)}
+                  >
+                    삭제
+                  </span>
+                </div>
+              ))
+            ) : (
+              <div className={styles.noAlerts}>알림이 없습니다.</div>
+            )}
+            <div className={styles.pagination}>
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
+                disabled={currentPage === 0}
+              >
+                이전
+              </button>
+              <span>
+                {currentPage + 1} / {totalPages}
+              </span>
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))
+                }
+                disabled={currentPage === totalPages - 1}
+              >
+                다음
+              </button>
+            </div>
+          </div>
+        )}
+
         {isLoggedIn ? (
           <>
             <GoPerson

@@ -1,11 +1,10 @@
 /* 공통 스타일 */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
   background-color: #f5f5f5;
   padding: 0;
   overflow-x: hidden;
-  height: 100vh;
+  height: auto;
   box-sizing: border-box;
 }
 
@@ -20,32 +19,32 @@ body {
 
 /* 메인 리뷰 섹션 컨테이너 */
 #mainReviewsContainer {
-  width: 60%; /* 부모 컨테이너 넓이 */
-  overflow: hidden; /* 화면 밖의 요소 숨기기 */
+  width: 60%;
+  overflow: hidden;
   position: relative;
-  max-width: 800px; /* 최대 넓이 설정 */
-  margin: 0 auto; /* 가운데 정렬 */
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 /* 메인 리뷰 섹션 */
 #mainReviews {
-  display: flex; /* 슬라이드를 가로로 나열 */
-  transition: transform 0.5s ease-in-out; /* 슬라이드 전환 애니메이션 */
-  width: 100%; /* 슬라이드의 전체 넓이를 부모 기준으로 설정 */
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  width: 100%;
 }
 
 /* 리뷰 박스 */
 .mainReviewsBox {
-  min-width: 100%; /* 한 번에 한 슬라이드씩 표시 */
+  min-width: 100%;
   flex-shrink: 0;
 }
 
 .mainReviewsBox img {
   width: 100%;
-  height: 400px;
+  height: auto;
+  max-height: 300px;
   object-fit: cover;
-  aspect-ratio: 4/3; /* 4:3 비율 유지 */
-  max-height: 300px; /* 이미지 최대 높이 설정 */
+  aspect-ratio: 4/3;
 }
 
 /* 메인 포스트 섹션 스타일 */
@@ -57,21 +56,22 @@ body {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  min-height: 800px;
+  /* min-height: 800px; */
   box-sizing: border-box;
 }
 
+/* 팝업 모달 스타일 */
 .popup-modal {
-  position: fixed; /* 화면에 고정하여 스크롤과 무관하게 보이도록 설정 */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* 배경을 반투명하게 설정 */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* 팝업이 다른 콘텐츠 위에 표시되도록 설정 */
+  z-index: 1000;
 }
 
 .popup-content {
@@ -81,7 +81,7 @@ body {
   width: 500px;
   text-align: center;
   position: relative;
-  z-index: 1001; /* 팝업 내부 콘텐츠는 모달보다 더 높은 z-index 설정 */
+  z-index: 1001;
 }
 
 .popup-close {
@@ -102,8 +102,8 @@ body {
   margin: 10px;
   padding: 20px;
   text-align: center;
-  width: 200px; /* 고정 너비 설정 */
-  height: 300px; /* 고정 높이 설정 */
+  width: 200px;
+  height: 300px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
   display: flex;
@@ -115,8 +115,8 @@ body {
 
 .mainPostsBox img {
   width: 100%;
-  height: 400px;
-  max-height: 300px; /* 이미지의 최대 높이 설정 */
+  height: auto;
+  max-height: 300px;
   object-fit: cover;
   border-radius: 8px;
 }
@@ -146,8 +146,8 @@ body {
   margin: 10px;
   padding: 20px;
   text-align: center;
-  width: 200px; /* 고정 너비 설정 */
-  height: 300px; /* 고정 높이 설정 */
+  width: 200px;
+  height: 300px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
   display: flex;
@@ -160,7 +160,7 @@ body {
 .mainStyleBox img {
   width: 100%;
   height: auto;
-  max-height: 180px; /* 이미지의 최대 높이 설정 */
+  max-height: 180px;
   object-fit: cover;
   border-radius: 8px;
 }
@@ -190,14 +190,6 @@ body {
   cursor: pointer;
 }
 
-.fade-in {
-  opacity: 1;
-}
-
-.fade-out {
-  opacity: 0;
-}
-
 /* SceneStealer 제목 스타일 */
 b {
   display: block;
@@ -209,9 +201,224 @@ b {
 
 /* 콘텐츠 스타일 */
 .content {
-  position: relative;
-  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
-  padding-bottom: 170px;
   box-sizing: border-box;
+}
+
+/* 카드 섹션 스타일 */
+section.card {
+  position: relative;
+  width: 300px;
+  height: 350px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  perspective: 1000px;
+  transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* 슬라이드 컨테이너 */
+.slider-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.slides {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  width: 200%; /* 슬라이드 2개 */
+}
+
+.slide {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  border-radius: 3px;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+  color: #ffffff;
+}
+
+.card__content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  padding-top: 50%;
+  box-sizing: border-box;
+  backdrop-filter: blur(5px);
+  transform: rotateX(-90deg);
+  transform-origin: bottom;
+  /* transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); */
+}
+
+.card:hover .card__content {
+  transform: rotateX(0deg);
+}
+
+.card__title {
+  margin: 0;
+  padding-left: 5px;
+  font-size: 24px;
+  color: #fff;
+  font-weight: 700;
+}
+
+.card__description {
+  margin: 10px 0 0;
+  font-size: 14px;
+  color: #ffffff;
+  line-height: 1.4;
+}
+/* 랜덤 캐릭터 이미지 스타일 */
+.random-character img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 20px auto;
+  display: block;
+}
+
+/* 가로로 배치되는 컨테이너 */
+.horizontal-container {
+  display: flex;
+  justify-content: space-around; /* 요소들을 균등하게 배치 */
+  align-items: center; /* 요소들을 수직으로 가운데 정렬 */
+  max-width: 1000px; /* 컨테이너 최대 너비 */
+  margin: 0 auto; /* 가운데 정렬 */
+}
+
+.horizontal-container .card,
+.horizontal-container .random-character,
+.horizontal-container .random-style-container {
+  flex: 1; /* 각 요소가 같은 크기를 가짐 */
+  text-align: center; /* 요소 안의 텍스트 및 이미지 가운데 정렬 */
+}
+
+.horizontal-container img {
+  width: 100%; /* 이미지 너비를 조정 */
+  max-width: 250px; /* 이미지의 최대 너비 */
+  height: auto; /* 이미지 비율 유지 */
+}
+
+/* 카드 섹션 스타일 */
+.card {
+  flex: 1;
+  text-align: center;
+  margin-right: 20px;
+}
+
+.random-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px auto;
+}
+
+/* 랜덤 스타일 컨테이너 */
+.random-style-container {
+  flex: 1;
+  text-align: center;
+}
+.random-style-container img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.random-style-items {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.random-style-items img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.mainPhotoSlide {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100vh; /* 전체 화면 높이 */
+}
+
+.slide-content {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.slide-content > * {
+  width: 100%;
+  height: 100%;
+}
+
+.slide-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.slide-button.prev {
+  left: 10px;
+}
+
+.slide-button.next {
+  right: 10px;
+}
+
+.popup-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 500px;
+  text-align: center;
+}
+
+.popup-close {
+  margin: 5px;
+  padding: 10px;
+  cursor: pointer;
 }

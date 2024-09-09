@@ -1,0 +1,60 @@
+.footer-container {
+  background: linear-gradient(135deg, #1f4037, #99f2c8); /* 그라데이션 배경 */
+  color: #fff;
+  padding: 40px 20px;
+  text-align: center;
+  font-family: "Roboto", sans-serif;
+}
+
+.footer-top {
+  margin-bottom: 30px;
+}
+
+.footer-logo {
+  font-size: 36px; /* 커다란 로고 폰트 */
+  font-weight: bold;
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase; /* 대문자 변환 */
+}
+
+.footer-tagline {
+  font-size: 18px;
+  font-style: italic; /* 스타일리시한 이탤릭체 */
+  margin-bottom: 20px;
+}
+
+.social-icons a {
+  color: #fff;
+  font-size: 24px; /* 소셜 아이콘 크기 */
+  margin: 0 15px;
+  transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: #ff6f61; /* 호버 시 포인트 컬러 */
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.3); /* 상단에 얇은 경계선 */
+  padding-top: 20px;
+  font-size: 14px;
+}
+
+.footer-bottom p {
+  margin: 5px 0;
+}
+
+.footer-bottom a {
+  color: #ff6f61; /* 이메일에 포인트 컬러 */
+  text-decoration: none;
+}
+
+.footer-bottom a:hover {
+  text-decoration: underline;
+}
+
+/* FontAwesome 아이콘 적용을 위한 클래스 */
+.fab {
+  font-family: "Font Awesome 5 Brands";
+}

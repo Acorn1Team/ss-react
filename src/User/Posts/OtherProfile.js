@@ -132,6 +132,10 @@ export default function OtherProfile() {
             if (!followState) {
               setFollowState(true);
             }
+            axios.post(`/alert/follow/from/${userNo}`, {
+              userNo: profileUserNo,
+              isRead: 0,
+            });
             followInfo();
           }
         })
