@@ -132,8 +132,8 @@ export default function NoticeDetail() {
           value={state.contents}
         />
       </div>
+      <button onClick={() => openModal("삭제")}>삭제</button>&nbsp;&nbsp;
       <button onClick={() => openModal("수정")}>수정</button>
-      <button onClick={() => openModal("삭제")}>삭제</button>
 
       {/* 모달 */}
       {isModalOpen && (
