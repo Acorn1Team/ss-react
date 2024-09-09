@@ -13,6 +13,7 @@ export default function MyOrderDetail() {
   const [productList, setProductList] = useState([]);
   const [orderProductList, setOrderProductList] = useState([]);
 
+  const [reviewedProducts, setReviewedProducts] = useState([]); // 이미 리뷰를 작성한 상품 목록
   // 로그인 정보라고 가정
   //const userNo = 31;
   const userNo = sessionStorage.getItem("id");
@@ -35,11 +36,27 @@ export default function MyOrderDetail() {
         setProductList(res.data.order.productList);
         setOrderProductList(res.data.order.orderProductList);
         setUserInfo(res.data.user);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+ // 각 상품에 대해 리뷰 작성 여부 확인
+ res.data.order.productList.forEach((product) => {
+  axios
+    .get(`/review/check/${userNo}/${product.no}`)
+    .then((response) => {
+      if (response.data) {
+        setReviewedProducts((prevReviewedProducts) => [
+          ...prevReviewedProducts,
+          product.no,
+        ]);
+      }
+    })
+    .catch((err) => {
+      console.log("리뷰 체크 오류:", err);
+    });
+});
+})
+.catch((err) => {
+console.log(err);
+});
+};
 
   useEffect(() => {
     getOrderList();
@@ -72,6 +89,8 @@ export default function MyOrderDetail() {
       {productList.map((pl) => {
         const orderProduct = orderProductList.find((op) => op.productNo === pl.no);
 
+        const hasReviewed = reviewedProducts.includes(pl.no); // 해당 상품에 리뷰가 있는지 확인
+
         return (
           <div key={pl.no} className={styles.productItem}>
             <Link to={`/user/shop/productlist/detail/${pl.no}`}>
@@ -90,10 +109,12 @@ export default function MyOrderDetail() {
             <button
               className={styles.reviewButton}
               onClick={() => orderProduct && goToReviewPage(orderProduct.no, pl.name)}
-              disabled={orderInfo.state === "주문취소"} // 주문 상태가 '주문취소'이면 비활성화
-            >
-            리뷰 쓰기
-            </button>
+             disabled={
+                  orderInfo.state === "주문취소" || orderInfo.state === "주문접수" || hasReviewed
+                } // 주문 취소 또는 접수이거나 이미 리뷰를 작성한 경우 버튼 비활성화
+              >
+                {hasReviewed ? "리뷰 작성 완료" : "리뷰 쓰기"}
+              </button>
           </div>
         );
       })}
