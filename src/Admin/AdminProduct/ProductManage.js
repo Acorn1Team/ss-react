@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Modal from "react-modal"; // react-modal 추가
 
+Modal.setAppElement("#root"); // 접근성 설정
 
 export default function ProductManage() {
   const [products, setProducts] = useState([]);
@@ -17,6 +19,8 @@ export default function ProductManage() {
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [searchTriggered, setSearchTriggered] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
+  const [selectedProductNo, setSelectedProductNo] = useState(null); // 품절 처리할 상품 번호
   const navigate = useNavigate();
 
   const fetchProducts = async (
@@ -36,7 +40,7 @@ export default function ProductManage() {
           searchField,
           startDate,
           endDate,
-          sort:"no,DESC"
+          sort: "no,DESC",
         },
       });
       setProducts(response.data.content);
@@ -80,6 +84,29 @@ export default function ProductManage() {
       setExpandedRows([...expandedRows, productId]);
       if (!reviews[productId]) {
         fetchReviews(productId); // 리뷰 데이터를 가져옴
+      }
+    }
+  };
+
+  const openModal = (productNo) => {
+    setSelectedProductNo(productNo);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProductNo(null);
+  };
+
+  const handleSoldOutConfirm = async () => {
+    if (selectedProductNo !== null) {
+      try {
+        await axios.put(`/admin/product/soldout/${selectedProductNo}`);
+        fetchProducts(currentPage, pageSize);
+        closeModal(); // 모달 닫기
+      } catch (error) {
+        console.error("Error updating product to sold out:", error);
+        closeModal(); // 에러 발생 시에도 모달 닫기
       }
     }
   };
@@ -137,16 +164,9 @@ export default function ProductManage() {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
-  };
-
-  const toSoldOut = async (no) => {
-    try {
-      await axios.put(`/admin/product/soldout/${no}`);
-      fetchProducts(currentPage, pageSize);
-    } catch (error) {
-      console.error("Error updating product to sold out:", error);
-    }
+    return `${date.getFullYear()}년 ${
+      date.getMonth() + 1
+    }월 ${date.getDate()}일`;
   };
 
   const renderSearchField = () => {
@@ -198,8 +218,7 @@ export default function ProductManage() {
   return (
     <>
       <style>
-      {
-          `.product-container {
+        {`.product-container {
             display: block; /* flex 대신 block 레이아웃 사용 */
           }
 
@@ -215,7 +234,6 @@ export default function ProductManage() {
             flex-direction: column;
             justify-content: space-between;
           }
-
 
           .product-card img {
             margin: 10px 0;
@@ -239,11 +257,36 @@ export default function ProductManage() {
             padding: 10px;
             background-color: #f9f9f9;
             border-top: 1px solid #ccc;
-          }`
-        }
+          }`}
       </style>
+
+      {/* 품절 처리 확인 모달 */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="품절 처리 확인"
+        style={{
+          content: {
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            marginRight: "-50%",
+            transform: "translate(-50%, -50%)",
+          },
+        }}
+      >
+        <h2>품절 처리</h2>
+        <p>이 상품을 품절 처리하시겠습니까?</p>
+        <button onClick={handleSoldOutConfirm}>확인</button>
+        <button onClick={closeModal}>취소</button>
+      </Modal>
+
       <div className="button-container">
-        <button className="button" onClick={() => navigate("/admin/product/insert")}>
+        <button
+          className="button"
+          onClick={() => navigate("/admin/product/insert")}
+        >
           상품 추가하기
         </button>
       </div>
@@ -263,7 +306,10 @@ export default function ProductManage() {
 
         {renderSearchField()}
 
-        <button onClick={handleSearch} style={{ padding: "5px 10px", marginRight: "10px" }}>
+        <button
+          onClick={handleSearch}
+          style={{ padding: "5px 10px", marginRight: "10px" }}
+        >
           검색
         </button>
         <button onClick={handleReset} style={{ padding: "5px 10px" }}>
@@ -275,22 +321,28 @@ export default function ProductManage() {
           products.map((item) => (
             <div key={item.no} className="product-card">
               <div>
-                <h3>{item.no}. {item.name}</h3>
+                <h3>
+                  {item.no}. {item.name}
+                </h3>
               </div>
               <div>
                 <strong>가격: </strong>
                 {item.discountRate > 0 ? (
                   <>
                     <span style={{ textDecoration: "line-through" }}>
-                      {item.price.toLocaleString('ko-KR')}원
-                    </span>&nbsp;
+                      {item.price.toLocaleString("ko-KR")}원
+                    </span>
+                    &nbsp;
                     <span style={{ color: "red", fontWeight: "bold" }}>
-                      {calculateSellingPrice(item.price, item.discountRate).toLocaleString('ko-KR')}원
-                      ({item.discountRate} % 할인)
+                      {calculateSellingPrice(
+                        item.price,
+                        item.discountRate
+                      ).toLocaleString("ko-KR")}
+                      원 ({item.discountRate} % 할인)
                     </span>
                   </>
                 ) : (
-                  <>{item.price.toLocaleString('ko-KR')}원</>
+                  <>{item.price.toLocaleString("ko-KR")}원</>
                 )}
               </div>
               <div>
@@ -300,19 +352,24 @@ export default function ProductManage() {
                   style={{ height: "100px" }}
                 />
               </div>
-              {item.reviewCount > 0 && (<div>
-                <strong>평점: </strong>
-                <span
-                  onClick={() => toggleRowExpansion(item.no)}
-                  style={{ cursor: "pointer", color: "blue" }}
-                >
-                  {item.score}점 (리뷰 총 {item.reviewCount || 0}건)
-                </span>
-              </div>)}
+              {item.reviewCount > 0 && (
+                <div>
+                  <strong>평점: </strong>
+                  <span
+                    onClick={() => toggleRowExpansion(item.no)}
+                    style={{ cursor: "pointer", color: "blue" }}
+                  >
+                    {item.score}점 (리뷰 총 {item.reviewCount || 0}건)
+                  </span>
+                </div>
+              )}
               <div>
-                <strong>재고:</strong> {item.stock} 
-                &nbsp; 
-                <button onClick={() => toSoldOut(item.no)} disabled={item.stock === 0}>
+                <strong>재고:</strong> {item.stock}
+                &nbsp;
+                <button
+                  onClick={() => openModal(item.no)}
+                  disabled={item.stock === 0}
+                >
                   품절 처리하기
                 </button>
               </div>
@@ -322,11 +379,18 @@ export default function ProductManage() {
                     {reviews[item.no] && reviews[item.no].length > 0 ? (
                       reviews[item.no].map((review) => (
                         <div key={review.no}>
-                          <strong>{review.userid}</strong><br/>
-                          평점: {review.score}점<br/>
-                          {review.contents}<br/>
-                          <img style={{height:'50px'}} src={review.pic} alt={`${review.userid}의 후기 사진`} />
-                        <hr/></div>
+                          <strong>{review.userid}</strong>
+                          <br />
+                          평점: {review.score}점<br />
+                          {review.contents}
+                          <br />
+                          <img
+                            style={{ height: "50px" }}
+                            src={review.pic}
+                            alt={`${review.userid}의 후기 사진`}
+                          />
+                          <hr />
+                        </div>
                       ))
                     ) : (
                       <p>No reviews available</p>
@@ -340,13 +404,17 @@ export default function ProductManage() {
               <div>
                 <strong>등록일:</strong> {formatDate(item.date)}
               </div>
-              <button onClick={() => navigate(`/admin/product/update/${item.no}`)}>
-                  수정하기
+              <button
+                onClick={() => navigate(`/admin/product/update/${item.no}`)}
+              >
+                수정하기
               </button>
             </div>
           ))
         ) : (
-          <div style={{ textAlign: "center", padding: "20px" }}>결과가 없습니다.</div>
+          <div style={{ textAlign: "center", padding: "20px" }}>
+            결과가 없습니다.
+          </div>
         )}
       </div>
 
