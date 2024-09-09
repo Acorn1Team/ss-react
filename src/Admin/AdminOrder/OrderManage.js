@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Modal from "react-modal"; // react-modal 추가
+
+Modal.setAppElement("#root"); // react-modal 설정 (접근성 관련)
 
 export default function OrderManage() {
   const [orders, setOrders] = useState([]);
@@ -17,7 +20,48 @@ export default function OrderManage() {
   const [status, setStatus] = useState(""); // 상태 필터링 상태 추가
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
+  const [modalOrderNo, setModalOrderNo] = useState(null); // 모달에서 처리할 주문 번호
+  const [modalStatus, setModalStatus] = useState(""); // 모달에서 처리할 상태
   const navigate = useNavigate();
+
+  // 모달 열기
+  const openModal = (orderNo, status) => {
+    setModalOrderNo(orderNo);
+    setModalStatus(status);
+    setIsModalOpen(true);
+  };
+
+  // 모달 닫기
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setModalOrderNo(null);
+    setModalStatus("");
+  };
+
+  // 주문 상태 변경 함수
+  const handleStatusChange = async () => {
+    try {
+      await axios.put(`/admin/orders/${modalOrderNo}/status`, {
+        status: modalStatus,
+      });
+      setError(null);
+      fetchOrders(
+        currentPage,
+        pageSize,
+        searchTerm,
+        searchField,
+        startDate,
+        endDate,
+        status
+      );
+      closeModal(); // 성공 시 모달 닫기
+    } catch (error) {
+      console.error("주문 상태를 업데이트하는 중 오류가 발생했습니다!", error);
+      setError("주문 상태 업데이트에 실패했습니다.");
+      closeModal(); // 실패 시에도 모달 닫기
+    }
+  };
 
   // 주문 목록 가져오기
   const fetchOrders = async (
@@ -121,30 +165,6 @@ export default function OrderManage() {
     fetchOrders(0, pageSize);
   };
 
-  const handleStatusChange = async (orderNo, status) => {
-    const confirmation = window.confirm(
-      `주문 상태를 '${status}'로 변경하시겠습니까?`
-    );
-    if (!confirmation) return;
-
-    try {
-      await axios.put(`/admin/orders/${orderNo}/status`, { status });
-      setError(null);
-      fetchOrders(
-        currentPage,
-        pageSize,
-        searchTerm,
-        searchField,
-        startDate,
-        endDate,
-        status
-      );
-    } catch (error) {
-      console.error("주문 상태를 업데이트하는 중 오류가 발생했습니다!", error);
-      setError("주문 상태 업데이트에 실패했습니다.");
-    }
-  };
-
   const handlePageChange = (newPage) => {
     if (newPage >= 0 && newPage < totalPages) {
       setCurrentPage(newPage);
@@ -166,6 +186,29 @@ export default function OrderManage() {
 
   return (
     <div>
+      {/* 모달 */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="주문 상태 변경 확인"
+        style={{
+          content: {
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            marginRight: "-50%",
+            transform: "translate(-50%, -50%)",
+          },
+        }}
+      >
+        <h2>주문 상태 변경</h2>
+        <p>주문 상태를 '{modalStatus}'로 변경하시겠습니까?</p>
+        <button onClick={handleStatusChange}>확인</button>
+        <button onClick={closeModal}>취소</button>
+      </Modal>
+
+      {/* 검색 및 주문 목록 렌더링 */}
       <div style={{ marginBottom: "10px" }}>
         <label style={{ display: "inline-block", marginRight: "10px" }}>
           <select
@@ -262,8 +305,8 @@ export default function OrderManage() {
                   <td>
                     <select
                       value={order.state}
-                      onChange={(e) =>
-                        handleStatusChange(order.no, e.target.value)
+                      onChange={
+                        (e) => openModal(order.no, e.target.value) // 모달 열기
                       }
                     >
                       <option
