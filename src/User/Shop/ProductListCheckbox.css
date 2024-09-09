@@ -9,7 +9,7 @@
   cursor: pointer;
   display: block;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-  top: 3px;
+  top: 8.2px;
 }
 
 .cbx:after {
@@ -95,7 +95,7 @@
   align-items: center;
   padding: 10px;
   border: 1px solid #ccc;
-  background-color: #71abf2;
+  background-color: #ccc;
   border-radius: 5px;
   margin-right: 12px;
   cursor: pointer;
@@ -119,14 +119,14 @@
 }
 
 .radio-input input[type="radio"]:checked + label:before {
-  background-color: green;
+  background-color: white;
+  border-color: #b8d2f1;
   top: 0;
 }
 
 .radio-input input[type="radio"]:checked + label {
-  background-color: royalblue;
-  color: #fff;
-  border-color: rgb(129, 235, 129);
+  background-color: #b8d2f1;
+  color: #333;
   animation: radio-translate 0.5s ease-in-out;
 }
 

@@ -13,6 +13,8 @@ export default function PromotionPopup() {
   const [filteredItems, setFilteredItems] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errorModalOpen, setErrorModalOpen] = useState(false); // 오류 모달 상태
+  const [errorMessage, setErrorMessage] = useState(""); // 오류 메시지 상태
 
   const changeInputValue = (e) => {
     setInputValue(e.target.value);
@@ -36,9 +38,10 @@ export default function PromotionPopup() {
   }, [locationCategory, inputValue]);
 
   const selectPath = (item) => {
-    const newPath = (locationCategory==="product") 
-    ? `/user/shop/productlist/detail/${item.no}`
-    : `/user/main/sub/${item.no}`;
+    const newPath =
+      locationCategory === "product"
+        ? `/user/shop/productlist/detail/${item.no}`
+        : `/user/main/sub/${item.no}`;
     setPath(newPath);
     setShowDropdown(false);
     setInputValue(item.name || item.title);
@@ -48,7 +51,28 @@ export default function PromotionPopup() {
     setPic(e.target.files[0]);
   };
 
+  const validateForm = () => {
+    if (!pic) {
+      setErrorMessage("파일을 선택해 주세요.");
+      return false;
+    }
+    if (!locationCategory) {
+      setErrorMessage("유도 경로를 선택해 주세요.");
+      return false;
+    }
+    if (!inputValue) {
+      setErrorMessage(" 입력 필드를 선택해 주세요.");
+      return false;
+    }
+    return true;
+  };
+
   const addPopup = () => {
+    if (!validateForm()) {
+      setErrorModalOpen(true); // 오류 발생 시 오류 모달 열기
+      return;
+    }
+
     const formData = new FormData();
     formData.append("path", path);
     formData.append("pic", pic);
@@ -113,26 +137,58 @@ export default function PromotionPopup() {
       <button onClick={addPopup} className={styles.button}>
         등록
       </button>
+
+      {/* 성공 모달 */}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
         contentLabel="팝업 등록 완료 확인"
-        style={{overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)",},
-                content: {
-                background: "white",
-                padding: "20px",
-                borderRadius: "8px",
-                textAlign: "center",
-                maxWidth: "300px",
-                height: "180px",
-                margin: "auto",
-                },
-        }}>
-          <><br/>
-              <h3>팝업이 등록되었습니다!</h3>
-              <button onClick={() => navigate("/admin/promotion")}>목록으로 돌아가기</button>
-          </>
-        </Modal>
+        style={{
+          overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+          content: {
+            background: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            textAlign: "center",
+            maxWidth: "300px",
+            height: "180px",
+            margin: "auto",
+          },
+        }}
+      >
+        <>
+          <br />
+          <h3>팝업이 등록되었습니다!</h3>
+          <button onClick={() => navigate("/admin/promotion")}>
+            목록으로 돌아가기
+          </button>
+        </>
+      </Modal>
+
+      {/* 오류 모달 */}
+      <Modal
+        isOpen={errorModalOpen}
+        onRequestClose={() => setErrorModalOpen(false)}
+        contentLabel="오류 확인"
+        style={{
+          overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+          content: {
+            background: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            textAlign: "center",
+            maxWidth: "300px",
+            height: "180px",
+            margin: "auto",
+          },
+        }}
+      >
+        <>
+          <br />
+          <h3>{errorMessage}</h3>
+          <button onClick={() => setErrorModalOpen(false)}>확인</button>
+        </>
+      </Modal>
     </div>
   );
 }

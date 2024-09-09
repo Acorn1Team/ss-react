@@ -119,6 +119,11 @@ export default function CartList() {
     }
   };
 
+ // 상품 상세 페이지
+ const handleProductClick = (productNo) => {
+  navigate(`/user/shop/productlist/detail/${productNo}`); 
+};
+
   const handleOrder = () => {
     const total = getTotalCartPrice();
     const selectedCartItems = cartProductInfo
@@ -161,7 +166,12 @@ export default function CartList() {
                   <img src={item.pic} alt={item.name} />
                 </span>
                 &nbsp;&nbsp;
-                <span>{item.name}</span>&nbsp;&nbsp;
+                <span
+                  onClick={() => handleProductClick(item.no)} // 클릭 시 상세 페이지로 이동
+                  style={{ cursor: "pointer", textDecoration: "underline" }}
+                >
+                  {item.name}
+                </span>
                 <div className={styles.cartQuantity}>
                   <button onClick={() => decrementQuantity(item.no)}>-</button>
                   <span>{item.quantity}</span>

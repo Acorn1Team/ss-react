@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FiShoppingCart } from "react-icons/fi";
-// import { FaShoppingCart } from "react-icons/fa";
-// import { HiBellAlert } from "react-icons/hi2";
 import { LiaBellSolid } from "react-icons/lia";
-// import { CgProfile } from "react-icons/cg";
-// import { BsPersonHearts } from "react-icons/bs";
 import { GoPerson } from "react-icons/go";
 import styles from "../Style/HeaderForm.module.css";
 import AutoSearch from "./AutoSearch";
@@ -120,13 +115,6 @@ function HeaderForm() {
   return (
     <header className={styles.header}>
       <div className={styles.leftContainer}>
-        <Link to="/user/main">
-          <img
-            src={`${process.env.PUBLIC_URL}/images/side.png`}
-            alt="Logo"
-            className={styles.logo}
-          />
-        </Link>
         <Link to="/user/main" className={styles.styledLink}>
           HOME
         </Link>
@@ -135,6 +123,11 @@ function HeaderForm() {
         </Link>
         <Link to="/user/style" className={styles.styledLink}>
           STYLE
+        </Link>
+      </div>
+      <div className={styles.centerContainer}>
+        <Link to="/user/main">
+          <img src={`/images/logo-02.png`} alt="Logo" className={styles.logo} />
         </Link>
       </div>
       <div className={styles.rightContainer}>
@@ -147,83 +140,6 @@ function HeaderForm() {
             <LiaBellSolid onClick={handleAlarmClick} className={styles.icon} />
             {alerts.some((alert) => !alert.isRead) && (
               <div className={styles.redDot}></div>
-            )}
-          </div>
-        )}
-        {showAlertPopup && (
-          <div className={styles.alertPopupContainer}>
-            <div>
-              <button
-                onClick={() => setSelectedCategory("전체")}
-                className={styles.alertCategoryButton}
-              >
-                전체
-              </button>
-              <button
-                onClick={() => setSelectedCategory("주문")}
-                className={styles.alertCategoryButton}
-              >
-                주문
-              </button>
-              <button
-                onClick={() => setSelectedCategory("커뮤니티")}
-                className={styles.alertCategoryButton}
-              >
-                커뮤니티
-              </button>
-              <button
-                onClick={() => setSelectedCategory("프로모션")}
-                className={styles.alertCategoryButton}
-              >
-                프로모션
-              </button>
-            </div>
-            {filteredAlerts.length > 0 ? (
-              filteredAlerts.map((alert, index) => (
-                <div
-                  key={alert.no || index}
-                  className={`${styles.alertItem} ${
-                    alert.isRead ? styles.readAlert : styles.unreadAlert
-                  }`} // 읽음 상태에 따라 클래스 추가
-                  onClick={() => markAsRead(alert.no)}
-                >
-                  <Link to={alert.path}>
-                    <i>{alert.category}</i>
-                    <br />
-                    {alert.content}
-                    <br />
-                    <i>{formatDate(alert.date)}</i>
-                  </Link>
-                  <button
-                    onClick={() => deleteAlert(alert.no)}
-                    className={styles.alertButton}
-                  >
-                    ×
-                  </button>
-                </div>
-              ))
-            ) : (
-              <div className={styles.noAlerts}>알림 내역이 없습니다.</div>
-            )}
-
-            {totalPages > 1 && (
-              <div className={styles.pagination}>
-                <button
-                  onClick={() => setCurrentPage(currentPage - 1)}
-                  disabled={currentPage === 0}
-                >
-                  이전
-                </button>
-                <span>
-                  {currentPage + 1} / {totalPages}
-                </span>
-                <button
-                  onClick={() => setCurrentPage(currentPage + 1)}
-                  disabled={currentPage + 1 >= totalPages}
-                >
-                  다음
-                </button>
-              </div>
             )}
           </div>
         )}
