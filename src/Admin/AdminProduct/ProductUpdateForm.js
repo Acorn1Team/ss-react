@@ -33,7 +33,7 @@ export default function ProductUpdateForm() {
     try {
       await axios.delete(`/admin/product/${no}`);
       setIsModalOpen(false);
-      alert("상품이 삭제되었습니다.");
+      alert("상품이 판매 종료되었습니다.");
       navigate("/admin/product");
     } catch (error) {
       console.log("삭제 중 오류가 발생했습니다.");
@@ -217,9 +217,13 @@ export default function ProductUpdateForm() {
           <p className="error-message">{errors.discountRate}</p>
         )}
       </div>
-      {/* <button className="delete-button" onClick={openModal}>
-        삭제하기
-      </button> */}
+      <button className="delete-button" onClick={() => {navigate("/admin/product")}}>
+        목록으로
+      </button>
+      &nbsp;&nbsp;
+      <button className="delete-button" onClick={openModal}>
+        판매 종료
+      </button>
       &nbsp;&nbsp;
       <button
         className="update-button"
@@ -248,7 +252,7 @@ export default function ProductUpdateForm() {
         >
       {isModalOpen && (
         <>
-            <p>정말로 삭제하시겠습니까?</p>
+            <p>정말로 판매 종료하시겠습니까?</p>
             <button
               onClick={() => handleDelete(state.no)}
             >
