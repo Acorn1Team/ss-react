@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import Modal from "react-modal";
 import styles from "../Style/PromotionPopup.module.css";
 
 export default function PromotionPopup() {
@@ -12,6 +12,7 @@ export default function PromotionPopup() {
   const [pic, setPic] = useState(null);
   const [filteredItems, setFilteredItems] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const changeInputValue = (e) => {
     setInputValue(e.target.value);
@@ -59,8 +60,7 @@ export default function PromotionPopup() {
         },
       })
       .then(() => {
-        alert("추가 성공");
-        navigate("/admin/promotion");
+        setIsModalOpen(true);
       })
       .catch((error) => {
         console.log(error);
@@ -113,6 +113,26 @@ export default function PromotionPopup() {
       <button onClick={addPopup} className={styles.button}>
         등록
       </button>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        contentLabel="팝업 등록 완료 확인"
+        style={{overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)",},
+                content: {
+                background: "white",
+                padding: "20px",
+                borderRadius: "8px",
+                textAlign: "center",
+                maxWidth: "300px",
+                height: "180px",
+                margin: "auto",
+                },
+        }}>
+          <><br/>
+              <h3>팝업이 등록되었습니다!</h3>
+              <button onClick={() => navigate("/admin/promotion")}>목록으로 돌아가기</button>
+          </>
+        </Modal>
     </div>
   );
 }

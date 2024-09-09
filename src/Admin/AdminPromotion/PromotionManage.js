@@ -21,9 +21,12 @@ export default function PromotionManage() {
   const [totalCouponPages, setTotalCouponPages] = useState(1);
   const [totalPopupPages, setTotalPopupPages] = useState(1);
 
-  // 팝업 삭제 관련
+  // 팝업 삭제 및 상태 변경 모달 관련
   const [popupToDelete, setPopupToDelete] = useState(null);
   const [isDeletePopupModal, setIsDeletePopupModalOpen] = useState(false);
+  const [popupToChange, setPopupToChange] = useState(null);
+  const [isChangeStatusModal, setIsChangeStatusModalOpen] = useState(false);
+  const [newStatus, setNewStatus] = useState(null);
 
   const fetchCoupons = () => {
     axios
@@ -71,17 +74,20 @@ export default function PromotionManage() {
     }
   };
 
-  const handleStatusChange = async (popupNo, status) => {
-    const confirmation = window.confirm(
-      `팝업 상태를 '${status}'로 변경하시겠습니까?`
-    );
-    if (!confirmation) return;
-    const booleanStatus = status === "true";
+  const openChangeStatusModal = (popup, status) => {
+    setPopupToChange(popup);
+    setNewStatus(status);
+    setIsChangeStatusModalOpen(true);
+  };
+
+  const handleStatusChange = async () => {
+    const booleanStatus = newStatus === "true";
     try {
-      await axios.put(`/admin/popup/${popupNo}/status`, {
+      await axios.put(`/admin/popup/${popupToChange.no}/status`, {
         status: booleanStatus,
       });
       fetchPopups();
+      setIsChangeStatusModalOpen(false);
     } catch (error) {
       console.error("팝업 상태를 업데이트하는 중 오류가 발생했습니다!", error);
     }
@@ -90,7 +96,7 @@ export default function PromotionManage() {
   const openDeletePopupModal = (popupData) => {
     setPopupToDelete(popupData);
     setIsDeletePopupModalOpen(true);
-  }
+  };
 
   const deletePopup = async (no) => {
     try {
@@ -179,9 +185,10 @@ export default function PromotionManage() {
                 {popups.map((popup) => (
                   <tr key={popup.no}>
                     <td>
-                      <img onClick={() => navigate(`${popup.path}`)}
+                      <img
+                        onClick={() => navigate(`${popup.path}`)}
                         className={styles.image}
-                        style={{cursor: "pointer"}}
+                        style={{ cursor: "pointer" }}
                         src={popup.pic}
                         alt={`${popup.no} 이미지`}
                       />
@@ -190,7 +197,7 @@ export default function PromotionManage() {
                       <select
                         value={popup.isShow.toString()}
                         onChange={(e) =>
-                          handleStatusChange(popup.no, e.target.value)
+                          openChangeStatusModal(popup, e.target.value)
                         }
                       >
                         <option value="true">보이기</option>
@@ -200,7 +207,7 @@ export default function PromotionManage() {
                     <td>
                       <i
                         onClick={() => openDeletePopupModal(popup)}
-                        className={styles.buttonDelete} // CSS 클래스 적용
+                        className={styles.buttonDelete}
                       >
                         삭제
                       </i>
@@ -231,37 +238,70 @@ export default function PromotionManage() {
           </div>
         </div>
         <Modal
-                isOpen={isDeletePopupModal}
-                onRequestClose={() => isDeletePopupModal(false)}
-                contentLabel="게시글 삭제 확인"
-                style={{
-                    overlay: {
-                        backgroundColor: "rgba(0, 0, 0, 0.5)",
-                    },
-                    content: {
-                        background: "white",
-                        padding: "20px",
-                        borderRadius: "8px",
-                        textAlign: "center",
-                        maxWidth: "400px",
-                        height: "300px",
-                        margin: "auto",
-                    },
-                }}
-            >
-                {popupToDelete && (
-                    <><br/>
-                        <img
-                            src={popupToDelete.pic}
-                            alt={`${popupToDelete.no} 이미지`}
-                            style={{ maxWidth: '70%', maxHeight: '30%' }}
-                            /><br/>
-                        <h3>해당 팝업을 삭제할까요?</h3>
-                        <button onClick={() => deletePopup(popupToDelete.no)}>삭제</button>&nbsp;&nbsp;
-                        <button onClick={() => setIsDeletePopupModalOpen(false)}>취소</button>
-                    </>
-                )}
-            </Modal>
+          isOpen={isDeletePopupModal}
+          onRequestClose={() => setIsDeletePopupModalOpen(false)}
+          contentLabel="팝업 삭제 확인"
+          style={{
+            overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+            content: {
+              background: "white",
+              padding: "20px",
+              borderRadius: "8px",
+              textAlign: "center",
+              maxWidth: "400px",
+              height: "300px",
+              margin: "auto",
+            },
+          }}
+        >
+          {popupToDelete && (
+            <>
+              <img
+                src={popupToDelete.pic}
+                alt={`${popupToDelete.no} 이미지`}
+                style={{ maxWidth: "70%", maxHeight: "30%" }}
+              />
+              <h3>해당 팝업을 삭제할까요?</h3>
+              <button onClick={() => deletePopup(popupToDelete.no)}>삭제</button>
+              <button onClick={() => setIsDeletePopupModalOpen(false)}>취소</button>
+            </>
+          )}
+        </Modal>
+        <Modal
+          isOpen={isChangeStatusModal}
+          onRequestClose={() => setIsChangeStatusModalOpen(false)}
+          contentLabel="팝업 상태 변경 확인"
+          style={{
+            overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+            content: {
+              background: "white",
+              padding: "20px",
+              borderRadius: "8px",
+              textAlign: "center",
+              maxWidth: "400px",
+              height: "300px",
+              margin: "auto",
+            },
+          }}
+        >
+          {popupToChange && (
+            <>
+              <h3>
+                팝업 상태를 "{newStatus === "true" ? "보이기" : "숨기기"}"로
+                변경할까요?
+              </h3>
+              <img
+                src={popupToChange.pic}
+                alt={`${popupToChange.no} 이미지`}
+                style={{ maxWidth: "70%", maxHeight: "30%" }}
+              /><br/>
+              <button onClick={() => setIsChangeStatusModalOpen(false)}>
+                취소
+              </button>&nbsp;&nbsp;
+              <button onClick={handleStatusChange}>변경</button>
+            </>
+          )}
+        </Modal>
       </div>
     </>
   );
