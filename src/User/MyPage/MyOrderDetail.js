@@ -45,10 +45,10 @@ export default function MyOrderDetail() {
     getOrderList();
   }, [orderNo]);
 
-  const goToReviewPage = (orderProductNo) => { // 리뷰 갈 때 주문상품번호를 가져감
+  const goToReviewPage = (orderProductNo, productName) => { // 리뷰 갈 때 주문상품번호를 가져감
     // 리뷰 데이터를 서버로 전송
     navigate(`/user/mypage/review/write/${orderProductNo}`, {
-      state: { orderNo: orderNo, userNo: userNo },
+      state: { orderNo: orderNo, userNo: userNo, productName : productName },
     });
   };
 
@@ -89,7 +89,7 @@ export default function MyOrderDetail() {
             <sapn className={styles.productPrice}>{orderProduct?.price}원</sapn>
             <button
               className={styles.reviewButton}
-              onClick={() => orderProduct && goToReviewPage(orderProduct.no)}
+              onClick={() => orderProduct && goToReviewPage(orderProduct.no, pl.name)}
               disabled={orderInfo.state === "주문취소"} // 주문 상태가 '주문취소'이면 비활성화
             >
             리뷰 쓰기

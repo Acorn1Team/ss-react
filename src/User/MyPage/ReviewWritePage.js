@@ -4,20 +4,15 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 
 export default function ReviewWritePage() {
-  const { orderProductNo } = useParams(); // URL에서 orderProductNo 추출
+  const { orderProductNo } = useParams(); 
+  const location = useLocation(); 
+  const { userNo, review, productName } = location.state || {}; // review 받아오기
+  const navigate = useNavigate(); 
 
-  // 디버깅: orderProductNo 확인
-// console.log("orderProductNo:", orderProductNo); // 이 값을 확인하여 제대로 추출되는지 확인
-
-  
-  const location = useLocation(); // location.state에서 다른 데이터를 추출
-  const { userNo } = location.state; // orderNo 제거
-  const navigate = useNavigate(); // 페이지 이동을 위한 훅
-  const [productName, setProductName] = useState("");
-
-  const [contents, setContents] = useState(""); // 리뷰 내용 상태 관리
-  const [score, setScore] = useState(0); // 평점 상태 관리
-  const [pic, setPic] = useState(null); // 이미지 파일 상태 관리
+   
+  const [contents, setContents] = useState(review?.contents || ""); 
+  const [score, setScore] = useState(review?.score || 0); 
+  const [pic, setPic] = useState(review?.pic || null);
 
   // 리뷰 작성 시 서버에 데이터를 전송하는 함수
   const handleSubmit = () => {
@@ -54,7 +49,7 @@ export default function ReviewWritePage() {
         console.error("리뷰 제출 실패:", error.response?.data || error);
       });
   };
-
+ 
   return (
     <div>
       <h2>리뷰 작성하기</h2>
@@ -62,7 +57,7 @@ export default function ReviewWritePage() {
         {/* 주문상품 번호: {orderProductNo}
         <br />
         사용자 번호: {userNo} */}
-        상품 정보 : {productName}
+        상품명 : {productName}
       </div>
       <textarea
   placeholder="리뷰 내용을 입력하세요"
