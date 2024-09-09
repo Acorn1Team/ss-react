@@ -141,6 +141,15 @@ export default function OrderManage() {
 
   const handleStatusFilterChange = (e) => {
     setStatus(e.target.value);
+    fetchOrders(
+      0,
+      pageSize,
+      searchTerm,
+      searchField,
+      startDate,
+      endDate,
+      e.target.value
+    ); // 상태 변경 시 즉시 fetchOrders 호출
   };
 
   const handleSearch = () => {
