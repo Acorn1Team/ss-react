@@ -37,7 +37,7 @@ export default function HelpManage() {
           justify-content: center;
           align-items: center;
           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-          transition: 0.5s;
+          transition: width 0.5s, box-shadow 0.5s;
         }
 
         .chat-list li:hover {
@@ -52,7 +52,7 @@ export default function HelpManage() {
           border-radius: 60px;
           background: linear-gradient(45deg, #56ccf2, #2f80ed);
           opacity: 0;
-          transition: 0.5s;
+          transition: opacity 0.5s;
         }
 
         .chat-list li:hover::before {
@@ -67,7 +67,7 @@ export default function HelpManage() {
           height: 100%;
           border-radius: 60px;
           background: linear-gradient(45deg, #56ccf2, #2f80ed);
-          transition: 0.5s;
+          transition: opacity 0.5s, filter 0.5s;
           filter: blur(15px);
           z-index: -1;
           opacity: 0;
@@ -80,14 +80,12 @@ export default function HelpManage() {
         .chat-list .icon {
           color: #777;
           font-size: 1.75em;
-          transition: 0.5s;
-          transition-delay: 0.25s;
+          transition: transform 0.2s, color 0.2s;
         }
 
         .chat-list li:hover .icon {
           transform: scale(0);
           color: #fff;
-          transition-delay: 0s;
         }
 
         .chat-list .title {
@@ -97,7 +95,7 @@ export default function HelpManage() {
           letter-spacing: 0.1em;
           position: absolute;
           white-space: nowrap;
-          transition: 0.5s;
+          transition: transform 0.2s, opacity 0.2s;
           transform: scale(0);
           opacity: 0;
           text-align: center;
