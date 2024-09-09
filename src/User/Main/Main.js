@@ -9,7 +9,6 @@ export default function UserHome() {
   const [posts, setPosts] = useState([]);
   const [selectReviewIndex, setSelectReviewIndex] = useState(0);
   const [mainPopup, setMainPopup] = useState([]);
-  const [popupOpen, setPopupOpen] = useState(false);
 
   // 이미지 전환을 위한 상태 추가
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -21,24 +20,26 @@ export default function UserHome() {
 
   const imageRef = useRef(null);
 
-  // 리뷰 슬라이드 기능 구현
   useEffect(() => {
     const interval = setInterval(() => {
-      setSelectReviewIndex((prevIndex) =>
-        review.length > 0
-          ? prevIndex === review.length - 1
-            ? 0
-            : prevIndex + 1
-          : 0
-      );
+      setSelectReviewIndex((prevIndex) => (prevIndex + 1) % review.length); // 다음 슬라이드로 이동, 마지막 인덱스에서 처음으로 돌아옴
     }, 5000); // 5초마다 슬라이드 변경
-    return () => clearInterval(interval);
+
+    return () => clearInterval(interval); // 컴포넌트가 언마운트될 때 인터벌 정리
   }, [review]);
 
-  // 클릭 시 이미지 전환
-  const handleImageClick = () => {
+  // 슬라이드 이동 스타일을 계산하는 함수
+  const getTransformStyle = () => {
+    return {
+      transform: `translateX(-${selectReviewIndex * 100}%)`, // 현재 인덱스에 따라 슬라이드 이동
+      transition: "transform 0.5s ease-in-out", // 자연스러운 이동
+    };
+  };
+
+  // 이미지 전환을 위한 상태 추가
+  const handleImageMouseOver = () => {
     if (!isTransitioning) {
-      // 전환 중일 때는 클릭을 막음
+      // 전환 중일 때는 전환을 막음
       setIsTransitioning(true);
       setTimeout(() => {
         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
@@ -86,6 +87,10 @@ export default function UserHome() {
     }
   }, [userNo]);
 
+  useEffect(() => {
+    console.log(mainPopup); // 팝업 데이터 확인
+  }, [mainPopup]);
+
   function getCookie(name) {
     let value = `; ${document.cookie}`;
     let parts = value.split(`; ${name}=`);
@@ -98,7 +103,6 @@ export default function UserHome() {
       document.cookie = `${userNo}_popup_${popupNo}=true; path=/; max-age=${
         60 * 60 * 24
       }`;
-      // 하루(24시간) 동안 유효한 쿠키 설정
     }
     setMainPopup((prev) =>
       prev.map((p) => (p.no === popupNo ? { ...p, popupOpen: false } : p))
@@ -107,7 +111,7 @@ export default function UserHome() {
 
   return (
     <div className="page-container">
-      <div className="image-wrapper" onClick={handleImageClick}>
+      <div className="image-wrapper" onMouseOver={handleImageMouseOver}>
         <img
           className={`scrollable-image ${
             isTransitioning ? "fade-out" : "fade-in"
@@ -160,20 +164,17 @@ export default function UserHome() {
         </div>
         <Link to="/user/main/show">작품 더보기</Link>
         <b className="mainTextTitle">최신 리뷰</b>
-        <div id="mainReviews">
-          {Array.isArray(review) && review.length > 0 && (
-            <div className="mainReviewsBox active">
-              <Link to={`/user/shop/review/${review[selectReviewIndex].no}`}>
-                <img
-                  src={review[selectReviewIndex].pic}
-                  alt={review[selectReviewIndex].no}
-                />
-                <br />
-                {review[selectReviewIndex].userNickname} &emsp;{" "}
-                {review[selectReviewIndex].productName}
-              </Link>
-            </div>
-          )}
+        <div id="mainReviewsContainer">
+          <div id="mainReviews" style={getTransformStyle()}>
+            {Array.isArray(review) &&
+              review.map((r, index) => (
+                <div className="mainReviewsBox" key={r.no}>
+                  <Link to={`/user/shop/review/${r.no}`}>
+                    <img src={r.pic} alt={r.no} />
+                  </Link>
+                </div>
+              ))}
+          </div>
         </div>
         <br />
         <b className="mainTextTitle">인기 스타일</b>

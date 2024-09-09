@@ -4,19 +4,132 @@ body {
   font-family: Arial, sans-serif;
   background-color: #f5f5f5;
   padding: 0;
-  overflow-x: hidden; /* 수평 스크롤 방지 */
+  overflow-x: hidden;
+  height: 100vh;
+  box-sizing: border-box;
 }
 
-/* 메인 페이지 컨테이너 */
-#mainPosts,
+/* 페이지 컨테이너 스타일 */
+.page-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* 메인 리뷰 섹션 컨테이너 */
+#mainReviewsContainer {
+  width: 60%; /* 부모 컨테이너 넓이 */
+  overflow: hidden; /* 화면 밖의 요소 숨기기 */
+  position: relative;
+  max-width: 800px; /* 최대 넓이 설정 */
+  margin: 0 auto; /* 가운데 정렬 */
+}
+
+/* 메인 리뷰 섹션 */
 #mainReviews {
+  display: flex; /* 슬라이드를 가로로 나열 */
+  transition: transform 0.5s ease-in-out; /* 슬라이드 전환 애니메이션 */
+  width: 100%; /* 슬라이드의 전체 넓이를 부모 기준으로 설정 */
+}
+
+/* 리뷰 박스 */
+.mainReviewsBox {
+  min-width: 100%; /* 한 번에 한 슬라이드씩 표시 */
+  flex-shrink: 0;
+}
+
+.mainReviewsBox img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  aspect-ratio: 4/3; /* 4:3 비율 유지 */
+  max-height: 300px; /* 이미지 최대 높이 설정 */
+}
+
+/* 메인 포스트 섹션 스타일 */
+#mainPosts {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  justify-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 800px;
+  box-sizing: border-box;
+}
+
+/* 메인 포스트 박스 스타일 */
+.mainPostsBox {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  padding: 20px;
+  text-align: center;
+  width: 200px; /* 고정 너비 설정 */
+  height: 300px; /* 고정 높이 설정 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 20px 0;
-  position: relative;
-  flex-wrap: wrap; /* 줄바꿈을 허용하여 레이아웃을 유지 */
-  min-height: 200px; /* 최소 높이 지정 */
+  box-sizing: border-box;
+}
+
+.mainPostsBox img {
+  width: 100%;
+  height: 400px;
+  max-height: 300px; /* 이미지의 최대 높이 설정 */
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.mainPostsBox:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* 메인 스타일 섹션 */
+#mainStyle {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  justify-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 800px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.mainStyleBox {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  padding: 20px;
+  text-align: center;
+  width: 200px; /* 고정 너비 설정 */
+  height: 300px; /* 고정 높이 설정 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.mainStyleBox img {
+  width: 100%;
+  height: auto;
+  max-height: 180px; /* 이미지의 최대 높이 설정 */
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 /* 메인 제목 스타일 */
@@ -28,6 +141,7 @@ body {
   margin: 40px 0 20px;
   color: #333;
 }
+
 /* 이미지 스타일 */
 .image-wrapper {
   width: 100%;
@@ -39,76 +153,16 @@ body {
   width: 100%;
   height: auto;
   object-fit: cover;
-  transition: opacity 0.2s ease; /* 부드러운 전환 추가 */
-  cursor: pointer; /* 이미지 클릭 가능하도록 커서 변경 */
+  transition: opacity 0.2s ease;
+  cursor: pointer;
 }
 
-/* 페이드 인/아웃 효과 */
 .fade-in {
   opacity: 1;
 }
 
 .fade-out {
   opacity: 0;
-}
-
-/* 포스트 및 리뷰 박스 스타일 */
-.mainPostsBox,
-.mainReviewsBox {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin: 10px;
-  padding: 20px;
-  text-align: center;
-  width: 200px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.mainPostsBox img,
-.mainReviewsBox img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.mainPostsBox:hover,
-.mainReviewsBox:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-/* 슬라이드 애니메이션 스타일 */
-#mainReviews {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  position: relative;
-  min-height: 200px;
-  margin: 20px 0;
-}
-
-.mainReviewsBox {
-  opacity: 0;
-  position: absolute;
-  top: 2px;
-  left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  visibility: hidden;
-}
-
-.mainReviewsBox.active {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-  visibility: visible;
 }
 
 /* SceneStealer 제목 스타일 */
@@ -126,4 +180,5 @@ b {
   z-index: 1;
   padding: 20px;
   padding-bottom: 170px;
+  box-sizing: border-box;
 }
