@@ -223,8 +223,8 @@ export default function CommunityManage() {
                             style={{ maxWidth: '70%', height: 'auto' }}
                             /><br/>
                         <h3>해당 게시글 삭제 조치 후<br/> 작성자에게 경고 알림을 전송하겠습니다.</h3>
-                        <button onClick={() => deletePost(postToDelete.no)}>삭제</button>&nbsp;&nbsp;
-                        <button onClick={() => setIsDeleteModalOpen(false)}>닫기</button>
+                        <button onClick={() => setIsDeleteModalOpen(false)}>취소</button>&nbsp;&nbsp;
+                        <button onClick={() => deletePost(postToDelete.no)}>확인</button>
                     </>
                 )}
             </Modal>
