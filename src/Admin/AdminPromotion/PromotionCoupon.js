@@ -5,6 +5,8 @@ import styles from "../Style/PromotionCoupon.module.css";
 import Modal from "react-modal";
 import LoadingScreen from "../../User/Component/Loading";
 
+Modal.setAppElement("#root"); // react-modal 설정 (접근성 관련)
+
 export default function PromotionCoupon() {
   const navigate = useNavigate();
   const [state, setState] = useState({
@@ -46,14 +48,15 @@ export default function PromotionCoupon() {
     }
 
     const expiryDate = state.expiryDate || getFutureDate(7);
-    const couponData = {...state,expiryDate,};
+    const couponData = { ...state, expiryDate };
+
     setIsLoading(true);
     axios
       .post("/admin/coupon", couponData)
       .then((response) => {
         if (response.data.isSuccess) {
           setIsLoading(false);
-          setIsModalOpen(true);
+          setIsModalOpen(true); // 성공 모달 열기
         }
       })
       .catch((error) => {
@@ -96,7 +99,9 @@ export default function PromotionCoupon() {
           <span>%</span>
         </div>
         {discountRateError && (
-          <p className={styles.errorMessage} style={{color:"red"}}>{discountRateError}</p>
+          <p className={styles.errorMessage} style={{ color: "red" }}>
+            {discountRateError}
+          </p>
         )}
       </div>
       <div className={styles.formGroup}>
@@ -107,6 +112,7 @@ export default function PromotionCoupon() {
           value={state.expiryDate}
           onChange={handleChange}
           className={styles.input}
+          min={new Date().toISOString().split("T")[0]} // 오늘 전 날짜 선택 방지
         />
       </div>
       <button onClick={addCoupon} className={styles.button}>
@@ -118,22 +124,25 @@ export default function PromotionCoupon() {
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
         contentLabel="쿠폰 등록 완료 확인"
-        style={{overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)",},
-                content: {
-                background: "white",
-                padding: "20px",
-                borderRadius: "8px",
-                textAlign: "center",
-                maxWidth: "300px",
-                height: "180px",
-                margin: "auto",
-                },
-        }}>
-          <><br/>
-              <h3>쿠폰 발급이 완료되었습니다!</h3>
-              <button onClick={() => navigate("/admin/promotion")}>목록으로 돌아가기</button>
-          </>
-        </Modal>
+        style={{
+          overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+          content: {
+            background: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            textAlign: "center",
+            maxWidth: "300px",
+            height: "180px",
+            margin: "auto",
+          },
+        }}
+      >
+        <br />
+        <h3>쿠폰 발급이 완료되었습니다!</h3>
+        <button onClick={() => navigate("/admin/promotion")}>
+          목록으로 돌아가기
+        </button>
+      </Modal>
     </div>
   );
 }

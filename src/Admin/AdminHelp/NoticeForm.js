@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from 'styled-components';
+import styled from "styled-components";
 import Modal from "react-modal";
 
 const FormContainer = styled.div`
@@ -33,7 +33,7 @@ const Textarea = styled.textarea`
 `;
 
 const Button = styled.button`
-  width: 100%;
+  width: calc(50% - 5px);
   padding: 10px;
   background-color: blue;
   color: white;
@@ -46,6 +46,12 @@ const Button = styled.button`
   &:hover {
     background-color: #5a31b4;
   }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
 `;
 
 const ErrorMessage = styled.p`
@@ -103,7 +109,13 @@ export default function NoticeForm() {
     <FormContainer>
       <h2>공지 추가</h2>
       <div>
-        제목 <InputField onChange={handleChange} type="text" name="title" value={state.title} />
+        제목{" "}
+        <InputField
+          onChange={handleChange}
+          type="text"
+          name="title"
+          value={state.title}
+        />
       </div>
       <div>
         카테고리
@@ -118,30 +130,50 @@ export default function NoticeForm() {
         </select>
       </div>
       <div>
-        내용 <Textarea onChange={handleChange} name="contents" value={state.contents} />     
+        내용{" "}
+        <Textarea
+          onChange={handleChange}
+          name="contents"
+          value={state.contents}
+        />
       </div>
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-      <Button onClick={handleSave}>추가</Button>
+
+      <ButtonContainer>
+        <Button onClick={handleSave}>추가</Button>
+        <Button
+          onClick={() => navigate(-1)}
+          style={{ backgroundColor: "gray" }}
+        >
+          뒤로가기
+        </Button>
+      </ButtonContainer>
+
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
         contentLabel="공지 등록 완료 확인"
-        style={{overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)",},
-                content: {
-                background: "white",
-                padding: "20px",
-                borderRadius: "8px",
-                textAlign: "center",
-                maxWidth: "300px",
-                height: "180px",
-                margin: "auto",
-                },
-        }}>
-          <><br/>
-              <h3>공지가 등록되었습니다!</h3>
-              <button onClick={() => navigate("/admin/help/notices")}>목록으로 돌아가기</button>
-          </>
-        </Modal>
+        style={{
+          overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+          content: {
+            background: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            textAlign: "center",
+            maxWidth: "300px",
+            height: "180px",
+            margin: "auto",
+          },
+        }}
+      >
+        <>
+          <br />
+          <h3>공지가 등록되었습니다!</h3>
+          <button onClick={() => navigate("/admin/help/notices")}>
+            목록으로 돌아가기
+          </button>
+        </>
+      </Modal>
     </FormContainer>
   );
 }
