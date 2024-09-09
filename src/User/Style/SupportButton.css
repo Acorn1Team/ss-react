@@ -36,7 +36,7 @@
 
 .support-modal-option {
   padding: 10px;
-  background-color: #f8f9fa;
+  background-color: #8cb6e3;
   border: none;
   text-align: left;
   cursor: pointer;
@@ -47,5 +47,5 @@
 }
 
 .support-modal-option:hover {
-  background-color: #e2e6ea;
+  background-color: #007bff;
 }

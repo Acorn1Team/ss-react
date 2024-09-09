@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import styles from "../Style/UserProfile.module.css"; // CSS 모듈 임포트
 
 export default function UserProfile() {
@@ -17,6 +17,8 @@ export default function UserProfile() {
   const [isSaveDisabled, setIsSaveDisabled] = useState(false); // 저장 버튼 상태
 
   const userNo = sessionStorage.getItem("id");
+
+  const location = useLocation(); // 현재 위치를 얻어오는 hook
 
   const userInfo = () => {
     axios
@@ -185,9 +187,15 @@ export default function UserProfile() {
         >
           내가 쓴 글
         </Link>
-        <Link to={`/user/style/write`} className={styles.profileActionLink}>
-          글 작성하기
-        </Link>
+        {location.pathname !== "/user/style/write" && (
+          <Link
+            to={`/user/style/write`}
+            // onClick={handleWriteButtonClick}
+            className={styles.profileActionLink}
+          >
+            글 작성하기
+          </Link>
+        )}
       </div>
 
       <div className={styles.followInfo}>

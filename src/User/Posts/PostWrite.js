@@ -221,6 +221,29 @@ export default function PostWrite() {
     loadData();
   }, [postNo, productNo]);
 
+  // 초기화
+  const resetButton = () => {
+    const fileInput = document.querySelector("input[type='file']");
+    if (fileInput) {
+      fileInput.value = "";
+    }
+
+    setContent("");
+
+    // 상품 정보 초기화
+    setProductInfo({});
+
+    // 검색 입력 초기화
+    setInputValue("");
+  };
+
+  const handleCancelClick = (event) => {
+    // event.preventDefault(); // 기본 동작 방지
+    // event.stopPropagation(); // 이벤트 전파 방지
+    // navigate(-1); // 이전 페이지로 이동
+    window.history.back();
+  };
+
   return (
     <div className={styles.container}>
       <div id="photoBox" className={styles.photoBox}></div>
@@ -302,6 +325,12 @@ export default function PostWrite() {
         onClick={() => insertPost(postNo)}
       >
         {postNo ? "수정" : "등록"}
+      </button>
+      <button className={styles.submitButton} onClick={resetButton}>
+        초기화
+      </button>
+      <button className={styles.submitButton} onClick={() => navigate(-1)}>
+        취소
       </button>
       <b id="error" className={styles.error}></b>
     </div>
