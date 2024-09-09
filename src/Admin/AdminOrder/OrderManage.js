@@ -226,10 +226,12 @@ export default function OrderManage() {
           <select
             value={searchField}
             onChange={handleSearchFieldChange}
-            style={{ marginLeft: "10px", padding: "5px" }}
+            style={{ marginLeft: "10px", padding: "5px", width: "120px" }}
           >
             <option value="state">상태</option>
             <option value="date">날짜</option>
+            <option value="userName">주문자명</option>{" "}
+            {/* 주문자명 옵션 추가 */}
           </select>
         </label>
 
@@ -240,21 +242,30 @@ export default function OrderManage() {
               placeholder="시작 날짜"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              style={{ padding: "5px", marginRight: "10px" }}
+              style={{
+                padding: "5px",
+                marginRight: "10px",
+                width: "150px", // 고정된 넓이 추가
+                lineHeight: "1.5",
+              }}
             />
             <input
               type="date"
               placeholder="종료 날짜"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              style={{ padding: "5px" }}
+              style={{
+                padding: "5px",
+                width: "150px", // 고정된 넓이 추가
+                lineHeight: "1.5",
+              }}
             />
           </div>
         ) : searchField === "state" ? (
           <select
             value={status}
             onChange={handleStatusFilterChange}
-            style={{ padding: "5px", marginRight: "10px" }}
+            style={{ padding: "5px", marginRight: "10px", width: "120px" }}
           >
             <option value="">상태 선택</option>
             <option value="주문접수">주문접수</option>
@@ -262,7 +273,15 @@ export default function OrderManage() {
             <option value="배송완료">배송완료</option>
             <option value="주문취소">주문취소</option>
           </select>
-        ) : null}
+        ) : (
+          <input
+            type="text"
+            placeholder="검색어를 입력하세요"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            style={{ padding: "5px", marginRight: "10px", width: "120px" }}
+          />
+        )}
 
         <button
           onClick={handleSearch}
@@ -275,7 +294,7 @@ export default function OrderManage() {
         </button>
       </div>
 
-      <table border="1">
+      <table border="1" style={{ width: "100%" }}>
         <thead>
           <tr>
             <th>번호</th>
@@ -294,10 +313,7 @@ export default function OrderManage() {
                   <td>{order.no}</td>
                   <td>{order.userName}</td>
                   <td>{new Date(order.date).toLocaleString()}</td>
-                  <td>
-                    {order.price.toLocaleString("ko-KR")}
-                    원
-                  </td>
+                  <td>{order.price.toLocaleString("ko-KR")}원</td>
                   <td>
                     <select
                       value={order.state}
