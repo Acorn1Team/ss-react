@@ -110,6 +110,12 @@ export default function NoticeDetail() {
           onChange={handleChange}
           name="contents"
           value={state.contents}
+          style={{
+            width: "100%",
+            height: "150px", // 높이 조절
+            padding: "10px",
+            boxSizing: "border-box",
+          }}
         />
       </div>
       <button onClick={() => openModal("삭제")}>삭제</button>&nbsp;&nbsp;
@@ -127,14 +133,36 @@ export default function NoticeDetail() {
             bottom: "auto",
             marginRight: "-50%",
             transform: "translate(-50%, -50%)",
+            padding: "20px",
+            borderRadius: "10px",
+            maxWidth: "500px",
+            width: "90%",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+          },
+          overlay: {
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
           },
         }}
       >
-        <h2>{modalType} 확인</h2>
-        <p>{modalType}하시겠습니까?</p>
+        <h2 style={{ fontSize: "20px" }}>{modalType} 확인</h2>
+        <p style={{ fontSize: "16px" }}>{modalType}하시겠습니까?</p>
         <div>
-          <button onClick={handleConfirm}>{modalType}</button>
-          <button onClick={closeModal}>취소</button>
+          <button
+            onClick={handleConfirm}
+            style={{
+              fontSize: "16px",
+              padding: "10px 20px",
+              marginRight: "10px",
+            }}
+          >
+            {modalType}
+          </button>
+          <button
+            onClick={closeModal}
+            style={{ fontSize: "16px", padding: "10px 20px" }}
+          >
+            취소
+          </button>
         </div>
       </Modal>
     </>
