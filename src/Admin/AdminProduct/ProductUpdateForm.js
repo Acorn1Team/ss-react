@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./ProductForm.css";
+import Modal from "react-modal";
 
 export default function ProductUpdateForm() {
   const { no } = useParams();
@@ -23,23 +24,20 @@ export default function ProductUpdateForm() {
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
-  const [modalLoading, setModalLoading] = useState(false); // 모달 안에서의 삭제 로딩 상태
 
   const isFormValid = () => {
     return !errors.stock && !errors.discountRate;
   };
 
   const handleDelete = async (no) => {
-    setModalLoading(true);
     try {
       await axios.delete(`/admin/product/${no}`);
+      setIsModalOpen(false);
       alert("상품이 삭제되었습니다.");
       navigate("/admin/product");
     } catch (error) {
-      console.error("Error deleting product:", error);
-      alert("삭제 중 오류가 발생했습니다.");
+      console.log("삭제 중 오류가 발생했습니다.");
     } finally {
-      setModalLoading(false);
       setIsModalOpen(false);
     }
   };
@@ -128,12 +126,11 @@ export default function ProductUpdateForm() {
         if (res.data.isSuccess) {
           navigate("/admin/product");
         } else {
-          alert("수정에 실패했습니다: " + res.data.message);
+          console.log("수정에 실패했습니다: " + res.data.message);
         }
       })
       .catch((error) => {
-        console.log(error);
-        alert(
+        console.log(
           "오류 발생: " +
             (error.response ? error.response.data : "알 수 없는 오류")
         );
@@ -220,9 +217,9 @@ export default function ProductUpdateForm() {
           <p className="error-message">{errors.discountRate}</p>
         )}
       </div>
-      <button className="delete-button" onClick={openModal}>
+      {/* <button className="delete-button" onClick={openModal}>
         삭제하기
-      </button>
+      </button> */}
       &nbsp;&nbsp;
       <button
         className="update-button"
@@ -232,22 +229,37 @@ export default function ProductUpdateForm() {
         수정 완료
       </button>
       {/* 모달 */}
+      <Modal
+          isOpen={isModalOpen}
+          onRequestClose={() => setIsModalOpen(false)}
+          contentLabel="상품 삭제 확인"
+          style={{
+            overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+            content: {
+              background: "white",
+              padding: "20px",
+              borderRadius: "8px",
+              textAlign: "center",
+              maxWidth: "400px",
+              height: "300px",
+              margin: "auto",
+            },
+          }}
+        >
       {isModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
+        <>
             <p>정말로 삭제하시겠습니까?</p>
-            <button onClick={closeModal} disabled={modalLoading}>
-              취소
-            </button>
             <button
               onClick={() => handleDelete(state.no)}
-              disabled={modalLoading}
             >
-              {modalLoading ? "삭제 중..." : "삭제"}
+              삭제
+            </button>&nbsp;&nbsp;
+            <button onClick={closeModal}>
+              취소
             </button>
-          </div>
-        </div>
+        </>
       )}
+      </Modal>
     </div>
   );
 }

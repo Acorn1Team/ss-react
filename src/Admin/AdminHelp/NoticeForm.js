@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from 'styled-components';
+import Modal from "react-modal";
 
 const FormContainer = styled.div`
   width: 100%;
@@ -14,6 +15,15 @@ const FormContainer = styled.div`
 `;
 
 const InputField = styled.input`
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+`;
+
+const Textarea = styled.textarea`
   width: 100%;
   padding: 10px;
   margin: 10px 0;
@@ -38,8 +48,16 @@ const Button = styled.button`
   }
 `;
 
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 14px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+`;
+
 export default function NoticeForm() {
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // 초기 상태값 설정
   const [state, setState] = useState({
@@ -48,19 +66,23 @@ export default function NoticeForm() {
     contents: "",
   });
 
+  // 에러 메시지 상태값
+  const [errorMessage, setErrorMessage] = useState("");
+
   // 입력 필드 값 변경 시 상태 업데이트
   const handleChange = (e) => {
     setState({
       ...state,
       [e.target.name]: e.target.value,
     });
+    setErrorMessage(""); // 입력 시 에러 메시지 초기화
   };
 
   // 추가 버튼 클릭 시 실행되는 함수
   const handleSave = () => {
     // 폼 유효성 검사
     if (!state.title || !state.category || !state.contents) {
-      alert("모든 필드를 입력해 주세요.");
+      setErrorMessage("모든 필드를 입력해 주세요.");
       return;
     }
 
@@ -69,8 +91,7 @@ export default function NoticeForm() {
       .post("/admin/help/notice", state)
       .then((res) => {
         if (res.data.isSuccess) {
-          alert("추가 성공");
-          navigate("/admin/help/notices");
+          setIsModalOpen(true);
         }
       })
       .catch((err) => {
@@ -82,7 +103,7 @@ export default function NoticeForm() {
     <FormContainer>
       <h2>공지 추가</h2>
       <div>
-        제목 <InputField onChange={handleChange} type="text" name="title" value={state.title}/>
+        제목 <InputField onChange={handleChange} type="text" name="title" value={state.title} />
       </div>
       <div>
         카테고리
@@ -97,9 +118,30 @@ export default function NoticeForm() {
         </select>
       </div>
       <div>
-        내용 <textarea onChange={handleChange} name="contents" value={state.contents} />     
+        내용 <Textarea onChange={handleChange} name="contents" value={state.contents} />     
       </div>
+      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       <Button onClick={handleSave}>추가</Button>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        contentLabel="공지 등록 완료 확인"
+        style={{overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)",},
+                content: {
+                background: "white",
+                padding: "20px",
+                borderRadius: "8px",
+                textAlign: "center",
+                maxWidth: "300px",
+                height: "180px",
+                margin: "auto",
+                },
+        }}>
+          <><br/>
+              <h3>공지가 등록되었습니다!</h3>
+              <button onClick={() => navigate("/admin/help/notices")}>목록으로 돌아가기</button>
+          </>
+        </Modal>
     </FormContainer>
   );
 }

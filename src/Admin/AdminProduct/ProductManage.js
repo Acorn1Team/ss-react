@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+
 export default function ProductManage() {
   const [products, setProducts] = useState([]);
   const [expandedRows, setExpandedRows] = useState([]); // 확장된 행을 저장할 상태
