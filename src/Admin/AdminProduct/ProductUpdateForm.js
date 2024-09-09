@@ -23,7 +23,8 @@ export default function ProductUpdateForm() {
     discountRate: "",
   });
 
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isResultModalOpen, setIsResultModalOpen] = useState(false);
 
   const isFormValid = () => {
     return !errors.stock && !errors.discountRate;
@@ -33,8 +34,7 @@ export default function ProductUpdateForm() {
     try {
       await axios.delete(`/admin/product/${no}`);
       setIsModalOpen(false);
-      alert("상품이 판매 종료되었습니다.");
-      navigate("/admin/product");
+      setIsResultModalOpen(true);
     } catch (error) {
       console.log("삭제 중 오류가 발생했습니다.");
     } finally {
@@ -219,18 +219,16 @@ export default function ProductUpdateForm() {
       </div>
       <button className="delete-button" onClick={() => {navigate("/admin/product")}}>
         목록으로
-      </button>
-      &nbsp;&nbsp;
-      <button className="delete-button" onClick={openModal}>
-        판매 종료
-      </button>
-      &nbsp;&nbsp;
+      </button>&nbsp;&nbsp;
       <button
         className="update-button"
         onClick={handleSave}
         disabled={!isFormValid()}
       >
         수정 완료
+      </button><br/>
+      <button className="delete-button" onClick={openModal} disabled={!state.available} style={{backgroundColor: !state.available ? "lightgray" : "#333"}}>
+        {state.available ? '판매 종료' : '판매 종료된 상품'}
       </button>
       {/* 모달 */}
       <Modal
@@ -244,15 +242,16 @@ export default function ProductUpdateForm() {
               padding: "20px",
               borderRadius: "8px",
               textAlign: "center",
-              maxWidth: "400px",
-              height: "300px",
+              maxWidth: "500px",
+              height: "200px",
               margin: "auto",
             },
           }}
         >
       {isModalOpen && (
         <>
-            <p>정말로 판매 종료하시겠습니까?</p>
+            <p>
+              <b>{state.name}</b> 판매를  종료하시겠습니까?</p>
             <button
               onClick={() => handleDelete(state.no)}
             >
@@ -264,6 +263,27 @@ export default function ProductUpdateForm() {
         </>
       )}
       </Modal>
+
+      <Modal
+        isOpen={isResultModalOpen}
+        onRequestClose={() => setIsResultModalOpen(false)}
+        contentLabel="판매종료 처리 확인"
+        style={{overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)",},
+                content: {
+                background: "white",
+                padding: "20px",
+                borderRadius: "8px",
+                textAlign: "center",
+                maxWidth: "300px",
+                height: "180px",
+                margin: "auto",
+                },
+        }}>
+          <><br/>
+              <h3>판매 종료 처리가 완료되었습니다.</h3>
+              <button onClick={() => navigate("/admin/product")}>목록으로 돌아가기</button>
+          </>
+        </Modal>
     </div>
   );
 }
