@@ -218,46 +218,58 @@ export default function ProductManage() {
   return (
     <>
       <style>
-        {`.product-container {
-            display: block; /* flex 대신 block 레이아웃 사용 */
-          }
+        {`.product-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch; /* 세로 길이를 동일하게 맞추기 */
+}
 
-          .product-card {
-            width: 100%; /* 한 줄에 하나씩 차지하도록 전체 너비 설정 */
-            max-width: 600px; /* 각 카드의 최대 너비 제한 */
-            margin: 0 auto 20px; /* 가운데 정렬 및 아래쪽 간격 추가 */
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-          }
+.product-card {
+  width: 60%; /* 제품 카드의 너비 줄이기 */
+  margin: 0 auto 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 400px; /* 고정 높이 설정 */
+  overflow-y: auto; /* 콘텐츠가 넘칠 경우 스크롤 */
+}
 
-          .product-card img {
-            margin: 10px 0;
-          }
+.product-card img {
+  margin: 10px 0;
+}
 
-          .button-container {
-            text-align: center;
-            margin-top: 20px;
-          }
+.reviews-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  width: 35%;
+  margin-left: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 400px; /* 고정 높이 설정 */
+  overflow-y: auto; /* 콘텐츠가 넘칠 경우 스크롤 */
+}
 
-          button {
-            padding: 10px 20px;
-            cursor: pointer;
-          }
+.button-container {
+  text-align: center;
+  margin-top: 20px;
+}
 
-          button:hover {
-            background-color: blue;
-          }
+button {
+  padding: 10px 20px;
+  cursor: pointer;
+}
 
-          .reviews-container {
-            padding: 10px;
-            background-color: #f9f9f9;
-            border-top: 1px solid #ccc;
-          }`}
+button:hover {
+  background-color: blue;
+}
+`}
       </style>
 
       {/* 품절 처리 확인 모달 */}
@@ -319,60 +331,75 @@ export default function ProductManage() {
       <div className="product-container">
         {products.length > 0 ? (
           products.map((item) => (
-            <div key={item.no} className="product-card">
-              <div>
-                <h3>
-                  {item.no}. {item.name}
-                </h3>
-              </div>
-              <div>
-                <strong>가격: </strong>
-                {item.discountRate > 0 ? (
-                  <>
-                    <span style={{ textDecoration: "line-through" }}>
-                      {item.price.toLocaleString("ko-KR")}원
-                    </span>
-                    &nbsp;
-                    <span style={{ color: "red", fontWeight: "bold" }}>
-                      {calculateSellingPrice(
-                        item.price,
-                        item.discountRate
-                      ).toLocaleString("ko-KR")}
-                      원 ({item.discountRate} % 할인)
-                    </span>
-                  </>
-                ) : (
-                  <>{item.price.toLocaleString("ko-KR")}원</>
-                )}
-              </div>
-              <div>
-                <img
-                  src={item.pic}
-                  alt={item.name}
-                  style={{ height: "100px" }}
-                />
-              </div>
-              {item.reviewCount > 0 && (
+            <div key={item.no} className="product-row">
+              <div className="product-card">
                 <div>
-                  <strong>평점: </strong>
-                  <span
-                    onClick={() => toggleRowExpansion(item.no)}
-                    style={{ cursor: "pointer", color: "blue" }}
-                  >
-                    {item.score}점 (리뷰 총 {item.reviewCount || 0}건)
-                  </span>
+                  <h3>
+                    {item.no}. {item.name}
+                  </h3>
                 </div>
-              )}
-              <div>
-                <strong>재고:</strong> {item.stock}
-                &nbsp;
+                <div>
+                  <strong>가격: </strong>
+                  {item.discountRate > 0 ? (
+                    <>
+                      <span style={{ textDecoration: "line-through" }}>
+                        {item.price.toLocaleString("ko-KR")}원
+                      </span>
+                      &nbsp;
+                      <span style={{ color: "red", fontWeight: "bold" }}>
+                        {calculateSellingPrice(
+                          item.price,
+                          item.discountRate
+                        ).toLocaleString("ko-KR")}
+                        원 ({item.discountRate} % 할인)
+                      </span>
+                    </>
+                  ) : (
+                    <>{item.price.toLocaleString("ko-KR")}원</>
+                  )}
+                </div>
+                <div>
+                  <img
+                    src={item.pic}
+                    alt={item.name}
+                    style={{ height: "100px" }}
+                  />
+                </div>
+                {item.reviewCount > 0 && (
+                  <div>
+                    <strong>평점: </strong>
+                    <span
+                      onClick={() => toggleRowExpansion(item.no)}
+                      style={{ cursor: "pointer", color: "blue" }}
+                    >
+                      {item.score}점 (리뷰 총 {item.reviewCount || 0}건)
+                    </span>
+                  </div>
+                )}
+                <div>
+                  <strong>재고:</strong> {item.stock}
+                  &nbsp;
+                  <button
+                    onClick={() => openModal(item.no)}
+                    disabled={item.stock === 0}
+                  >
+                    품절 처리하기
+                  </button>
+                </div>
+                <div>
+                  <strong>판매량:</strong> {item.count}건
+                </div>
+                <div>
+                  <strong>등록일:</strong> {formatDate(item.date)}
+                </div>
                 <button
-                  onClick={() => openModal(item.no)}
-                  disabled={item.stock === 0}
+                  onClick={() => navigate(`/admin/product/update/${item.no}`)}
                 >
-                  품절 처리하기
+                  수정하기
                 </button>
               </div>
+
+              {/* 옆에 리뷰 표시 */}
               {expandedRows.includes(item.no) && (
                 <div className="reviews-container">
                   <div>
@@ -398,17 +425,6 @@ export default function ProductManage() {
                   </div>
                 </div>
               )}
-              <div>
-                <strong>판매량:</strong> {item.count}건
-              </div>
-              <div>
-                <strong>등록일:</strong> {formatDate(item.date)}
-              </div>
-              <button
-                onClick={() => navigate(`/admin/product/update/${item.no}`)}
-              >
-                수정하기
-              </button>
             </div>
           ))
         ) : (
