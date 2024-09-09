@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useParams, useLocation } from "react-router-dom";
+import { Link, useParams, useLocation, useNavigate } from "react-router-dom";
 import styles from "../Style/Sub.module.css";
 import { IoIosHeart } from "react-icons/io";
 import { IoIosHeartEmpty } from "react-icons/io";
@@ -8,6 +8,7 @@ import { IoIosHeartEmpty } from "react-icons/io";
 export default function Sub() {
   const { no } = useParams();
   const locationState = useLocation();
+  const nv = useNavigate();
 
   // 로그인된 정보라고 가정
   const userNo = sessionStorage.getItem("id");
@@ -78,32 +79,37 @@ export default function Sub() {
   };
 
   const scrapProc = () => {
-    if (scrap) {
-      axios
-        .delete(`/main/scrap/${selectCharacter.no}/${userNo}`)
-        .then((res) => {
-          if (res.data.result === true) {
-            setScrap(false);
-          }
-        })
-        .catch((error) => {
-          console.log("스크랩 삭제 실패 :", error);
-        });
+    if (userNo) {
+      if (scrap) {
+        axios
+          .delete(`/main/scrap/${selectCharacter.no}/${userNo}`)
+          .then((res) => {
+            if (res.data.result === true) {
+              setScrap(false);
+            }
+          })
+          .catch((error) => {
+            console.log("스크랩 삭제 실패 :", error);
+          });
+      } else {
+        axios
+          .post("/main/scrap", {
+            characterNo: selectCharacter.no,
+            userNo: userNo,
+          })
+          .then((res) => {
+            if (res.data.result === true) {
+              setScrap(true);
+            }
+          })
+          .catch((error) => {
+            console.log("스크랩 실패 :", error);
+          });
+      }
     } else {
-      axios
-        .post("/main/scrap", {
-          characterNo: selectCharacter.no,
-          userNo: userNo,
-        })
-        .then((res) => {
-          if (res.data.result === true) {
-            setScrap(true);
-          }
-        })
-        .catch((error) => {
-          console.log("스크랩 실패 :", error);
-        });
+      nv("../../auth/login");
     }
+
     showSubData();
   };
 
@@ -144,23 +150,22 @@ export default function Sub() {
             src={selectCharacter.pic}
             alt={selectCharacter.name}
           />
-          {userNo && (
-            <div>
-              <span onClick={() => scrapProc()}>
-                {scrap ? (
-                  <IoIosHeart size={"40"} />
-                ) : (
-                  <IoIosHeartEmpty size={"40"} />
-                )}
-              </span>
-              <p>
-                {selectCharacter.characterLikeNo === null
-                  ? ""
-                  : selectCharacter.characterLikeNo.length}{" "}
-                명이 좋아합니다!
-              </p>
-            </div>
-          )}
+
+          <div>
+            <span onClick={() => scrapProc()}>
+              {scrap ? (
+                <IoIosHeart size={"40"} />
+              ) : (
+                <IoIosHeartEmpty size={"40"} />
+              )}
+            </span>
+            <p>
+              {selectCharacter.characterLikeNo === null
+                ? ""
+                : selectCharacter.characterLikeNo.length}{" "}
+              명이 좋아합니다!
+            </p>
+          </div>
 
           <div className={styles.styles}>
             {styleData
