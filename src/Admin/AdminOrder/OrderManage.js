@@ -8,8 +8,8 @@ Modal.setAppElement("#root"); // react-modal 설정 (접근성 관련)
 export default function OrderManage() {
   const [orders, setOrders] = useState([]);
   const [expandedRows, setExpandedRows] = useState([]); // 확장된 행을 관리하는 상태
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchField, setSearchField] = useState("userId");
+  const [searchTerm, setSearchTerm] = useState(""); // searchTerm을 상태로 남겨두기
+  const [searchField, setSearchField] = useState("state"); // 초기 값: 상태
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
@@ -169,7 +169,7 @@ export default function OrderManage() {
     setSearchTerm("");
     setStartDate("");
     setEndDate("");
-    setSearchField("userId");
+    setSearchField("state");
     setStatus("");
     fetchOrders(0, pageSize);
   };
@@ -225,7 +225,6 @@ export default function OrderManage() {
             onChange={handleSearchFieldChange}
             style={{ marginLeft: "10px", padding: "5px" }}
           >
-            <option value="userId">유저 ID</option>
             <option value="state">상태</option>
             <option value="date">날짜</option>
           </select>
@@ -255,21 +254,12 @@ export default function OrderManage() {
             style={{ padding: "5px", marginRight: "10px" }}
           >
             <option value="">상태 선택</option>
+            <option value="주문접수">주문접수</option>
             <option value="배송중">배송중</option>
             <option value="배송완료">배송완료</option>
             <option value="주문취소">주문취소</option>
           </select>
-        ) : (
-          <input
-            type="text"
-            placeholder={`검색어를 입력하세요 (${
-              searchField === "userId" ? "유저 ID" : "날짜"
-            })`}
-            value={searchTerm}
-            onChange={handleSearchChange}
-            style={{ padding: "5px", width: "300px", marginRight: "10px" }}
-          />
-        )}
+        ) : null}
 
         <button
           onClick={handleSearch}
@@ -286,7 +276,7 @@ export default function OrderManage() {
         <thead>
           <tr>
             <th>번호</th>
-            <th>유저 ID</th>
+            <th>주문자명</th>
             <th>주문일</th>
             <th>총액</th>
             <th>상태</th>
@@ -299,7 +289,7 @@ export default function OrderManage() {
               <React.Fragment key={order.no}>
                 <tr>
                   <td>{order.no}</td>
-                  <td>{order.userId}</td>
+                  <td>{order.userName}</td>
                   <td>{new Date(order.date).toLocaleString()}</td>
                   <td>
                     {order.orderProducts
@@ -314,9 +304,7 @@ export default function OrderManage() {
                   <td>
                     <select
                       value={order.state}
-                      onChange={
-                        (e) => openModal(order.no, e.target.value) // 모달 열기
-                      }
+                      onChange={(e) => openModal(order.no, e.target.value)} // 모달 열기
                     >
                       <option
                         value="주문접수"
@@ -365,11 +353,9 @@ export default function OrderManage() {
                               <tr>
                                 <td colSpan={4}>
                                   <h4>
-                                    주문자명: {userInfo[order.no].name}
+                                    전화번호) {userInfo[order.no].tel}
                                     <br />
-                                    전화번호: {userInfo[order.no].tel}
-                                    <br />
-                                    주소: {userInfo[order.no].address}
+                                    주소) {userInfo[order.no].address}
                                   </h4>
                                 </td>
                               </tr>
