@@ -187,7 +187,10 @@ export default function OrderManage() {
     return optionIndex < currentIndex;
   };
 
-  const formatPrice = (price) => `${price.toLocaleString("ko-KR")}원`;
+  const formatPrice = (price) => {
+    const roundedPrice = Math.round(price);
+    return `${roundedPrice.toLocaleString("ko-KR")}원`;
+  };
 
   useEffect(() => {
     fetchOrders(currentPage, pageSize);
@@ -292,13 +295,7 @@ export default function OrderManage() {
                   <td>{order.userName}</td>
                   <td>{new Date(order.date).toLocaleString()}</td>
                   <td>
-                    {order.orderProducts
-                      .reduce(
-                        (total, product) =>
-                          total + product.price * product.quantity,
-                        0
-                      )
-                      .toLocaleString("ko-KR")}
+                    {order.price.toLocaleString("ko-KR")}
                     원
                   </td>
                   <td>
@@ -351,7 +348,7 @@ export default function OrderManage() {
                           <table>
                             <thead>
                               <tr>
-                                <td colSpan={4}>
+                                <td colSpan={5}>
                                   <h4>
                                     전화번호) {userInfo[order.no].tel}
                                     <br />
@@ -364,6 +361,7 @@ export default function OrderManage() {
                                 <th>상품명</th>
                                 <th>수량</th>
                                 <th>구매가</th>
+                                <th>총액</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -381,6 +379,7 @@ export default function OrderManage() {
                                     {productInfo[order.no][p.productNo]}
                                   </td>
                                   <td>{p.quantity}</td>
+                                  <td>{formatPrice(p.price / p.quantity)}</td>
                                   <td>{formatPrice(p.price)}</td>
                                 </tr>
                               ))}
