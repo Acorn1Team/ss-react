@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Modal from "react-modal"; // react-modal 추가
+
+Modal.setAppElement("#root"); // 접근성 설정
 
 export default function NoticeDetail() {
   const { no } = useParams(); // URL 파라미터에서 no 값 추출
-  const [categoryFilter, setCategoryFilter] = useState(""); // 카테고리 필터링 상태 추가
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림 상태
   const [modalType, setModalType] = useState(""); // "수정" 또는 "삭제" 모달을 구분
 
@@ -15,23 +17,11 @@ export default function NoticeDetail() {
     contents: "",
   });
 
-  const [notices, setNotices] = useState([]); // 필터링된 공지사항 리스트
-
   useEffect(() => {
     axios
       .get("/admin/help/notice/" + no)
       .then((res) => {
         setState(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    // 공지사항 리스트를 가져오는 API 호출
-    axios
-      .get("/admin/help/notices")
-      .then((res) => {
-        setNotices(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -51,7 +41,6 @@ export default function NoticeDetail() {
     axios
       .put("/admin/help/notice/" + no, state)
       .then((res) => {
-        // 수정 후 목록보기
         if (res.data.isSuccess) navigate("/admin/help/notices");
       })
       .catch((err) => {
@@ -63,21 +52,12 @@ export default function NoticeDetail() {
     axios
       .delete("/admin/help/notice/" + no)
       .then((res) => {
-        // 삭제 후 목록 보기
         if (res.data.isSuccess) navigate("/admin/help/notices");
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
-  const handleCategoryFilterChange = (e) => {
-    setCategoryFilter(e.target.value);
-  };
-
-  const filteredNotices = notices.filter(
-    (notice) => categoryFilter === "" || notice.category === categoryFilter
-  );
 
   // 모달 열기
   const openModal = (type) => {
@@ -134,19 +114,29 @@ export default function NoticeDetail() {
       </div>
       <button onClick={() => openModal("삭제")}>삭제</button>&nbsp;&nbsp;
       <button onClick={() => openModal("수정")}>수정</button>
-
-      {/* 모달 */}
-      {isModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <p>{modalType}하시겠습니까?</p>
-            <div className="modal-buttons">
-              <button onClick={handleConfirm}>{modalType}</button>
-              <button onClick={closeModal}>취소</button>
-            </div>
-          </div>
+      {/* react-modal 모달 */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="확인 모달"
+        style={{
+          content: {
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            marginRight: "-50%",
+            transform: "translate(-50%, -50%)",
+          },
+        }}
+      >
+        <h2>{modalType} 확인</h2>
+        <p>{modalType}하시겠습니까?</p>
+        <div>
+          <button onClick={handleConfirm}>{modalType}</button>
+          <button onClick={closeModal}>취소</button>
         </div>
-      )}
+      </Modal>
     </>
   );
 }
