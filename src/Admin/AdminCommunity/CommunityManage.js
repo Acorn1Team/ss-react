@@ -76,6 +76,7 @@ export default function CommunityManage() {
     }
   };
 
+  // 신고 글 삭제 (Backend에서 작성자에게 알림도 전송!)
   const deletePost = async (postNo) => {
     try {
       const response = await axios.delete(`/admin/posts/${postNo}`);
@@ -221,7 +222,7 @@ export default function CommunityManage() {
                             alt={`${postToDelete.no} 이미지`}
                             style={{ maxWidth: '70%', height: 'auto' }}
                             /><br/>
-                        <h3>해당 게시글을 삭제 조치할까요?</h3>
+                        <h3>해당 게시글 삭제 조치 후<br/> 작성자에게 경고 알림을 전송하겠습니다.</h3>
                         <button onClick={() => deletePost(postToDelete.no)}>삭제</button>&nbsp;&nbsp;
                         <button onClick={() => setIsDeleteModalOpen(false)}>닫기</button>
                     </>
