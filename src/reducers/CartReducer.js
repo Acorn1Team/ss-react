@@ -12,7 +12,10 @@ const CartReducer = (state = initialCartState, action) => {
       }
 
       const { product, quantity, userNo } = action.payload;
-      const existingItems = state.cartItems[userNo] || [];
+      // userNo에 대한 기존 항목이 배열인지 확인
+      const existingItems = Array.isArray(state.cartItems[userNo])
+        ? state.cartItems[userNo]
+        : []; // 배열이 아닐 경우 빈 배열로 초기화
 
       const existingItem = existingItems.find(
         (i) => i.product.no === product.no
@@ -20,20 +23,24 @@ const CartReducer = (state = initialCartState, action) => {
 
       let updatedItems;
       if (existingItem) {
+        // 기존 항목이 있으면 수량을 업데이트
         updatedItems = existingItems.map((i) =>
           i.product.no === product.no
             ? { ...i, quantity: i.quantity + quantity }
             : i
         );
       } else {
+        // 새로운 항목을 추가
         updatedItems = [...existingItems, { product, quantity }];
       }
 
+      // 상태 업데이트
       const updatedCartItems = {
         ...state.cartItems,
         [userNo]: updatedItems,
       };
 
+      // 로컬 스토리지 업데이트
       localStorage.setItem("cart", JSON.stringify(updatedCartItems));
 
       return {
@@ -51,15 +58,18 @@ const CartReducer = (state = initialCartState, action) => {
         return state;
       }
 
-      const updatedItems =
-        state.cartItems[userNo]?.filter((i) => i.product.no !== productNo) ||
-        [];
+      // userNo에 대한 기존 항목이 배열인지 확인
+      const updatedItems = Array.isArray(state.cartItems[userNo])
+        ? state.cartItems[userNo].filter((i) => i.product.no !== productNo)
+        : []; // 배열이 아닐 경우 빈 배열로 초기화
 
+      // 상태 업데이트
       const updatedCartItems = {
         ...state.cartItems,
         [userNo]: updatedItems,
       };
 
+      // 로컬 스토리지 업데이트
       localStorage.setItem("cart", JSON.stringify(updatedCartItems));
 
       return {
