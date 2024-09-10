@@ -1,0 +1,79 @@
+.btn1 {
+  border-radius: 10px;
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  background-color: #c9aaaf;
+  color: #f5f5f5;
+  font-weight: border;
+  font-family: Hahmlet;
+  font-size: 17px;
+  border: none;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+  margin: 10px; /* 상하좌우 모두 20px의 여백 */
+}
+
+.btn1:hover {
+  background-color: #b39297;
+}
+
+.btn2 {
+  border-radius: 10px;
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  background-color: #df919e;
+  color: #f5f5f5;
+  font-weight: border;
+  font-family: Hahmlet;
+  font-size: 17px;
+  border: none;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+  margin: 10px; /* 상하좌우 모두 20px의 여백 */
+}
+
+.btn2:hover {
+  background-color: #c7727e;
+}
+
+.btn3 {
+  border-radius: 10px;
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  background-color: #c6c3bd;
+  color: #f5f5f5;
+  font-weight: border;
+  font-family: Hahmlet;
+  font-size: 17px;
+  border: none;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+  margin: 10px; /* 상하좌우 모두 20px의 여백 */
+}
+
+.btn3:hover {
+  background-color: #a8a5a0;
+}
+
+.btn4 {
+  border-radius: 10px;
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  background-color: #444444;
+  color: #f5f5f5;
+  font-weight: border;
+  font-family: Hahmlet;
+  font-size: 17px;
+  border: none;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+  margin: 10px; /* 상하좌우 모두 20px의 여백 */
+}
+
+.btn4:hover {
+  background-color: #000000;
+}

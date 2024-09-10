@@ -145,47 +145,82 @@ function HeaderForm() {
         )}
         {showAlertPopup && (
           <div className={styles.alertPopupContainer}>
-            <h4>알림 목록</h4>
+            <div>
+              <button
+                onClick={() => setSelectedCategory("전체")}
+                className={styles.alertCategoryButton}
+              >
+                전체
+              </button>
+              <button
+                onClick={() => setSelectedCategory("주문")}
+                className={styles.alertCategoryButton}
+              >
+                주문
+              </button>
+              <button
+                onClick={() => setSelectedCategory("커뮤니티")}
+                className={styles.alertCategoryButton}
+              >
+                커뮤니티
+              </button>
+              <button
+                onClick={() => setSelectedCategory("프로모션")}
+                className={styles.alertCategoryButton}
+              >
+                프로모션
+              </button>
+            </div>
             {filteredAlerts.length > 0 ? (
-              filteredAlerts.map((alert) => (
+              filteredAlerts.map((alert, index) => (
                 <div
-                  key={alert.alertNo}
+                  key={alert.no || index}
                   className={`${styles.alertItem} ${
-                    alert.isRead ? styles.readAlert : ""
-                  }`}
-                  onClick={() => markAsRead(alert.alertNo)}
+                    alert.isRead ? styles.readAlert : styles.unreadAlert
+                  }`} // 읽음 상태에 따라 클래스 추가
+                  onClick={() => markAsRead(alert.no)}
                 >
-                  <span>{alert.message}</span>
-                  <span
-                    className={styles.alertButton}
-                    onClick={() => deleteAlert(alert.alertNo)}
-                  >
-                    삭제
-                  </span>
+                  <div>
+                    <Link to={alert.path}>
+                      <i>{alert.category}</i>
+                      <br />
+                      {alert.content}
+                      <br />
+                      <i>{formatDate(alert.date)}</i>
+                    </Link>
+                    <span
+                      onClick={() => deleteAlert(alert.no)}
+                      className={styles.alertButton}
+                    >
+                      {" "}
+                      ×
+                    </span>
+                  </div>
                 </div>
               ))
             ) : (
-              <div className={styles.noAlerts}>알림이 없습니다.</div>
+              <div className={styles.noAlerts}>알림 내역이 없습니다.</div>
             )}
-            <div className={styles.pagination}>
-              <button
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
-                disabled={currentPage === 0}
-              >
-                이전
-              </button>
-              <span>
-                {currentPage + 1} / {totalPages}
-              </span>
-              <button
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))
-                }
-                disabled={currentPage === totalPages - 1}
-              >
-                다음
-              </button>
-            </div>
+
+            {totalPages > 1 && (
+              <div className={styles.pagination}>
+                <button
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  disabled={currentPage === 0}
+                >
+                  이전
+                </button>
+                <span>
+                  {currentPage + 1} / {totalPages}
+                </span>
+                <button
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  disabled={currentPage + 1 >= totalPages}
+                >
+                  다음
+                </button>
+              </div>
+            )}
           </div>
         )}
 

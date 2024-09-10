@@ -52,12 +52,12 @@ td {
 a {
   text-decoration: none;
   color: black;
-  font-size: 18px;
-  font-weight: bold;
+  /* font-size: 18px; */
+  /* font-weight: bold; */
 }
 
 a:hover {
-  background-color: #f4f4f4;
+  /* background-color: #f4f4f4; */
 }
 
 body {

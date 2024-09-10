@@ -215,7 +215,7 @@ export default function UserHome() {
             <div className="content-wrapper">
               <div className="content">
                 <h2>CHOOSE YOUR SCENE!</h2>
-                <p>어떤 장면을 당신의 것으로 만들까요?</p>
+                <span>어떤 장면을 당신의 것으로 만들까요?</span>
 
                 <div className="horizontal-container">
                   <Link to={`/user/main/sub/${forMainRandom?.show?.no}`}>
@@ -325,7 +325,7 @@ export default function UserHome() {
                   <br />
                   BUY IT IF YOU WANT OR JUST SCRAP
                 </h3>
-                <p>마음에 드는 스타일을 찾으셨다면, 사거나 담거나!</p>
+                <span>마음에 드는 스타일을 찾으셨다면, 사거나 담거나!</span>
               </div>
             </div>
           </div>

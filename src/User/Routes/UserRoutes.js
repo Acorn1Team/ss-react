@@ -12,6 +12,7 @@ import { PrivateRoute, AdminRoute } from "../Component/PrivateRoute";
 import SupportButton from "../Component/SupportButton"; // 고객지원 버튼 컴포넌트 import
 import NotAdmin from "../User/NotAdmin";
 import FooterForm from "../Component/FooterForm";
+import Test from "../Main/Test";
 export default function UserRoutes() {
   return (
     <>
@@ -27,6 +28,7 @@ export default function UserRoutes() {
           element={<PrivateRoute element={<UserMypageRoutes />} />}
         />
         <Route path="/main/*" element={<UserMainRoutes />} />
+        <Route path="/test" element={<Test />} />
         <Route path="/search/*" element={<SearchRoutes />} />
         <Route path="/auth/*" element={<AuthRoutes />} />
         <Route path="/callback" element={<SocialKakao />} />
