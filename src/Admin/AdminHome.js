@@ -6,7 +6,7 @@ import ReturnRateChart from './AdminStatistics/ReturnRate';
 
 export default function AdminHome() {
     return (
-        <><br/><br/><br/>
+        <><br/>
         <ul id="statistics">
             <li><MonthlyRevenueChart /></li>
             <li><BestSellerChart /></li>

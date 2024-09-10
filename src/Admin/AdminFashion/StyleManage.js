@@ -158,6 +158,13 @@ export default function StyleManage() {
     }
   };
 
+  const closeModal = () => {
+    setIsExistingItemModalOpen(false);
+    setIsNewItemModalOpen(false);
+    setProductKeyword('');
+    setProductNo();
+  }
+
   const addItem = async () => {
     const itemForm = new FormData();
     itemForm.append("file", newItemPic);
@@ -244,10 +251,6 @@ export default function StyleManage() {
                         >
                           유사상품 조회하기
                         </button>
-                        <button /*{onClick={()=>{openDeleteItemPopup(filteredItems[i])}}*/
-                        >
-                          아이템 정보 삭제
-                        </button>
                       </>
                     ) : (
                       <>
@@ -291,6 +294,7 @@ export default function StyleManage() {
             borderRadius: "8px",
             textAlign: "center",
             maxWidth: "500px",
+            maxHeight: "650px",
             margin: "auto",
           },
         }}
@@ -341,27 +345,9 @@ export default function StyleManage() {
         아이템 사진 <input type="file" onChange={onItemFileChange} />
         <br />
         아이템 이름 <input type="text" onChange={onItemNameChange} />
-        <br />
+        <br /><br /><br /><br /><br /><br /><br />
+        <button onClick={() => closeModal()}>닫기</button>&nbsp;&nbsp;
         <button onClick={addItem}>추가</button>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <button onClick={() => setIsNewItemModalOpen(false)}>닫기</button>
       </Modal>
 
       <Modal
@@ -376,6 +362,7 @@ export default function StyleManage() {
             borderRadius: "8px",
             textAlign: "center",
             maxWidth: "500px",
+            maxHeight: "650px",
             margin: "auto",
           },
         }}
@@ -424,24 +411,7 @@ export default function StyleManage() {
           )}
         </SearchForm>
         <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <button onClick={() => setIsExistingItemModalOpen(false)}>닫기</button>
+        <button onClick={() => closeModal()}>닫기</button>
       </Modal>
     </>
   );
