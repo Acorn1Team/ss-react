@@ -33,6 +33,7 @@ export default function MyOrder() {
         params: {
           page: currentPage,
           size: pageSize,
+          sort: 'no,desc' // 주문 번호를 기준으로 내림차순 정렬
         },
       })
       .then((res) => {

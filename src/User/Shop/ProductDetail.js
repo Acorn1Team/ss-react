@@ -115,6 +115,7 @@ export default function ProductDetail() {
   return (
     <div className={styles.container}>
       <h2>상품 상세 정보</h2>
+
       <div>
         <span className={styles.label}>이름:</span>
         <span className={styles.value}>{product.name}</span>
@@ -148,10 +149,10 @@ export default function ProductDetail() {
         <span className={styles.label}>상품 설명:</span>
         <span>{product.contents}</span>
       </div>
-      <div className={styles.productCategory}>
+      {/* <div className={styles.productCategory}>
         <span className={styles.label}>카테고리:</span>
         <span>{product.category}</span>
-      </div>
+      </div> */}
       <div>
         <img
           src={product.pic}

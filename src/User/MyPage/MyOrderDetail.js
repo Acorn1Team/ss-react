@@ -105,7 +105,7 @@ console.log(err);
             {/* <span className={styles.productPrice}>
             {(pl.price * (orderProduct?.quantity || 1)).toLocaleString()}원
             </span> */}
-            <sapn className={styles.productPrice}>{orderProduct?.price}원</sapn>
+            <sapn className={styles.productPrice}>{orderProduct?.price.toLocaleString()}원</sapn>
             <button
               className={styles.reviewButton}
               onClick={() => orderProduct && goToReviewPage(orderProduct.no, pl.name)}
