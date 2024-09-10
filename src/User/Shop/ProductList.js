@@ -31,13 +31,14 @@ export default function ProductList() {
     axios
       .get(endpoint)
       .then((res) => {
-        // 판매 가능한 상품만 필터링
-        let filteredProducts = res.data.content.filter(
-          (product) => product.is_available // is_available이 true인 상품만 필터링
-        );
+      // 판매 가능한 상품만 필터링
+      let filteredProducts = res.data.content.filter(
+        (product) => product.available === true // available이 true인 상품만 필터링
+      );
 
-        let sortedProducts = sortProducts(res.data.content, sortOption); // 정렬 기준 적용
-
+      // 정렬 기준 적용
+      let sortedProducts = sortProducts(filteredProducts, sortOption);
+      
         if (excludeSoldOut) {
           sortedProducts = sortedProducts.filter(
             (product) => product.stock > 0
