@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
 import { Chart, CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend } from 'chart.js';
+import { useNavigate } from 'react-router-dom';
 
 Chart.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend); // 리액트 차트 필수 components
 
@@ -9,6 +10,7 @@ export default function MonthlyRevenueDetail(){
     const [monthlyData, setMonthlyData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios
@@ -23,7 +25,16 @@ export default function MonthlyRevenueDetail(){
 
     const chartData = {
         labels: monthlyData.map(d => `${d.month}월`),
-        datasets: [{label: '월별 매출', data: monthlyData.map(d => d.totalRevenue), fill: false, borderColor: 'gray', tension: 0.1},]
+        datasets: [
+            {
+                label: '월별 매출', 
+                data: monthlyData.map(d => d.totalRevenue), 
+                fill: false, 
+                backgroundColor: '#a5d6a7',
+                borderColor: 'gray', 
+                tension: 0.1,
+            },
+        ]
     };
 
     return (
@@ -43,8 +54,10 @@ export default function MonthlyRevenueDetail(){
                             width: '100%', height: '100%' }}>
                 <div style={{ width: '600px', height: '400px' }}>
                 <Line data={chartData} options={{ responsive: true }} />
-                </div>
+                
             </div>
+            </div>
+            <strong style={{ cursor:"pointer"}} onClick={() => navigate('/admin')}>돌아가기</strong>
         </div>
     );
 };

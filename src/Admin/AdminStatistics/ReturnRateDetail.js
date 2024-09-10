@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend); // Chart.js 필수 components
 
-export default function ReturnRateChart() {
+export default function ReturnRateDetail() {
     const [returnRateData, setReturnRateData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -52,6 +52,25 @@ export default function ReturnRateChart() {
     return (
         <div>
             <h2>불만족 상품</h2>
+            <table>
+                <thead>
+                    <tr><td>상품코드</td><td>상품명</td><td>반품비율</td><td>총 주문 수량</td><td>취소 수량</td></tr>
+                </thead>
+                <tbody>
+                {returnRateData.map((data) => (
+                    <tr>
+                        <td>{data.productNo}</td>
+                        <td>{data.productName}</td>
+                        <td>{data.returnRate.toFixed(4) * 100}%</td>
+                        <td>{data.deliveredQuantity + data.canceledQuantity}</td>
+                        <td>{data.canceledQuantity}</td>
+                    </tr>
+                ))}
+                </tbody><br/>
+            </table>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', 
+                            width: '100%', height: '100%' }}>
+                <div style={{ width: '600px', height: '400px' }}>
             <Bar
                 data={chartData}
                 options={{ 
@@ -78,8 +97,10 @@ export default function ReturnRateChart() {
                     },
                     onClick: handleClick
                 }}
-            />
-            <strong style={{ cursor:"pointer"}} onClick={() => navigate('/admin/statistics/return')}>자세히</strong>
+            /><br/><br/><br/>
+            <strong style={{ cursor:"pointer"}} onClick={() => navigate('/admin')}>돌아가기</strong>
+        </div>
+        </div>
         </div>
     );
 }

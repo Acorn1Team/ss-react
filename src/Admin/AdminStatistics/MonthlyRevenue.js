@@ -25,14 +25,23 @@ export default function MonthlyRevenueChart(){
 
     const chartData = {
         labels: monthlyData.map(d => `${d.month}월`),
-        datasets: [{label: '월별 매출', data: monthlyData.map(d => d.totalRevenue), fill: false, borderColor: 'gray', tension: 0.1},]
+        datasets: [
+            {
+                label: '월별 매출', 
+                data: monthlyData.map(d => d.totalRevenue), 
+                fill: false, 
+                backgroundColor: '#a5d6a7',
+                borderColor: 'gray', 
+                tension: 0.1,
+            },
+        ]
     };
 
     return (
         <div>
-            <h3>2024년 월별 매출</h3>
-            <Line data={chartData} options={{ responsive: true }} />
-            <strong style={{color:"green", cursor:"pointer"}} onClick={() => navigate('/admin/statistics/monthly-revenue')}>자세히</strong>
+            <h2>2024년 월별 매출</h2>
+            <Line data={chartData} options={{ responsive: true }} /><br/>
+            <strong style={{ cursor:"pointer"}} onClick={() => navigate('/admin/statistics/monthly-revenue')}>자세히</strong>
         </div>
     );
 };

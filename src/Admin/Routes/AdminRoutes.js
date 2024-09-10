@@ -18,6 +18,9 @@ import StyleManage from "../AdminFashion/StyleManage";
 import AdminChat from "../AdminHelp/AdminChat";
 import PromotionPopup from "../AdminPromotion/PromotionPopup";
 import MonthlyRevenueDetail from "../AdminStatistics/MonthlyRevenueDetail";
+import MonthlyBestSellerDetail from "../AdminStatistics/MonthlyBestSellerDetail";
+import BestSellerDetail from "../AdminStatistics/BestSellerDetail";
+import ReturnRateDetail from "../AdminStatistics/ReturnRateDetail";
 
 export default function AdminRoutes() {
   return (
@@ -49,6 +52,9 @@ export default function AdminRoutes() {
         <Route path="/promotion/popup" element={<PromotionPopup />} />
 
       <Route path="/statistics/monthly-revenue" element={<MonthlyRevenueDetail />} />
+      <Route path="/statistics/bestseller" element={<BestSellerDetail />} />
+      <Route path="/statistics/monthly-bestseller" element={<MonthlyBestSellerDetail />} />
+      <Route path="/statistics/return" element={<ReturnRateDetail />} />
     </Routes>
   );
 }

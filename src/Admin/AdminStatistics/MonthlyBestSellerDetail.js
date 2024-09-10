@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-export default function MonthlyBestSellerChart() {
+export default function MonthlyBestSellerDetail() {
     const [bestSellerData, setBestSellerData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -80,9 +80,28 @@ export default function MonthlyBestSellerChart() {
 
     return (
         <div>
-            <h2>이번 달의 인기 상품</h2>
-            <Bar data={chartData} options={chartOptions} />
-            <strong style={{ cursor:"pointer"}} onClick={() => navigate('/admin/statistics/monthly-bestseller')}>자세히</strong>
+            <h3>이번 달의 인기 상품</h3>
+            <table>
+                <thead>
+                    <tr><td>상품코드</td><td>상품명</td><td>수량</td></tr>
+                </thead>
+                <tbody>
+                {bestSellerData.map((data) => (
+                    <tr>
+                        <td>{data.no}</td>
+                        <td>{data.name}</td>
+                        <td>{data.quantity}개</td>
+                    </tr>
+                ))}
+                </tbody><br/>
+            </table>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', 
+                            width: '100%', height: '100%' }}>
+                <div style={{ width: '600px', height: '400px' }}>
+            <Bar data={chartData} options={chartOptions} /><br/><br/><br/>
+            <strong style={{ cursor:"pointer"}} onClick={() => navigate('/admin')}>돌아가기</strong>
+            </div>
+            </div>
         </div>
     );
 }

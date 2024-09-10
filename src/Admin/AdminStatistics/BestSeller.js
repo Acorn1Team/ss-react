@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-export default function MonthlyBestSellerChart() {
+export default function BestSellerChart() {
     const [bestSellerData, setBestSellerData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -35,7 +35,7 @@ export default function MonthlyBestSellerChart() {
             {
                 label: '판매량',
                 data: bestSellerData.map(d => d.quantity),
-                backgroundColor: 'lightgray',
+                backgroundColor: '#ffe082',
                 borderColor: 'gray',
                 borderWidth: 1
             }
@@ -80,8 +80,9 @@ export default function MonthlyBestSellerChart() {
 
     return (
         <div>
-            <h3>인기 상품</h3>
+            <h2>인기 상품</h2>
             <Bar data={chartData} options={chartOptions} />
+            <strong style={{ cursor:"pointer"}} onClick={() => navigate('/admin/statistics/bestseller')}>자세히</strong>
         </div>
     );
 }

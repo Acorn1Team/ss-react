@@ -9,7 +9,7 @@ export default function HelpManage() {
         <ul className="chat-list">
           <li>
             <Link to="/admin/help/chat" className="chat-link">
-              <span className="icon">💬</span>
+              <span className="icon">🧑🏻‍💻💬</span>
               <span className="title">채팅 상담하러 가기</span>
             </Link>
           </li>
@@ -22,13 +22,14 @@ export default function HelpManage() {
         .chat-list {
           position: relative;
           display: flex;
+          justify-content: center;
           gap: 25px;
         }
 
         .chat-list li {
           position: relative;
           list-style: none;
-          width: 60px;
+          width: 120px;
           height: 60px;
           background: #fff;
           border-radius: 60px;
