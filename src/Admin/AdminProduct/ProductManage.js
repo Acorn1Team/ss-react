@@ -169,6 +169,7 @@ export default function ProductManage() {
     }월 ${date.getDate()}일`;
   };
 
+  // 텍스트바 크기 조정을 위한 함수
   const renderSearchField = () => {
     if (searchField === "date") {
       return (
@@ -178,14 +179,14 @@ export default function ProductManage() {
             placeholder="시작 날짜"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            style={{ padding: "5px", marginRight: "10px" }}
+            style={{ padding: "5px", marginRight: "10px", width: "150px" }} // 크기 조정
           />
           <input
             type="date"
             placeholder="종료 날짜"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            style={{ padding: "5px", marginRight: "10px" }}
+            style={{ padding: "5px", marginRight: "10px", width: "150px" }} // 크기 조정
           />
         </div>
       );
@@ -194,7 +195,7 @@ export default function ProductManage() {
         <select
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ padding: "5px", marginRight: "10px" }}
+          style={{ padding: "5px", marginRight: "10px", width: "150px" }} // 크기 조정
         >
           <option value="">카테고리 선택</option>
           <option value="상의">상의</option>
@@ -209,7 +210,7 @@ export default function ProductManage() {
           placeholder={`검색어를 입력하세요 (${searchField})`}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ padding: "5px", width: "300px", marginRight: "10px" }}
+          style={{ padding: "5px", width: "200px", marginRight: "10px" }} // 크기 조정
         />
       );
     }
