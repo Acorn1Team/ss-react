@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import styles from "../Style/ProductList.module.css"; // 기존 스타일
-import "./ProductListCheckbox.css"; // 체크박스 스타일 임포트
+import checkboxStyles from "./ProductListCheckbox.module.css"; // 체크박스 스타일 임포트
 
 export default function ProductList() {
   const { category } = useParams();
@@ -16,10 +16,10 @@ export default function ProductList() {
 
   const categories = ["전체", "상의", "하의", "신발", "기타"];
 
-    // 할인가격 계산 함수
-    const calculateSellingPrice = (price, discountRate) => {
-      return price - (price * discountRate) / 100;
-    };
+  // 할인가격 계산 함수
+  const calculateSellingPrice = (price, discountRate) => {
+    return price - (price * discountRate) / 100;
+  };
 
   // 데이터 새로고침: 카테고리 및 정렬 기준에 따라
   const refresh = (selectedCategory, sortOption) => {
@@ -31,13 +31,13 @@ export default function ProductList() {
     axios
       .get(endpoint)
       .then((res) => {
-         // 판매 가능한 상품만 필터링
-         let filteredProducts = res.data.content.filter(
+        // 판매 가능한 상품만 필터링
+        let filteredProducts = res.data.content.filter(
           (product) => product.is_available // is_available이 true인 상품만 필터링
         );
 
         let sortedProducts = sortProducts(res.data.content, sortOption); // 정렬 기준 적용
-        
+
         if (excludeSoldOut) {
           sortedProducts = sortedProducts.filter(
             (product) => product.stock > 0
@@ -136,23 +136,23 @@ export default function ProductList() {
           </select>
         </label>
         <div className={styles.excludeSoldOutContainer}>
-          <div className="cntr">
-            {/* Uiverse 체크박스 스타일 적용 */}
+          <div className={checkboxStyles.cntr}>
+            {/* 체크박스 스타일 적용 */}
             <input
-              className="hidden-xs-up"
+              className={checkboxStyles["hidden-xs-up"]}
               id="cbx"
               type="checkbox"
               checked={excludeSoldOut}
               onChange={handleExcludeSoldOutChange}
             />
-            <label className="cbx" htmlFor="cbx"></label>
+            <label className={checkboxStyles.cbx} htmlFor="cbx"></label>
           </div>
           <label className={styles.excludeSoldOutLabel}>품절 상품 제외</label>
         </div>
       </div>
 
       {/* 카테고리 선택을 위한 라디오 버튼 */}
-      <div className="radio-input">
+      <div className={checkboxStyles["radio-input"]}>
         {categories.map((cate, index) => (
           <React.Fragment key={index}>
             <input
@@ -190,10 +190,14 @@ export default function ProductList() {
                 <>
                   <span style={{ textDecoration: "line-through" }}>
                     {product.price.toLocaleString()}원
-                  </span>&nbsp;
+                  </span>
+                  &nbsp;
                   <span style={{ color: "skyblue", fontWeight: "bold" }}>
-                    {calculateSellingPrice(product.price, product.discountRate).toLocaleString()}원
-                    ({product.discountRate}% 할인)
+                    {calculateSellingPrice(
+                      product.price,
+                      product.discountRate
+                    ).toLocaleString()}
+                    원 ({product.discountRate}% 할인)
                   </span>
                 </>
               ) : (
