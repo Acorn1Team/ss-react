@@ -9,7 +9,6 @@ export default function UserHome() {
   const [posts, setPosts] = useState([]);
   const [selectReviewIndex, setSelectReviewIndex] = useState(0);
   const [mainPopup, setMainPopup] = useState([]);
-  const [productData, setProductData] = useState([]);
   const [forMainRandom, setForMainRandom] = useState({});
   const [showCount, setShowCount] = useState(0);
   const [randomStyle, setRandomStyle] = useState(null); // 추가된 상태
@@ -19,9 +18,6 @@ export default function UserHome() {
   const images = ["../images/newmain-text.png", "../images/newmain.png"];
 
   const userNo = sessionStorage.getItem("id");
-  const cookies = document.cookie;
-
-  const imageRef = useRef(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -66,7 +62,7 @@ export default function UserHome() {
       });
   }, []);
 
-  useEffect(() => {
+  const mainLoad = () => {
     if (showCount > 0) {
       const n = Math.floor(Math.random() * showCount) + 1;
 
@@ -119,6 +115,10 @@ export default function UserHome() {
           console.log(err);
         });
     }
+  };
+
+  useEffect(() => {
+    mainLoad();
   }, [showCount]);
 
   useEffect(() => {
@@ -218,30 +218,71 @@ export default function UserHome() {
                 <p>어떤 장면을 당신의 것으로 만들까요?</p>
 
                 <div className="horizontal-container">
-                  <section id="card1" className="card">
-                    <img src={forMainRandom.show?.pic} alt="mainpic"></img>
-                    <div className="card__content">
-                      <p className="card__title">
-                        {forMainRandom.show?.title || "제목 없음"}
-                      </p>
-                      <p className="card__description">
-                        {forMainRandom.characters &&
-                        forMainRandom.characters.length > 0 ? (
-                          forMainRandom.characters.map((c) => (
-                            <div key={c.name}>{c.name.slice(0, -2)}</div>
-                          ))
-                        ) : (
-                          <p>캐릭터 정보가 없습니다.</p>
-                        )}
-                      </p>
-                    </div>
-                  </section>
+                  <Link to={`/user/main/sub/${forMainRandom?.show?.no}`}>
+                    <section id="card1" className="card">
+                      <img src={forMainRandom.show?.pic} alt="mainpic"></img>
+                      <div className="card__content">
+                        <p className="card__title">
+                          {forMainRandom.show?.title || "제목 없음"}
+                        </p>
 
+                        <p className="card__description">
+                          {forMainRandom.characters &&
+                          forMainRandom.characters.length > 0 ? (
+                            forMainRandom.characters.map((c) => (
+                              <div key={c.name}>{c.name.slice(0, -2)}</div>
+                            ))
+                          ) : (
+                            <p>캐릭터 정보가 없습니다.</p>
+                          )}
+                          <p>
+                            <Link to="/user/main/show">
+                              <button className="moreButton">
+                                작품 더보기
+                              </button>
+                            </Link>
+                          </p>
+                        </p>
+                      </div>
+                    </section>
+                  </Link>
                   <div className="random-character">
-                    <img src={randomCharacter?.pic} alt="characterPic"></img>
+                    <img
+                      className="characterPic"
+                      src={randomCharacter?.pic}
+                      alt="characterPic"
+                    ></img>
                     {randomCharacter?.name.slice(0, -2)}
+                    <br />
+                    <button
+                      onClick={() => {
+                        mainLoad(); // 기존 새로고침 기능
+                        const refreshIcon = document.querySelector(
+                          ".refresh-button svg"
+                        );
+                        refreshIcon.style.animation = "none"; // 애니메이션 리셋
+                        setTimeout(() => {
+                          refreshIcon.style.animation = ""; // 애니메이션 재시작
+                        }, 0); // 짧은 지연 후 애니메이션 재시작
+                      }}
+                      className="refresh-button"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        className="bi bi-arrow-repeat"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"></path>
+                        <path
+                          fillRule="evenodd"
+                          d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
+                        ></path>
+                      </svg>
+                    </button>
                   </div>
-
                   <div className="random-style-container">
                     이 스타일 어때요?
                     {randomStyle ? (
@@ -264,19 +305,19 @@ export default function UserHome() {
                           ) : (
                             <p>아이템 정보가 없습니다.</p>
                           )}
-                          <br />
+
                           <div style={{ fontSize: "80%" }}>
                             SceneStealer에서 비슷한 상품을 <br />
                             구매할 수 있어요. <br />
                             마음에 드는 상품을 클릭해 보세요!
                           </div>
-                          <Link to="/user/main/show">작품 더보기</Link>
                         </div>
                       </div>
                     ) : (
                       <p>스타일 정보가 없습니다.</p>
                     )}
                   </div>
+                  <div></div>
                 </div>
 
                 <h3>
@@ -290,7 +331,6 @@ export default function UserHome() {
           </div>
         </div>
 
-        {/* 슬라이드 버튼 */}
         <button className="slide-button prev" onClick={handlePrev}>
           🎧
         </button>
