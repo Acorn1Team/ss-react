@@ -107,7 +107,7 @@ const ProductReviews = () => {
               <img
                 src={review.pic ? review.pic : "/path/to/default-image.jpg"}
                 alt={review.productName}
-                className="review-image"
+                className="review-image2"
               />
             </div>
             <div className="review-right">

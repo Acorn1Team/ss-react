@@ -2,12 +2,16 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../Style/Myreview.module.css";
+import Modal from "react-modal";
+import "../Style/All.css"; //  button styles
 
 function Myreview() {
   const [reviews, setReviews] = useState([]);
   const userNo = sessionStorage.getItem("id");
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [modalIsOpen, setModalIsOpen] = useState(false); // 모달 상태
+  const [selectedReviewNo, setSelectedReviewNo] = useState(null)
   const navigate = useNavigate();
 
   const myreviewOnly = (page = 0) => {
@@ -32,18 +36,29 @@ function Myreview() {
     myreviewOnly(currentPage);
   }, [currentPage]);
 
-  const deleteReview = (reviewNo) => {
-    const confirmed = window.confirm("정말로 이 리뷰를 삭제하시겠습니까?");
-    if (confirmed) {
+  const deleteReview = () => {
+    if (selectedReviewNo !== null) {
       axios
-        .delete(`/review/delete/${reviewNo}`)
+        .delete(`/review/delete/${selectedReviewNo}`)
         .then(() => {
-          setReviews(reviews.filter((review) => review.no !== reviewNo));
+          setReviews(reviews.filter((review) => review.no !== selectedReviewNo));
+          closeModal(); // 모달 닫기
         })
         .catch((error) => {
           console.log(error);
         });
     }
+  };
+  // 모달 열기
+  const openModal = (reviewNo) => {
+    setSelectedReviewNo(reviewNo);
+    setModalIsOpen(true);
+  };
+
+  // 모달 닫기
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setSelectedReviewNo(null);
   };
 
   const goToNextPage = () => {
@@ -73,15 +88,12 @@ function Myreview() {
               <div className={styles.reviewContent}>리뷰 내용: {review.contents}</div>
               <div className={styles.buttonContainer}>
                 <button
-                  className={styles.editButton}
+                   className={`btn1`}
                   onClick={() => navigate(`../review/edit/${review.no}`, { state: { review } })}
                 >
                   수정
                 </button>
-                <button
-                  className={styles.deleteButton}
-                  onClick={() => deleteReview(review.no)}
-                >
+                <button  className={`btn3`} onClick={() => openModal(review.no)}>
                   삭제
                 </button>
               </div>
@@ -113,6 +125,29 @@ function Myreview() {
         </button>
       </div>
     )}
+    {/* 리뷰 삭제 모달 */}
+    <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="리뷰 삭제 확인 모달"
+        style={{
+          content: {
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            marginRight: "-50%",
+            transform: "translate(-50%, -50%)",
+            textAlign: "center",
+          },
+        }}
+      >
+        <h3>정말로 이 리뷰를 삭제하시겠습니까?</h3>
+        <div className={styles.modalButtons}>
+          <button onClick={deleteReview}>예</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <button onClick={closeModal}>아니요</button>
+        </div>
+      </Modal>
     </>
   );
 }

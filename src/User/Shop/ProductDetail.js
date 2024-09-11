@@ -6,6 +6,7 @@ import ProductReviews from "./ProductReviews";
 import { FiShoppingCart } from "react-icons/fi";
 
 import styles from "../Style/ProductDetail.module.css";
+import "../Style/All.css"; //  button styles
 
 import Modal from "react-modal";
 
@@ -115,11 +116,18 @@ export default function ProductDetail() {
   return (
     <div className={styles.container}>
       <h2>상품 상세 정보</h2>
-
+   <div>
+        <img
+          src={product.pic}
+          alt={product.name}
+          // className={styles.productImage}
+        />
+      </div>
       <div>
         <span className={styles.label}>이름:</span>
         <span className={styles.value}>{product.name}</span>
       </div>
+   
       <div>
         <span className={styles.label}>가격:</span>
         <span className={styles.price}>
@@ -133,15 +141,15 @@ export default function ProductDetail() {
       </div>
       <div className={styles.quantityControls}>
         <span className={styles.label}>수량:</span>
-        <button onClick={decrementQuantity}>-</button>
+        <button className={`btn1`} onClick={decrementQuantity}>-</button>
         <span>{count}</span>
-        <button onClick={incrementQuantity}>+</button>&nbsp;
+        <button className={`btn1`} onClick={incrementQuantity}>+</button>&nbsp;
         {product.stock > 0 ? (
-          <button className={styles.addToCartButton} onClick={handleAddToCart}>
+          <button className={`btn2`} onClick={handleAddToCart}>
             장바구니에 담기
           </button>
         ) : (
-          <button className={styles.addToCartButton}>품절된 상품입니다</button>
+          <button className={`btn2`}>품절된 상품입니다</button>
         )}
       </div>
 
@@ -153,14 +161,8 @@ export default function ProductDetail() {
         <span className={styles.label}>카테고리:</span>
         <span>{product.category}</span>
       </div> */}
-      <div>
-        <img
-          src={product.pic}
-          alt={product.name}
-          className={styles.productImage}
-        />
-      </div>
-      <Link to={`/user/style/write/${no}`} className={styles.communityLink}>
+     
+      <Link to={`/user/style/write/${no}`} className={`btn3`}>
         커뮤니티 공유하기
       </Link>
       <div className={styles.reviewSection}>
@@ -190,8 +192,8 @@ export default function ProductDetail() {
           <FiShoppingCart size={100} color="#007bff" />
         </div>
         <h3>선택한 상품이 장바구니에 담겼습니다.</h3>
-        <button onClick={continueShopping}>계속 쇼핑하기</button>
-        <button onClick={goToCart}>장바구니 보기</button>
+        <button className={`btn3`} onClick={continueShopping}>계속 쇼핑하기</button>&nbsp;&nbsp;
+        <button className={`btn4`} onClick={goToCart}>장바구니 보기</button>
       </Modal>
     </div>
   );

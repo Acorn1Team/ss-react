@@ -25,13 +25,13 @@ h2 {
   color: #555;
 }
 
-.quantityControls {
+/* .quantityControls {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
-}
+} */
 
-.quantityControls button {
+/* .quantityControls button {
   background-color: #007bff;
   color: white;
   border: none;
@@ -39,16 +39,16 @@ h2 {
   padding: 5px 10px;
   cursor: pointer;
   font-size: 16px;
-}
+} */
 
-.quantityControls button:hover {
+/* .quantityControls button:hover {
   background-color: #0056b3;
-}
+} */
 
-.quantityControls span {
+/* .quantityControls span {
   margin: 0 10px;
   font-size: 16px;
-}
+} */
 
 .price {
   font-size: 20px;
@@ -63,7 +63,7 @@ h2 {
   margin-left: 10px;
 }
 
-.addToCartButton {
+/* .addToCartButton {
   background-color: #28a745;
   color: white;
   border: none;
@@ -73,11 +73,11 @@ h2 {
   font-size: 16px;
   transition: background-color 0.3s;
   margin-top: 20px;
-}
+} */
 
-.addToCartButton:hover {
+/* .addToCartButton:hover {
   background-color: #218838;
-}
+} */
 
 .productDescription {
   margin: 20px 0;

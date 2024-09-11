@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import styles from "../Style/CartDetail.module.css";
+//import "../Style/All.css";
 
 export default function CartDetail() {
   const orderItems = useSelector((state) => state.order.orderItems); // Redux에서 주문 항목 가져오기

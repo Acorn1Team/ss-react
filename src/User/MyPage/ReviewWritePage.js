@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
+import './ReviewWritePage.css'; // CSS 파일 import
+//import "../Style/All.css"; //  button styles
 
 export default function ReviewWritePage() {
   const { orderProductNo } = useParams(); 
@@ -13,10 +15,32 @@ export default function ReviewWritePage() {
   const [contents, setContents] = useState(review?.contents || ""); 
   const [score, setScore] = useState(review?.score || 0); 
   const [pic, setPic] = useState(review?.pic || null);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // 리뷰 작성 시 서버에 데이터를 전송하는 함수
-  const handleSubmit = () => {
-    const formData = new FormData();
+ // 입력 자료 검증 함수
+ const validateInputs = () => {
+  if (!contents.trim()) {
+    setErrorMessage("리뷰 내용을 입력해주세요.");
+    return false;
+  }
+  if (contents.length > 40) {
+    setErrorMessage("리뷰 내용은 40자 이하로 작성해주세요.");
+    return false;
+  }
+  if (score === 0) {
+    setErrorMessage("평점을 선택해주세요.");
+    return false;
+  }
+  setErrorMessage(""); // 오류 메시지가 없을 때는 초기화
+  return true;
+};
+
+// 리뷰 작성 시 서버에 데이터를 전송하는 함수
+const handleSubmit = () => {
+  if (!validateInputs()) return; // 입력 검증 통과하지 않으면 제출 중단
+
+  const formData = new FormData();
+
 
     // 리뷰 데이터를 객체로 생성
     const reviewDto = {
@@ -59,6 +83,10 @@ export default function ReviewWritePage() {
         사용자 번호: {userNo} */}
         상품명 : {productName}
       </div>
+
+      {/* 오류 메시지를 화면에 표시 */}
+      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+      
       <textarea
   placeholder="리뷰 내용을 입력하세요"
   value={contents}

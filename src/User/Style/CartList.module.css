@@ -43,7 +43,7 @@
   justify-content: space-between;
 }
 
-.cartQuantity button {
+/* .cartQuantity button {
   background-color: #007bff;
   color: white;
   border: none;
@@ -51,11 +51,11 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 1rem;
-}
+} */
 
-.cartQuantity button:disabled {
+/* .cartQuantity button:disabled {
   background-color: #ccc;
-}
+} */
 
 .cartItemPrice,
 .cartTotalPrice {
@@ -69,7 +69,7 @@
   margin-top: 20px;
 }
 
-.cartActions button {
+/* .cartActions button {
   background-color: #28a745;
   color: white;
   border: none;
@@ -78,24 +78,24 @@
   cursor: pointer;
   font-size: 1.2rem;
   transition: background-color 0.3s ease;
-}
+} */
 
-.cartActions button:hover {
+/* .cartActions button:hover {
   background-color: #218838;
-}
+} */
 
 .cartActions button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
 
-.removeButton {
+/* .removeButton {
   background-color: #dc3545;
-}
+} */
 
-.removeButton:hover {
+/* .removeButton:hover {
   background-color: #c82333;
-}
+} */
 
 .stockWarning {
   color: red;

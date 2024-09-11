@@ -2,8 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
-// import "./Review.css"; // CSS 파일 추가
-import styles from "../Style/Review.module.css";
+import "./Review.css"; // CSS 파일 추가
+
 
 
 export default function Review() {

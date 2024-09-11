@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "../Style/CartList.module.css";
+import "../Style/All.css"; //  button styles
 
 export default function CartList() {
   const userNo = sessionStorage.getItem("id"); // 로그인한 사용자 ID를 세션에서 가져옴
@@ -173,9 +174,10 @@ export default function CartList() {
                   {item.name}
                 </span>
                 <div className={styles.cartQuantity}>
-                  <button onClick={() => decrementQuantity(item.no)}>-</button>
+                  <button className={`btn1`} onClick={() => decrementQuantity(item.no)}>-</button>
                   <span>{item.quantity}</span>
                   <button
+                    className={`btn1`}
                     onClick={() => incrementQuantity(item.no)}
                     disabled={item.quantity >= item.stock}
                   >
@@ -192,7 +194,7 @@ export default function CartList() {
                 </span>
                 &emsp;
                 <span className={styles.cartItemPrice}>
-                  총 {item.resultPrice.toLocaleString()}원
+                  {item.resultPrice.toLocaleString()}원
                 </span>
                 {item.stock === 0 && (
                   <div className={styles.stockWarning}>품절</div>
@@ -205,17 +207,20 @@ export default function CartList() {
               </div>
             ))}
           </div>
-          <div className={styles.cartActions}>
+          <div>
             <button
-              className={styles.removeButton}
+              className={`btn2`}
               onClick={handleRemoveSelected}
               disabled={selectedItems.length === 0}
             >
               선택 삭제
             </button>
+          </div>
+          <div>
             <div className={styles.cartTotalPrice}>
               <h3>총 가격: {getTotalCartPrice().toLocaleString()}원</h3>
               <button
+                className={`btn2`}
                 onClick={handleOrder}
                 disabled={selectedItems.length === 0}
               >
