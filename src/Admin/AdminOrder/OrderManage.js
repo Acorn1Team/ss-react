@@ -1,45 +1,59 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Modal from "react-modal"; // react-modal 추가
+import Modal from "react-modal";
 
-Modal.setAppElement("#root"); // react-modal 설정 (접근성 관련)
+Modal.setAppElement("#root");
+
+function StatusFilterSelect({ status, onStatusChange }) {
+  return (
+    <select
+      value={status}
+      onChange={onStatusChange}
+      style={{ padding: "5px", marginRight: "10px", width: "120px" }}
+    >
+      <option value="">상태 선택</option>
+      <option value="주문접수">주문접수</option>
+      <option value="배송중">배송중</option>
+      <option value="배송완료">배송완료</option>
+      <option value="주문취소">주문취소</option>
+    </select>
+  );
+}
 
 export default function OrderManage() {
   const [orders, setOrders] = useState([]);
-  const [expandedRows, setExpandedRows] = useState([]); // 확장된 행을 관리하는 상태
-  const [searchTerm, setSearchTerm] = useState(""); // searchTerm을 상태로 남겨두기
-  const [searchField, setSearchField] = useState("state"); // 초기 값: 상태
+  const [expandedRows, setExpandedRows] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchField, setSearchField] = useState("userName");
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [error, setError] = useState(null);
+  const [status, setStatus] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalOrderNo, setModalOrderNo] = useState(null);
+  const [modalStatus, setModalStatus] = useState("");
   const [orderDetails, setOrderDetails] = useState({});
   const [userInfo, setUserInfo] = useState({});
   const [productInfo, setProductInfo] = useState({});
-  const [status, setStatus] = useState(""); // 상태 필터링 상태 추가
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
-  const [modalOrderNo, setModalOrderNo] = useState(null); // 모달에서 처리할 주문 번호
-  const [modalStatus, setModalStatus] = useState(""); // 모달에서 처리할 상태
   const navigate = useNavigate();
 
-  // 모달 열기
   const openModal = (orderNo, status) => {
     setModalOrderNo(orderNo);
     setModalStatus(status);
     setIsModalOpen(true);
   };
 
-  // 모달 닫기
   const closeModal = () => {
     setIsModalOpen(false);
     setModalOrderNo(null);
     setModalStatus("");
   };
 
-  // 주문 상태 변경 함수
+  // 주문 상태 변경
   const handleStatusChange = async () => {
     try {
       await axios.put(`/admin/orders/${modalOrderNo}/status`, {
@@ -55,11 +69,11 @@ export default function OrderManage() {
         endDate,
         status
       );
-      closeModal(); // 성공 시 모달 닫기
+      closeModal();
     } catch (error) {
       console.error("주문 상태를 업데이트하는 중 오류가 발생했습니다!", error);
       setError("주문 상태 업데이트에 실패했습니다.");
-      closeModal(); // 실패 시에도 모달 닫기
+      closeModal();
     }
   };
 
@@ -78,12 +92,14 @@ export default function OrderManage() {
         params: {
           page,
           size,
-          searchTerm: searchField === "state" ? status : searchTerm,
+          searchTerm,
           searchField,
           startDate,
           endDate,
+          status,
         },
       });
+
       setOrders(response.data.content);
       setTotalPages(response.data.totalPages);
       setCurrentPage(response.data.number);
@@ -129,18 +145,10 @@ export default function OrderManage() {
     }
   };
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleSearchFieldChange = (e) => {
-    setSearchField(e.target.value);
-    setSearchTerm("");
-    setStatus("");
-  };
-
+  // 상태 필터 변경 시 목록을 즉시 업데이트
   const handleStatusFilterChange = (e) => {
-    setStatus(e.target.value);
+    const newStatus = e.target.value;
+    setStatus(newStatus);
     fetchOrders(
       0,
       pageSize,
@@ -148,12 +156,27 @@ export default function OrderManage() {
       searchField,
       startDate,
       endDate,
-      e.target.value
-    ); // 상태 변경 시 즉시 fetchOrders 호출
+      newStatus
+    );
   };
 
-  const handleSearch = () => {
-    setCurrentPage(0);
+  // 검색어 필터 변경 시 목록 업데이트
+  const handleSearchChange = (e) => {
+    const newSearchTerm = e.target.value;
+    setSearchTerm(newSearchTerm);
+    fetchOrders(
+      0,
+      pageSize,
+      newSearchTerm,
+      searchField,
+      startDate,
+      endDate,
+      status
+    );
+  };
+
+  // 날짜 필터 설정 시 목록 업데이트
+  const handleDateFilter = () => {
     fetchOrders(
       0,
       pageSize,
@@ -169,7 +192,6 @@ export default function OrderManage() {
     setSearchTerm("");
     setStartDate("");
     setEndDate("");
-    setSearchField("state");
     setStatus("");
     fetchOrders(0, pageSize);
   };
@@ -177,19 +199,16 @@ export default function OrderManage() {
   const handlePageChange = (newPage) => {
     if (newPage >= 0 && newPage < totalPages) {
       setCurrentPage(newPage);
+      fetchOrders(
+        newPage,
+        pageSize,
+        searchTerm,
+        searchField,
+        startDate,
+        endDate,
+        status
+      );
     }
-  };
-
-  const isOptionDisabled = (currentStatus, option) => {
-    const statusOrder = ["주문접수", "배송중", "배송완료", "주문취소"];
-    const currentIndex = statusOrder.indexOf(currentStatus);
-    const optionIndex = statusOrder.indexOf(option);
-    return optionIndex < currentIndex;
-  };
-
-  const formatPrice = (price) => {
-    const roundedPrice = Math.round(price);
-    return `${roundedPrice.toLocaleString("ko-KR")}원`;
   };
 
   useEffect(() => {
@@ -198,7 +217,6 @@ export default function OrderManage() {
 
   return (
     <div>
-      {/* 모달 */}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
@@ -220,79 +238,60 @@ export default function OrderManage() {
         <button onClick={closeModal}>취소</button>
       </Modal>
 
-      {/* 검색 및 주문 목록 렌더링 */}
-      <div style={{ marginBottom: "10px" }}>
-        <label style={{ display: "inline-block", marginRight: "10px" }}>
-          <select
-            value={searchField}
-            onChange={handleSearchFieldChange}
-            style={{ marginLeft: "10px", padding: "5px", width: "120px" }}
-          >
-            <option value="state">상태</option>
-            <option value="date">날짜</option>
-            <option value="userName">주문자명</option>{" "}
-            {/* 주문자명 옵션 추가 */}
-          </select>
-        </label>
+      {/* 상태 필터 */}
+      <div style={{ marginBottom: "20px" }}>
+        <h4>상태 필터</h4>
+        <StatusFilterSelect
+          status={status}
+          onStatusChange={handleStatusFilterChange}
+        />
+      </div>
 
-        {searchField === "date" ? (
-          <div>
-            <input
-              type="date"
-              placeholder="시작 날짜"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              style={{
-                padding: "5px",
-                marginRight: "10px",
-                width: "150px", // 고정된 넓이 추가
-                lineHeight: "1.5",
-              }}
-            />
-            <input
-              type="date"
-              placeholder="종료 날짜"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              style={{
-                padding: "5px",
-                width: "150px", // 고정된 넓이 추가
-                lineHeight: "1.5",
-              }}
-            />
-          </div>
-        ) : searchField === "state" ? (
-          <select
-            value={status}
-            onChange={handleStatusFilterChange}
-            style={{ padding: "5px", marginRight: "10px", width: "120px" }}
-          >
-            <option value="">상태 선택</option>
-            <option value="주문접수">주문접수</option>
-            <option value="배송중">배송중</option>
-            <option value="배송완료">배송완료</option>
-            <option value="주문취소">주문취소</option>
-          </select>
-        ) : (
-          <input
-            type="text"
-            placeholder="검색어를 입력하세요"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            style={{ padding: "5px", marginRight: "10px", width: "120px" }}
-          />
-        )}
+      {/* 검색 필터 */}
+      <div style={{ marginBottom: "20px" }}>
+        <h4>주문자명 필터</h4>
+        <input
+          type="text"
+          placeholder="이름을 입력하세요"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          style={{ padding: "5px", marginRight: "10px", width: "120px" }}
+        />
+      </div>
 
+      {/* 날짜 필터 */}
+      <div style={{ marginBottom: "20px" }}>
+        <h4>날짜 필터</h4>
+        <input
+          type="date"
+          placeholder="시작 날짜"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          style={{
+            padding: "5px",
+            marginRight: "10px",
+            width: "150px",
+            lineHeight: "1.5",
+          }}
+        />
+        <input
+          type="date"
+          placeholder="종료 날짜"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+          style={{ padding: "5px", width: "150px", lineHeight: "1.5" }}
+        />
         <button
-          onClick={handleSearch}
+          onClick={handleDateFilter}
           style={{ padding: "5px 10px", marginRight: "10px" }}
         >
-          검색
-        </button>
-        <button onClick={handleReset} style={{ padding: "5px 10px" }}>
-          전체보기
+          날짜로 검색
         </button>
       </div>
+
+      <button onClick={handleReset} style={{ padding: "5px 10px" }}>
+        전체보기
+      </button>
 
       <table border="1" style={{ width: "100%" }}>
         <thead>
@@ -317,32 +316,29 @@ export default function OrderManage() {
                   <td>
                     <select
                       value={order.state}
-                      onChange={(e) => openModal(order.no, e.target.value)} // 모달 열기
+                      onChange={(e) => openModal(order.no, e.target.value)}
                     >
                       <option
                         value="주문접수"
-                        disabled={isOptionDisabled(order.state, "주문접수")}
+                        disabled={
+                          order.state === "배송중" || order.state === "배송완료"
+                        }
                       >
                         주문접수
                       </option>
                       <option
                         value="배송중"
-                        disabled={isOptionDisabled(order.state, "배송중")}
+                        disabled={order.state === "배송완료"}
                       >
                         배송중
                       </option>
                       <option
                         value="배송완료"
-                        disabled={isOptionDisabled(order.state, "배송완료")}
+                        disabled={order.state === "주문취소"}
                       >
                         배송완료
                       </option>
-                      <option
-                        value="주문취소"
-                        disabled={isOptionDisabled(order.state, "주문취소")}
-                      >
-                        주문취소
-                      </option>
+                      <option value="주문취소">주문취소</option>
                     </select>
                   </td>
                   <td>
@@ -395,8 +391,13 @@ export default function OrderManage() {
                                     {productInfo[order.no][p.productNo]}
                                   </td>
                                   <td>{p.quantity}</td>
-                                  <td>{formatPrice(p.price / p.quantity)}</td>
-                                  <td>{formatPrice(p.price)}</td>
+                                  <td>
+                                    {(p.price / p.quantity).toLocaleString(
+                                      "ko-KR"
+                                    )}
+                                    원
+                                  </td>
+                                  <td>{p.price.toLocaleString("ko-KR")}원</td>
                                 </tr>
                               ))}
                             </tbody>
