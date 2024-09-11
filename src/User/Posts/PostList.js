@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import styles from "./PostList.css"; // CSS 파일을 import
+import "./PostList.css"; // 기존 CSS 파일을 유지
+import "../Style/All.css"; // Import All.css for button styles
 
 export default function PostList() {
   const [posts, setPosts] = useState([]); // 모든 게시글을 관리
@@ -127,12 +128,14 @@ export default function PostList() {
       <div className="view-mode-buttons">
         {/* 팔로우한 사람 게시글 보기와 전체 보기 버튼 */}
         <button
+          className={`btn2`} // 기존 버튼 스타일 유지하며 btn2 스타일 추가
           onClick={() => handleViewModeChange("follow")}
           disabled={viewMode === "follow" && hasFollowPosts === false}
         >
           팔로우한 사람 게시글 보기
         </button>
         <button
+          className={`btn2`} // 기존 버튼 스타일 유지하며 btn2 스타일 추가
           onClick={() => handleViewModeChange("all")}
           disabled={viewMode === "all"}
         >
