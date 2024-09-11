@@ -9,7 +9,9 @@ export default function ActorEdit() {
     const [actors, setActors] = useState([]);
     const [scrapedDatas, setScrapedData] = useState([]);
     const navigate = useNavigate();
-    const [isModalOpen, setIsModalOpen] = useState(false); // 삭제 확인 모달
+    const [isShowModalOpen, setIsShowModalOpen] = useState(false); // 작품 삭제 확인 모달
+    const [isShowDeleteModalOpen, setIsShowDeleteModalOpen] = useState(false); // 작품 삭제 결과 모달
+    const [isCharacterModalOpen, setIsCharacterModalOpen] = useState(false); // 배역 삭제 확인 모달
     const [selectedActor, setSelectedActor] = useState(null); // 선택된 actorData
 
     const [actorName, setActorName] = useState('');
@@ -82,19 +84,28 @@ export default function ActorEdit() {
             });
     };
 
-    const deleteCharacter = (no) => {
+    const deleteShow = (no) => {
         axios
-            .delete(`/admin/character/${no}`)
-            .then(getShowInfo)
-            .then(setIsModalOpen(false))
+            .delete(`/admin/show/${no}`)
+            .then(setIsShowDeleteModalOpen(true))
             .catch((error) => {
                 console.log(error);
             });
     };
 
-    const openModal = (actorData) => {
+    const deleteCharacter = (no) => {
+        axios
+            .delete(`/admin/character/${no}`)
+            .then(getShowInfo)
+            .then(setIsCharacterModalOpen(false))
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+    const openCharacterModal = (actorData) => {
         setSelectedActor(actorData);
-        setIsModalOpen(true);
+        setIsCharacterModalOpen(true);
     };
 
     return (
@@ -105,6 +116,7 @@ export default function ActorEdit() {
                     <div style={{ textAlign: 'center' }}>
                         <img src={show.pic} alt={`${show.title} 이미지`} style={{ width: '70%', height: 'auto' }} />
                     </div>
+                    <button onClick={() => setIsShowModalOpen(true)}>작품 삭제</button>
                 </div>
 
                 {actors.length > 0 && (
@@ -122,7 +134,7 @@ export default function ActorEdit() {
                                     <button onClick={() => navigate(`/admin/fashion/character/${actorData.no}`, { state: actorData })}>
                                         스타일 편집
                                     </button><br />
-                                    <button onClick={() => openModal(actorData)}>배역 제거</button>&nbsp;
+                                    <button onClick={() => openCharacterModal(actorData)}>배역 제거</button>&nbsp;
                                 </div>
                             ))}
                         </div>
@@ -164,8 +176,66 @@ export default function ActorEdit() {
             )}
 
             <Modal
-                isOpen={isModalOpen}
-                onRequestClose={() => setIsModalOpen(false)}
+                isOpen={isShowModalOpen}
+                onRequestClose={() => setIsShowModalOpen(false)}
+                contentLabel="작품 삭제 확인"
+                style={{
+                    overlay: {
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    },
+                    content: {
+                        background: "white",
+                        padding: "20px",
+                        borderRadius: "8px",
+                        textAlign: "center",
+                        maxWidth: "500px",
+                        height: "600px",
+                        margin: "auto",
+                    },
+                }}
+            >
+                <>
+                    <br/>
+                        <img
+                            src={show.pic}
+                            alt={`${show.title} 이미지`}
+                            style={{ maxWidth: '70%', height: 'auto' }}
+                            /><br/>
+                        <h2>{show.title}</h2>
+                        <h3>관련 데이터를 모두 삭제할까요?</h3>
+                        <h4>❗등록된 모든 배역, 스타일, 아이템 데이터가 전체 삭제됩니다❗</h4>
+                        <button onClick={() => deleteShow(show.no)}>삭제</button>&nbsp;&nbsp;
+                        <button onClick={() => setIsShowModalOpen(false)}>취소</button>
+                </>
+            </Modal>
+
+            <Modal
+                isOpen={isShowDeleteModalOpen}
+                onRequestClose={() => setIsShowDeleteModalOpen(false)}
+                contentLabel="작품 삭제 완료 확인"
+                style={{
+                overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+                content: {
+                    background: "white",
+                    padding: "20px",
+                    borderRadius: "8px",
+                    textAlign: "center",
+                    maxWidth: "300px",
+                    height: "180px",
+                    margin: "auto",
+                },
+                }}
+            >
+                <br />
+                <h3>작품 관련 정보를 모두 삭제했습니다.</h3>
+                <button onClick={() => navigate("/admin/fashion")}>
+                다른 작품 편집하기
+                </button>
+            </Modal>
+
+            <Modal
+                isOpen={isCharacterModalOpen}
+                onRequestClose={() => setIsCharacterModalOpen(false)}
                 contentLabel="배역 삭제 확인"
                 style={{
                     overlay: {
@@ -191,8 +261,9 @@ export default function ActorEdit() {
                             /><br/>
                         <h2>{selectedActor.character} ({selectedActor.actor} 배우)</h2>
                         <h3>관련 데이터를 모두 삭제할까요?</h3>
+                        <h4>❗연결된 스타일, 아이템 데이터가 전체 삭제됩니다❗</h4>
                         <button onClick={() => deleteCharacter(selectedActor.no)}>삭제</button>&nbsp;&nbsp;
-                        <button onClick={() => setIsModalOpen(false)}>닫기</button>
+                        <button onClick={() => setIsCharacterModalOpen(false)}>닫기</button>
                     </>
                 )}
             </Modal>

@@ -149,9 +149,9 @@ export default function CommunityManage() {
 
             return (
               <li key={post.no} className="post-item">
-                <button onClick={() => openDeleteModal(post)}>
+                <button className="btn1" onClick={() => openDeleteModal(post)}>
                   삭제하기
-                </button><br/><br/><hr/>
+                </button><hr/>
                 {view === "reported" && (
                   <>
                     <strong>신고 횟수:</strong> {post.reportsCount}

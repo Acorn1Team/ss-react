@@ -31,6 +31,11 @@ export default function StyleManage() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [currentStyle, setCurrentStyle] = useState({});
 
+  const [styleToDelete, setStyleToDelete] = useState(null); 
+  const [isDeleteStyleModal, setIsDeleteStyleModal] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const [isDeleteItemModal, setIsDeleteItemModal] = useState(false);
+
   useEffect(() => {
     axios
       .get(`/admin/fashion/character/${no}/style`)
@@ -41,18 +46,18 @@ export default function StyleManage() {
       .catch((error) => {
         console.log(error);
       });
-
-    const getItems = (no) => {
-      axios
-        .get(`/admin/fashion/character/${no}/item`)
-        .then((response) => {
-          setItems(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
   }, [no]);
+
+  const getItems = (no) => {
+    axios
+      .get(`/admin/fashion/character/${no}/item`)
+      .then((response) => {
+        setItems(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const onStyleFileChange = (e) => {
     setNewStyle(e.target.files[0]);
@@ -178,12 +183,60 @@ export default function StyleManage() {
 
       const response = await axios.get(`/admin/fashion/character/${no}/item`);
       setItems(response.data);
+      setItemKeyword('');
+      setProductKeyword('');
 
       setIsNewItemModalOpen(false);
     } catch (error) {
       console.error("Error adding item:", error);
     }
   };
+
+  const openDeleteStyleModal = (style) => {
+    setStyleToDelete(style);
+    setIsDeleteStyleModal(true);
+  }
+
+  const openDeleteItemModal = (item) => {
+    setItemToDelete(item);
+    setIsDeleteItemModal(true);
+  }
+
+  const deleteStyle = () => {
+    axios
+      .delete(`/admin/style/${styleToDelete.no}`)
+      .then(
+        axios
+          .get(`/admin/fashion/character/${no}/style`)
+          .then((response) => {
+            setStyles(response.data);
+            getItems(no);
+          })
+          .then(() => {
+            setIsDeleteStyleModal(false)
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+      )
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  const deleteItem = () => {
+    axios
+      .delete(`/admin/item/${itemToDelete.style}/${itemToDelete.no}`)
+      .then(() => {
+        getItems(no)
+      })
+      .then(() => {
+        setIsDeleteItemModal(false)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   if (!actorData) {
     return <p>상세 정보를 불러올 수 없습니다.</p>;
@@ -219,11 +272,8 @@ export default function StyleManage() {
             return (
               <tr key={index}>
                 <td>
-                  <img
-                    src={styleData.pic}
-                    alt={`${index + 1}번 스타일`}
-                    style={{ height: "300px", marginRight: "20px" }}
-                  />
+                  <img src={styleData.pic} alt={`${index + 1}번 스타일`} style={{ height: "300px", marginRight: "20px" }}/><br/>
+                  <button onClick={() => {openDeleteStyleModal(styleData)}}>스타일 삭제</button>
                 </td>
                 {[0, 1, 2].map((i) => (
                   <td key={i}>
@@ -242,6 +292,7 @@ export default function StyleManage() {
                           }}
                         />
                         <br />
+                        <button onClick={() => openDeleteItemModal(filteredItems[i])}>아이템 삭제</button><br/>
                         <button
                           onClick={() =>
                             navigate(
@@ -249,7 +300,7 @@ export default function StyleManage() {
                             )
                           }
                         >
-                          유사상품 조회하기
+                          연결된 상품 조회
                         </button>
                       </>
                     ) : (
@@ -413,6 +464,77 @@ export default function StyleManage() {
         <br />
         <button onClick={() => closeModal()}>닫기</button>
       </Modal>
+
+      <Modal
+        isOpen={isDeleteStyleModal}
+        onRequestClose={() => setIsDeleteStyleModal(false)}
+        contentLabel="스타일 삭제 확인"
+        style={{
+          overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+          content: {
+            background: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            textAlign: "center",
+            maxWidth: "500px",
+            height: "600px",
+            margin: "auto",
+          },
+        }}
+      >
+        {styleToDelete ? (
+          <>
+            <h3>해당 스타일 및 연결된 아이템을 모두 삭제할까요?</h3>
+            <img
+              src={styleToDelete.pic}
+              alt={`${styleToDelete.no} 이미지`}
+              style={{ maxWidth: "70%", height: "auto", maxHeight:"60%" }}
+            />
+            <br /><br />
+            <button onClick={() => deleteStyle()}>삭제</button>
+            &nbsp;&nbsp;
+            <button onClick={() => setIsDeleteStyleModal(false)}>취소</button>
+          </>
+        ) : (
+          <p>삭제할 스타일을 선택하세요.</p>
+        )}
+      </Modal>
+
+      <Modal
+        isOpen={isDeleteItemModal}
+        onRequestClose={() => setIsDeleteItemModal(false)}
+        contentLabel="아이템 삭제 확인"
+        style={{
+          overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+          content: {
+            background: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            textAlign: "center",
+            maxWidth: "500px",
+            height: "600px",
+            margin: "auto",
+          },
+        }}
+      >
+        {itemToDelete ? (
+          <>
+            <h3>해당 아이템을 이 스타일에서 삭제할까요?</h3>
+            <img
+              src={itemToDelete.pic}
+              alt={`${itemToDelete.name} 이미지`}
+              style={{ maxWidth: "70%", height: "auto", maxHeight:"60%" }}
+            />
+            <br /><br />
+            <button onClick={() => deleteItem()}>삭제</button>
+            &nbsp;&nbsp;
+            <button onClick={() => setIsDeleteItemModal(false)}>취소</button>
+          </>
+        ) : (
+          <p>삭제할 아이템을 선택하세요.</p>
+        )}
+      </Modal>
+
     </>
   );
 }
