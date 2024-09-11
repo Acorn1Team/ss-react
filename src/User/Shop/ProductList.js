@@ -21,6 +21,9 @@ export default function ProductList() {
     return price - (price * discountRate) / 100;
   };
 
+  // 품절 상품 존재 여부 확인 함수
+  const hasSoldOutProducts = products.some((product) => product.stock === 0);
+
   // 데이터 새로고침: 카테고리 및 정렬 기준에 따라
   const refresh = (selectedCategory, sortOption) => {
     const endpoint =
@@ -31,14 +34,14 @@ export default function ProductList() {
     axios
       .get(endpoint)
       .then((res) => {
-      // 판매 가능한 상품만 필터링
-      let filteredProducts = res.data.content.filter(
-        (product) => product.available === true // available이 true인 상품만 필터링
-      );
+        // 판매 가능한 상품만 필터링
+        let filteredProducts = res.data.content.filter(
+          (product) => product.available === true // available이 true인 상품만 필터링
+        );
 
-      // 정렬 기준 적용
-      let sortedProducts = sortProducts(filteredProducts, sortOption);
-      
+        // 정렬 기준 적용
+        let sortedProducts = sortProducts(filteredProducts, sortOption);
+
         if (excludeSoldOut) {
           sortedProducts = sortedProducts.filter(
             (product) => product.stock > 0
@@ -136,20 +139,24 @@ export default function ProductList() {
             <option value="rating">평점순</option>
           </select>
         </label>
-        <div className={styles.excludeSoldOutContainer}>
-          <div className={checkboxStyles.cntr}>
-            {/* 체크박스 스타일 적용 */}
-            <input
-              className={checkboxStyles["hidden-xs-up"]}
-              id="cbx"
-              type="checkbox"
-              checked={excludeSoldOut}
-              onChange={handleExcludeSoldOutChange}
-            />
-            <label className={checkboxStyles.cbx} htmlFor="cbx"></label>
+
+        {/* 품절 상품이 있을 때만 체크박스 표시 */}
+        {hasSoldOutProducts && (
+          <div className={styles.excludeSoldOutContainer}>
+            <div className={checkboxStyles.cntr}>
+              {/* 체크박스 스타일 적용 */}
+              <input
+                className={checkboxStyles["hidden-xs-up"]}
+                id="cbx"
+                type="checkbox"
+                checked={excludeSoldOut}
+                onChange={handleExcludeSoldOutChange}
+              />
+              <label className={checkboxStyles.cbx} htmlFor="cbx"></label>
+            </div>
+            <label className={styles.excludeSoldOutLabel}>품절 상품 제외</label>
           </div>
-          <label className={styles.excludeSoldOutLabel}>품절 상품 제외</label>
-        </div>
+        )}
       </div>
 
       {/* 카테고리 선택을 위한 라디오 버튼 */}
