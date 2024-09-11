@@ -243,6 +243,7 @@ export default function StyleManage() {
   }
   return (
     <>
+      <button onClick={() => navigate(-1)}>배역 목록으로 돌아가기</button>
       <h2>
         {actorData.character} ({actorData.actor}) 의 스타일
         <br />

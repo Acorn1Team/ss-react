@@ -86,6 +86,7 @@ export default function NoticeManage() {
                 <option value="배송">배송</option>
                 <option value="프로모션/쿠폰">프로모션/쿠폰</option>
                 <option value="상품문의">상품문의</option>
+                <option value="커뮤니티">커뮤니티</option>
               </select>
             </th>
             <th>제목</th>

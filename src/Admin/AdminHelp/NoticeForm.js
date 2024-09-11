@@ -127,6 +127,7 @@ export default function NoticeForm() {
           <option value="배송">배송</option>
           <option value="프로모션/쿠폰">프로모션/쿠폰</option>
           <option value="상품문의">상품문의</option>
+          <option value="커뮤니티">커뮤니티</option>
         </select>
       </div>
       <div>
@@ -169,7 +170,7 @@ export default function NoticeForm() {
         <>
           <br />
           <h3>공지가 등록되었습니다!</h3>
-          <button onClick={() => navigate("/admin/help/notices")}>
+          <button onClick={() => navigate("/admin/help")}>
             목록으로 돌아가기
           </button>
         </>

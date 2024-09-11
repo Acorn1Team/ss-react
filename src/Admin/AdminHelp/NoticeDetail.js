@@ -41,7 +41,7 @@ export default function NoticeDetail() {
     axios
       .put("/admin/help/notice/" + no, state)
       .then((res) => {
-        if (res.data.isSuccess) navigate("/admin/help/notices");
+        if (res.data.isSuccess) navigate("/admin/help");
       })
       .catch((err) => {
         console.log(err);
@@ -52,7 +52,7 @@ export default function NoticeDetail() {
     axios
       .delete("/admin/help/notice/" + no)
       .then((res) => {
-        if (res.data.isSuccess) navigate("/admin/help/notices");
+        if (res.data.isSuccess) navigate("/admin/help");
       })
       .catch((err) => {
         console.log(err);
@@ -83,7 +83,7 @@ export default function NoticeDetail() {
   return (
     <>
       <h2>공지 수정</h2>
-      <button onClick={() => navigate(`/admin/help/notices`)}>목록보기</button>
+      <button onClick={() => navigate(`/admin/help`)}>목록보기</button>
       <div>
         제목
         <input
@@ -102,6 +102,7 @@ export default function NoticeDetail() {
           <option value="배송">배송</option>
           <option value="프로모션/쿠폰">프로모션/쿠폰</option>
           <option value="상품문의">상품문의</option>
+          <option value="커뮤니티">커뮤니티</option>
         </select>
       </div>
       <div>

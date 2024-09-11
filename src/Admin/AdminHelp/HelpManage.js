@@ -29,7 +29,7 @@ export default function HelpManage() {
         .chat-list li {
           position: relative;
           list-style: none;
-          width: 120px;
+          width: 200px;
           height: 60px;
           background: #fff;
           border-radius: 60px;
@@ -42,7 +42,7 @@ export default function HelpManage() {
         }
 
         .chat-list li:hover {
-          width: 200px;
+          width: 350px;
           box-shadow: 0 10px 25px rgba(0, 0, 0, 0);
         }
 
@@ -51,7 +51,7 @@ export default function HelpManage() {
           position: absolute;
           inset: 0;
           border-radius: 60px;
-          background: linear-gradient(45deg, #56ccf2, #2f80ed);
+          background: linear-gradient(45deg, #df919e, #c9aaaf); /* 메인 컬러에 맞춤 */
           opacity: 0;
           transition: opacity 0.5s;
         }
@@ -67,7 +67,7 @@ export default function HelpManage() {
           width: 100%;
           height: 100%;
           border-radius: 60px;
-          background: linear-gradient(45deg, #56ccf2, #2f80ed);
+          background: linear-gradient(45deg, #df919e, #c9aaaf); /* 메인 컬러에 맞춤 */
           transition: opacity 0.5s, filter 0.5s;
           filter: blur(15px);
           z-index: -1;
@@ -109,6 +109,7 @@ export default function HelpManage() {
           top: 50%;
           transform: translate(-50%, -50%) scale(1);
         }
+
       `}</style>
     </>
   );
