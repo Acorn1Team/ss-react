@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import ItemManage from "./ItemManage";
 
 export default function ShowSearch() {
   const [inputValue, setInputValue] = useState("");
@@ -100,39 +101,50 @@ export default function ShowSearch() {
 
   return (
     <>
-      <h2>패션 정보 관리</h2>
-      <SearchForm>
-        <SearchInput
-          id="inputValue"
-          type="text"
-          value={inputValue}
-          onChange={handleChange}
-          onFocus={() => setShowDropdown(true)}
-          name="inputValue"
-          placeholder="작품명을 입력하세요"
-        />
+      <Container>
+        <LeftSection>
+          <h2>패션 정보 관리</h2>
+          <SearchForm>
+            <SearchInput
+              id="inputValue"
+              type="text"
+              value={inputValue}
+              onChange={handleChange}
+              onFocus={() => setShowDropdown(true)}
+              name="inputValue"
+              placeholder="작품명을 입력하세요"
+            />
 
-        {showDropdown && (
-          <AutoSearchContainer>
-            {filteredItems.map((item, index) => (
-              <AutoSearchItem key={index}>
-                {item.title}{" "}
-                <SearchButton
-                  onClick={() => {
-                    navigate(`/admin/fashion/show/${item.no}`);
-                  }}
-                >
-                  조회
-                </SearchButton>
-              </AutoSearchItem>
-            ))}
-            <AutoSearchItem>
-              {inputValue}{" "}
-              <SearchButtonN onClick={scrapShow}>정보 찾기</SearchButtonN>
-            </AutoSearchItem>
-          </AutoSearchContainer>
-        )}
-      </SearchForm>
+            {showDropdown && (
+              <AutoSearchContainer>
+                {filteredItems.map((item, index) => (
+                  <AutoSearchItem key={index}>
+                    {item.title}{" "}
+                    <SearchButton
+                      onClick={() => {
+                        navigate(`/admin/fashion/show/${item.no}`);
+                      }}
+                    >
+                      조회
+                    </SearchButton>
+                  </AutoSearchItem>
+                ))}
+                <AutoSearchItem>
+                  {inputValue}{" "}
+                  <SearchButtonN onClick={scrapShow}>정보 찾기</SearchButtonN>
+                </AutoSearchItem>
+              </AutoSearchContainer>
+            )}
+          </SearchForm>
+        </LeftSection>
+
+        <Divider />
+
+        <RightSection>
+          <h2>등록된 아이템 관리</h2>
+          <ItemManage />
+        </RightSection>
+      </Container>
 
       <Modal
         isOpen={isModalOpen}
@@ -214,14 +226,33 @@ export default function ShowSearch() {
   );
 }
 
-const SearchForm = styled.form`
-  width: 40% !important; /* 너비를 강제로 적용 */
+const Container = styled.div`
   display: flex;
-  justify-content: center; /* 가로 중앙 정렬 */
-  align-items: center; /* 세로 중앙 정렬 */
-  width: 100%; /* 부모 컨테이너 너비에 맞게 설정 */
-  margin: 0 auto; /* 가운데 정렬 */
-  position: relative; /* 드롭다운의 위치를 제대로 설정하기 위해 추가 */
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+`;
+
+const LeftSection = styled.div`
+  width: 50%; /* 왼쪽 섹션 너비 */
+`;
+
+const RightSection = styled.div`
+  width: 50%; /* 오른쪽 섹션 너비 */
+`;
+
+const Divider = styled.div`
+  width: 1px;
+  background-color: #ccc;
+  height: 500px; /* 고정 높이 설정 */
+  margin: 0 20px;
+`;
+
+const SearchForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const SearchInput = styled.input`
@@ -232,8 +263,7 @@ const SearchInput = styled.input`
   color: black;
   padding: 0.7rem 1rem;
   border-radius: 30px;
-  transition: all ease-in-out 0.5s;
-  margin-right: 0.5rem;
+  margin-bottom: 10px;
 
   &:hover,
   &:focus {
@@ -244,69 +274,41 @@ const SearchInput = styled.input`
     outline: none;
     background-color: #f0eeee;
   }
-
-  &::-webkit-input-placeholder {
-    font-weight: 100;
-    color: #ccc;
-  }
-`;
-
-const SearchButton = styled.button`
-  font-family: inherit;
-  font-size: inherit;
-  background-color: gray;
-  color: #white;
-  padding: 0.7rem 1rem;
-  border-radius: 30px;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: #505050;
-    cursor: pointer;
-  }
-`;
-
-const SearchButtonN = styled.button`
-  font-family: inherit;
-  font-size: inherit;
-  background-color: #323232;
-  color: #fff;
-  border: none;
-  padding: 0.7rem 1rem;
-  border-radius: 30px;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: #505050;
-    cursor: pointer;
-  }
 `;
 
 const AutoSearchContainer = styled.div`
-  width: 70%; /* 드롭다운 너비 설정 */
-  max-height: 500px;
-  overflow-y: auto;
+  width: 100%;
   background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.3);
-  box-shadow: 0 10px 10px rgb(0, 0, 0, 0.3);
-  z-index: 3;
-  margin: 0 auto; /* 중앙 정렬을 위해 추가 */
-  top: 50px;
-  position: absolute; /* 위치를 고정 */
-  left: 0; /* 부모 요소 기준으로 왼쪽부터 중앙으로 정렬 */
-  right: 0; /* 부모 요소 기준으로 오른쪽을 동일하게 정렬 */
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
+  margin-top: 10px;
 `;
 
 const AutoSearchItem = styled.div`
   padding: 10px;
-  cursor: default; // 기본 커서로 변경하여 클릭할 수 없음을 표시
+  cursor: default;
   font-size: 14px;
-  font-weight: bold;
-  pointer-events: none; // 클릭 이벤트를 무시
   display: flex;
-  justify-content: space-between; // 버튼과 텍스트를 양쪽 끝에 배치
+  justify-content: space-between;
   align-items: center;
+
   button {
-    pointer-events: all; // 버튼은 클릭할 수 있게 설정
+    cursor: pointer;
   }
+`;
+
+const SearchButton = styled.button`
+  background-color: gray;
+  color: white;
+  padding: 0.7rem 1rem;
+  border-radius: 30px;
+
+  &:hover {
+    background-color: #505050;
+    cursor: pointer;
+  }
+`;
+
+const SearchButtonN = styled(SearchButton)`
+  background-color: #323232;
 `;
