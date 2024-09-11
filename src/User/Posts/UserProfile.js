@@ -182,14 +182,14 @@ export default function UserProfile() {
       )}
 
       <div className={styles.profileActions}>
-        <Link to={`/user/style/list/${userNo}`} className={`btn1`}>
-          내가 쓴 글
-        </Link>
         {location.pathname !== "/user/style/write" && (
           <Link to={`/user/style/write`} className={`btn1`}>
             글 작성하기
           </Link>
         )}
+        <Link to={`/user/style/list/${userNo}`} className={`btn1`}>
+          내가 쓴 글
+        </Link>
       </div>
 
       <div className={styles.followInfo}>

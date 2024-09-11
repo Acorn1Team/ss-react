@@ -35,9 +35,17 @@
 
 .postImage {
   width: 100%;
-  max-height: 400px;
-  object-fit: cover;
+  aspect-ratio: 1 / 1; /* 가로 세로 비율을 1:1로 설정 */
+  object-fit: cover; /* 비율에 맞게 이미지 잘라내기 */
+  border-radius: 10px; /* 선택 사항: 이미지 테두리를 둥글게 */
+}
+
+.page {
+  width: 300px; /* 고정된 너비로 설정 */
+  height: 300px; /* 고정된 높이로 설정 */
+  object-fit: cover; /* 이미지 비율 유지하며 잘리도록 설정 */
   margin-bottom: 10px;
+  border-radius: 10px; /* 선택 사항: 이미지 테두리를 둥글게 */
 }
 
 .actionButtons {

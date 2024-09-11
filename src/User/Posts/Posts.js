@@ -8,6 +8,7 @@ import { FaReply } from "react-icons/fa";
 import stylesPost from "./Posts.css";
 import "../Style/All.css";
 import { MdDeleteForever } from "react-icons/md";
+import { RxCornerBottomLeft } from "react-icons/rx";
 
 export default function Posts() {
   const { postNo } = useParams();
@@ -656,11 +657,14 @@ export default function Posts() {
                 <Link to={`/user/shop/productlist/detail/${productData.no}`}>
                   <div className={styles.productInPost}>
                     <img
+                      style={{ height: "150px" }}
                       src={productData.pic}
                       alt="Product Pic"
                       className={styles.productImage}
                     />
-                    <div>{productData.name}</div>
+                    <div>
+                      <b style={{ fontSize: "120%" }}>{productData.name}</b>
+                    </div>
                     <div>{productData.price.toLocaleString()}원</div>
                   </div>
                 </Link>
@@ -709,7 +713,7 @@ export default function Posts() {
                             </div>
                           </label>
                         </span>
-                        <span className="like-count">
+                        <span style={{ fontSize: "70%" }}>
                           좋아요 {commentLike[pc.no]}개
                         </span>
                         {String(pc.userNo) === String(userNo) && (
@@ -722,6 +726,7 @@ export default function Posts() {
                       {pc.replies &&
                         pc.replies.map((reply) => (
                           <div key={reply.no} className={styles.reply}>
+                            <RxCornerBottomLeft size={"25"} color="#df919e" />
                             <Link
                               to={`/user/style/profile/${reply.userNo}`}
                               style={{ color: "#c7727e", fontWeight: "bold" }}
@@ -759,11 +764,13 @@ export default function Posts() {
                                   </svg>
                                 </div>
                               </label>
-                              좋아요{" "}
-                              {commentLike[reply.no] === undefined
-                                ? 0
-                                : commentLike[reply.no]}
-                              개
+                              <span style={{ fontSize: "70%" }}>
+                                좋아요{" "}
+                                {commentLike[reply.no] === undefined
+                                  ? 0
+                                  : commentLike[reply.no]}
+                                개
+                              </span>
                               {String(reply.userNo) === String(userNo) && (
                                 <span
                                   onClick={() =>

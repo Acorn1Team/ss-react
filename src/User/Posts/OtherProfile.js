@@ -170,12 +170,10 @@ export default function OtherProfile() {
           <div className={styles.profileInfo}>
             <span className={styles.profileNickname}>@{userInfo.nickname}</span>
             <br />
-            <span className={styles.profileId}>{userInfo.id}</span>
-            <br />
             <span className={styles.profileBio}>{userInfo.bio}</span>
           </div>
           {followState !== null && (
-            <button className={styles.followButton} onClick={followOrCancel}>
+            <button className="btn1" onClick={followOrCancel}>
               {followState ? "팔로우 취소" : "팔로우하기"}
             </button>
           )}

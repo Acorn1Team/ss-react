@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "../Style/PostWrite.module.css";
+import "../Style/All.css";
 
 export default function PostWrite() {
   const { postNo, productNo } = useParams();
@@ -237,13 +238,6 @@ export default function PostWrite() {
     setInputValue("");
   };
 
-  const handleCancelClick = (event) => {
-    // event.preventDefault(); // 기본 동작 방지
-    // event.stopPropagation(); // 이벤트 전파 방지
-    // navigate(-1); // 이전 페이지로 이동
-    window.history.back();
-  };
-
   return (
     <div className={styles.container}>
       <div id="photoBox" className={styles.photoBox}></div>
@@ -320,16 +314,13 @@ export default function PostWrite() {
         )}
       </div>
 
-      <button
-        className={styles.submitButton}
-        onClick={() => insertPost(postNo)}
-      >
+      <button className="btn1Long" onClick={() => insertPost(postNo)}>
         {postNo ? "수정" : "등록"}
       </button>
-      <button className={styles.submitButton} onClick={resetButton}>
+      <button className="btn1Long" onClick={resetButton}>
         초기화
       </button>
-      <button className={styles.submitButton} onClick={() => navigate(-1)}>
+      <button className="btn3Long" onClick={() => navigate(-1)}>
         취소
       </button>
       <b id="error" className={styles.error}></b>
