@@ -3,8 +3,8 @@
   bottom: 20px;
   right: 20px;
   padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
+  background-color: #df919e;
+  color: #f5f5f5;
   border: none;
   border-radius: 50px;
   cursor: pointer;
@@ -15,7 +15,7 @@
 }
 
 .support-button:hover {
-  background-color: #0056b3;
+  background-color: #c7727e;
 }
 
 .support-modal {
@@ -36,8 +36,9 @@
 
 .support-modal-option {
   padding: 10px;
-  background-color: #8cb6e3;
+  background-color: #c9aaaf;
   border: none;
+  color: #f5f5f5;
   text-align: left;
   cursor: pointer;
   font-size: 14px;
@@ -47,5 +48,5 @@
 }
 
 .support-modal-option:hover {
-  background-color: #007bff;
+  background-color: #b39297;
 }

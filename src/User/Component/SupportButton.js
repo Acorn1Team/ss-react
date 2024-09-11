@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../Style/SupportButton.css";
+import styles from "../Style/SupportButton.module.css";
+import "../Style/All.css";
 import TranslateWidget from "../../TranslateWidget";
 
 function SupportButton() {
@@ -18,25 +19,25 @@ function SupportButton() {
 
   return (
     <div>
-      <button className="support-button" onClick={handleButtonClick}>
+      <button className={styles["support-button"]} onClick={handleButtonClick}>
         고객지원
       </button>
       {isModalOpen && (
-        <div className="support-modal">
-          <div className="support-modal-content">
+        <div className={styles["support-modal"]}>
+          <div className={styles["support-modal-content"]}>
             <button
-              className="support-modal-option"
+              className={styles["support-modal-option"]}
               onClick={() => handleOptionClick("/user/mypage/notice")}
             >
               공지사항
             </button>
             <button
-              className="support-modal-option"
+              className={styles["support-modal-option"]}
               onClick={() => handleOptionClick("/user/chat")}
             >
               채팅 문의
             </button>
-            <TranslateWidget/>
+            <TranslateWidget />
           </div>
         </div>
       )}

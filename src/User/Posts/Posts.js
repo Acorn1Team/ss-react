@@ -5,8 +5,9 @@ import styles from "../Style/PostDetail.module.css"; // CSS 모듈 임포트
 import modalStyles from "../Style/PostsModal.module.css"; // 모달 CSS 임포트
 import KakaoShareButton from "../Component/KaKaoShareButton";
 import { FaReply } from "react-icons/fa";
-import "./Posts.css";
 import stylesPost from "./Posts.css";
+import "../Style/All.css";
+import { MdDeleteForever } from "react-icons/md";
 
 export default function Posts() {
   const { postNo } = useParams();
@@ -441,7 +442,7 @@ export default function Posts() {
             key={index}
             to={`/user/style/profile/${userNo}`}
             className={styles.link}
-            style={{ color: "#007bff" }}
+            style={{ color: "#c7727e" }}
           >
             {part}
           </Link>
@@ -546,13 +547,18 @@ export default function Posts() {
                 @{userInfo.userNickname}
               </Link>
               <br />
-              {formatDate(postData.date)}
+              <span
+                style={{
+                  color: "#c7727e",
+                  fontWeight: "none",
+                  fontSize: "12px",
+                }}
+              >
+                {formatDate(postData.date)}
+              </span>
             </div>
             {String(postData.userNo) !== userNo && !isReport && (
-              <button
-                className={styles.topButtonBox}
-                onClick={() => postReports()}
-              >
+              <button className="btn1Small" onClick={() => postReports()}>
                 신고
               </button>
             )}
@@ -560,14 +566,15 @@ export default function Posts() {
             {String(postData.userNo) === String(userNo) && (
               <>
                 <button
-                  className={styles.topButtonBox}
+                  className="btn1Small"
                   onClick={() => postUDControl("u")}
                 >
                   수정
                 </button>
                 &ensp;
                 <button
-                  className={styles.topButtonBox}
+                  c
+                  className="btn1Small"
                   onClick={() => postUDControl("d")}
                 >
                   삭제
@@ -575,10 +582,7 @@ export default function Posts() {
               </>
             )}
             {isAdmin && (
-              <button
-                className={styles.topButtonBox}
-                onClick={() => postUDControl("d")}
-              >
+              <button className="btn1Small" onClick={() => postUDControl("d")}>
                 삭제
               </button>
             )}
@@ -662,7 +666,7 @@ export default function Posts() {
                 </Link>
               )}
           </div>
-          <hr width="90%" />
+
           <div className={styles.commentSection}>
             {postCommentData && postCommentData.length > 0 ? (
               <div>
@@ -672,98 +676,107 @@ export default function Posts() {
                     <div key={pc.no} className={styles.comment}>
                       <Link
                         to={`/user/style/profile/${pc.userNo}`}
-                        style={{ color: "#007bff", fontWeight: "bold" }}
+                        style={{ color: "#c7727e", fontWeight: "bold" }}
                       >
                         @{pc.userNickname}
                       </Link>
                       : {renderCommentContent(pc.content)}
                       <span id="iconBox">
                         <span onClick={() => recomment(pc.no, pc.userNickname)}>
-                          <FaReply size={"25"} />
+                          <FaReply size={"25"} color="#df919e" />
                         </span>
                         <span onClick={() => likeProcHandler(pc.no)}>
-                          <label class="ui-bookmark">
+                          <label className="ui-bookmark">
                             <input
                               type="checkbox"
                               checked={commentLikeStatus[pc.no]}
                               onChange={() => likeProcHandler(pc.no)}
                             />
-                            <div class="bookmark">
+                            <div className="bookmark">
                               <svg
                                 viewBox="0 0 16 16"
                                 style={{ marginTop: "4px" }}
-                                class="bi bi-heart-fill"
+                                className="bi bi-heart-fill"
                                 height="25"
                                 width="25"
                                 xmlns="http://www.w3.org/2000/svg"
                               >
                                 <path
                                   d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
-                                  fill-rule="evenodd"
+                                  fillRule="evenodd"
                                 ></path>
                               </svg>
                             </div>
                           </label>
                         </span>
-                        좋아요 {commentLike[pc.no]}개
+                        <span className="like-count">
+                          좋아요 {commentLike[pc.no]}개
+                        </span>
+                        {String(pc.userNo) === String(userNo) && (
+                          <span onClick={() => openDeleteCommentModal(pc.no)}>
+                            <MdDeleteForever size={"25"} color="#df919e" />
+                          </span>
+                        )}{" "}
                       </span>
-                      {String(pc.userNo) === String(userNo) && (
-                        <button onClick={() => openDeleteCommentModal(pc.no)}>
-                          삭제
-                        </button>
-                      )}
+                      <hr width="90%" />
                       {pc.replies &&
                         pc.replies.map((reply) => (
                           <div key={reply.no} className={styles.reply}>
                             <Link
                               to={`/user/style/profile/${reply.userNo}`}
-                              style={{ color: "#007bff" }}
+                              style={{ color: "#c7727e", fontWeight: "bold" }}
                             >
                               @{reply.userNickname}
                             </Link>
                             : {renderCommentContent(reply.content)}
-                            <br />
-                            <span
-                              onClick={() =>
-                                recomment(reply.no, reply.userNickname)
-                              }
-                            >
-                              <FaReply size={"25"} />
-                            </span>
-                            <label className="ui-bookmark">
-                              <input
-                                type="checkbox"
-                                checked={commentLikeStatus[reply.no]}
-                                onChange={() => likeProcHandler(reply.no)}
-                              />
-                              <div className="bookmark">
-                                <svg
-                                  viewBox="0 0 16 16"
-                                  style={{ marginTop: "4px" }}
-                                  className="bi bi-heart-fill"
-                                  height="25"
-                                  width="25"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
-                                    fillRule="evenodd"
-                                  ></path>
-                                </svg>
-                              </div>
-                            </label>
-                            좋아요{" "}
-                            {commentLike[reply.no] === undefined
-                              ? 0
-                              : commentLike[reply.no]}
-                            개
-                            {reply.userNo === userNo && (
-                              <button
-                                onClick={() => openDeleteCommentModal(reply.no)}
+                            <span id="iconBox">
+                              <span
+                                onClick={() =>
+                                  recomment(reply.no, reply.userNickname)
+                                }
                               >
-                                삭제
-                              </button>
-                            )}
+                                <FaReply size={"25"} color="#df919e" />
+                              </span>
+                              <label className="ui-bookmark">
+                                <input
+                                  type="checkbox"
+                                  checked={commentLikeStatus[reply.no]}
+                                  onChange={() => likeProcHandler(reply.no)}
+                                />
+                                <div className="bookmark">
+                                  <svg
+                                    viewBox="0 0 16 16"
+                                    style={{ marginTop: "4px" }}
+                                    className="bi bi-heart-fill"
+                                    height="25"
+                                    width="25"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+                                      fillRule="evenodd"
+                                    ></path>
+                                  </svg>
+                                </div>
+                              </label>
+                              좋아요{" "}
+                              {commentLike[reply.no] === undefined
+                                ? 0
+                                : commentLike[reply.no]}
+                              개
+                              {String(reply.userNo) === String(userNo) && (
+                                <span
+                                  onClick={() =>
+                                    openDeleteCommentModal(reply.no)
+                                  }
+                                >
+                                  <MdDeleteForever
+                                    size={"25"}
+                                    color="#df919e"
+                                  />
+                                </span>
+                              )}
+                            </span>
                           </div>
                         ))}
                     </div>
@@ -787,11 +800,7 @@ export default function Posts() {
                 {commentContent.length} / 100
               </div>
             </div>
-            <button
-              onClick={insertComment}
-              className={styles.submitButton}
-              disabled={loading}
-            >
+            <button onClick={insertComment} className="btn1" disabled={loading}>
               댓글 등록
             </button>
           </div>

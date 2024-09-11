@@ -1,11 +1,46 @@
 .ui-bookmark {
   --icon-size: 24px;
-  --icon-secondary-color: rgb(77, 77, 77);
-  --icon-hover-color: rgb(97, 97, 97);
-  --icon-primary-color: rgb(252, 54, 54);
+  --icon-secondary-color: #c6c3bd;
+  --icon-hover-color: #a8a5a0;
+  --icon-primary-color: #c7727e;
   --icon-circle-border: 1px solid var(--icon-primary-color);
   --icon-circle-size: 35px;
   --icon-anmt-duration: 0.3s;
+}
+
+.ui-bookmark {
+  display: flex;
+  align-items: center; /* Vertical alignment of the bookmark */
+}
+
+.like-count {
+  margin-left: 5px; /* Spacing between the like count and icons */
+}
+
+.commentSection {
+  display: flex;
+  flex-direction: column;
+}
+.reply {
+  display: flex;
+  flex-direction: column; /* 텍스트는 수직으로 정렬 */
+  width: 100%; /* 가로로 전체 공간을 차지하게 함 */
+}
+
+.reply span {
+  display: flex;
+  gap: 10px; /* 아이콘 간 간격 */
+}
+
+#iconBox {
+  display: flex;
+  align-items: center; /* 수직 가운데 정렬 */
+  gap: 10px; /* 아이콘 간 간격 */
+  width: 100%;
+}
+
+.bookmark svg {
+  margin: 0; /* 아이콘 간격이 자동으로 잘 정렬되도록 */
 }
 
 .textarea {

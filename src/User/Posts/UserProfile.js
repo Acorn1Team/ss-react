@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams, useLocation } from "react-router-dom";
 import styles from "../Style/UserProfile.module.css"; // CSS 모듈 임포트
+import "../Style/All.css";
 
 export default function UserProfile() {
   const [userData, setUserData] = useState({
@@ -174,25 +175,18 @@ export default function UserProfile() {
           <div className={styles.profileNickname}>@{userData.nickname}</div>
           <div className={styles.profileNickname}>{userData.id}</div>
           <div className={styles.profileBio}>{userData.bio}</div>
-          <button className={styles.editButton} onClick={() => profileEdit()}>
+          <button className={`btn3`} onClick={() => profileEdit()}>
             수정
           </button>
         </div>
       )}
 
       <div className={styles.profileActions}>
-        <Link
-          to={`/user/style/list/${userNo}`}
-          className={styles.profileActionLink}
-        >
+        <Link to={`/user/style/list/${userNo}`} className={`btn1`}>
           내가 쓴 글
         </Link>
         {location.pathname !== "/user/style/write" && (
-          <Link
-            to={`/user/style/write`}
-            // onClick={handleWriteButtonClick}
-            className={styles.profileActionLink}
-          >
+          <Link to={`/user/style/write`} className={`btn1`}>
             글 작성하기
           </Link>
         )}
