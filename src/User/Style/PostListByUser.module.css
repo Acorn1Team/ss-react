@@ -1,5 +1,3 @@
-/* PostListByUser.module.css */
-
 .container {
   max-width: 800px;
   margin: 40px auto;
@@ -29,43 +27,74 @@
   background-color: #0056b3;
 }
 
+.trashButtonContainer {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+}
+
+.postContainer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.postContainer input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.postContainer img {
+  width: 100px; /* 정사각형으로 이미지 비율 유지 */
+  height: 100px; /* 정사각형 */
+  object-fit: cover; /* 이미지가 정사각형 내에서 잘림 */
+  border-radius: 5px; /* 모서리를 둥글게 설정 */
+}
+
+.postContentWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column; /* 이미지와 텍스트가 가로로 정렬되도록 설정 */
+  justify-content: flex-start; /* 텍스트가 왼쪽으로 정렬되도록 */
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.postContent {
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden; /* 넘치는 텍스트 숨기기 */
+  text-overflow: ellipsis; /* 텍스트가 넘칠 때 '...' 처리 */
+}
+
+.postContent p {
+  margin: 0;
+}
+
+.trashButtonContainer div {
+  display: inline-block;
+  text-align: center;
+}
+
+.noPostsMessage {
+  text-align: center;
+  color: #666;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
 .checkboxGroup {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   margin-bottom: 20px;
-}
-.postContainer img {
-  width: 300px; /* 고정된 너비 */
-  height: 200px; /* 고정된 높이 */
-  object-fit: cover; /* 이미지 비율을 유지하면서 컨테이너에 맞추기 */
-  border-radius: 5px;
-  margin-bottom: 10px;
 }
 
 .checkboxGroup input[type="checkbox"] {
   margin-right: 10px;
-}
-.checkboxGroup button {
-  margin-right: 10px;
-  border: none;
-  border-radius: 20px;
-  padding: 10px;
-  background-color: #eee;
-}
-.postContainer {
-  margin-bottom: 20px;
-}
-
-.postContainer img {
-  border-radius: 5px;
-  margin-bottom: 10px;
-}
-
-.postContainer hr {
-  margin-top: 20px;
-  border: none;
-  height: 1px;
-  background-color: #ddd;
 }
 
 .pagination {
@@ -94,11 +123,4 @@
 .pagination span {
   font-size: 14px;
   color: #333;
-}
-
-.noPostsMessage {
-  text-align: center;
-  color: #666;
-  font-size: 16px;
-  margin-top: 20px;
 }
