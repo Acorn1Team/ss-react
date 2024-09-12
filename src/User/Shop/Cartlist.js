@@ -3,16 +3,20 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "../Style/CartList.module.css";
-import "../Style/All.css"; //  button styles
+import "../Style/All.css"; // button styles
 
 export default function CartList() {
-  const userNo = sessionStorage.getItem("id"); // 로그인한 사용자 ID를 세션에서 가져옴
-  const cartItems = useSelector((state) => state.cart.cartItems[userNo] || []); // 사용자 ID별 장바구니 항목 가져오기
+
+  const userNo = sessionStorage.getItem("id");
+  const cartItems = useSelector((state) => state.cart.cartItems[userNo] || []);
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // 선택된 장바구니 아이템과 장바구니에 표시할 상품 정보를 관리하는 상태
   const [selectedItems, setSelectedItems] = useState([]);
   const [cartProductInfo, setCartProductInfo] = useState([]);
+  const [isAllSelected, setIsAllSelected] = useState(false); // 전체 선택 상태 관리
 
   const fetchStockInfo = async () => {
     try {
@@ -27,12 +31,18 @@ export default function CartList() {
         }
       );
       const stockData = response.data;
-      setCartProductInfo(
-        cartItems.map((ci) => {
+
+      // 판매 가능하고 재고가 있는 상품만 필터링
+      const filteredProducts = cartItems
+        .map((ci) => {
+          // 각 상품에 대한 재고 및 판매 가능 정보 찾기
           const stockInfo = stockData.find(
             (stock) => stock.productNo === ci.product.no
           );
+          
+          // 재고와 판매 가능 여부를 설정
           const availableStock = stockInfo ? stockInfo.stock : 0;
+          const available = stockInfo ? stockInfo.available : false;
 
           return {
             no: ci.product.no,
@@ -47,22 +57,42 @@ export default function CartList() {
                   (1 - ci.product.discountRate / 100) *
                   ci.quantity
                 : ci.product.price * ci.quantity,
-            stock: availableStock,
-            purchaseCheck: ci.quantity <= availableStock,
+            stock: availableStock, // 상품의 재고
+            available, // 판매 가능 여부
+            purchaseCheck: ci.quantity <= availableStock && available, // 재고와 판매 가능 여부 체크
           };
         })
-      );
+        .filter((item) => item.available); // 판매 종료된 상품을 필터링
+
+      setCartProductInfo(filteredProducts);
     } catch (error) {
       console.error("Error fetching stock info:", error);
     }
   };
 
+  // 재고 정보 체크
   useEffect(() => {
     if (userNo) {
-      fetchStockInfo(); // 컴포넌트가 로드될 때 재고 정보 불러오기
+      fetchStockInfo();
     }
   }, [cartItems, userNo]);
 
+  // 전체 선택 및 해제 기능
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      // 전체 선택 해제
+      setSelectedItems([]);
+    } else {
+      // 전체 선택
+      const selectableItems = cartProductInfo.filter(
+        (item) => item.purchaseCheck
+      ).map((item) => item.no);
+      setSelectedItems(selectableItems);
+    }
+    setIsAllSelected(!isAllSelected);
+  };
+
+  // 총 가격을 계산하는 함수
   const getTotalCartPrice = () => {
     return selectedItems.reduce((total, productNo) => {
       const selectedItem = cartProductInfo.find(
@@ -72,9 +102,11 @@ export default function CartList() {
     }, 0);
   };
 
+  // 체크박스 변경 시 호출, 선택한 아이템을 관리하는 함수
   const handleCheckboxChange = (productNo) => {
     const selectedItem = cartProductInfo.find((item) => item.no === productNo);
 
+    // 재고가 있고 구매 가능한 상품만 선택할 수 있음
     if (selectedItem && selectedItem.purchaseCheck) {
       if (selectedItems.includes(productNo)) {
         setSelectedItems(selectedItems.filter((no) => no !== productNo));
@@ -84,6 +116,7 @@ export default function CartList() {
     }
   };
 
+  // 선택된 상품을 장바구니에서 제거하는 함수
   const handleRemoveSelected = () => {
     selectedItems.forEach((productNo) =>
       dispatch({
@@ -91,7 +124,8 @@ export default function CartList() {
         payload: { productNo, userNo },
       })
     );
-    setSelectedItems([]); // 선택 목록 초기화
+    // 선택된 아이템 목록 초기화
+    setSelectedItems([]);
   };
 
   const incrementQuantity = (productNo) => {
@@ -120,13 +154,16 @@ export default function CartList() {
     }
   };
 
- // 상품 상세 페이지
- const handleProductClick = (productNo) => {
-  navigate(`/user/shop/productlist/detail/${productNo}`); 
-};
+  // 상품 클릭 시 상세 페이지로 이동
+  const handleProductClick = (productNo) => {
+    navigate(`/user/shop/productlist/detail/${productNo}`);
+  };
 
+  // 선택된 상품을 주문하는 함수
   const handleOrder = () => {
     const total = getTotalCartPrice();
+    
+    // 선택된 상품들을 주문 항목으로 변환
     const selectedCartItems = cartProductInfo
       .filter((item) => selectedItems.includes(item.no))
       .map((item) => ({
@@ -138,12 +175,14 @@ export default function CartList() {
         resultPrice: item.resultPrice,
       }));
 
+    // 주문 생성 
     dispatch({
       type: "CREATE_ORDER",
-      payload: { items: selectedCartItems, total: total, userNo }, // 필요한 정보들을 저장
+      payload: { items: selectedCartItems, total: total, userNo },
     });
 
-    navigate(`/user/shop/order/detail`); // 주문 페이지로 이동
+    // 주문 완료 후 주문 상세 페이지로 이동
+    navigate(`/user/shop/order/detail`);
   };
 
   return (
@@ -153,6 +192,14 @@ export default function CartList() {
         <p>장바구니가 비어 있습니다.</p>
       ) : (
         <>
+          <div>
+            <input
+              type="checkbox"
+              checked={isAllSelected}
+              onChange={toggleSelectAll} // 전체 선택/해제 토글
+            />
+            <label>전체 선택</label>
+          </div>
           <div className={styles.cartContainer}>
             {cartProductInfo.map((item) => (
               <div key={item.no} className={styles.cartItem}>
@@ -168,7 +215,7 @@ export default function CartList() {
                 </span>
                 &nbsp;&nbsp;
                 <span
-                  onClick={() => handleProductClick(item.no)} // 클릭 시 상세 페이지로 이동
+                  onClick={() => handleProductClick(item.no)} // 클릭 시 상품 상세 페이지로 이동
                   style={{ cursor: "pointer", textDecoration: "underline" }}
                 >
                   {item.name}
@@ -179,7 +226,7 @@ export default function CartList() {
                   <button
                     className={`btn1`}
                     onClick={() => incrementQuantity(item.no)}
-                    disabled={item.quantity >= item.stock}
+                    disabled={item.quantity >= item.stock} // 재고량에 따른 수량 제한
                   >
                     +
                   </button>
@@ -197,12 +244,12 @@ export default function CartList() {
                   {item.resultPrice.toLocaleString()}원
                 </span>
                 {item.stock === 0 && (
-                  <div className={styles.stockWarning}>품절</div>
+                  <div className={styles.stockWarning}>품절</div> // 재고가 0일 경우 품절 표시
                 )}
                 {item.stock > 0 && item.quantity >= item.stock && (
                   <div className={styles.stockWarning}>
                     재고가 {item.stock}개 남았습니다
-                  </div>
+                  </div> // 재고가 한정적일 때 재고량 표시
                 )}
               </div>
             ))}
@@ -211,7 +258,7 @@ export default function CartList() {
             <button
               className={`btn2`}
               onClick={handleRemoveSelected}
-              disabled={selectedItems.length === 0}
+              disabled={selectedItems.length === 0} // 선택된 항목이 없으면 버튼 비활성화
             >
               선택 삭제
             </button>
@@ -222,7 +269,7 @@ export default function CartList() {
               <button
                 className={`btn2`}
                 onClick={handleOrder}
-                disabled={selectedItems.length === 0}
+                disabled={selectedItems.length === 0} // 선택된 항목이 없으면 주문 버튼 비활성화
               >
                 주문하기
               </button>
