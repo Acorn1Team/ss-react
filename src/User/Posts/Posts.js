@@ -44,11 +44,24 @@ export default function Posts() {
   const [isAdmin, setIsAdmin] = useState(false); // 관리자 여부
   const [isReport, setIsReport] = useState(false); // 신고 여부
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return `${date.getFullYear()}년 ${
-      date.getMonth() + 1
-    }월 ${date.getDate()}일`;
+    const now = new Date();
+    const diffInMs = now - date; // 현재 시간과의 차이를 밀리초로 계산
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60)); // 분 단위로 변환
+    const diffInHours = Math.floor(diffInMinutes / 60); // 시간 단위로 변환
+    const diffInDays = Math.floor(diffInHours / 24); // 일 단위로 변환
+
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes}분 전`; // 1시간 이내면 분으로 표시
+    } else if (diffInHours < 24) {
+      return `${diffInHours}시간 전`; // 24시간 이내면 시간으로 표시
+    } else if (diffInDays < 4) {
+      return `${diffInDays}일 전`; // 3일 이내면 일로 표시
+    } else {
+      return `${date.getMonth() + 1}월 ${date.getDate()}일`; // 4일 이상이면 월/일로 표시
+    }
   };
 
   const openDeleteModal = () => {

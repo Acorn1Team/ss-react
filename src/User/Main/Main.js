@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import "../Style/Main.css";
-
+import { PiCaretCircleDoubleLeftFill } from "react-icons/pi";
+import { PiCaretCircleDoubleRightFill } from "react-icons/pi";
 export default function UserHome() {
   const [show, setShow] = useState([]);
   const [review, setReview] = useState([]);
@@ -214,8 +215,10 @@ export default function UserHome() {
           <div className="slide">
             <div className="content-wrapper">
               <div className="content">
-                <h2>CHOOSE YOUR SCENE!</h2>
-                <span>어떤 장면을 당신의 것으로 만들까요?</span>
+                <h2 style={{ color: "#c7727e" }}>CHOOSE YOUR SCENE!</h2>
+                <span style={{ color: "#555" }}>
+                  어떤 장면을 당신의 것으로 만들까요?
+                </span>
 
                 <div className="horizontal-container">
                   <Link to={`/user/main/sub/${forMainRandom?.show?.no}`}>
@@ -284,7 +287,7 @@ export default function UserHome() {
                     </button>
                   </div>
                   <div className="random-style-container">
-                    이 스타일 어때요?
+                    <span style={{ color: "#555" }}>이 스타일 어때요?</span>
                     {randomStyle ? (
                       <div>
                         <img
@@ -320,27 +323,29 @@ export default function UserHome() {
                   <div></div>
                 </div>
 
-                <h3>
+                <h3 style={{ color: "#c7727e" }}>
                   FIND THE STYLE YOU LOVE!
                   <br />
                   BUY IT IF YOU WANT OR JUST SCRAP
                 </h3>
-                <span>마음에 드는 스타일을 찾으셨다면, 사거나 담거나!</span>
+                <span style={{ color: "#555" }}>
+                  마음에 드는 스타일을 찾으셨다면, 사거나 담거나!
+                </span>
               </div>
             </div>
           </div>
         </div>
 
         {currentIndex > 0 && (
-          <button className="slide-button prev" onClick={handlePrev}>
-            🎧
-          </button>
+          <span className="slide-button prev" onClick={handlePrev}>
+            <PiCaretCircleDoubleLeftFill color="df919e" />
+          </span>
         )}
 
         {currentIndex < 1 && (
-          <button className="slide-button next" onClick={handleNext}>
-            📻
-          </button>
+          <span className="slide-button next" onClick={handleNext}>
+            <PiCaretCircleDoubleRightFill color="df919e" />
+          </span>
         )}
       </div>
 

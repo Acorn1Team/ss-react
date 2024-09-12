@@ -132,7 +132,21 @@ function HeaderForm() {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+    const now = new Date();
+    const diffInMs = now - date; // 현재 시간과의 차이를 밀리초로 계산
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60)); // 분 단위로 변환
+    const diffInHours = Math.floor(diffInMinutes / 60); // 시간 단위로 변환
+    const diffInDays = Math.floor(diffInHours / 24); // 일 단위로 변환
+
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes}분 전`; // 1시간 이내면 분으로 표시
+    } else if (diffInHours < 24) {
+      return `${diffInHours}시간 전`; // 24시간 이내면 시간으로 표시
+    } else if (diffInDays < 4) {
+      return `${diffInDays}일 전`; // 3일 이내면 일로 표시
+    } else {
+      return `${date.getMonth() + 1}월 ${date.getDate()}일`; // 4일 이상이면 월/일로 표시
+    }
   };
 
   const deleteAlert = async (alertNo) => {
@@ -193,25 +207,25 @@ function HeaderForm() {
             <div>
               <button
                 onClick={() => setSelectedCategory("전체")}
-                className={styles.alertCategoryButton}
+                className="btn1Small"
               >
                 전체
               </button>
               <button
                 onClick={() => setSelectedCategory("주문")}
-                className={styles.alertCategoryButton}
+                className="btn1Small"
               >
                 주문
               </button>
               <button
                 onClick={() => setSelectedCategory("커뮤니티")}
-                className={styles.alertCategoryButton}
+                className="btn1Small"
               >
                 커뮤니티
               </button>
               <button
                 onClick={() => setSelectedCategory("프로모션")}
-                className={styles.alertCategoryButton}
+                className="btn1Small"
               >
                 프로모션
               </button>
@@ -222,24 +236,23 @@ function HeaderForm() {
                   key={alert.no || index}
                   className={`${styles.alertItem} ${
                     alert.isRead ? styles.readAlert : styles.unreadAlert
-                  }`} // 읽음 상태에 따라 클래스 추가
+                  }`}
                   onClick={() => markAsRead(alert.no)}
                 >
                   <div>
                     <Link to={alert.path}>
-                      <i>{alert.category}</i>
+                      <strong>{alert.category}</strong>&emsp;&emsp;{" "}
+                      <i style={{ opacity: "80%" }}>{formatDate(alert.date)}</i>
                       <br />
-                      {alert.content}
+                      {alert.content}&emsp;
+                      <span
+                        onClick={() => deleteAlert(alert.no)}
+                        className={styles.alertButton}
+                      >
+                        ×
+                      </span>
                       <br />
-                      <i>{formatDate(alert.date)}</i>
                     </Link>
-                    <span
-                      onClick={() => deleteAlert(alert.no)}
-                      className={styles.alertButton}
-                    >
-                      {" "}
-                      ×
-                    </span>
                   </div>
                 </div>
               ))
@@ -248,7 +261,7 @@ function HeaderForm() {
             )}
 
             {totalPages > 1 && (
-              <div className="pagination">
+              <div id={styles.pagination}>
                 <button
                   onClick={() => setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 0}
