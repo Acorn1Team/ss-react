@@ -188,6 +188,13 @@ export default function OrderManage() {
     );
   };
 
+  // 날짜 변경 시 필터링을 자동으로 처리
+  useEffect(() => {
+    if (startDate && endDate) {
+      handleDateFilter();
+    }
+  }, [startDate, endDate]);
+
   const handleReset = () => {
     setSearchTerm("");
     setStartDate("");
@@ -278,20 +285,14 @@ export default function OrderManage() {
                 type="date"
                 placeholder="시작 날짜"
                 value={startDate}
-                onChange={(e) => {
-                  setStartDate(e.target.value);
-                  handleDateFilter(); // 날짜 변경 시 즉시 필터 적용
-                }}
+                onChange={(e) => setStartDate(e.target.value)}
                 style={{ padding: "5px", width: "150px" }}
               />
               <input
                 type="date"
                 placeholder="종료 날짜"
                 value={endDate}
-                onChange={(e) => {
-                  setEndDate(e.target.value);
-                  handleDateFilter(); // 날짜 변경 시 즉시 필터 적용
-                }}
+                onChange={(e) => setEndDate(e.target.value)}
                 style={{ padding: "5px", width: "150px" }}
               />
             </div>
