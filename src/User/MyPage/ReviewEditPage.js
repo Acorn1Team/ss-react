@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
+import './ReviewWritePage.css';
 
 export default function ReviewEditPage() {
   const location = useLocation();
@@ -37,7 +38,7 @@ export default function ReviewEditPage() {
 
 
   return (
-    <div>
+    <div className="reviews-container">
       <h2>리뷰 수정하기</h2>
       <div>
         상품명: {review.productName}

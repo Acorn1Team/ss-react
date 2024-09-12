@@ -59,14 +59,14 @@
 
 .totalPrice h3 {
   font-size: 1.5rem;
-  color: #007bff;
+  color: #df919e;
   text-align: right;
 }
 
 .payButton {
   width: 100%;
   padding: 15px;
-  background-color: #df919e;
+  background-color: #c6c3bd;
   color: white;
   border: none;
   border-radius: 5px;
@@ -77,7 +77,7 @@
 }
 
 .payButton:hover {
-  background-color: #c7727e;
+  background-color: #a8a5a0;
 }
 
 .payButton:disabled {

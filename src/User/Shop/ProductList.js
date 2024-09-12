@@ -199,7 +199,7 @@ export default function ProductList() {
                     {product.price.toLocaleString()}원
                   </span>
                   &nbsp;
-                  <span style={{ color: "skyblue", fontWeight: "bold" }}>
+                  <span style={{ color: '#df919e', fontWeight: "bold" }}>
                     {calculateSellingPrice(
                       product.price,
                       product.discountRate

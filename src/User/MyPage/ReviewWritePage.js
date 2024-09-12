@@ -75,7 +75,7 @@ const handleSubmit = () => {
   };
  
   return (
-    <div>
+    <div className="reviews-container">
       <h2>리뷰 작성하기</h2>
       <div>
         {/* 주문상품 번호: {orderProductNo}

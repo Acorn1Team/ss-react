@@ -43,13 +43,13 @@ h2 {
 
 .orderProductLink {
   text-decoration: none;
-  color: #007bff;
+  color: #df919e;
   font-weight: bold;
   transition: color 0.3s;
 }
 
 .orderProductLink:hover {
-  color: #0056b3;
+  color: #c7727e;
 }
 
 .orderPrice {
@@ -60,7 +60,7 @@ h2 {
 .orderState {
   font-size: 1rem;
   font-weight: bold;
-  color: #28a745;
+  color: #a8a5a0;
 }
 
 hr {
@@ -77,7 +77,7 @@ hr {
 
 .pagination button {
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #df919e;
   color: white;
   border: none;
   border-radius: 5px;

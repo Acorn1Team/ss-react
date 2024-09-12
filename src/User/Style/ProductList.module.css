@@ -107,7 +107,7 @@
 
 .categoryLink {
   font-weight: bold;
-  color: #3897f0;
+  color: #df919e;
   text-decoration: none;
   padding: 10px;
   border-radius: 5px;
@@ -121,7 +121,7 @@
 
 /* 활성화된 카테고리 스타일 */
 .activeCategoryLink {
-  background-color: #3897f0;
+  background-color: #df919e;
   color: white;
   font-weight: bold;
 }

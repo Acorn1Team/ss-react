@@ -200,7 +200,7 @@ export default function ProductDetail() {
         }}
       >
         <div>
-          <FiShoppingCart size={100} color="#007bff" />
+          <FiShoppingCart size={100} color="#c7727e" />
         </div>
         <h3>선택한 상품이 장바구니에 담겼습니다.</h3>
         <button className={`btn3`} onClick={continueShopping}>계속 쇼핑하기</button>&nbsp;&nbsp;
