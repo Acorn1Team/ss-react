@@ -1,60 +1,69 @@
+/* 페이지 전체를 채우는 레이아웃 */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* 전체 화면을 채우는 최소 높이 설정 */
+}
+
+/* 본문 컨텐츠 */
+.main-content {
+  flex: 1; /* 남은 공간을 차지하도록 설정 */
+}
+
+/* 푸터 */
 .footer-container {
-  background: linear-gradient(135deg, #1f4037, #99f2c8); /* 그라데이션 배경 */
-  color: #fff;
-  padding: 40px 20px;
+  color: #444; /* 더 중립적인 컬러 */
+  padding: 20px 15px; /* 여백 줄임 */
   text-align: center;
   font-family: "Roboto", sans-serif;
+  width: 100%; /* 푸터가 화면 너비 전체에 걸쳐 나타나도록 설정 */
+  margin-top: auto; /* 본문 아래에 푸터가 위치하도록 설정 */
 }
 
 .footer-top {
-  margin-bottom: 30px;
+  margin-bottom: 20px; /* 여백을 줄여서 간결하게 */
 }
 
 .footer-logo {
-  font-size: 36px; /* 커다란 로고 폰트 */
+  font-size: 28px; /* 로고 크기 줄임 */
   font-weight: bold;
-  margin-bottom: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase; /* 대문자 변환 */
-}
-
-.footer-tagline {
-  font-size: 18px;
-  font-style: italic; /* 스타일리시한 이탤릭체 */
-  margin-bottom: 20px;
+  margin-bottom: 8px; /* 여백 줄임 */
+  letter-spacing: 1px; /* 글자 간격 줄임 */
+  text-transform: uppercase;
 }
 
 .social-icons a {
-  color: #fff;
-  font-size: 24px; /* 소셜 아이콘 크기 */
-  margin: 0 15px;
+  color: #444; /* 더 중립적인 색상 */
+  font-size: 20px; /* 소셜 아이콘 크기 줄임 */
+  margin: 0 10px; /* 여백 줄임 */
   transition: color 0.3s ease;
 }
 
 .social-icons a:hover {
-  color: #ff6f61; /* 호버 시 포인트 컬러 */
+  color: #888; /* 덜 강조된 호버 색상 */
 }
 
 .footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.3); /* 상단에 얇은 경계선 */
-  padding-top: 20px;
-  font-size: 14px;
+  padding-top: 15px; /* 여백 줄임 */
+  font-size: 12px; /* 폰트 크기 줄임 */
 }
 
 .footer-bottom p {
-  margin: 5px 0;
+  margin: 3px 0; /* 여백 줄임 */
 }
 
 .footer-bottom a {
-  color: #ff6f61; /* 이메일에 포인트 컬러 */
+  color: #888; /* 중립적인 색상 */
   text-decoration: none;
 }
 
 .footer-bottom a:hover {
   text-decoration: underline;
-}
-
-/* FontAwesome 아이콘 적용을 위한 클래스 */
-.fab {
-  font-family: "Font Awesome 5 Brands";
 }

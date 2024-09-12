@@ -70,14 +70,14 @@ export default function Scrap() {
         <div className={styles.scrapGrid}>
           {scrapList.map((sl) => (
             <div key={sl.no} className={styles.scrapItem}>
-              <Link to={`/user/main/sub/${sl.no}`} className={styles.scrapLink}>
+              <Link
+                to={`/user/main/sub/${sl.showNo}`}
+                className={styles.scrapLink}
+              >
                 <img src={sl.pic} alt={sl.name} className={styles.scrapImage} />
                 {sl.name}
               </Link>
-              <button
-                onClick={() => handleScrapCancel(sl.no)}
-                className={styles.scrapButton}
-              >
+              <button onClick={() => handleScrapCancel(sl.no)} className="btn2">
                 스크랩 취소
               </button>
             </div>

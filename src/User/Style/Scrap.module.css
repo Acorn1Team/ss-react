@@ -2,9 +2,6 @@
   max-width: 1200px;
   margin: 40px auto;
   padding: 20px;
-  background-color: #f9f9fc;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .title {
@@ -17,7 +14,7 @@
 
 .scrapGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 한 줄에 두 개씩 */
+  grid-template-columns: repeat(3, 1fr); /* 한 줄에 두 개씩 */
   gap: 20px; /* 카드 사이 간격 */
 }
 
@@ -38,7 +35,7 @@
 
 .scrapImage {
   width: 100%; /* 그리드 아이템 안에서 이미지를 꽉 채움 */
-  height: 200px;
+  height: 250px;
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 15px;
@@ -51,20 +48,6 @@
   font-size: 1.2rem;
   text-align: center;
   margin-bottom: 10px;
-}
-
-.scrapButton {
-  padding: 8px 16px;
-  background-color: #ff6b6b;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.scrapButton:hover {
-  background-color: #ff4757;
 }
 
 .emptyMessage {
