@@ -140,18 +140,29 @@ export default function ProductDetail() {
         )}
       </div>
       <div className={styles.quantityControls}>
-        <span className={styles.label}>수량:</span>
-        <button className={`btn1`} onClick={decrementQuantity}>-</button>
-        <span>{count}</span>
-        <button className={`btn1`} onClick={incrementQuantity}>+</button>&nbsp;
-        {product.stock > 0 ? (
-          <button className={`btn2`} onClick={handleAddToCart}>
-            장바구니에 담기
-          </button>
-        ) : (
-          <button className={`btn2`}>품절된 상품입니다</button>
-        )}
-      </div>
+  {product.stock > 0 ? (
+    <>
+      <span className={styles.label}>수량:</span>
+      <button className={`btn1`} onClick={decrementQuantity}>
+        -
+      </button>
+      <span>{count}</span>
+      <button
+        className={`btn1`}
+        onClick={incrementQuantity}
+        disabled={product.stock <= count}
+      >
+        +
+      </button>
+    </>
+  ) : (
+    <span></span>
+  )}
+  &nbsp;
+  <button className={`btn2`} onClick={handleAddToCart} disabled={product.stock === 0}>
+    {product.stock === 0 ? "품절된 상품입니다" : "장바구니에 담기"}
+  </button>
+</div>
 
       <div className={styles.productDescription}>
         <span className={styles.label}>상품 설명:</span>

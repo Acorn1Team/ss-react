@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { LiaBellSolid } from "react-icons/lia";
 import { GoPerson } from "react-icons/go";
 import styles from "../Style/HeaderForm.module.css";
 import AutoSearch from "./AutoSearch";
 import { IoCartOutline } from "react-icons/io5";
+import { FiSearch } from "react-icons/fi";
+import Modal from "react-modal";
 
 function HeaderForm() {
-  const [showPopup, setShowPopup] = useState(false);
-  const [showAlertPopup, setShowAlertPopup] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null); // 드롭다운 상태 통합
   const [alerts, setAlerts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [currentPage, setCurrentPage] = useState(0);
@@ -18,7 +19,12 @@ function HeaderForm() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const navigate = useNavigate();
-  const nv = useNavigate();
+  const location = useLocation(); // useLocation을 추가하여 페이지 경로를 추적
+
+  // 페이지 이동 시 드롭다운 닫기
+  useEffect(() => {
+    setActiveDropdown(null); // 페이지 이동 시 드롭다운과 알림 팝업 닫기
+  }, [location]); // location이 변경될 때마다 실행
 
   const checkFor = () => {
     const userId = sessionStorage.getItem("id");
@@ -30,29 +36,43 @@ function HeaderForm() {
     }
   };
 
-  // 화면 이동 시 드롭다운 닫기
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleSearch = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // 페이지 이동 또는 다른 아이콘 클릭 시 드롭다운 닫기
   useEffect(() => {
     const handleNavigation = () => {
-      setShowPopup(false);
+      setActiveDropdown(null); // 페이지 이동 시 드롭다운 닫기
     };
 
     window.addEventListener("popstate", handleNavigation);
     return () => {
       window.removeEventListener("popstate", handleNavigation);
     };
-  }, [nv]);
+  }, [navigate]);
 
   const handleProfileClick = () => {
     checkFor();
     if (isLoggedIn) {
-      setShowPopup(!showPopup);
+      setActiveDropdown(activeDropdown === "profile" ? null : "profile"); // 프로필 드롭다운 토글
     }
+  };
+
+  const handleAlarmClick = () => {
+    setActiveDropdown(activeDropdown === "alert" ? null : "alert"); // 알림 드롭다운 토글
   };
 
   const handleLogout = () => {
     sessionStorage.clear();
     navigate("/user");
-    setShowPopup(false);
+    setActiveDropdown(null);
     setIsLoggedIn(false);
   };
 
@@ -60,11 +80,6 @@ function HeaderForm() {
     (alert) =>
       selectedCategory === "전체" || alert.category === selectedCategory
   );
-
-  const handleAlarmClick = () => {
-    setShowAlertPopup(!showAlertPopup);
-    setShowPopup(false);
-  };
 
   const fetchAlerts = async () => {
     const userNo = sessionStorage.getItem("id");
@@ -83,8 +98,10 @@ function HeaderForm() {
   };
 
   useEffect(() => {
-    fetchAlerts();
-  }, [showAlertPopup, currentPage]);
+    if (activeDropdown === "alert") {
+      fetchAlerts(); // 알림창 열릴 때 알림 가져오기
+    }
+  }, [activeDropdown, currentPage]);
 
   const markAsRead = async (alertNo) => {
     try {
@@ -110,6 +127,7 @@ function HeaderForm() {
       console.log(err);
     }
   };
+
   const userNo = sessionStorage.getItem("id");
 
   return (
@@ -131,7 +149,18 @@ function HeaderForm() {
         </Link>
       </div>
       <div className={styles.rightContainer}>
-        <AutoSearch />
+        {" "}
+        <FiSearch size={30} onClick={handleSearch} />
+        <Modal
+          isOpen={isModalOpen} // 모달을 열기 위한 조건
+          onRequestClose={handleCloseModal} // 모달 바깥 클릭 시 닫히도록 설정
+          // contentLabel="Search Modal"
+          className={styles.modalContent} // 모달 콘텐츠에 대한 스타일 적용
+          // overlayClassName={styles.modalOverlay} // 모달 오버레이에 대한 스타일 적용
+        >
+          <AutoSearch />
+          <button onClick={handleCloseModal}>Close</button>
+        </Modal>
         <Link to="/user/shop/cart">
           <IoCartOutline className={styles.icon} />
         </Link>
@@ -143,7 +172,7 @@ function HeaderForm() {
             )}
           </div>
         )}
-        {showAlertPopup && (
+        {activeDropdown === "alert" && (
           <div className={styles.alertPopupContainer}>
             <div>
               <button
@@ -223,7 +252,6 @@ function HeaderForm() {
             )}
           </div>
         )}
-
         {isLoggedIn ? (
           <>
             <GoPerson
@@ -231,39 +259,39 @@ function HeaderForm() {
               onClick={handleProfileClick}
               style={{ marginBottom: "5px", marginLeft: "-2px" }}
             />
-            {showPopup && (
+            {activeDropdown === "profile" && (
               <div className={styles.popupContainer}>
                 <Link
                   to={`/user/mypage/update/${userNo}`}
-                  onClick={() => setShowPopup(false)}
+                  onClick={() => setActiveDropdown(null)}
                 >
                   회원정보수정
                 </Link>
                 <br />
                 <Link
                   to="/user/mypage/scrap"
-                  onClick={() => setShowPopup(false)}
+                  onClick={() => setActiveDropdown(null)}
                 >
                   마이스크랩
                 </Link>
                 <br />
                 <Link
                   to="/user/mypage/order"
-                  onClick={() => setShowPopup(false)}
+                  onClick={() => setActiveDropdown(null)}
                 >
                   주문내역
                 </Link>
                 <br />
                 <Link
                   to={`/user/mypage/review`}
-                  onClick={() => setShowPopup(false)}
+                  onClick={() => setActiveDropdown(null)}
                 >
                   마이리뷰
                 </Link>
                 <br />
                 <Link
                   to="/user/mypage/coupon"
-                  onClick={() => setShowPopup(false)}
+                  onClick={() => setActiveDropdown(null)}
                 >
                   마이쿠폰
                 </Link>

@@ -1,9 +1,9 @@
-import "../Style/Loading.css";
+import styles from "../Style/Loading.module.css";
 
 function Loading() {
   return (
-    <div class="loader-overlay">
-      <div class="loader"></div>
+    <div class={styles.loaderOverlay}>
+      <div class={styles.loader}></div>
     </div>
   );
 }

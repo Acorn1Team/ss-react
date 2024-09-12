@@ -52,41 +52,44 @@ const Login = () => {
   };
 
   return (
-    <div className={styles["login-container"]}>
-      <form className={styles["login-form"]} onSubmit={handleLogin}>
-        <h1>SceneStealer</h1>
+    <div className={styles["body"]}>
+      <div className={styles["login-container"]}>
+        <form className={styles["login-form"]} onSubmit={handleLogin}>
+          <h1>SceneStealer</h1>
 
-        <input
-          type="text"
-          placeholder="아이디"
-          id="id"
-          value={id}
-          onChange={(e) => setId(e.target.value)}
-        />
-        <input
-          type="password"
-          id="pwd"
-          placeholder="비밀번호"
-          value={pwd}
-          onChange={(e) => setPwd(e.target.value)}
-        />
+          <input
+            type="text"
+            placeholder="아이디"
+            id="id"
+            value={id}
+            onChange={(e) => setId(e.target.value)}
+          />
+          <input
+            type="password"
+            id="pwd"
+            placeholder="비밀번호"
+            value={pwd}
+            onChange={(e) => setPwd(e.target.value)}
+          />
 
-        {loginCheck && (
-          <label className={styles["error-message"]}>{errorMessage}</label>
-        )}
+          {loginCheck && (
+            <label className={styles["error-message"]}>{errorMessage}</label>
+          )}
 
-        <button type="submit">로그인</button>
+          <button type="submit">로그인</button>
+          <br />
+          <div>
+            <Link to="/user/auth/findPass">비밀번호 찾기</Link>
+          </div>
+          <p className={styles["signup-link"]}>
+            아직 회원이 아니신가요?{" "}
+            <Link to="/user/auth/register">회원가입</Link>
+          </p>
+        </form>
+        <SocialKakao props="social" />
         <br />
-        <div>
-          <Link to="/user/auth/findPass">비밀번호 찾기</Link>
-        </div>
-        <p className={styles["signup-link"]}>
-          아직 회원이 아니신가요? <Link to="/user/auth/register">회원가입</Link>
-        </p>
-      </form>
-      <SocialKakao props="social" />
-      <br />
-      <SocailNaver props="social" />
+        <SocailNaver props="social" />
+      </div>
     </div>
   );
 };
