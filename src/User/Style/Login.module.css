@@ -2,7 +2,9 @@
 .body {
   text-align: center;
 }
-.login-form input {
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
   width: 100%; /* 동일한 너비 설정 */
   padding: 10px; /* 동일한 패딩 설정 */
   margin-bottom: 20px; /* 동일한 아래 여백 */
@@ -11,7 +13,6 @@
   box-sizing: border-box; /* 패딩과 보더 포함한 너비 설정 */
   font-size: 14px; /* 동일한 폰트 크기 설정 */
 }
-
 .login-form input[type="submit"] {
   background-color: #df919e; /* 버튼 배경색 */
   color: white;
@@ -44,9 +45,10 @@
 }
 
 /* 에러 메시지 */
-.login-form .error-message {
-  color: red;
-  margin-bottom: 20px;
+.login-form .error_message {
+  text-align: left;
+  color: #d9534f;
+  font-size: 14px;
 }
 
 /* 하단 링크 스타일 */

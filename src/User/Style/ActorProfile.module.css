@@ -1,66 +1,45 @@
-/* @import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");*/
-@import url("https://fonts.googleapis.com/css2?family=Hahmlet:wght@100..900&display=swap");
-/* @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap"); */
-
-body {
-  font-family: "Hahmlet", serif;
+/* General layout for the actor, show, or product cards */
+.actorsContainer {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin: 20px 0;
+  gap: 20px;
 }
 
 .profileContainer {
   position: relative;
-  display: inline-block;
-  width: 220px; /* Adjust width as needed */
-  margin: 10px;
-  border-radius: 8px;
-  overflow: hidden;
+  max-width: 180px;
+  text-align: center;
   cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-  background-color: #222; /* Dark background for Netflix style */
-}
-
-.profileContainer:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
-}
-
-.actorsContainer {
-  position: relative;
-  width: 100%;
-  height: 300px; /* Adjust height as needed */
 }
 
 .profilePic {
   width: 100%;
-  height: 100%;
+  height: 250px;
   object-fit: cover;
   border-radius: 8px;
-  transition: opacity 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .profilePic:hover {
-  opacity: 0.8;
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .actorName {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.7); /* Dark background with some transparency */
-  color: #fff;
-  text-align: center;
+  margin-top: 8px;
   font-size: 16px;
   font-weight: bold;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  color: #333;
+  text-align: center;
 }
 
 .actorName a {
-  color: #fff;
   text-decoration: none;
-  transition: color 0.3s;
+  color: inherit;
 }
 
 .actorName a:hover {
-  color: #e50914; /* Netflix red color */
+  color: #df919e;
 }

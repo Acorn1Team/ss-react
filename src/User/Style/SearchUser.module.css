@@ -1,57 +1,53 @@
+/* 검색 결과 컨테이너 */
 .profileContainer {
-  background-color: #f4f4f9;
-  border-radius: 10px;
-  padding: 20px;
-  max-width: 300px;
-  text-align: left;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 20px; /* 페이지 상단에서 아래로 20px 내려오게 설정 */
-  margin-bottom: 20px;
-  margin-left: 20px;
   display: flex;
-  align-items: center;
+  justify-content: center; /* 중앙 정렬 */
+  flex-wrap: wrap;
+  gap: 30px; /* 카드 간 간격 */
+  margin: 20px auto;
 }
 
+/* 프로필 이미지 */
 .profilePic {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  margin-right: 20px;
+  object-fit: cover;
+  margin-bottom: 10px;
 }
 
+/* 사용자 정보 */
 .profileInfo {
-  display: flex;
-  flex-direction: column;
+  text-align: center;
 }
 
 .profileId {
-  font-size: 1.5em;
+  font-size: 18px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 5px;
 }
 
 .profileNickname {
-  font-size: 1em;
+  font-size: 14px;
   color: #777;
 }
-.customBtn {
-  width: 130px;
-  height: 40px;
-  padding: 10px 25px;
-  border: 2px solid #000;
-  font-family: "Lato", sans-serif;
-  font-weight: 500;
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  display: inline-block;
-}
+
+/* 페이징 버튼 */
 .pagingButton {
-  transition: all 0.3s ease;
+  background-color: #df919e;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
+
 .pagingButton:hover {
-  box-shadow: -7px -7px 20px 0px #fff9, -4px -4px 5px 0px #fff9,
-    7px 7px 20px 0px #0002, 4px 4px 5px 0px #0001;
+  background-color: #c7727e;
+}
+
+.customBtn {
+  margin: 0 10px;
 }

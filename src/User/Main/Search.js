@@ -79,9 +79,9 @@ function Search() {
   }
 
   return (
-    <div>
+    <div className={styles.actorsContainer}>
       {dbData.length > 0 ? (
-        <div>
+        <div className={styles.profileContainer}>
           {dbData.map((item, index) => (
             <span key={index}>
               {category === "actor" && <ActorItem item={item} />}
