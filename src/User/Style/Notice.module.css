@@ -24,7 +24,7 @@
 }
 
 .noticeTitle:hover {
-  color: #007bff;
+  color: #c7727e;
 }
 
 .noticeCategory {
@@ -37,32 +37,4 @@
   font-size: 0.8rem;
   color: #666;
   margin-top: 5px;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.pagination button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 0 5px;
-  transition: background-color 0.3s ease;
-}
-
-.pagination button:disabled {
-  background-color: #ddd;
-  cursor: not-allowed;
-}
-
-.pagination span {
-  font-size: 1rem;
-  color: #333;
 }

@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import "../Style/Main.css";
-
+import { PiCaretCircleDoubleLeftFill } from "react-icons/pi";
+import { PiCaretCircleDoubleRightFill } from "react-icons/pi";
 export default function UserHome() {
   const [show, setShow] = useState([]);
   const [review, setReview] = useState([]);
@@ -332,15 +333,15 @@ export default function UserHome() {
         </div>
 
         {currentIndex > 0 && (
-          <button className="slide-button prev" onClick={handlePrev}>
-            🎧
-          </button>
+          <span className="slide-button prev" onClick={handlePrev}>
+            <PiCaretCircleDoubleLeftFill color="df919e" />
+          </span>
         )}
 
         {currentIndex < 1 && (
-          <button className="slide-button next" onClick={handleNext}>
-            📻
-          </button>
+          <span className="slide-button next" onClick={handleNext}>
+            <PiCaretCircleDoubleRightFill color="df919e" />
+          </span>
         )}
       </div>
 
