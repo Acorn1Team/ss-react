@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import './ProductReviews.css'; // 스타일을 위한 CSS 파일 추가
 
 const ProductReviews = () => {
   const { no } = useParams(); // URL에서 product 번호 가져오기
+  const navigate = useNavigate();
   const [reviews, setReviews] = useState([]); // 페이징된 리뷰 데이터를 저장할 state
   const [averageRating, setAverageRating] = useState(0); // 전체 리뷰에 대한 평균 평점
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 번호
@@ -89,6 +90,10 @@ const ProductReviews = () => {
     }
     return stars;
   };
+  // 리뷰 이미지를 클릭했을 때 상세 페이지로 이동하는 함수
+  const goToReviewDetail = (no) => {
+    navigate(`/user/shop/review/${no}`); // 해당 리뷰의 상세 페이지로 이동
+  };
 
   return (
     <div className="reviews-container">
@@ -108,6 +113,8 @@ const ProductReviews = () => {
                 src={review.pic ? review.pic : "/path/to/default-image.jpg"}
                 alt={review.productName}
                 className="review-image2"
+                onClick={() => goToReviewDetail(review.no)} 
+                style={{ cursor: 'pointer' }} 
               />
             </div>
             <div className="review-right">

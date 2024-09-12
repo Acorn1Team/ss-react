@@ -128,6 +128,14 @@ export default function CartList() {
     setSelectedItems([]);
   };
 
+    // **개별 상품을 삭제하는 함수**
+    const handleRemoveItem = (productNo) => {
+      dispatch({
+        type: "REMOVE_FROM_CART",
+        payload: { productNo, userNo },
+      });
+    };
+
   const incrementQuantity = (productNo) => {
     const selectedItem = cartProductInfo.find((item) => item.no === productNo);
 
@@ -199,6 +207,7 @@ export default function CartList() {
               onChange={toggleSelectAll} // 전체 선택/해제 토글
             />
             <label>전체 선택</label>
+            
           </div>
           <div className={styles.cartContainer}>
             {cartProductInfo.map((item) => (
@@ -219,6 +228,15 @@ export default function CartList() {
                   style={{ cursor: "pointer", textDecoration: "underline" }}
                 >
                   {item.name}
+                  {item.stock === 0 && (
+                  <div className={styles.stockWarning}>품절</div> // 재고가 0일 경우 품절 표시
+                )}
+                {item.stock > 0 && item.quantity >= item.stock && (
+                  <div className={styles.stockWarning}>
+                    재고가 {item.stock}개 남았습니다
+                  </div> // 재고가 한정적일 때 재고량 표시
+                )}
+                
                 </span>
                 <div className={styles.cartQuantity}>
                   <button className={`btn1`} onClick={() => decrementQuantity(item.no)}>-</button>
@@ -243,17 +261,26 @@ export default function CartList() {
                 <span className={styles.cartItemPrice}>
                   {item.resultPrice.toLocaleString()}원
                 </span>
-                {item.stock === 0 && (
+
+                {/* {item.stock === 0 && (
                   <div className={styles.stockWarning}>품절</div> // 재고가 0일 경우 품절 표시
                 )}
                 {item.stock > 0 && item.quantity >= item.stock && (
                   <div className={styles.stockWarning}>
                     재고가 {item.stock}개 남았습니다
                   </div> // 재고가 한정적일 때 재고량 표시
-                )}
+                )} */}
+
+                  {/* 개별 삭제 버튼 추가 */}
+                <button className={`btn3`} onClick={() => handleRemoveItem(item.no)}>
+                  삭제
+                </button>
+
               </div>
             ))}
           </div>
+
+          
           <div>
             <button
               className={`btn2`}

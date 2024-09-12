@@ -99,6 +99,11 @@ console.log(err);
               상세보기
             </Link>
           )}
+           {!pl.available && (
+                  <span className={styles.productUnavailable}>
+                    판매종료된 상품입니다.
+                  </span>
+                )}
         </div>
         <span className={styles.productQuantity}>
           {orderProduct?.quantity}개
@@ -117,14 +122,12 @@ console.log(err);
             }
           >
             {hasReviewed ? "리뷰 작성 완료" : "리뷰 쓰기"}
-          </button>
-        ) : (
-          <span className={styles.productUnavailable}>판매종료된 상품입니다.</span>
-        )}
+                </button>
+              ) : null}
+            </div>
+          );
+        })}
       </div>
-    );
-  })}
-</div>
 
 
       <div className={styles.userInfo}>

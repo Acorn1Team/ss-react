@@ -122,7 +122,6 @@ export default function ProductList() {
     <div className={styles.container}>
       <div className={styles.header}>
         <label id={styles.sortOptions} className={styles.sortOptions}>
-          정렬 기준:
           <select
             id={styles.sortSelect}
             className={styles.sortSelect}
