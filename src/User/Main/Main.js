@@ -331,12 +331,17 @@ export default function UserHome() {
           </div>
         </div>
 
-        <button className="slide-button prev" onClick={handlePrev}>
-          🎧
-        </button>
-        <button className="slide-button next" onClick={handleNext}>
-          📻
-        </button>
+        {currentIndex > 0 && (
+          <button className="slide-button prev" onClick={handlePrev}>
+            🎧
+          </button>
+        )}
+
+        {currentIndex < 1 && (
+          <button className="slide-button next" onClick={handleNext}>
+            📻
+          </button>
+        )}
       </div>
 
       <b className="mainTextTitle">최신 리뷰</b>

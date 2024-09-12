@@ -331,20 +331,21 @@ export default function Posts() {
           getPostDetailInfo(); // 댓글 등록 후 게시글 정보 다시 가져오기
           setCommentContent("");
           setRecommentCheck(0);
-
-          // 알림 전송
-          axios.post(`/alert/reply/post/${userNo}`, {
-            userNo: postData.userNo,
-            path: postNo,
-            isRead: 0,
-          });
-
-          if (recomment !== null) {
-            axios.post(`/alert/reply/recomment/${userNo}`, {
-              userNo: recomment,
+          if (String(postData.userNo) !== String(userNo)) {
+            // 알림 전송
+            axios.post(`/alert/reply/post/${userNo}`, {
+              userNo: postData.userNo,
               path: postNo,
               isRead: 0,
             });
+
+            if (recomment !== null) {
+              axios.post(`/alert/reply/recomment/${userNo}`, {
+                userNo: recomment,
+                path: postNo,
+                isRead: 0,
+              });
+            }
           }
         }
       })

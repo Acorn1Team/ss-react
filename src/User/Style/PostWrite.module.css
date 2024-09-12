@@ -11,6 +11,14 @@
   padding: 20px;
 }
 
+.previewImage {
+  width: 100px;
+  height: 100px;
+  object-fit: cover; /* 이미지의 중앙 부분을 유지하면서 잘라냄 */
+  object-position: center; /* 이미지 중앙을 기준으로 위치 */
+  border-radius: 5px; /* 선택 사항: 이미지 모서리를 둥글게 */
+}
+
 #photoBox {
   margin-bottom: 10px;
 }

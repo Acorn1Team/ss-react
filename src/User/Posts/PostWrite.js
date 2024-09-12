@@ -26,6 +26,8 @@ export default function PostWrite() {
 
   const [orderProductList, setOrderProductList] = useState([]);
 
+  const [previewImage, setPreviewImage] = useState(null);
+
   const navigate = useNavigate();
 
   // 로그인 정보라고 가정
@@ -153,6 +155,20 @@ export default function PostWrite() {
     setInputValue(e.target.value);
   };
 
+  // 파일 변경 핸들러 (이미지 미리보기 추가)
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result); // 미리보기 이미지 설정
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setPreviewImage(null); // 파일이 없으면 미리보기 초기화
+    }
+  };
+
   // 상품 선택 핸들러
   const handleSelectChange = (e) => {
     const selectedProductNo = e.target.value;
@@ -240,8 +256,16 @@ export default function PostWrite() {
 
   return (
     <div className={styles.container}>
-      <div id="photoBox" className={styles.photoBox}></div>
-      {!postNo && <input type="file" />}
+      <div id="photoBox" className={styles.photoBox}>
+        {previewImage && (
+          <img
+            src={previewImage}
+            alt="미리보기"
+            className={styles.previewImage} // 미리보기 이미지에 스타일 적용
+          />
+        )}
+      </div>
+      {!postNo && <input type="file" onChange={handleFileChange} />}
       <span style={{ color: "red" }} id="forFileNull"></span>
       <br />
 
@@ -288,11 +312,13 @@ export default function PostWrite() {
               className={styles.productSelect}
             >
               <option value="0">구매한 상품을 선택하세요</option>
-              {orderProductList.map((item) => (
-                <option key={item.no} value={item.no}>
-                  {item.name}
-                </option>
-              ))}
+              {orderProductList
+                .filter((item) => item.available)
+                .map((item) => (
+                  <option key={item.no} value={item.no}>
+                    {item.name}
+                  </option>
+                ))}
             </select>
           </div>
         )}

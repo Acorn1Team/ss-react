@@ -18,9 +18,21 @@
   transform: translateX(-50%);
 }
 
+.logo {
+  transition: transform 0.3s ease, opacity 0.3s ease; /* 부드러운 전환 효과 추가 */
+}
+
+.logo:hover {
+  opacity: 0.8; /* 약간 투명하게 변경 */
+}
+
 .rightContainer {
   display: flex;
   align-items: center;
+}
+
+.rightContainer Link:hover {
+  color: #c7727e;
 }
 
 .logo {
@@ -90,34 +102,6 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.pagination button {
-  padding: 8px 16px;
-  margin: 0 5px;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.pagination button:disabled {
-  background-color: #dbdbdb;
-  cursor: not-allowed;
-}
-
-.pagination span {
-  font-size: 14px;
-  color: #333;
-}
-
-.pagination {
-  margin-top: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .popupContainer {
   position: absolute;
   top: 50px;
@@ -172,23 +156,25 @@
 .icon {
   width: 30px;
   height: 30px;
+  color: #444;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
 
 .icon:hover {
+  color: #c7727e;
   transform: scale(1.1);
 }
 
 .styledLink {
   text-decoration: none;
-  color: black;
+  color: #444;
   font-weight: bold;
   margin-left: 20px;
 }
 
 .styledLink:hover {
-  color: gray;
+  color: #c7727e;
 }
 
 .notificationWrapper {

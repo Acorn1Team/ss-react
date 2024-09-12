@@ -8,6 +8,7 @@ export default function UserProfile() {
   const [userData, setUserData] = useState({
     nickname: "",
     bio: "",
+    pic: "", // 사용자 프로필 사진 URL
   });
   const [followeeData, setFolloweeData] = useState([]);
   const [followerData, setFollowerData] = useState([]);
@@ -16,6 +17,7 @@ export default function UserProfile() {
   const [nicknameError, setNicknameError] = useState(false);
   const [bioError, setBioError] = useState(false);
   const [isSaveDisabled, setIsSaveDisabled] = useState(false); // 저장 버튼 상태
+  const [previewImage, setPreviewImage] = useState(null); // 이미지 미리보기 상태
 
   const userNo = sessionStorage.getItem("id");
 
@@ -28,6 +30,7 @@ export default function UserProfile() {
         setUserData({
           nickname: res.data.nickname || "",
           bio: res.data.bio || "",
+          pic: res.data.pic || "", // 서버에서 받은 프로필 사진 URL
         });
       })
       .catch((err) => console.log(err));
@@ -58,11 +61,9 @@ export default function UserProfile() {
         )
       );
 
-      if (document.querySelector('input[type="file"]').files[0]) {
-        formData.append(
-          "profileImage",
-          document.querySelector('input[type="file"]').files[0]
-        );
+      const fileInput = document.querySelector('input[type="file"]');
+      if (fileInput && fileInput.files[0]) {
+        formData.append("profileImage", fileInput.files[0]);
       }
 
       axios
@@ -74,6 +75,7 @@ export default function UserProfile() {
         .then((res) => {
           if (res.data.result) {
             setIsEditing(false);
+            setPreviewImage(null); // 저장 후 미리보기 초기화
             userInfo();
           }
         })
@@ -82,6 +84,19 @@ export default function UserProfile() {
         });
     } else {
       setIsEditing(true);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result); // 미리보기 이미지 설정
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setPreviewImage(null); // 파일이 없으면 미리보기 초기화
     }
   };
 
@@ -111,7 +126,25 @@ export default function UserProfile() {
     <div className={styles.profileContainer}>
       {isEditing ? (
         <div id="userPicNicknameEdit">
-          <input type="file" />{" "}
+          {/* 이미지 미리보기 */}
+          <div className={styles.previewContainer}>
+            {previewImage ? (
+              <img
+                src={previewImage}
+                alt="미리보기"
+                className={styles.previewImage}
+              />
+            ) : (
+              <img
+                src={userData.pic}
+                alt="프로필"
+                className={styles.previewImage}
+              />
+            )}
+          </div>
+
+          <input type="file" onChange={handleFileChange} />
+
           {isSaveDisabled && (
             <span style={{ color: "red", fontSize: "60%" }}>
               이미 사용 중인 닉네임입니다.
@@ -173,7 +206,6 @@ export default function UserProfile() {
         <div className={styles.profileContent}>
           <img src={userData.pic} alt="Profile" className={styles.profilePic} />
           <div className={styles.profileNickname}>@{userData.nickname}</div>
-          <div className={styles.profileNickname}>{userData.id}</div>
           <div className={styles.profileBio}>{userData.bio}</div>
           <button className={`btn3`} onClick={() => profileEdit()}>
             수정
