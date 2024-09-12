@@ -422,7 +422,7 @@ export default function OrderManage() {
       </table>
 
       {totalPages > 1 && (
-        <div style={{ marginTop: "10px" }}>
+        <div id="pagination" style={{ marginTop: "10px" }}>
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 0}

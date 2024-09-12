@@ -256,38 +256,14 @@ export default function ProductManage() {
   height: 400px; /* 고정 높이 설정 */
   overflow-y: auto; /* 콘텐츠가 넘칠 경우 스크롤 */
 }
-
-.button-container {
-  text-align: center;
-  margin-top: 20px;
-}
-
-button {
-  padding: 10px 20px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: blue;
-}
 `}
       </style>
 
-      {/* 품절 처리 확인 모달 */}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         contentLabel="품절 처리 확인"
-        style={{
-          content: {
-            top: "50%",
-            left: "50%",
-            right: "auto",
-            bottom: "auto",
-            marginRight: "-50%",
-            transform: "translate(-50%, -50%)",
-          },
-        }}
+        style={{content: {top: "50%",left: "50%", right: "auto", bottom: "auto", marginRight: "-50%", transform: "translate(-50%, -50%)",},}}
       >
         <h2>품절 처리</h2>
         <p>이 상품을 품절 처리하시겠습니까?</p>
@@ -295,14 +271,12 @@ button:hover {
         <button onClick={closeModal}>취소</button>
       </Modal>
 
-      <div className="button-container">
         <button
           className="button"
           onClick={() => navigate("/admin/product/insert")}
         >
           상품 추가하기
         </button>
-      </div>
 
       <div style={{ marginBottom: "10px" }}>
         <label style={{ display: "inline-block", marginRight: "10px" }}>
@@ -435,7 +409,7 @@ button:hover {
         )}
       </div>
 
-      <div style={{ marginTop: "10px" }}>
+      <div id="pagination" style={{ marginTop: "10px" }}>
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 0}
