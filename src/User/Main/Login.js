@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import SocialKakao from "../Component/SocialKakao";
 import SocailNaver from "../Component/SocialNaver";
 import styles from "../Style/Login.module.css";
+import "../Style/All.css";
 
 const Login = () => {
   const [id, setId] = useState("");
@@ -52,7 +53,7 @@ const Login = () => {
   };
 
   return (
-    <div className={styles["body"]}>
+    <div className={styles.body}>
       <div className={styles["login-container"]}>
         <form className={styles["login-form"]} onSubmit={handleLogin}>
           <h1>SceneStealer</h1>
@@ -76,7 +77,7 @@ const Login = () => {
             <label className={styles["error-message"]}>{errorMessage}</label>
           )}
 
-          <button type="submit">로그인</button>
+          <input type="submit" value="로그인" className="btn3Long"></input>
           <br />
           <div>
             <Link to="/user/auth/findPass">비밀번호 찾기</Link>
