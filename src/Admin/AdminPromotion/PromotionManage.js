@@ -110,18 +110,30 @@ export default function PromotionManage() {
 
   return (
     <>
-      <h3 className={styles.header}>
-        🩶 광고 🩶&nbsp;
-        <button className="register-button" onClick={() => {navigate("/admin/promotion/advertise")}}>
-          광고 알림 보내기
-        </button>
-      </h3>
+      <div id="admin-body">
+        <h3 className={styles.header}>
+          🩶 광고 🩶&nbsp;
+          <button
+            className="register-button"
+            onClick={() => {
+              navigate("/admin/promotion/advertise");
+            }}
+          >
+            광고 알림 보내기
+          </button>
+        </h3>
+      </div>
       <div className={styles.container}>
         <div className={styles.flexRow}>
           <div className={styles.card}>
             <h3>
               🩶 쿠폰 🩶&nbsp;
-              <button className="register-button" onClick={() => {navigate("/admin/promotion/coupon")}}>
+              <button
+                className="register-button"
+                onClick={() => {
+                  navigate("/admin/promotion/coupon");
+                }}
+              >
                 쿠폰 발급하기
               </button>
             </h3>
@@ -139,7 +151,9 @@ export default function PromotionManage() {
                   <tr key={coupon.no}>
                     <td>{coupon.name}</td>
                     <td>{coupon.discountRate}%</td>
-                    <td>{coupon.expiryDate ? `${coupon.expiryDate}까지` : "없음"}</td>
+                    <td>
+                      {coupon.expiryDate ? `${coupon.expiryDate}까지` : "없음"}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -168,7 +182,10 @@ export default function PromotionManage() {
           <div className={styles.card}>
             <h3>
               🩶 팝업 🩶&nbsp;
-              <button className="register-button" onClick={() => navigate('/admin/promotion/popup')}>
+              <button
+                className="register-button"
+                onClick={() => navigate("/admin/promotion/popup")}
+              >
                 팝업 등록하기
               </button>
             </h3>
@@ -207,7 +224,7 @@ export default function PromotionManage() {
                     <td>
                       <i
                         onClick={() => openDeletePopupModal(popup)}
-                        className={styles.buttonDelete}
+                        className="delete-button"
                       >
                         삭제
                       </i>
@@ -262,8 +279,12 @@ export default function PromotionManage() {
                 style={{ maxWidth: "70%", maxHeight: "30%" }}
               />
               <h3>해당 팝업을 삭제할까요?</h3>
-              <button onClick={() => deletePopup(popupToDelete.no)}>삭제</button>
-              <button onClick={() => setIsDeletePopupModalOpen(false)}>취소</button>
+              <button onClick={() => deletePopup(popupToDelete.no)}>
+                삭제
+              </button>
+              <button onClick={() => setIsDeletePopupModalOpen(false)}>
+                취소
+              </button>
             </>
           )}
         </Modal>
@@ -294,11 +315,17 @@ export default function PromotionManage() {
                 src={popupToChange.pic}
                 alt={`${popupToChange.no} 이미지`}
                 style={{ maxWidth: "70%", maxHeight: "30%" }}
-              /><br/>
-              <button className="cancel-button" onClick={() => setIsChangeStatusModalOpen(false)}>
+              />
+              <br />
+              <button
+                className="cancel-button"
+                onClick={() => setIsChangeStatusModalOpen(false)}
+              >
                 취소
               </button>
-              <button className="confirm-button" onClick={handleStatusChange}>변경</button>
+              <button className="confirm-button" onClick={handleStatusChange}>
+                변경
+              </button>
             </>
           )}
         </Modal>

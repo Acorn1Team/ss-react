@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Modal from "react-modal"; // react-modal 추가
+import "../Style/admin.css";
 
 Modal.setAppElement("#root"); // 접근성 설정
 
@@ -217,7 +218,7 @@ export default function ProductManage() {
   };
 
   return (
-    <>
+    <div id="admin-body">
       <style>
         {`.product-row {
   display: flex;
@@ -263,20 +264,33 @@ export default function ProductManage() {
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         contentLabel="품절 처리 확인"
-        style={{content: {top: "50%",left: "50%", right: "auto", bottom: "auto", marginRight: "-50%", transform: "translate(-50%, -50%)",},}}
+        style={{
+          content: {
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            marginRight: "-50%",
+            transform: "translate(-50%, -50%)",
+          },
+        }}
       >
         <h2>품절 처리</h2>
         <p>이 상품을 품절 처리하시겠습니까?</p>
-        <button className="confirm-button" onClick={handleSoldOutConfirm}>확인</button>
-        <button className="cancel-button" onClick={closeModal}>취소</button>
+        <button className="confirm-button" onClick={handleSoldOutConfirm}>
+          확인
+        </button>
+        <button className="cancel-button" onClick={closeModal}>
+          취소
+        </button>
       </Modal>
 
-        <button
-          className="add-button"
-          onClick={() => navigate("/admin/product/insert")}
-        >
-          상품 추가하기
-        </button>
+      <button
+        className="add-button"
+        onClick={() => navigate("/admin/product/insert")}
+      >
+        상품 추가하기
+      </button>
 
       <div style={{ marginBottom: "10px" }}>
         <label style={{ display: "inline-block", marginRight: "10px" }}>
@@ -300,7 +314,11 @@ export default function ProductManage() {
         >
           검색
         </button>
-        <button className="view-all-button" onClick={handleReset} style={{ padding: "5px 10px" }}>
+        <button
+          className="view-all-button"
+          onClick={handleReset}
+          style={{ padding: "5px 10px" }}
+        >
           전체보기
         </button>
       </div>
@@ -355,7 +373,8 @@ export default function ProductManage() {
                 <div>
                   <strong>재고:</strong> {item.stock}
                   &nbsp;
-                  <button className="delete-button"
+                  <button
+                    className="delete-button"
                     onClick={() => openModal(item.no)}
                     disabled={item.stock === 0}
                   >
@@ -368,7 +387,8 @@ export default function ProductManage() {
                 <div>
                   <strong>등록일:</strong> {formatDate(item.date)}
                 </div>
-                <button className="update-button"
+                <button
+                  className="update-button"
                   onClick={() => navigate(`/admin/product/update/${item.no}`)}
                 >
                   수정하기
@@ -427,6 +447,6 @@ export default function ProductManage() {
           다음
         </button>
       </div>
-    </>
+    </div>
   );
 }

@@ -20,7 +20,7 @@ export default function CommunityManage() {
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [pageSize] = useState(5); // 한 페이지에 보여줄 게시글 수
   const [selectedPost, setSelectedPost] = useState(null); // 선택된 게시글
-  
+
   const [postToDelete, setPostToDelete] = useState(null); // 삭제할 게시글
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -65,7 +65,7 @@ export default function CommunityManage() {
   const openDeleteModal = (postData) => {
     setPostToDelete(postData);
     setIsDeleteModalOpen(true);
-  }
+  };
 
   const fetchReportedInfos = async () => {
     try {
@@ -149,9 +149,13 @@ export default function CommunityManage() {
 
             return (
               <li key={post.no} className="post-item">
-                <button className="delete-button" onClick={() => openDeleteModal(post)}>
+                <button
+                  className="delete-button"
+                  onClick={() => openDeleteModal(post)}
+                >
                   삭제하기
-                </button><hr/>
+                </button>
+                <hr />
                 {view === "reported" && (
                   <>
                     <strong>신고 횟수:</strong> {post.reportsCount}
@@ -159,7 +163,8 @@ export default function CommunityManage() {
                     <strong>신고 사유:</strong> {displayedCategories}
                     <br />
                   </>
-                )}<hr/>
+                )}
+                <hr />
                 {post.deleted > 0 && view === "reported" && (
                   <strong>휴지통에 있는 게시물입니다</strong>
                 )}
@@ -175,7 +180,9 @@ export default function CommunityManage() {
                     />
                   </div>
                 )}
-                {selectedPost?.no === post.no ? post.content : truncateText(post.content, 20)}
+                {selectedPost?.no === post.no
+                  ? post.content
+                  : truncateText(post.content, 20)}
                 {post.content.length > 20 && (
                   <span
                     style={{ cursor: "pointer", color: "blue" }} // 클릭 가능한 스타일 추가
@@ -190,52 +197,66 @@ export default function CommunityManage() {
                     {selectedPost?.no === post.no ? "닫기" : "상세보기"}
                   </span>
                 )}
-
-
               </li>
             );
           })}
         </ul>
         <Modal
-                isOpen={isDeleteModalOpen}
-                onRequestClose={() => setIsDeleteModalOpen(false)}
-                contentLabel="게시글 삭제 확인"
-                style={{
-                    overlay: {
-                        backgroundColor: "rgba(0, 0, 0, 0.5)",
-                    },
-                    content: {
-                        background: "white",
-                        padding: "20px",
-                        borderRadius: "8px",
-                        textAlign: "center",
-                        maxWidth: "400px",
-                        height: "500px",
-                        margin: "auto",
-                    },
-                }}
-            >
-                {postToDelete && (
-                    <><br/>
-                        <img
-                            src={postToDelete.pic}
-                            alt={`${postToDelete.no} 이미지`}
-                            style={{ maxWidth: '70%', height: 'auto' }}
-                            /><br/>
-                        <h3>해당 게시글 삭제 조치 후<br/> 작성자에게 경고 알림을 전송하겠습니다.</h3>
-                        <button className="cancel-button" onClick={() => setIsDeleteModalOpen(false)}>취소</button>&nbsp;&nbsp;
-                        <button className="confirm-button" onClick={() => deletePost(postToDelete.no)}>확인</button>
-                    </>
-                )}
-            </Modal>
+          isOpen={isDeleteModalOpen}
+          onRequestClose={() => setIsDeleteModalOpen(false)}
+          contentLabel="게시글 삭제 확인"
+          style={{
+            overlay: {
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+            },
+            content: {
+              background: "white",
+              padding: "20px",
+              borderRadius: "8px",
+              textAlign: "center",
+              maxWidth: "400px",
+              height: "500px",
+              margin: "auto",
+            },
+          }}
+        >
+          {postToDelete && (
+            <>
+              <br />
+              <img
+                src={postToDelete.pic}
+                alt={`${postToDelete.no} 이미지`}
+                style={{ maxWidth: "70%", height: "auto" }}
+              />
+              <br />
+              <h3>
+                해당 게시글 삭제 조치 후<br /> 작성자에게 경고 알림을
+                전송하겠습니다.
+              </h3>
+              <button
+                className="cancel-button"
+                onClick={() => setIsDeleteModalOpen(false)}
+              >
+                취소
+              </button>
+              &nbsp;&nbsp;
+              <button
+                className="confirm-button"
+                onClick={() => deletePost(postToDelete.no)}
+              >
+                확인
+              </button>
+            </>
+          )}
+        </Modal>
       </div>
     );
   };
 
-
   return (
     <div style={{ padding: "20px" }}>
-    <style>{`
+      <style>
+        {`
 
 .post-list-horizontal {
   display: flex;
@@ -278,13 +299,31 @@ export default function CommunityManage() {
 
         `}
       </style>
-      <h1>게시글 관리</h1>
-      <button className={view === "all" ? "button-disabled" : "button-abled"} onClick={() => { setCurrentPage(0); setView("all"); }} disabled={view === "all"}>
-        전체 글 보기
-      </button>
-      <button className={view === "reported" ? "button-disabled" : "button-abled"} onClick={() => { setCurrentPage(0); setView("reported") }} disabled={view === "reported"}>
-        신고된 글 보기
-      </button><br /><br />
+      <div id="admin-body">
+        <h1>게시글 관리</h1>
+        <button
+          className={view === "all" ? "button-disabled" : "button-abled"}
+          onClick={() => {
+            setCurrentPage(0);
+            setView("all");
+          }}
+          disabled={view === "all"}
+        >
+          전체 글 보기
+        </button>
+        <button
+          className={view === "reported" ? "button-disabled" : "button-abled"}
+          onClick={() => {
+            setCurrentPage(0);
+            setView("reported");
+          }}
+          disabled={view === "reported"}
+        >
+          신고된 글 보기
+        </button>
+        <br />
+        <br />
+      </div>
       {view === "reported" && (
         <select
           value={sortOrder}

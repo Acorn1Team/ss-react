@@ -2,9 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams, useLocation, useNavigate } from "react-router-dom";
 import styles from "../Style/Sub.module.css";
-import { IoIosHeart } from "react-icons/io";
-import { IoIosHeartEmpty } from "react-icons/io";
 
+import "./Sub.css";
 export default function Sub() {
   const { no } = useParams();
   const locationState = useLocation();
@@ -152,13 +151,28 @@ export default function Sub() {
           />
 
           <div>
-            <span onClick={() => scrapProc()}>
-              {scrap ? (
-                <IoIosHeart size={"40"} />
-              ) : (
-                <IoIosHeartEmpty size={"40"} />
-              )}
+            <span className="ui-bookmark" onClick={() => scrapProc()}>
+              <input
+                type="checkbox"
+                checked={scrap}
+                onChange={scrapProc} // 좋아요 처리 함수
+              />
+              <div className="bookmark">
+                <svg
+                  viewBox="0 0 16 16"
+                  style={{ marginTop: "4px" }}
+                  height="25"
+                  width="25"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+                    fillRule="evenodd"
+                  />
+                </svg>
+              </div>
             </span>
+
             <p>
               {selectCharacter.characterLikeNo === null
                 ? ""

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./ProductForm.css";
 import Modal from "react-modal";
-
+import "../Style/admin.css";
 export default function ProductUpdateForm() {
   const { no } = useParams();
   const navigate = useNavigate();
@@ -147,6 +147,14 @@ export default function ProductUpdateForm() {
 
   return (
     <div className="form-container">
+      <button
+        className="view-all-button"
+        onClick={() => {
+          navigate("/admin/product");
+        }}
+      >
+        목록으로
+      </button>
       <h2 className="form-title">상품 정보 수정</h2>
       <div className="form-group">
         <input
@@ -217,73 +225,78 @@ export default function ProductUpdateForm() {
           <p className="error-message">{errors.discountRate}</p>
         )}
       </div>
-      <button className="view-all-button" onClick={() => {navigate("/admin/product")}}>
-        목록으로
-      </button>&nbsp;&nbsp;
-      <button
-        className="update-button"
-        onClick={handleSave}
-        disabled={!isFormValid()}
-      >
-        수정 완료
-      </button><br/>
-      <button className="delete-button" onClick={openModal} disabled={!state.available}>
-        {state.available ? '판매 종료' : '판매 종료된 상품'}
-      </button>
+      <div id="admin-body">
+        &nbsp;&nbsp;
+        <button
+          className="delete-button"
+          onClick={openModal}
+          disabled={!state.available}
+        >
+          {state.available ? "판매 종료" : "판매 종료된 상품"}
+        </button>
+        <button
+          className="update-button"
+          onClick={handleSave}
+          disabled={!isFormValid()}
+        >
+          수정 완료
+        </button>
+      </div>
       {/* 모달 */}
       <Modal
-          isOpen={isModalOpen}
-          onRequestClose={() => setIsModalOpen(false)}
-          contentLabel="상품 삭제 확인"
-          style={{
-            overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
-            content: {
-              background: "white",
-              padding: "20px",
-              borderRadius: "8px",
-              textAlign: "center",
-              maxWidth: "500px",
-              height: "200px",
-              margin: "auto",
-            },
-          }}
-        >
-      {isModalOpen && (
-        <>
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        contentLabel="상품 삭제 확인"
+        style={{
+          overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+          content: {
+            background: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            textAlign: "center",
+            maxWidth: "500px",
+            height: "200px",
+            margin: "auto",
+          },
+        }}
+      >
+        {isModalOpen && (
+          <>
             <p>
-              <b>{state.name}</b> 판매를  종료하시겠습니까?</p>
-            <button
-              onClick={() => handleDelete(state.no)}
-            >
-              삭제
-            </button>&nbsp;&nbsp;
-            <button onClick={closeModal}>
-              취소
-            </button>
-        </>
-      )}
+              <b>{state.name}</b> 판매를 종료하시겠습니까?
+            </p>
+            <button onClick={() => handleDelete(state.no)}>삭제</button>
+            &nbsp;&nbsp;
+            <button onClick={closeModal}>취소</button>
+          </>
+        )}
       </Modal>
 
       <Modal
         isOpen={isResultModalOpen}
         onRequestClose={() => setIsResultModalOpen(false)}
         contentLabel="판매종료 처리 확인"
-        style={{overlay: {backgroundColor: "rgba(0, 0, 0, 0.5)",},
-                content: {
-                background: "white",
-                padding: "20px",
-                borderRadius: "8px",
-                textAlign: "center",
-                maxWidth: "300px",
-                height: "180px",
-                margin: "auto",
-                },
-        }}>
-          <><br/>
-              <h3>판매 종료 처리가 완료되었습니다.</h3>
-              <button onClick={() => navigate("/admin/product")}>목록으로 돌아가기</button>
-          </>
-        </Modal>
+        style={{
+          overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+          content: {
+            background: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            textAlign: "center",
+            maxWidth: "300px",
+            height: "180px",
+            margin: "auto",
+          },
+        }}
+      >
+        <>
+          <br />
+          <h3>판매 종료 처리가 완료되었습니다.</h3>
+          <button onClick={() => navigate("/admin/product")}>
+            목록으로 돌아가기
+          </button>
+        </>
+      </Modal>
     </div>
   );
 }

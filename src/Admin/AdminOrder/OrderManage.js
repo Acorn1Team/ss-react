@@ -234,64 +234,79 @@ export default function OrderManage() {
       >
         <h2>주문 상태 변경</h2>
         <p>주문 상태를 '{modalStatus}'로 변경하시겠습니까?</p>
-        <button className="confirm-button" onClick={handleStatusChange}>확인</button>
-        <button className="cancel-button" onClick={closeModal}>취소</button>
-      </Modal>
-
-      {/* 상태 필터 */}
-      <div style={{ marginBottom: "20px" }}>
-        <h4>상태 필터</h4>
-        <StatusFilterSelect
-          status={status}
-          onStatusChange={handleStatusFilterChange}
-        />
-      </div>
-
-      {/* 검색 필터 */}
-      <div style={{ marginBottom: "20px" }}>
-        <h4>주문자명 필터</h4>
-        <input
-          type="text"
-          placeholder="이름을 입력하세요"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          style={{ padding: "5px", marginRight: "10px", width: "120px" }}
-        />
-      </div>
-
-      {/* 날짜 필터 */}
-      <div style={{ marginBottom: "20px" }}>
-        <h4>날짜 필터</h4>
-        <input
-          type="date"
-          placeholder="시작 날짜"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          style={{
-            padding: "5px",
-            marginRight: "10px",
-            width: "150px",
-            lineHeight: "1.5",
-          }}
-        />
-        <input
-          type="date"
-          placeholder="종료 날짜"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          style={{ padding: "5px", width: "150px", lineHeight: "1.5" }}
-        />
-        <button className="search-button"
-          onClick={handleDateFilter}
-          style={{ padding: "5px 10px", marginRight: "10px" }}
-        >
-          날짜로 검색
+        <button className="confirm-button" onClick={handleStatusChange}>
+          확인
         </button>
-      </div>
+        <button className="cancel-button" onClick={closeModal}>
+          취소
+        </button>
+      </Modal>
+      <div id="admin-body" style={{ textAlign: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center", // 가로 가운데 정렬
+            alignItems: "center", // 수직 가운데 정렬
+            marginBottom: "20px",
+            gap: "30px", // 필터 사이의 간격 설정
+          }}
+        >
+          {/* 상태 필터 */}
+          <div style={{ textAlign: "center" }}>
+            <StatusFilterSelect
+              status={status}
+              onStatusChange={handleStatusFilterChange}
+            />
+          </div>
 
-      <button className="view-all-button" onClick={handleReset} style={{ padding: "5px 10px" }}>
-        전체보기
-      </button>
+          {/* 검색 필터 */}
+          <div style={{ textAlign: "center" }}>
+            <input
+              type="text"
+              placeholder="이름을 입력하세요"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              style={{ padding: "5px", width: "150px" }} // 크기 조정
+            />
+          </div>
+
+          {/* 날짜 필터 */}
+          <div style={{ textAlign: "center" }}>
+            <div style={{ display: "flex", gap: "10px" }}>
+              {/* 날짜와 버튼 간 간격 설정 */}
+              <input
+                type="date"
+                placeholder="시작 날짜"
+                value={startDate}
+                onChange={(e) => {
+                  setStartDate(e.target.value);
+                  handleDateFilter(); // 날짜 변경 시 즉시 필터 적용
+                }}
+                style={{ padding: "5px", width: "150px" }}
+              />
+              <input
+                type="date"
+                placeholder="종료 날짜"
+                value={endDate}
+                onChange={(e) => {
+                  setEndDate(e.target.value);
+                  handleDateFilter(); // 날짜 변경 시 즉시 필터 적용
+                }}
+                style={{ padding: "5px", width: "150px" }}
+              />
+            </div>
+          </div>
+
+          {/* 전체보기 버튼을 같은 줄에 배치 */}
+          <button
+            className="view-all-button"
+            onClick={handleReset}
+            style={{ padding: "5px 10px" }}
+          >
+            전체보기
+          </button>
+        </div>
+      </div>
 
       <table border="1" style={{ width: "100%" }}>
         <thead>
