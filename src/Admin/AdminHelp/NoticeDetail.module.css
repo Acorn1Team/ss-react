@@ -1,0 +1,9 @@
+/* NoticeDetail.module.css */
+/* NoticeDetail.module.css */
+.container {
+  max-width: none !important; /* max-width 제한 해제 */
+}
+
+.container .textarea {
+  width: 150%;
+}

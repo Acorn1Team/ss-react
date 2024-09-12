@@ -149,12 +149,14 @@ export default function CommunityManage() {
 
             return (
               <li key={post.no} className="post-item">
-                <button
-                  className="delete-button"
-                  onClick={() => openDeleteModal(post)}
-                >
-                  삭제하기
-                </button>
+                <div style={{ textAlign: "center" }}>
+                  <button
+                    className="delete-button"
+                    onClick={() => openDeleteModal(post)}
+                  >
+                    삭제하기
+                  </button>
+                </div>
                 <hr />
                 {view === "reported" && (
                   <>
@@ -328,6 +330,7 @@ export default function CommunityManage() {
         <select
           value={sortOrder}
           onChange={(e) => setSortOrder(e.target.value)}
+          style={{ width: "150px" }} // 너비 설정
         >
           <option value="latest">최신순</option>
           <option value="mostReported">신고 많은 순</option>

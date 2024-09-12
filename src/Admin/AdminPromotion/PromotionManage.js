@@ -126,18 +126,20 @@ export default function PromotionManage() {
       <div className={styles.container}>
         <div className={styles.flexRow}>
           <div className={styles.card}>
-            <h3>
-              🩶 쿠폰 🩶&nbsp;
-              <button
-                className="register-button"
-                onClick={() => {
-                  navigate("/admin/promotion/coupon");
-                }}
-              >
-                쿠폰 발급하기
-              </button>
-            </h3>
-            <h4>발급한 쿠폰 목록</h4>
+            <div style={{ textAlign: "center" }}>
+              <h3>
+                🩶 쿠폰 🩶&nbsp;
+                <button
+                  className="register-button"
+                  onClick={() => {
+                    navigate("/admin/promotion/coupon");
+                  }}
+                >
+                  쿠폰 발급하기
+                </button>
+              </h3>
+              <h4>발급한 쿠폰 목록</h4>
+            </div>
             <table className={styles.table}>
               <thead>
                 <tr>
@@ -180,16 +182,18 @@ export default function PromotionManage() {
           </div>
 
           <div className={styles.card}>
-            <h3>
-              🩶 팝업 🩶&nbsp;
-              <button
-                className="register-button"
-                onClick={() => navigate("/admin/promotion/popup")}
-              >
-                팝업 등록하기
-              </button>
-            </h3>
-            <h4>팝업 목록</h4>
+            <div style={{ textAlign: "center" }}>
+              <h3>
+                🩶 팝업 🩶&nbsp;
+                <button
+                  className="register-button"
+                  onClick={() => navigate("/admin/promotion/popup")}
+                >
+                  팝업 등록하기
+                </button>
+              </h3>
+              <h4>팝업 목록</h4>
+            </div>
             <table className={styles.table}>
               <thead>
                 <tr>
