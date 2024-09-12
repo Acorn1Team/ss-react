@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "../Style/HeaderForm.module.css";
+import "../Style/All.css";
 
-function AutoSearch() {
+function AutoSearch({ onSearch }) {
   const [inputValue, setInputValue] = useState("");
   const [filteredItems, setFilteredItems] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -74,10 +75,13 @@ function AutoSearch() {
       `/user/search?category=${encodedCategory}&name=${encodedInputValue}`
     );
     setInputValue("");
+    if (onSearch) {
+      onSearch();
+    }
   };
 
   return (
-    <form className={styles.searchForm} onSubmit={handleSearch}>
+    <form className={styles.searchForm}>
       <select
         className={styles.searchSelect}
         onChange={(e) => setCategory(e.target.value)}
@@ -96,9 +100,13 @@ function AutoSearch() {
         onBlur={handleBlur}
         placeholder="Search..."
       />
-      <button type="submit" className={styles.searchButton}>
-        조회
-      </button>
+
+      <input
+        onClick={handleSearch}
+        type="button"
+        value="조회"
+        className={`btn4 ${styles.searchButton}`}
+      ></input>
 
       {showDropdown && (
         <div className={styles.autoSearchContainer}>

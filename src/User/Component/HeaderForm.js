@@ -5,6 +5,7 @@ import { LiaBellSolid } from "react-icons/lia";
 import { GoPerson } from "react-icons/go";
 import styles from "../Style/HeaderForm.module.css";
 import AutoSearch from "./AutoSearch";
+import "../Style/All.css";
 import { IoCartOutline } from "react-icons/io5";
 import { FiSearch } from "react-icons/fi";
 import Modal from "react-modal";
@@ -19,6 +20,7 @@ function HeaderForm() {
   const [alertCheckForDot, setAlertCheckForDot] = useState();
 
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [filteredItems, setFilteredItems] = useState([]); // AutoSearch의 결과
   const navigate = useNavigate();
   const location = useLocation(); // useLocation을 추가하여 페이지 경로를 추적
 
@@ -186,14 +188,21 @@ function HeaderForm() {
         {" "}
         <FiSearch size={25} className={styles.icon} onClick={handleSearch} />
         <Modal
-          isOpen={isModalOpen} // 모달을 열기 위한 조건
-          onRequestClose={handleCloseModal} // 모달 바깥 클릭 시 닫히도록 설정
-          // contentLabel="Search Modal"
-          className={styles.modalContent} // 모달 콘텐츠에 대한 스타일 적용
-          // overlayClassName={styles.modalOverlay} // 모달 오버레이에 대한 스타일 적용
+          isOpen={isModalOpen}
+          onRequestClose={handleCloseModal}
+          className={styles.modalContent} // 모달 콘텐츠 스타일
+          overlayClassName={styles.modalOverlay} // 오버레이 배경 스타일
         >
-          <AutoSearch />
-          <button onClick={handleCloseModal}>Close</button>
+          <div>
+            <h2>당신에게 어울리는 스타일, 배우와 작품에서 발견하세요</h2>
+            <AutoSearch
+              setFilteredItems={setFilteredItems}
+              onSearch={handleCloseModal}
+            />
+            <button onClick={handleCloseModal} className={styles.closeButton}>
+              X
+            </button>
+          </div>
         </Modal>
         <Link to="/user/shop/cart">
           <IoCartOutline className={styles.icon} />
@@ -327,7 +336,9 @@ function HeaderForm() {
                   마이쿠폰
                 </Link>
                 <br />
-                <button onClick={handleLogout}>로그아웃</button>
+                <button className="btn2Small" onClick={handleLogout}>
+                  로그아웃
+                </button>
               </div>
             )}
           </>

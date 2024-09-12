@@ -527,8 +527,10 @@ const Register = () => {
               {errorMessage.email && (
                 <div className={styles.error_message}>{errorMessage.email}</div>
               )}
-              <button
-                className="btn1Long"
+              <input
+                className="btn3Long"
+                value="인증번호 전송"
+                type="button"
                 onClick={async () => {
                   if (!email || !emailDomain) {
                     setErrorMessage((prev) => ({
@@ -546,9 +548,7 @@ const Register = () => {
                   );
                 }}
                 disabled={!email || !emailDomain}
-              >
-                인증번호 발송
-              </button>
+              ></input>
               <div className={styles.user_input}>
                 <label>
                   <input
@@ -586,7 +586,7 @@ const Register = () => {
               onChange={(e) => setId(e.target.value)}
             />
             <input
-              className="btn1"
+              className="btn3"
               id="idCheck"
               value="중복 확인"
               type="button"
@@ -600,7 +600,7 @@ const Register = () => {
           )}
 
           {/* 비밀번호 */}
-          <div className={styles.user_input}>
+          <div className={styles.pwd_input}>
             <input
               type="password"
               name="pwd"
@@ -612,7 +612,7 @@ const Register = () => {
               <div className={styles.error_message}>{errorMessage.pwd}</div>
             )}
           </div>
-          <div className={styles.user_input}>
+          <div className={styles.pwd_input}>
             <input
               type="password"
               name="pwd_chk"
@@ -667,9 +667,12 @@ const Register = () => {
               ref={zipcodeDisplayRef}
               value={zipcode}
             />
-            <button className="btn1" onClick={openDaumPostcode}>
-              검색
-            </button>
+            <input
+              type="button"
+              value="검색"
+              className="btn3 "
+              onClick={openDaumPostcode}
+            ></input>
           </div>
           <input
             type="hidden"
@@ -704,9 +707,13 @@ const Register = () => {
             <div className={styles.error_message}>{errorMessage.address}</div>
           )}
 
-          <button className="btn2" id="btnRegister">
-            회원가입
-          </button>
+          <input
+            type="button"
+            value="회원가입"
+            className="btn4"
+            id="btnRegister"
+            onClick={handleRegister}
+          ></input>
         </form>
         <Modal
           isOpen={modalIsOpen}
