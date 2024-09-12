@@ -16,6 +16,7 @@ function HeaderForm() {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(4);
   const [totalPages, setTotalPages] = useState(1);
+  const [alertCheckForDot, setAlertCheckForDot] = useState(false);
 
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const navigate = useNavigate();
@@ -65,7 +66,24 @@ function HeaderForm() {
     }
   };
 
+  useEffect(() => {
+    forAlert();
+  }, []);
+
+  const forAlert = () => {
+    axios
+      .get(`/alert/Readcheck/${userNo}`)
+      .then((res) => {
+        if (res.data.result) {
+          setAlertCheckForDot(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   const handleAlarmClick = () => {
+    forAlert();
     setActiveDropdown(activeDropdown === "alert" ? null : "alert"); // 알림 드롭다운 토글
   };
 
@@ -132,7 +150,7 @@ function HeaderForm() {
 
   return (
     <header className={styles.header}>
-      <div className={styles.leftContainer}>
+      <div className={styles.leftContainer} onClick={forAlert()}>
         <Link to="/user/main" className={styles.styledLink}>
           HOME
         </Link>
@@ -150,7 +168,7 @@ function HeaderForm() {
       </div>
       <div className={styles.rightContainer}>
         {" "}
-        <FiSearch size={30} onClick={handleSearch} />
+        <FiSearch size={25} className={styles.icon} onClick={handleSearch} />
         <Modal
           isOpen={isModalOpen} // 모달을 열기 위한 조건
           onRequestClose={handleCloseModal} // 모달 바깥 클릭 시 닫히도록 설정
@@ -167,9 +185,7 @@ function HeaderForm() {
         {sessionStorage.getItem("id") && (
           <div className={styles.notificationWrapper}>
             <LiaBellSolid onClick={handleAlarmClick} className={styles.icon} />
-            {alerts.some((alert) => !alert.isRead) && (
-              <div className={styles.redDot}></div>
-            )}
+            {alertCheckForDot && <div className={styles.redDot}></div>}
           </div>
         )}
         {activeDropdown === "alert" && (
@@ -232,7 +248,7 @@ function HeaderForm() {
             )}
 
             {totalPages > 1 && (
-              <div className={styles.pagination}>
+              <div className="pagination">
                 <button
                   onClick={() => setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 0}

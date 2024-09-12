@@ -177,15 +177,17 @@ function ChatInput({ onSendMessage }) {
           placeholder="메시지를 입력하세요!"
           className={stylesChat.inputField}
         />
-        <button onClick={handleSend} className={stylesChat.sendButton}>
-          Send
+        <button onClick={handleSend} className="btn1">
+          전송
         </button>
       </div>
-      <button onClick={chatClose} className={stylesChat.closeButton}>
-        채팅 종료
-      </button>
-      <br />
-      채팅 종료시, 상담 내역을 다시 확인할 수 없습니다.
+      <div style={{ textAlign: "center" }}>
+        <button onClick={chatClose} className="btn3">
+          채팅 종료
+        </button>
+        <br />
+        채팅 종료시, 상담 내역을 다시 확인할 수 없습니다.
+      </div>
     </div>
   );
 }
