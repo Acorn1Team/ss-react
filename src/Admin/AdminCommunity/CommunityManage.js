@@ -305,7 +305,7 @@ export default function CommunityManage() {
         </select>
       )}
       {renderContent()}
-      <div>
+      <div id="pagination">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 0}

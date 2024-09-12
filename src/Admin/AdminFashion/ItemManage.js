@@ -74,7 +74,7 @@ export default function ItemManage() {
 
       {/* 페이지네이션 */}
       {totalPages > 1 && (
-      <div style={{ marginTop: "10px", fontSize: "12px" }}>
+      <div id="pagination">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 0}

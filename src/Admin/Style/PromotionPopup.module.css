@@ -56,22 +56,6 @@ select:focus {
   outline: none;
 }
 
-.button {
-  background-color: #4a4a4a;
-  color: white;
-  padding: 12px 24px;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
-  margin-top: 20px;
-}
-
-.button:hover {
-  background-color: #333;
-}
-
 .autoSearchContainer {
   position: absolute;
   top: 100%; /* 입력 필드 바로 아래에 위치하도록 수정 */

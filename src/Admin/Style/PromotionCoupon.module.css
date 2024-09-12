@@ -57,18 +57,3 @@ span {
   font-size: 16px;
   margin-left: 5px; /* % 기호와 input 사이에 여백 */
 }
-
-.button {
-  background-color: #4a4a4a;
-  color: white;
-  padding: 12px 24px;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
-}
-
-.button:hover {
-  background-color: #333;
-}

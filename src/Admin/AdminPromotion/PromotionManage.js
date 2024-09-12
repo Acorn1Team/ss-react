@@ -139,13 +139,13 @@ export default function PromotionManage() {
                   <tr key={coupon.no}>
                     <td>{coupon.name}</td>
                     <td>{coupon.discountRate}%</td>
-                    <td>{coupon.expiryDate}까지</td>
+                    <td>{coupon.expiryDate ? `${coupon.expiryDate}까지` : "없음"}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
             {totalCouponPages > 1 && (
-              <div className={styles.pagination}>
+              <div id="pagination">
                 <button
                   onClick={() => handleCouponPageChange(currentCouponPage - 1)}
                   disabled={currentCouponPage === 0}
@@ -217,7 +217,7 @@ export default function PromotionManage() {
               </tbody>
             </table>
             {totalPopupPages > 1 && (
-              <div className={styles.pagination}>
+              <div id="pagination">
                 <button
                   onClick={() => handlePopupPageChange(currentPopupPage - 1)}
                   disabled={currentPopupPage === 0}
