@@ -16,7 +16,7 @@ function HeaderForm() {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(4);
   const [totalPages, setTotalPages] = useState(1);
-  const [alertCheckForDot, setAlertCheckForDot] = useState(false);
+  const [alertCheckForDot, setAlertCheckForDot] = useState();
 
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const navigate = useNavigate();
@@ -76,6 +76,8 @@ function HeaderForm() {
       .then((res) => {
         if (res.data.result) {
           setAlertCheckForDot(true);
+        } else {
+          setAlertCheckForDot(false);
         }
       })
       .catch((err) => {
