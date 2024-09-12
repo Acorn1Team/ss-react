@@ -42,33 +42,54 @@ export default function ItemManage() {
       <table border={1} style={{ fontSize: "12px" }}>
         <thead>
           <tr>
-            <th>번호</th>
-            <th>이름</th>
-            <th>사진</th>
+            <th>아이템 정보</th>
+            <th>연결 상품 정보</th>
+            <th>연결 스타일 정보</th>
           </tr>
         </thead>
         <tbody>
-          {items.length > 0 ? (
-            items.map((item) => (
-              <tr key={item.no}>
-                <td>{item.no}</td>
-                <td> 
-                  <Link to={`/admin/help`}>
-                    {item.name}
-                  </Link>
-                </td>
-                <td>
-                  <img src={item.pic} alt={`${item.name} 이미지`} style={{maxHeight:"100px", maxWidth:"30px"}}/>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4" style={{ textAlign: "center", padding: "20px" }}>
-                결과가 없습니다.
+        {items.length > 0 ? (
+          items.map((item) => (
+            <tr key={item.no}>
+              <td>
+                {item.no}번,&nbsp;
+                <Link to={`/admin/help`}>
+                  {item.name}
+                </Link><br/>
+                <img src={item.pic} alt={`${item.name} 이미지`} style={{ maxHeight: "100px", maxWidth: "30px" }} />
+              </td>
+              <td>
+                {item.productNo}번, &nbsp;
+                {item.productName}<br/>
+                <img src={item.productPic} alt={`${item.productName} 이미지`} style={{ maxHeight: "100px", maxWidth: "30px" }} />
+               
+              </td>
+              <td>
+                {item.styleInfos && item.styleInfos.length > 0 ? (
+                  item.styleInfos.map((styleInfo) => (
+                    <div key={styleInfo.no}>
+                      {styleInfo.no},&nbsp;
+                      <img src={styleInfo.pic} alt={`${styleInfo.no} 이미지`} style={{ maxHeight: "100px", maxWidth: "30px" }} />
+                      {styleInfo.style.no},&nbsp;
+                      {styleInfo.characterName},&nbsp;
+                      {styleInfo.actorName},&nbsp;
+                      {styleInfo.showTitle}
+                    </div>
+                  ))
+                ) : (
+                  <div>정보 없음</div>
+                )}
               </td>
             </tr>
-          )}
+          ))
+        ) : (
+          <tr>
+            <td colSpan="4" style={{ textAlign: "center", padding: "20px" }}>
+              결과가 없습니다.
+            </td>
+          </tr>
+        )}
+
         </tbody>
       </table>
 

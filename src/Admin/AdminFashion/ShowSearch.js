@@ -234,11 +234,11 @@ const Container = styled.div`
 `;
 
 const LeftSection = styled.div`
-  width: 50%; /* 왼쪽 섹션 너비 */
+  width: 30%; /* 왼쪽 섹션 너비 */
 `;
 
 const RightSection = styled.div`
-  width: 50%; /* 오른쪽 섹션 너비 */
+  width: 70%; /* 오른쪽 섹션 너비 */
 `;
 
 const Divider = styled.div`
