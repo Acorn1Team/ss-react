@@ -112,18 +112,18 @@ export default function PromotionManage() {
     <>
       <h3 className={styles.header}>
         🩶 광고 🩶&nbsp;
-        <Link to="/admin/promotion/advertise">
-          <button className={styles.button}>광고 알림 보내기</button>
-        </Link>
+        <button className="register-button" onClick={() => {navigate("/admin/promotion/advertise")}}>
+          광고 알림 보내기
+        </button>
       </h3>
       <div className={styles.container}>
         <div className={styles.flexRow}>
           <div className={styles.card}>
             <h3>
               🩶 쿠폰 🩶&nbsp;
-              <Link to="/admin/promotion/coupon">
-                <button className={styles.button}>쿠폰 발급하기</button>
-              </Link>
+              <button className="register-button" onClick={() => {navigate("/admin/promotion/coupon")}}>
+                쿠폰 발급하기
+              </button>
             </h3>
             <h4>발급한 쿠폰 목록</h4>
             <table className={styles.table}>
@@ -168,9 +168,9 @@ export default function PromotionManage() {
           <div className={styles.card}>
             <h3>
               🩶 팝업 🩶&nbsp;
-              <Link to="/admin/promotion/popup">
-                <button className={styles.button}>팝업 등록하기</button>
-              </Link>
+              <button className="register-button" onClick={() => navigate('/admin/promotion/popup')}>
+                팝업 등록하기
+              </button>
             </h3>
             <h4>팝업 목록</h4>
             <table className={styles.table}>
@@ -295,10 +295,10 @@ export default function PromotionManage() {
                 alt={`${popupToChange.no} 이미지`}
                 style={{ maxWidth: "70%", maxHeight: "30%" }}
               /><br/>
-              <button onClick={() => setIsChangeStatusModalOpen(false)}>
+              <button className="cancel-button" onClick={() => setIsChangeStatusModalOpen(false)}>
                 취소
-              </button>&nbsp;&nbsp;
-              <button onClick={handleStatusChange}>변경</button>
+              </button>
+              <button className="confirm-button" onClick={handleStatusChange}>변경</button>
             </>
           )}
         </Modal>

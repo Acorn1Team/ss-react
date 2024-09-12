@@ -69,7 +69,7 @@ export default function NoticeManage() {
               {/* 카테고리 선택 및 전체보기 버튼 */}
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px", alignItems: "center", padding: "0 20px", fontSize: "20px" }}>
               공지 목록<br/>
-              <button onClick={() => navigate("/admin/help/notices/new")}>
+              <button className="add-button" onClick={() => navigate("/admin/help/notices/new")}>
                 공지 추가하기
               </button>
               </div>

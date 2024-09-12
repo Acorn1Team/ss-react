@@ -83,7 +83,7 @@ export default function NoticeDetail() {
   return (
     <>
       <h2>공지 수정</h2>
-      <button onClick={() => navigate(`/admin/help`)}>목록보기</button>
+      <button className="cancel-button" onClick={() => navigate(`/admin/help`)}>목록보기</button>
       <div>
         제목
         <input
@@ -113,14 +113,14 @@ export default function NoticeDetail() {
           value={state.contents}
           style={{
             width: "100%",
-            height: "150px", // 높이 조절
+            height: "200px", // 높이 조절
             padding: "10px",
             boxSizing: "border-box",
           }}
         />
       </div>
-      <button onClick={() => openModal("삭제")}>삭제</button>&nbsp;&nbsp;
-      <button onClick={() => openModal("수정")}>수정</button>
+      <button className="delete-button" onClick={() => openModal("삭제")}>공지 삭제하기</button>&nbsp;&nbsp;
+      <button className="update-button" onClick={() => openModal("수정")}>수정 완료</button>
       {/* react-modal 모달 */}
       <Modal
         isOpen={isModalOpen}
@@ -148,7 +148,7 @@ export default function NoticeDetail() {
         <h2 style={{ fontSize: "20px" }}>{modalType} 확인</h2>
         <p style={{ fontSize: "16px" }}>{modalType}하시겠습니까?</p>
         <div>
-          <button
+          <button className="delete-button"
             onClick={handleConfirm}
             style={{
               fontSize: "16px",
@@ -158,7 +158,7 @@ export default function NoticeDetail() {
           >
             {modalType}
           </button>
-          <button
+          <button className="cancel-button"
             onClick={closeModal}
             style={{ fontSize: "16px", padding: "10px 20px" }}
           >

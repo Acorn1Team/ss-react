@@ -30,7 +30,7 @@ export default function CommunityManage() {
         `/admin/posts?page=${page}&size=${pageSize}`
       );
 
-      const { content, totalElements, totalPages } = response.data;
+      const { content, totalPages } = response.data;
 
       const filteredPosts = content.filter((post) => !post.deleted);
 
@@ -149,7 +149,7 @@ export default function CommunityManage() {
 
             return (
               <li key={post.no} className="post-item">
-                <button className="btn1" onClick={() => openDeleteModal(post)}>
+                <button className="delete-button" onClick={() => openDeleteModal(post)}>
                   삭제하기
                 </button><hr/>
                 {view === "reported" && (
@@ -163,7 +163,7 @@ export default function CommunityManage() {
                 {post.deleted > 0 && view === "reported" && (
                   <strong>휴지통에 있는 게시물입니다</strong>
                 )}
-                <strong>작성자 ID:</strong> {post.userId}
+                <strong>작성자:</strong> {post.userNickname}
                 <br />
                 {post.pic && (
                   <div className="image-container">
@@ -223,8 +223,8 @@ export default function CommunityManage() {
                             style={{ maxWidth: '70%', height: 'auto' }}
                             /><br/>
                         <h3>해당 게시글 삭제 조치 후<br/> 작성자에게 경고 알림을 전송하겠습니다.</h3>
-                        <button onClick={() => setIsDeleteModalOpen(false)}>취소</button>&nbsp;&nbsp;
-                        <button onClick={() => deletePost(postToDelete.no)}>확인</button>
+                        <button className="cancel-button" onClick={() => setIsDeleteModalOpen(false)}>취소</button>&nbsp;&nbsp;
+                        <button className="confirm-button" onClick={() => deletePost(postToDelete.no)}>확인</button>
                     </>
                 )}
             </Modal>
@@ -264,16 +264,6 @@ export default function CommunityManage() {
 .post-image {
   height: 150px;
   width: auto;
-}
-
-.button-disabled {
-  background-color: rgb(199, 199, 199); /* disabled일 때의 색상 */
-  cursor: not-allowed; /* 마우스 포인터를 not-allowed로 변경 */
-}
-
-.button-abled {
-  background-color: #ebeaea; /* disabled일 때의 색상 */
-  color: black;
 }
 
 .post-detail {

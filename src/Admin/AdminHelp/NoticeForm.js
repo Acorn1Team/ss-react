@@ -32,28 +32,6 @@ const Textarea = styled.textarea`
   font-size: 16px;
 `;
 
-const Button = styled.button`
-  width: calc(50% - 5px);
-  padding: 10px;
-  background-color: blue;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #5a31b4;
-  }
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-`;
-
 const ErrorMessage = styled.p`
   color: red;
   font-size: 14px;
@@ -140,15 +118,13 @@ export default function NoticeForm() {
       </div>
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
 
-      <ButtonContainer>
-        <Button onClick={handleSave}>추가</Button>
-        <Button
+        <button className="cancel-button"
           onClick={() => navigate(-1)}
           style={{ backgroundColor: "gray" }}
         >
           뒤로가기
-        </Button>
-      </ButtonContainer>
+        </button>
+        <button className="add-button" onClick={handleSave}>추가</button>
 
       <Modal
         isOpen={isModalOpen}

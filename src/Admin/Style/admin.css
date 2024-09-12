@@ -1,3 +1,120 @@
+.add-button, .update-button, .delete-button, .search-button, .view-all-button, .disabled-button {
+  border-radius: 10px;
+  padding: 5px 15px;
+  color: #f5f5f5;
+  font-weight: bold;
+  font-family: Hahmlet;
+  font-size: 17px;
+  border: none;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+  margin: 10px;
+}
+
+.add-button {
+  background-color: #e8b5b5;
+}
+
+.add-button:hover {
+  background-color: #d49d9d;
+}
+
+.update-button {
+  background-color: #e0e0e0;
+  color: #444444;
+}
+
+.update-button:hover {
+  background-color: #d4d3d3;
+}
+
+.view-all-button {
+  background-color: #555555;
+}
+
+.view-all-button:hover {
+  background-color: #444444;
+}
+
+.search-button {
+  background-color: #f2d1d1;
+  color: #645e5e;
+}
+
+.search-button:hover {
+  background-color: #e6b8b8;
+}
+
+.delete-button {
+  background-color: #ded4d4;
+  color: #444444;
+}
+
+.delete-button:hover {
+  background-color: #a9a7a1;
+}
+
+.confirm-button, .cancel-button {
+  border-radius: 10px;
+  padding: 5px 15px;
+  color: #f5f5f5;
+  font-weight: bold;
+  font-family: Hahmlet;
+  font-size: 17px;
+  border: none;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+  margin: 10px;
+}
+
+.confirm-button {
+  background-color: #d3bcbc;
+}
+
+.confirm-button:hover {
+  background-color: #c5a0a8;
+}
+
+.cancel-button {
+  background-color: #888888;
+}
+
+.cancel-button:hover {
+  background-color: #777777;
+}
+
+.button-disabled {
+  border-radius: 0px;
+  background-color: #b39297; /* disabled일 때의 색상 */
+  cursor: default; /* 마우스 포인터를 not-allowed로 변경 */
+}
+
+.button-disabled:hover {
+  background-color: #b39297; /* disabled일 때의 색상 */
+  cursor: default; /* 마우스 포인터를 not-allowed로 변경 */
+}
+
+.button-abled {
+  border-radius: 0px;
+  background-color: #eacfd0;
+  color: black;
+}
+
+
+.register-button {
+  padding: 10px;
+  margin-left: 10px;
+  background-color: #4a4a4a;
+  color: white;
+  border: none;
+  border-radius: 8px; /* 모든 버튼에 동일한 border-radius 적용 */
+  cursor: pointer;
+}
+
+.register-button:hover {
+  background-color: #333;
+}
+
 table {
   margin: 0 auto; /* 테이블을 가로로 중앙에 배치 */
   border-collapse: collapse; /* 테이블 셀 테두리 병합 */
@@ -88,13 +205,13 @@ body {
 }
 
 #topmenu li a:hover {
-  background-color: rgb(219, 219, 219);
+  background-color: #c99ba6;
   color: #fff;
 }
 
 /* 활성화된 링크에 적용할 스타일 */
 #topmenu li a.active-link {
-  background-color: rgb(219, 219, 219);
+  background-color: #b39297;
   color: #fff;
   font-weight: bold; /* 강조 표시 */
 }

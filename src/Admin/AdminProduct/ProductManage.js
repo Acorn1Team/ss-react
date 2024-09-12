@@ -267,12 +267,12 @@ export default function ProductManage() {
       >
         <h2>품절 처리</h2>
         <p>이 상품을 품절 처리하시겠습니까?</p>
-        <button onClick={handleSoldOutConfirm}>확인</button>
-        <button onClick={closeModal}>취소</button>
+        <button className="confirm-button" onClick={handleSoldOutConfirm}>확인</button>
+        <button className="cancel-button" onClick={closeModal}>취소</button>
       </Modal>
 
         <button
-          className="button"
+          className="add-button"
           onClick={() => navigate("/admin/product/insert")}
         >
           상품 추가하기
@@ -294,12 +294,13 @@ export default function ProductManage() {
         {renderSearchField()}
 
         <button
+          className="search-button"
           onClick={handleSearch}
           style={{ padding: "5px 10px", marginRight: "10px" }}
         >
           검색
         </button>
-        <button onClick={handleReset} style={{ padding: "5px 10px" }}>
+        <button className="view-all-button" onClick={handleReset} style={{ padding: "5px 10px" }}>
           전체보기
         </button>
       </div>
@@ -354,7 +355,7 @@ export default function ProductManage() {
                 <div>
                   <strong>재고:</strong> {item.stock}
                   &nbsp;
-                  <button
+                  <button className="delete-button"
                     onClick={() => openModal(item.no)}
                     disabled={item.stock === 0}
                   >
@@ -367,7 +368,7 @@ export default function ProductManage() {
                 <div>
                   <strong>등록일:</strong> {formatDate(item.date)}
                 </div>
-                <button
+                <button className="update-button"
                   onClick={() => navigate(`/admin/product/update/${item.no}`)}
                 >
                   수정하기

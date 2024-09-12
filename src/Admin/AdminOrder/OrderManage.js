@@ -234,8 +234,8 @@ export default function OrderManage() {
       >
         <h2>주문 상태 변경</h2>
         <p>주문 상태를 '{modalStatus}'로 변경하시겠습니까?</p>
-        <button onClick={handleStatusChange}>확인</button>
-        <button onClick={closeModal}>취소</button>
+        <button className="confirm-button" onClick={handleStatusChange}>확인</button>
+        <button className="cancel-button" onClick={closeModal}>취소</button>
       </Modal>
 
       {/* 상태 필터 */}
@@ -281,7 +281,7 @@ export default function OrderManage() {
           onChange={(e) => setEndDate(e.target.value)}
           style={{ padding: "5px", width: "150px", lineHeight: "1.5" }}
         />
-        <button
+        <button className="search-button"
           onClick={handleDateFilter}
           style={{ padding: "5px 10px", marginRight: "10px" }}
         >
@@ -289,7 +289,7 @@ export default function OrderManage() {
         </button>
       </div>
 
-      <button onClick={handleReset} style={{ padding: "5px 10px" }}>
+      <button className="view-all-button" onClick={handleReset} style={{ padding: "5px 10px" }}>
         전체보기
       </button>
 

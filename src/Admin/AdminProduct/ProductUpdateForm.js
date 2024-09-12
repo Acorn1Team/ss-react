@@ -217,7 +217,7 @@ export default function ProductUpdateForm() {
           <p className="error-message">{errors.discountRate}</p>
         )}
       </div>
-      <button className="delete-button" onClick={() => {navigate("/admin/product")}}>
+      <button className="view-all-button" onClick={() => {navigate("/admin/product")}}>
         목록으로
       </button>&nbsp;&nbsp;
       <button
@@ -227,7 +227,7 @@ export default function ProductUpdateForm() {
       >
         수정 완료
       </button><br/>
-      <button className="delete-button" onClick={openModal} disabled={!state.available} style={{backgroundColor: !state.available ? "lightgray" : "#333"}}>
+      <button className="delete-button" onClick={openModal} disabled={!state.available}>
         {state.available ? '판매 종료' : '판매 종료된 상품'}
       </button>
       {/* 모달 */}
