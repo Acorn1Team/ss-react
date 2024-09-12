@@ -1,4 +1,8 @@
 /* Login.module.css */
+.body {
+  text-align: center;
+}
+
 .login-container {
   max-width: 400px;
   margin: 80px auto; /* 상단에 여백 추가 */

@@ -4,6 +4,7 @@ import styles from "../Style/UserRegister.module.css";
 import axios from "axios";
 import Modal from "react-modal";
 import Loading from "../User/Loading";
+import "../Style/All.css";
 
 const Register = () => {
   const [id, setId] = useState("");
@@ -481,267 +482,270 @@ const Register = () => {
   };
 
   return (
-    <div className={styles.container}>
-      {loading && <Loading />} {/* 로딩 컴포넌트 표시 */}
-      <form className="register_Form" onSubmit={handleRegister}>
-        <h1>SceneStealer</h1>
-        {/* 이메일 */}
-        <div className={styles.email_input}>
-          <input
-            type="text"
-            name="user_email"
-            id="user_email"
-            placeholder="이메일"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <span id="middle">@</span>
-          <input
-            type="text"
-            name="email_domain"
-            id="email_domain"
-            value={isCustomDomain ? customDomainInput : emailDomain}
-            onChange={handleCustomDomainInputChange}
-            disabled={!isCustomDomain}
-          />
-        </div>
-
-        {showEmail && (
-          <div>
-            <select
-              name="email_select"
-              id="email_select"
-              onChange={handleEmailDomainChange}
-              value={emailDomain}
-            >
-              {emailOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.text}
-                </option>
-              ))}
-            </select>
-            {errorMessage.email && (
-              <div className={styles.error_message}>{errorMessage.email}</div>
+    <div className={styles.body}>
+      <div className={styles.container}>
+        {loading && <Loading />} {/* 로딩 컴포넌트 표시 */}
+        <form className="register_Form" onSubmit={handleRegister}>
+          <h1>SceneStealer</h1>
+          {/* 이메일 */}
+          <div className={styles.email_input}>
+            <input
+              type="text"
+              name="user_email"
+              id="user_email"
+              placeholder="이메일"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <span>@</span>
+            <input
+              type="text"
+              name="email_domain"
+              id="email_domain"
+              value={isCustomDomain ? customDomainInput : emailDomain}
+              onChange={handleCustomDomainInputChange}
+              disabled={!isCustomDomain}
+            />
+            {showEmail && (
+              <select
+                name="email_select"
+                id="email_select"
+                onChange={handleEmailDomainChange}
+                value={emailDomain}
+              >
+                {emailOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.text}
+                  </option>
+                ))}
+              </select>
             )}
-
-            <button
-              type="button"
-              onClick={async () => {
-                if (!email || !emailDomain) {
-                  setErrorMessage((prev) => ({
-                    ...prev,
-                    email: "이메일을 입력하세요.",
-                  }));
-                  return;
-                }
-
-                // 이메일 중복 체크 및 인증번호 발송
-                await checkEmailDuplication(
-                  fullEmail,
-                  setVerificationCode,
-                  setErrorMessage
-                );
-              }}
-              disabled={!email || !emailDomain}
-            >
-              인증번호 발송
-            </button>
-
-            <div className={styles.user_input}>
-              <label>
-                {" "}
-                <input
-                  type="text"
-                  placeholder="인증번호"
-                  value={inputVerificationCode}
-                  onChange={async (e) => {
-                    const userCode = e.target.value;
-                    setInputVerificationCode(userCode);
-                    if (userCode) {
-                      await verifyEmailCodeOnServer(
-                        `${email}@${emailDomain}`,
-                        userCode,
-                        setErrorMessage
-                      );
-                    }
-                  }}
-                />
-              </label>
-            </div>
           </div>
-        )}
 
-        {errorMessage.email && (
-          <div className={styles.error_message}>{errorMessage.email}</div>
-        )}
-        <hr />
-        {/* 아이디 */}
-        <div className={styles.id_input}>
-          <input
-            type="text"
-            name="id"
-            placeholder="아이디"
-            value={id}
-            onChange={(e) => setId(e.target.value)}
-          />
-          <button
-            type="button"
-            id="idCheck"
-            onClick={() => idCheck(id, setErrorMessage, setIdChecked)}
-          >
-            중복 확인
-          </button>
-        </div>
-        {errorMessage.id && (
-          <div className={styles.error_message}>{errorMessage.id}</div>
-        )}
+          {showEmail && (
+            <>
+              {errorMessage.email && (
+                <div className={styles.error_message}>{errorMessage.email}</div>
+              )}
+              <button
+                className="btn1Long"
+                onClick={async () => {
+                  if (!email || !emailDomain) {
+                    setErrorMessage((prev) => ({
+                      ...prev,
+                      email: "이메일을 입력하세요.",
+                    }));
+                    return;
+                  }
 
-        {/* 비밀번호 */}
-        <div className={styles.user_input}>
-          <input
-            type="password"
-            name="pwd"
-            placeholder="비밀번호"
-            value={pwd}
-            onChange={handlePwdChange}
-          />
-          {errorMessage.pwd && (
-            <div className={styles.error_message}>{errorMessage.pwd}</div>
+                  // 이메일 중복 체크 및 인증번호 발송
+                  await checkEmailDuplication(
+                    fullEmail,
+                    setVerificationCode,
+                    setErrorMessage
+                  );
+                }}
+                disabled={!email || !emailDomain}
+              >
+                인증번호 발송
+              </button>
+              <div className={styles.user_input}>
+                <label>
+                  <input
+                    type="text"
+                    placeholder="인증번호"
+                    value={inputVerificationCode}
+                    onChange={async (e) => {
+                      const userCode = e.target.value;
+                      setInputVerificationCode(userCode);
+                      if (userCode) {
+                        await verifyEmailCodeOnServer(
+                          `${email}@${emailDomain}`,
+                          userCode,
+                          setErrorMessage
+                        );
+                      }
+                    }}
+                  />
+                </label>
+              </div>
+            </>
           )}
-        </div>
-        <div className={styles.user_input}>
-          <input
-            type="password"
-            name="pwd_chk"
-            placeholder="비밀번호 재입력"
-            value={pwdChk}
-            onChange={handlePwdChkChange}
-          />
-          {errorMessage.pwdChk && (
-            <div className={styles.error_message}>{errorMessage.pwdChk}</div>
-          )}
-        </div>
 
-        {/* 이름 */}
-        <div className={styles.user_input}>
-          <input
-            type="text"
-            name="name"
-            placeholder="이름"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          {errorMessage.name && (
-            <div className={styles.error_message}>{errorMessage.name}</div>
+          {errorMessage.email && (
+            <div className={styles.error_message}>{errorMessage.email}</div>
           )}
-        </div>
-        <hr />
-
-        {/* 전화번호 */}
-        <div className={styles.user_input}>
-          <input
-            type="text"
-            name="tel"
-            id="user_tel"
-            placeholder='휴대폰번호(" - " 제외)'
-            value={tel}
-            onChange={(e) => setTel(e.target.value)}
-          />
-          {errorMessage.tel && (
-            <div className={styles.error_message}>{errorMessage.tel}</div>
+          <hr />
+          {/* 아이디 */}
+          <div className={styles.id_input}>
+            <input
+              type="text"
+              name="id"
+              placeholder="아이디"
+              value={id}
+              onChange={(e) => setId(e.target.value)}
+            />
+            <input
+              className="btn1"
+              id="idCheck"
+              value="중복 확인"
+              type="button"
+              onClick={() => idCheck(id, setErrorMessage, setIdChecked)}
+            >
+              {/* 중복 확인 */}
+            </input>
+          </div>
+          {errorMessage.id && (
+            <div className={styles.error_message}>{errorMessage.id}</div>
           )}
-        </div>
 
-        {/* 주소 */}
-        <div className={styles.id_input}>
+          {/* 비밀번호 */}
+          <div className={styles.user_input}>
+            <input
+              type="password"
+              name="pwd"
+              placeholder="비밀번호"
+              value={pwd}
+              onChange={handlePwdChange}
+            />
+            {errorMessage.pwd && (
+              <div className={styles.error_message}>{errorMessage.pwd}</div>
+            )}
+          </div>
+          <div className={styles.user_input}>
+            <input
+              type="password"
+              name="pwd_chk"
+              placeholder="비밀번호 재입력"
+              value={pwdChk}
+              onChange={handlePwdChkChange}
+            />
+            {errorMessage.pwdChk && (
+              <div className={styles.error_message}>{errorMessage.pwdChk}</div>
+            )}
+          </div>
+
+          {/* 이름 */}
+          <div className={styles.user_input}>
+            <input
+              type="text"
+              name="name"
+              placeholder="이름"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            {errorMessage.name && (
+              <div className={styles.error_message}>{errorMessage.name}</div>
+            )}
+          </div>
+          <hr />
+
+          {/* 전화번호 */}
+          <div className={styles.user_input}>
+            <input
+              type="text"
+              name="tel"
+              id="user_tel"
+              placeholder='휴대폰번호(" - " 제외)'
+              value={tel}
+              onChange={(e) => setTel(e.target.value)}
+            />
+            {errorMessage.tel && (
+              <div className={styles.error_message}>{errorMessage.tel}</div>
+            )}
+          </div>
+
+          {/* 주소 */}
+          <div className={styles.id_input}>
+            <input
+              type="text"
+              placeholder="우편번호"
+              maxLength="6"
+              name="zipcode"
+              id="zipcode_display"
+              disabled
+              ref={zipcodeDisplayRef}
+              value={zipcode}
+            />
+            <button className="btn1" onClick={openDaumPostcode}>
+              검색
+            </button>
+          </div>
           <input
-            type="text"
-            placeholder="우편번호"
-            maxLength="6"
+            type="hidden"
+            id="user_zipcode"
             name="zipcode"
-            id="zipcode_display"
-            disabled
-            ref={zipcodeDisplayRef}
             value={zipcode}
+            ref={userZipcodeRef}
           />
-          <button type="button" onClick={openDaumPostcode}>
-            검색
+
+          <div className={styles.user_input}>
+            <input
+              type="text"
+              name="addr_start"
+              id="addr_start"
+              placeholder="도로명/지번 주소"
+              disabled
+              ref={addrStartRef}
+              value={addrStart}
+            />
+          </div>
+          <div className={styles.user_input}>
+            <input
+              type="text"
+              name="addr_end"
+              id="addr_end"
+              placeholder="상세 주소"
+              value={addrEnd}
+              onChange={(e) => setAddrEnd(e.target.value)}
+            />
+          </div>
+          {errorMessage.address && (
+            <div className={styles.error_message}>{errorMessage.address}</div>
+          )}
+
+          <button className="btn2" id="btnRegister">
+            회원가입
           </button>
-        </div>
-        <input
-          type="hidden"
-          id="user_zipcode"
-          name="zipcode"
-          value={zipcode}
-          ref={userZipcodeRef}
-        />
-
-        <div className={styles.user_input}>
-          <input
-            type="text"
-            name="addr_start"
-            id="addr_start"
-            placeholder="도로명/지번 주소"
-            disabled
-            ref={addrStartRef}
-            value={addrStart}
-          />
-        </div>
-        <div className={styles.user_input}>
-          <input
-            type="text"
-            name="addr_end"
-            id="addr_end"
-            placeholder="상세 주소"
-            value={addrEnd}
-            onChange={(e) => setAddrEnd(e.target.value)}
-          />
-        </div>
-        {errorMessage.address && (
-          <div className={styles.error_message}>{errorMessage.address}</div>
-        )}
-
-        <button type="submit" id="btnRegister">
-          회원가입
-        </button>
-      </form>
-      <Modal
-        isOpen={modalIsOpen}
-        className={styles.modal}
-        onRequestClose={closeModal}
-        overlayClassName={styles.overlay}
-        // contentLabel={modalType === "integrated" ? "통합 가입" : "번호"}
-      >
-        <h2>알림</h2>
-        <p>{modalContent}</p>
-        {modalType === "integrated" && (
-          <>
+        </form>
+        <Modal
+          isOpen={modalIsOpen}
+          className={styles.modal}
+          onRequestClose={closeModal}
+          overlayClassName={styles.overlay}
+          // contentLabel={modalType === "integrated" ? "통합 가입" : "번호"}
+        >
+          <h2>알림</h2>
+          <p>{modalContent}</p>
+          {modalType === "integrated" && (
+            <>
+              <button
+                onClick={updateModal}
+                className={styles.modal_buttons}
+                style={{ backgroundColor: "darkred" }}
+              >
+                확인
+              </button>
+              <button
+                onClick={loginModal}
+                className={styles.modal_buttons}
+                style={{ backgroundColor: "gray" }}
+              >
+                로그인
+              </button>
+            </>
+          )}
+          {modalType === "code" && (
             <button
-              onClick={updateModal}
+              onClick={closeModal}
               className={styles.modal_buttons}
-              style={{ backgroundColor: "darkred" }}
+              style={{ backgroundColor: "darkblue" }}
             >
               확인
             </button>
-            <button
-              onClick={loginModal}
-              className={styles.modal_buttons}
-              style={{ backgroundColor: "gray" }}
-            >
-              로그인
-            </button>
-          </>
-        )}
-        {modalType === "code" && (
-          <button
-            onClick={closeModal}
-            className={styles.modal_buttons}
-            style={{ backgroundColor: "darkblue" }}
-          >
-            확인
-          </button>
-        )}
-      </Modal>
+          )}
+        </Modal>
+      </div>
     </div>
   );
 };

@@ -1,3 +1,7 @@
+/* UserRegister.module.css */
+.body {
+  text-align: center;
+}
 .container {
   max-width: 600px;
   margin: 40px auto;
@@ -9,176 +13,119 @@
   box-sizing: border-box;
 }
 
-/* 공통 입력 필드 스타일 */
-.user_input input,
-.user_input select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
-  font-size: 15px;
-  margin-bottom: 15px;
-  box-sizing: border-box;
+.id_input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-/* 이메일 입력 필드와 도메인 선택 필드 스타일 */
+.id_input input {
+  flex: 1;
+  padding: 10px;
+  margin-right: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.register_Form {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.register_Form h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
 .email_input {
   display: flex;
   align-items: center;
-  gap: 5px;
-  margin-bottom: 20px;
-  box-sizing: border-box;
 }
 
 .email_input input {
   padding: 10px;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
-  font-size: 15px;
-  flex-grow: 2; /* 첫 번째 입력 필드가 더 많은 공간을 차지하도록 설정 */
-  min-width: 0; /* flex-grow로 인해 최소 너비가 너무 커지는 것을 방지 */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 8px;
+  width: 50%;
 }
 
 .email_input span {
-  flex-shrink: 0; /* @ 기호는 크기가 줄어들지 않도록 설정 */
-  font-size: 15px;
+  margin: 0 8px;
 }
 
 .email_input select {
   padding: 10px;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
-  font-size: 15px;
-  flex-grow: 1; /* 도메인 선택 필드가 나머지 공간을 차지하도록 설정 */
-  min-width: 120px; /* 도메인 선택 필드의 최소 너비를 설정 */
-  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 150px;
 }
-
-/* 아이디 입력 필드와 중복 확인 버튼 스타일 */
-.id_input {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  /* margin-bottom: 20px; */
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.id_input input {
-  padding: 10px;
-  border: 1px solid #dbdbdb;
-  border-radius: 5px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-  font-size: 14px;
-  flex: 3;
-}
-
-.id_input button {
-  background-color: #3897f0;
-  color: #ffffff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 14px;
-  margin-top: 0;
-  flex: 1;
-  min-width: 80px;
-  box-sizing: border-box;
-}
-
-.id_input button:hover {
-  background-color: #3071a9;
-}
-
-/* 버튼 스타일 */
-.register_button {
+/* 
+.btn1 {
   background-color: #007bff;
-  color: #ffffff;
-  border: none;
-  padding: 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 15px;
-  width: 100%;
-  text-align: center;
-}
-
-.register_button:hover {
-  background-color: #0056b3;
-}
-
-.register_button:disabled {
-  background-color: #d0d0d0;
-  cursor: not-allowed;
-}
-
-/* 오류 메시지 스타일 */
-.error_message {
-  text-align: left;
-  color: #ff6f61;
-  font-size: 13px;
-  margin-top: -3px;
-  margin-bottom: 10px;
-}
-
-.modal {
-  /* 모달 창의 내용 부분 */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80%;
-  max-width: 500px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  outline: none; /* 포커스 시 기본 윤곽선 제거 */
-}
-
-.overlay {
-  /* 모달 창의 배경 부분 */
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* 반투명 검정 배경 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal_buttons {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-}
-
-.modal_buttons button {
-  margin-left: 10px;
+  color: #fff;
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  background-color: #007bff; /* 기본 버튼 색상 */
-  color: #fff;
   font-size: 16px;
 }
 
-.modal_buttons button:hover {
-  background-color: #0056b3; /* 버튼 호버 색상 */
+.btn1:hover {
+  background-color: #0056b3;
+} */
+
+.error_message {
+  text-align: left;
+  color: #d9534f;
+  font-size: 14px;
+  /* margin-top: 5px; */
 }
 
-.modal_buttons button:nth-child(2) {
-  background-color: darkgray;
+.loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
-.modal_buttons button:nth-child(2):hover {
-  background-color: gray;
+.loading div {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.modalContent {
+  background-color: rgba(255, 255, 255, 0.8); /* 투명도 조절 */
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.modalOverlay {
+  background-color: rgba(0, 0, 0, 0.5); /* 배경을 어둡게 하면서 반투명으로 */
 }
