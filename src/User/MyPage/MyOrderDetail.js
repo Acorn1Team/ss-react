@@ -86,62 +86,46 @@ console.log(err);
       </div>
 
       <div className={styles.productList}>
-      {productList.map((pl) => {
-  const orderProduct = orderProductList.find((op) => op.productNo === pl.no);
-  const hasReviewed = reviewedProducts.includes(pl.no); // 해당 상품에 리뷰가 있는지 확인
+  {productList.map((pl) => {
+    const orderProduct = orderProductList.find((op) => op.productNo === pl.no);
+    const hasReviewed = reviewedProducts.includes(pl.no); // 해당 상품에 리뷰가 있는지 확인
 
-  return (
-    <div key={pl.no} className={styles.productItem}>
-      {pl.available ? (
-        <>
-          <Link to={`/user/shop/productlist/detail/${pl.no}`}>
-            <div>
-              <span className={styles.productName}>{pl.name}</span>
-              <br />
-              <span className={styles.productQuantity}>
-                {orderProduct?.quantity}개
-              </span>
-            </div>
-          </Link>
-          <span className={styles.productPrice}>
-            {orderProduct?.price.toLocaleString()}원
-          </span>
+    return (
+      <div key={pl.no} className={styles.productItem}>
+        <div className={styles.productDetails}>
+          <span className={styles.productName}>{pl.name}</span>
+          {pl.available && (
+            <Link to={`/user/shop/productlist/detail/${pl.no}`} className={styles.productLink}>
+              상세보기
+            </Link>
+          )}
+        </div>
+        <span className={styles.productQuantity}>
+          {orderProduct?.quantity}개
+        </span>
+        <span className={styles.productPrice}>
+          {orderProduct?.price.toLocaleString()}원
+        </span>
+        {pl.available ? (
           <button
             className={styles.reviewButton}
-            onClick={() =>
-              orderProduct && goToReviewPage(orderProduct.no, pl.name)
-            }
+            onClick={() => orderProduct && goToReviewPage(orderProduct.no, pl.name)}
             disabled={
               orderInfo.state === "주문취소" ||
               orderInfo.state === "주문접수" ||
               hasReviewed
-            } // 주문 취소 또는 접수이거나 이미 리뷰를 작성한 경우 버튼 비활성화
+            }
           >
             {hasReviewed ? "리뷰 작성 완료" : "리뷰 쓰기"}
           </button>
-        </>
-      ) : (
-        <>
-          <div>
-            <span className={styles.productName}>{pl.name}</span>
-            <br />
-            <span className={styles.productQuantity}>
-              {orderProduct?.quantity}개
-            </span>
-          </div>
-          <span className={styles.productPrice}>
-            {orderProduct?.price.toLocaleString()}원
-          </span>
-          <span className={styles.productUnavailable}>
-            판매종료된 상품입니다.
-          </span>
-        </>
-      )}
-    </div>
-  );
-})}
-
+        ) : (
+          <span className={styles.productUnavailable}>판매종료된 상품입니다.</span>
+        )}
       </div>
+    );
+  })}
+</div>
+
 
       <div className={styles.userInfo}>
         <h3>주문자 정보</h3>
