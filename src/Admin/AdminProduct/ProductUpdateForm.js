@@ -12,7 +12,7 @@ export default function ProductUpdateForm() {
     name: "",
     price: "",
     contents: "",
-    category: "상의", // 기본값을 "상의"로 설정
+    category: "기타", // 기본값을 "기타"로 설정
     pic: null,
     stock: "",
     discountRate: "",
@@ -148,12 +148,10 @@ export default function ProductUpdateForm() {
   return (
     <div className="form-container">
       <button
-        className="view-all-button"
-        onClick={() => {
-          navigate("/admin/product");
-        }}
+        className="cancel-button"
+        onClick={() => {navigate(-1)}}
       >
-        목록으로
+        뒤로
       </button>
       <h2 className="form-title">상품 정보 수정</h2>
       <div className="form-group">

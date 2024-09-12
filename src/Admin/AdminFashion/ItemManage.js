@@ -39,7 +39,7 @@ export default function ItemManage() {
 
   return (
     <>
-      <table border={1} style={{ fontSize: "12px" }}>
+      <table border={1}>
         <thead>
           <tr>
             <th>아이템 정보</th>
@@ -52,30 +52,30 @@ export default function ItemManage() {
           items.map((item) => (
             <tr key={item.no}>
               <td>
-                {item.no}번,&nbsp;
-                <Link to={`/admin/help`}>
-                  {item.name}
-                </Link><br/>
-                <img src={item.pic} alt={`${item.name} 이미지`} style={{ maxHeight: "100px", maxWidth: "30px" }} />
+                <img src={item.pic} alt={`${item.name} 이미지`} style={{ maxHeight: "200px", maxWidth: "150px" }} /><br/>
+                {item.name} ({item.no}번)<br/>
+                <button className="delete-button">아이템 삭제</button>
               </td>
               <td>
-                {item.productNo}번, &nbsp;
+                <img src={item.productPic} alt={`${item.productName} 이미지`} style={{ maxHeight: "200px", maxWidth: "150px" }} /><br/>
                 {item.productName}<br/>
-                <img src={item.productPic} alt={`${item.productName} 이미지`} style={{ maxHeight: "100px", maxWidth: "30px" }} />
-               
+                <button className="update-button" onClick={() => navigate(`/admin/product/update/${item.productNo}`)}>상세보기</button>            
               </td>
               <td>
-                {item.styleInfos && item.styleInfos.length > 0 ? (
-                  item.styleInfos.map((styleInfo) => (
-                    <div key={styleInfo.no}>
-                      {styleInfo.no},&nbsp;
-                      <img src={styleInfo.pic} alt={`${styleInfo.no} 이미지`} style={{ maxHeight: "100px", maxWidth: "30px" }} />
-                      {styleInfo.style.no},&nbsp;
-                      {styleInfo.characterName},&nbsp;
-                      {styleInfo.actorName},&nbsp;
-                      {styleInfo.showTitle}
-                    </div>
-                  ))
+              {item.styleInfos && item.styleInfos.length > 0 ? (
+              <div style={{ display: "flex", flexWrap: "wrap" }}>
+                {item.styleInfos.map((styleInfo) => (
+                  <div key={styleInfo.no} style={{ backgroundColor:"#e7e7e7", padding: "20px", margin: "20px", width: "200px" }}>
+                    <img src={styleInfo.style.pic} alt={`${styleInfo.no} 이미지`} style={{ maxHeight: "100px", maxWidth: "150px" }} /><br/>
+                    styleItem PK: {styleInfo.no}<br/>
+                    style PK: {styleInfo.style.no}<br/>
+                    [{styleInfo.showTitle}]<br/>
+                    {styleInfo.actorInfo.actor}
+                    ({styleInfo.actorInfo.character})<br/>
+                    <button className="update-button" onClick={() => navigate(`/admin/fashion/character/${styleInfo.actorInfo.no}`, { state: styleInfo.actorInfo })}>스타일 편집</button>
+                  </div>
+                ))}
+              </div>
                 ) : (
                   <div>정보 없음</div>
                 )}
