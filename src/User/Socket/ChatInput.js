@@ -75,6 +75,15 @@ function ChatInput({ onSendMessage }) {
       });
   };
 
+  useEffect(() => {
+    const chatMessagesDiv = document.querySelector(
+      `.${stylesChat.chatMessages}`
+    );
+    if (chatMessagesDiv) {
+      chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+    }
+  }, [chats]);
+
   // 컴포넌트가 마운트될 때 실행되는 useEffect
   useEffect(() => {
     // 기존 채팅 내역 불러오기
@@ -136,19 +145,28 @@ function ChatInput({ onSendMessage }) {
             <h2>상담 구분을 선택해 주세요.</h2>
             <ul>
               <li>
-                <button onClick={() => handleCategorySelect("상품 문의")}>
-                  상품 문의
-                </button>
+                <input
+                  type="button"
+                  className="btn1"
+                  value="상품 문의"
+                  onClick={() => handleCategorySelect("상품 문의")}
+                ></input>
               </li>
               <li>
-                <button onClick={() => handleCategorySelect("배송 문의")}>
-                  배송 문의
-                </button>
+                <input
+                  type="button"
+                  className="btn1"
+                  value="배송 문의"
+                  onClick={() => handleCategorySelect("배송 문의")}
+                ></input>
               </li>
               <li>
-                <button onClick={() => handleCategorySelect("기타 문의")}>
-                  기타 문의
-                </button>
+                <input
+                  type="button"
+                  className="btn1"
+                  value="기타 문의"
+                  onClick={() => handleCategorySelect("기타 문의")}
+                ></input>
               </li>
             </ul>
           </div>

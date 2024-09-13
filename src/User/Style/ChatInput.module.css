@@ -1,12 +1,14 @@
 .container {
+  display: flex;
+  flex-direction: column; /* 세로로 정렬 */
   max-width: 600px;
   margin: 20px auto;
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  height: 100vh; /* 화면의 전체 높이를 차지하도록 */
 }
-
 h2 {
   text-align: center;
   margin-bottom: 20px;
@@ -15,7 +17,10 @@ h2 {
 }
 
 .chatMessages {
-  max-height: 300px;
+  flex-grow: 1; /* 남은 공간을 모두 채우도록 */
+  max-height: calc(
+    100vh - 160px
+  ); /* 입력창, 버튼 등의 높이를 제외한 가용 공간 */
   overflow-y: auto;
   padding: 10px;
   background-color: white;
@@ -38,7 +43,7 @@ h2 {
 
 .inputContainer {
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .inputField {
@@ -121,17 +126,55 @@ h2 {
   margin-bottom: 10px;
 }
 
-.modalContent button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
+.chatMessages::-webkit-scrollbar {
+  width: 8px;
 }
 
-.modalContent button:hover {
-  background-color: #0056b3;
+.chatMessages::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.chatMessages::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 10px;
+  border: 3px solid #f1f1f1;
+}
+@media (max-width: 768px) {
+  .container {
+    max-width: 100%;
+    padding: 10px;
+  }
+
+  .modalContent {
+    width: 90%;
+  }
+
+  .sendButton,
+  .closeButton {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
+
+  .inputField {
+    font-size: 12px;
+    padding: 8px;
+  }
+}
+.chatMessage {
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

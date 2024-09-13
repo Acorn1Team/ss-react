@@ -1,3 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Diphylleia&family=Gowun+Batang:wght@400;700&display=swap"); */
+/* @import url("https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap"); */
+
+body {
+  font-family: "Gowun Batang";
+  /* font-family: "Gowun Dodum"; */
+  /* font-family: "Diphylleia"; */
+}
+
+/* .gowun-dodum-regular {
+  font-family: "Gowun Dodum", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+} */
+
+/* .diphylleia-regular {
+  font-family: "Diphylleia", serif;
+  font-weight: 400;
+  font-style: normal;
+} */
+
+.gowun-batang-regular {
+  font-family: "Gowun Batang", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
 .btn1 {
   border-radius: 10px;
   padding: 5px;

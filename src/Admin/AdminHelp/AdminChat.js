@@ -17,21 +17,39 @@ function AdminChat() {
 
   // 채팅방 목록
   useEffect(() => {
-    axios
-      .get(`/chat/admin`)
-      .then((res) => {
-        setChatRooms(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [selectedUserId, chatNo]);
+    const fetchChatRooms = () => {
+      axios
+        .get(`/chat/admin`)
+        .then((res) => {
+          setChatRooms(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    // 최초에 한 번 채팅방 목록 불러오기
+    fetchChatRooms();
+
+    // 5초마다 주기적으로 채팅방 목록 불러오기
+    const interval = setInterval(fetchChatRooms, 5000);
+
+    // 컴포넌트 언마운트 시 타이머 정리
+    return () => clearInterval(interval);
+  }, []); // 의존성 배열에 아무것도 넣지 않음, 최초에 한 번만 실행
 
   const handleUserSelect = (userId, chatNo, closeState) => {
     setSelectedUserId(userId);
     setChatNo(chatNo);
     setCloseState(closeState);
   };
+
+  useEffect(() => {
+    const chatWindow = document.querySelector(`.${styles.messageList}`);
+    if (chatWindow) {
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+  }, [messages]);
 
   useEffect(() => {
     if (!selectedUserId || !chatNo) return;
@@ -138,7 +156,7 @@ function AdminChat() {
 
       {selectedUserId && chatNo && (
         <div className={styles.chatWindow}>
-          <h2>Admin Chat with User {selectedUserId}</h2>
+          <h2>회원 번호 : {selectedUserId}</h2>
           <div className={styles.messageList}>
             {messages.map((msg, index) => (
               <div

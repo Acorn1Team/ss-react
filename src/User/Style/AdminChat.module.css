@@ -32,7 +32,7 @@
 }
 
 .chatRoomItem.active {
-  background-color: #cce5ff;
+  background-color: #e4dddd;
 }
 
 .chatWindow {
@@ -64,7 +64,7 @@
 }
 
 .messageItem.admin {
-  background-color: #d1ecf1;
+  background-color: #e4dddd;
   font-weight: bold;
 }
 
@@ -82,24 +82,8 @@
 
 .inputField:focus {
   outline: none;
-  border-color: #80bdff;
-  box-shadow: 0 0 5px rgba(128, 189, 255, 0.5);
-}
-
-.sendButton {
-  margin-left: 10px;
-  padding: 10px 20px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
-}
-
-.sendButton:hover {
-  background-color: #218838;
+  border-color: #d0bbbe;
+  box-shadow: 0 0 5px #2b2b2b;
 }
 
 .closeButton {

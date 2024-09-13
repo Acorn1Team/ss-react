@@ -221,34 +221,39 @@ export default function UserHome() {
                 </span>
 
                 <div className="horizontal-container">
-                  <Link to={`/user/main/sub/${forMainRandom?.show?.no}`}>
-                    <section id="card1" className="card">
-                      <img src={forMainRandom.show?.pic} alt="mainpic"></img>
-                      <div className="card__content">
-                        <p className="card__title">
-                          {forMainRandom.show?.title || "제목 없음"}
-                        </p>
-
-                        <p className="card__description">
-                          {forMainRandom.characters &&
-                          forMainRandom.characters.length > 0 ? (
-                            forMainRandom.characters.map((c) => (
-                              <div key={c.name}>{c.name.slice(0, -2)}</div>
-                            ))
-                          ) : (
-                            <p>캐릭터 정보가 없습니다.</p>
-                          )}
-                          <p>
-                            <Link to="/user/main/show">
-                              <button className="moreButton">
-                                작품 더보기
-                              </button>
-                            </Link>
+                  <div style={{ textAlign: "center" }}>
+                    <Link to={`/user/main/sub/${forMainRandom?.show?.no}`}>
+                      <section id="card1" className="card">
+                        <img src={forMainRandom.show?.pic} alt="mainpic"></img>
+                        <div className="card__content">
+                          <p className="card__title">
+                            {forMainRandom.show?.title || "제목 없음"}
                           </p>
-                        </p>
-                      </div>
-                    </section>
-                  </Link>
+                          <p className="card__description">
+                            {forMainRandom.characters &&
+                            forMainRandom.characters.length > 0 ? (
+                              forMainRandom.characters.map((c) => (
+                                <div key={c.name}>{c.name.slice(0, -2)}</div>
+                              ))
+                            ) : (
+                              <p>캐릭터 정보가 없습니다.</p>
+                            )}
+                            <p></p>
+                          </p>
+                          <br />
+
+                          <p style={{ fontSize: "80%" }}>
+                            클릭해 보세요!
+                            <br /> '{forMainRandom?.show?.title}'의 더 많은
+                            스타일을 <br />볼 수 있어요.
+                          </p>
+                        </div>
+                      </section>
+                    </Link>
+                    <Link to="/user/main/show">
+                      <button className="btn3Small">작품 목록 보러 가기</button>
+                    </Link>
+                  </div>
                   <div className="random-character">
                     <img
                       className="characterPic"
@@ -381,7 +386,9 @@ export default function UserHome() {
           <p>인기 스타일이 없습니다.</p>
         )}
       </div>
-      {userNo === "1" && <Link to="/admin">관리자</Link>}
+      <div style={{ textAlign: "center" }}>
+        {userNo === "1" && <Link to="/admin">관리자 페이지로 이동하기</Link>}
+      </div>
     </div>
   );
 }

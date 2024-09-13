@@ -4,6 +4,10 @@ import { Link, useParams, useLocation, useNavigate } from "react-router-dom";
 import styles from "../Style/Sub.module.css";
 
 import "./Sub.css";
+import {
+  PiCaretCircleDoubleLeftFill,
+  PiCaretCircleDoubleRightFill,
+} from "react-icons/pi";
 export default function Sub() {
   const { no } = useParams();
   const locationState = useLocation();
@@ -85,6 +89,15 @@ export default function Sub() {
           .then((res) => {
             if (res.data.result === true) {
               setScrap(false);
+              // 스크랩 수 감소 반영
+              setSelectCharacter((prevCharacter) => ({
+                ...prevCharacter,
+                characterLikeNo:
+                  prevCharacter.characterLikeNo &&
+                  prevCharacter.characterLikeNo > 0
+                    ? prevCharacter.characterLikeNo - 1
+                    : 0, // 최소 값은 0으로 설정
+              }));
             }
           })
           .catch((error) => {
@@ -99,6 +112,13 @@ export default function Sub() {
           .then((res) => {
             if (res.data.result === true) {
               setScrap(true);
+              // 스크랩 수 증가 반영
+              setSelectCharacter((prevCharacter) => ({
+                ...prevCharacter,
+                characterLikeNo: prevCharacter.characterLikeNo
+                  ? prevCharacter.characterLikeNo + 1
+                  : 1, // 처음 스크랩일 경우 1로 설정
+              }));
             }
           })
           .catch((error) => {
@@ -108,9 +128,14 @@ export default function Sub() {
     } else {
       nv("../../auth/login");
     }
-
-    showSubData();
   };
+
+  // 캐릭터가 바뀔 때마다 스크랩 여부를 가져옴
+  useEffect(() => {
+    if (selectCharacter) {
+      isScrap(selectCharacter.no); // 스크랩 여부 확인
+    }
+  }, [selectCharacter]);
 
   useEffect(() => {
     showSubData();
@@ -127,18 +152,13 @@ export default function Sub() {
       <h1 className={styles.title}>{show.title}</h1>
 
       <div className={styles.characterNavigation}>
-        <button
-          className={styles.characterBtn}
-          onClick={() => changeCharacter(-1)}
-        >
-          이전캐릭터
-        </button>
-        <button
-          className={styles.characterBtn}
-          onClick={() => changeCharacter(1)}
-        >
-          다음캐릭터
-        </button>
+        <span className="movePage" onClick={() => changeCharacter(-1)}>
+          <PiCaretCircleDoubleLeftFill size={50} color="df919e" />
+        </span>
+
+        <span onClick={() => changeCharacter(1)}>
+          <PiCaretCircleDoubleRightFill size={50} color="df919e" />
+        </span>
       </div>
 
       {selectCharacter && (
@@ -150,19 +170,25 @@ export default function Sub() {
             alt={selectCharacter.name}
           />
 
-          <div>
-            <span className="ui-bookmark" onClick={() => scrapProc()}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <span
+              className="ui-bookmark"
+              onClick={() => scrapProc()}
+              style={{ display: "flex", alignItems: "center" }}
+            >
               <input
                 type="checkbox"
                 checked={scrap}
                 onChange={scrapProc} // 좋아요 처리 함수
+                style={{ display: "none" }} // 체크박스 숨김
               />
-              <div className="bookmark">
+              <div className="bookmark" style={{ marginRight: "10px" }}>
+                {" "}
+                {/* 하트와 텍스트 사이 간격 */}
                 <svg
                   viewBox="0 0 16 16"
-                  style={{ marginTop: "4px" }}
-                  height="25"
-                  width="25"
+                  height="25" // 하트 크기 유지
+                  width="25" // 하트 크기 유지
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -173,12 +199,14 @@ export default function Sub() {
               </div>
             </span>
 
-            <p>
-              {selectCharacter.characterLikeNo === null
-                ? ""
-                : selectCharacter.characterLikeNo.length}{" "}
-              명이 좋아합니다!
-            </p>
+            <span>
+              {selectCharacter.characterLikeNo !== null &&
+              selectCharacter.characterLikeNo !== undefined
+                ? selectCharacter.characterLikeNo > 0
+                  ? `${selectCharacter.characterLikeNo} 명이 좋아합니다!`
+                  : "하트를 눌러 스크랩해 보세요." // 스크랩 수가 0인 경우
+                : "하트를 눌러 스크랩해 보세요."}
+            </span>
           </div>
 
           <div className={styles.styles}>

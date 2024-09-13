@@ -30,20 +30,12 @@
   margin-bottom: 30px;
 }
 
-.characterBtn {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 25px;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  font-size: 1rem;
+.characterNavigation span {
+  transition: transform 0.3s ease;
 }
 
-.characterBtn:hover {
-  background-color: #0056b3;
-  transform: scale(1.1);
+.characterNavigation span:hover {
+  transform: scale(1.05);
 }
 
 .characterDetails {
@@ -70,7 +62,7 @@
 }
 
 .characterImg:hover {
-  transform: scale(1.05);
+  transform: scale(1.01);
 }
 
 .scrapBtn {

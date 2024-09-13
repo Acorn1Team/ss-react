@@ -7,7 +7,6 @@ export default function FooterForm() {
       <div className={styles["footer-top"]}>
         <h2 className={styles["footer-logo"]}>SceneStealer</h2>
       </div>
-
       <div className={styles["footer-bottom"]}>
         <p>Team Daracle | 팀 다라클 | teamdaracle@gmail.com</p>
       </div>
