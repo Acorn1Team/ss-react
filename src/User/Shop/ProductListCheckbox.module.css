@@ -10,6 +10,7 @@
   display: block;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
   top: 8.2px;
+  
 }
 
 .cbx:after {
@@ -42,6 +43,7 @@
   position: relative;
   display: inline-block;
   margin-right: 10px;
+  
 }
 
 .hidden-xs-up {

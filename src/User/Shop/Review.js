@@ -52,7 +52,7 @@ export default function Review() {
         {/* 하단 상품 정보 섹션에 링크 추가 */}
         <Link to={`/user/shop/productlist/detail/${reviewData.productNo}`} className="product-info-link">
           <div className="product-info">
-            <img src={reviewData.productImage} alt={`${reviewData.productName}`} className="product-thumbnail" />
+            {/* <img src={reviewData.productImage} alt={`${reviewData.productName}`} className="product-thumbnail" /> */}
             <div className="product-details">
               <span>제품정보</span>
               <span className="product-name">{reviewData.productName}</span>

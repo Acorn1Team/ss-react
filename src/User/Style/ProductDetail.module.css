@@ -121,3 +121,14 @@ h2 {
 .communityLink:hover {
   background-color: #0056b3;
 }
+
+.productImage2 {
+  width: 400px; /* 원하는 가로 크기 */
+  height: 400px; /* 원하는 세로 크기 */
+  object-fit: cover; /* 비율을 유지하면서 크기에 맞게 자름 */
+  border-radius: 8px; /* 모서리 둥글게 */
+  display: block; /* 이미지 블록 요소로 처리 */
+  margin: 0 auto; /* 수평 가운데 정렬 */
+}
+
+

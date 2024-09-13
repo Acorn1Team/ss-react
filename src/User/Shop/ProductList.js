@@ -185,7 +185,7 @@ export default function ProductList() {
             {product.stock === 0 && (
               <div className={styles.soldOutMessage}>품절된 상품입니다.</div>
             )}
-            <div className={styles.productImage}>
+            <div className={styles.productImage3}>
               <Link to={`/user/shop/productlist/detail/${product.no}`}>
                 <img src={product.pic} alt={`${product.name} 사진`} />
               </Link>

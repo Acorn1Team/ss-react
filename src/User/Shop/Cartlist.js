@@ -200,7 +200,7 @@ export default function CartList() {
         <p>장바구니가 비어 있습니다.</p>
       ) : (
         <>
-          <div>
+          <div className={styles.cartHeader}>
             <input
               type="checkbox"
               checked={isAllSelected}
@@ -281,9 +281,9 @@ export default function CartList() {
           </div>
 
           
-          <div>
+          <div className={styles.cartHeader}>
             <button
-              className={`btn2`}
+             
               onClick={handleRemoveSelected}
               disabled={selectedItems.length === 0} // 선택된 항목이 없으면 버튼 비활성화
             >
@@ -294,7 +294,7 @@ export default function CartList() {
             <div className={styles.cartTotalPrice}>
               <h3>총 가격: {getTotalCartPrice().toLocaleString()}원</h3>
               <button
-                className={`btn2`}
+                className={`btn4`}
                 onClick={handleOrder}
                 disabled={selectedItems.length === 0} // 선택된 항목이 없으면 주문 버튼 비활성화
               >

@@ -120,7 +120,7 @@ export default function ProductDetail() {
         <img
           src={product.pic}
           alt={product.name}
-          // className={styles.productImage}
+          className={styles.productImage2}
         />
       </div>
       <div>

@@ -14,6 +14,7 @@
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 20px;
+
 }
 
 
@@ -97,16 +98,26 @@
 }
 
 .removeButton {
-  background-color: #df919e;
+  background-color: #c6c3bd;
 }
 
 .removeButton:hover {
-  background-color: #c7727e;
+  background-color: #a8a5a0;
 }
 
 .stockWarning {
   color: red;
   font-size: 0.9rem;
 }
+
+.cartHeader {
+  display: flex;
+  justify-content: flex-start; /* 왼쪽 정렬 */
+  align-items: center; /* 세로 정렬 */
+  margin-bottom: 20px; /* 아래쪽 여백 */
+  gap: 10px; /* 버튼과 체크박스 사이 간격 */
+  padding-left: 400px; /* 왼쪽에 약간의 여백 추가 */
+}
+
 
 
