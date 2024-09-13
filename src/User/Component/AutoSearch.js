@@ -80,6 +80,12 @@ function AutoSearch({ onSearch }) {
     }
   };
 
+  const EnterSearch = (e) => {
+    if (e.key === "Enter") {
+      handleSearch(e);
+    }
+  };
+
   return (
     <form className={styles.searchForm}>
       <select
@@ -99,10 +105,12 @@ function AutoSearch({ onSearch }) {
         onChange={handleChange}
         onBlur={handleBlur}
         placeholder="Search..."
+        onKeyDown={EnterSearch}
       />
 
       <input
         onClick={handleSearch}
+        onKeyDown={EnterSearch}
         type="button"
         value="조회"
         className={`btn4 ${styles.searchButton}`}
