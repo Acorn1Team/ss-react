@@ -1,4 +1,10 @@
-/* 페이지 전체를 채우는 레이아웃 */
+@import url("https://fonts.googleapis.com/css2?family=Hahmlet:wght@100..900&family=Noto+Serif+KR:wght@200..900&display=swap");
+
+.hahmlet {
+  font-family: "Hahmlet", serif;
+  font-optical-sizing: auto;
+}
+
 html,
 body {
   height: 100%;
@@ -21,20 +27,16 @@ body {
 .footer-container {
   color: #444; /* 더 중립적인 컬러 */
   padding: 20px 15px; /* 여백 줄임 */
+  font-family: "Hahmlet";
+  font-size: 50%;
   text-align: center;
-  font-family: "Roboto", sans-serif;
   width: 100%; /* 푸터가 화면 너비 전체에 걸쳐 나타나도록 설정 */
   margin-top: auto; /* 본문 아래에 푸터가 위치하도록 설정 */
 }
 
-.footer-top {
-  margin-bottom: 20px; /* 여백을 줄여서 간결하게 */
-}
-
 .footer-logo {
-  font-size: 28px; /* 로고 크기 줄임 */
+  font-size: 14px; /* 로고 크기 줄임 */
   font-weight: bold;
-  margin-bottom: 8px; /* 여백 줄임 */
   letter-spacing: 1px; /* 글자 간격 줄임 */
   text-transform: uppercase;
 }
@@ -51,7 +53,6 @@ body {
 }
 
 .footer-bottom {
-  padding-top: 15px; /* 여백 줄임 */
   font-size: 12px; /* 폰트 크기 줄임 */
 }
 

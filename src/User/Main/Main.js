@@ -378,7 +378,7 @@ export default function UserHome() {
             <Link to={`/user/style/detail/${p.no}`} key={p.no}>
               <div className="mainPostsBox">
                 <img src={p.pic} alt={p.no} />
-                {p.userNickname}
+                <p>@{p.userNickname}</p>
               </div>
             </Link>
           ))
