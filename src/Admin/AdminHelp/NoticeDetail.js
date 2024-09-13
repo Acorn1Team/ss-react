@@ -122,7 +122,7 @@ export default function NoticeDetail() {
           내용
           <textarea
             style={{
-              width: "2000px !important", // 가로 100%로 설정
+              width: "200px !important", // 가로 100%로 설정
               height: "300px", // 세로 300px로 설정
               padding: "10px", // 내부 여백 10px
               boxSizing: "border-box", // 패딩과 경계 포함
