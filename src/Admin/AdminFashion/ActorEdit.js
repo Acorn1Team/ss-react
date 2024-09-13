@@ -116,7 +116,7 @@ export default function ActorEdit() {
                     <div style={{ textAlign: 'center' }}>
                         <img src={show.pic} alt={`${show.title} 이미지`} style={{ width: '70%', height: 'auto' }} />
                     </div>
-                    <button onClick={() => setIsShowModalOpen(true)}>작품 삭제</button>
+                    <button className="delete-button" onClick={() => setIsShowModalOpen(true)}>작품 삭제</button>
                 </div>
 
                 {actors.length > 0 && (
@@ -131,10 +131,10 @@ export default function ActorEdit() {
                                         style={{ height: '220px', display: 'block', margin: '0 auto' }}
                                     />
                                     {actorData.actor} ({actorData.character})<br />
-                                    <button onClick={() => navigate(`/admin/fashion/character/${actorData.no}`, { state: actorData })}>
+                                    <button className="update-button" onClick={() => navigate(`/admin/fashion/character/${actorData.no}`, { state: actorData })}>
                                         스타일 편집
                                     </button><br />
-                                    <button onClick={() => openCharacterModal(actorData)}>배역 제거</button>&nbsp;
+                                    <button className="delete-button" onClick={() => openCharacterModal(actorData)}>배역 제거</button>&nbsp;
                                 </div>
                             ))}
                         </div>
@@ -153,7 +153,7 @@ export default function ActorEdit() {
                                     {!isRegistered && (
                                         <>
                                             <img src={data.pic} alt={`${data.character} 이미지`} style={{ height: '220px', display: 'block' }} />
-                                            <button onClick={() => addCharacter(data)}>배역 등록</button><br />
+                                            <button className="add-button" onClick={() => addCharacter(data)}>배역 등록</button><br />
                                             {data.actor}<br />({data.character})
                                         </>
                                     )}
@@ -171,7 +171,7 @@ export default function ActorEdit() {
                     <input onChange={(e) => setCharacterName(e.target.value)} type="text" name="title" placeholder="작품명 입력하기" />역<br />
                     <label>이미지:</label>
                     <input onChange={(e) => setFile(e.target.files[0])} type="file" name="pic" accept="image/*" /><br /><br />
-                    <button onClick={addCharacterDIY}>추가</button>
+                    <button className="add-button" onClick={addCharacterDIY}>추가</button>
                 </>
             )}
 
@@ -195,17 +195,16 @@ export default function ActorEdit() {
                 }}
             >
                 <>
-                    <br/>
-                        <img
-                            src={show.pic}
-                            alt={`${show.title} 이미지`}
-                            style={{ maxWidth: '70%', height: 'auto' }}
-                            /><br/>
-                        <h2>{show.title}</h2>
-                        <h3>관련 데이터를 모두 삭제할까요?</h3>
-                        <h4>❗등록된 모든 배역, 스타일, 아이템 데이터가 전체 삭제됩니다❗</h4>
-                        <button onClick={() => deleteShow(show.no)}>삭제</button>&nbsp;&nbsp;
-                        <button onClick={() => setIsShowModalOpen(false)}>취소</button>
+                    <h2>&lt;{show.title}&gt;</h2>
+                    <img
+                        src={show.pic}
+                        alt={`${show.title} 이미지`}
+                        style={{ maxWidth: '70%', height: 'auto' }}
+                    /><br/>
+                    <h3>관련 데이터를 모두 삭제할까요?</h3>
+                    <h4>❗등록된 모든 배역, 스타일, 아이템 데이터가 전체 삭제됩니다❗</h4>
+                    <button className="delete-button" onClick={() => deleteShow(show.no)}>삭제</button>&nbsp;&nbsp;
+                    <button className="cancel-button" onClick={() => setIsShowModalOpen(false)}>취소</button>
                 </>
             </Modal>
 
@@ -228,7 +227,7 @@ export default function ActorEdit() {
             >
                 <br />
                 <h3>작품 관련 정보를 모두 삭제했습니다.</h3>
-                <button onClick={() => navigate("/admin/fashion")}>
+                <button className="update-button" onClick={() => navigate("/admin/fashion")}>
                 다른 작품 편집하기
                 </button>
             </Modal>
@@ -254,16 +253,16 @@ export default function ActorEdit() {
             >
                 {selectedActor && (
                     <><br/>
+                        <h2>{selectedActor.character} ({selectedActor.actor} 배우)</h2>
                         <img
                             src={selectedActor.pic}
                             alt={`${selectedActor.character} 이미지`}
                             style={{ maxWidth: '70%', height: 'auto' }}
                             /><br/>
-                        <h2>{selectedActor.character} ({selectedActor.actor} 배우)</h2>
                         <h3>관련 데이터를 모두 삭제할까요?</h3>
                         <h4>❗연결된 스타일, 아이템 데이터가 전체 삭제됩니다❗</h4>
-                        <button onClick={() => deleteCharacter(selectedActor.no)}>삭제</button>&nbsp;&nbsp;
-                        <button onClick={() => setIsCharacterModalOpen(false)}>닫기</button>
+                        <button className="delete-button" onClick={() => deleteCharacter(selectedActor.no)}>삭제</button>&nbsp;&nbsp;
+                        <button className="cancel-button" onClick={() => setIsCharacterModalOpen(false)}>취소</button>
                     </>
                 )}
             </Modal>

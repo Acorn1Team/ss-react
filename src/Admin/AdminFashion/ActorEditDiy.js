@@ -98,7 +98,7 @@ export default function ActorEditDiy() {
                 style={{ display: "block", margin: "0 auto 10px" }}
               />
               {actorData.actor} ({actorData.character})<br />
-              <button
+              <button className="update-button"
                 onClick={() =>
                   navigate(`/admin/fashion/character/${actorData.no}`, {
                     state: actorData,
@@ -107,7 +107,7 @@ export default function ActorEditDiy() {
               >
                 스타일 편집
               </button>
-              <button onClick={() => openModal(actorData)}>배역 제거</button>
+              <button className="delete-button" onClick={() => openModal(actorData)}>배역 제거</button>
               &nbsp;
             </div>
           ))}
@@ -127,7 +127,7 @@ export default function ActorEditDiy() {
                       style={{ display: "block", margin: "0 auto 10px" }}
                     />
                     {data.actor} ({data.character}) &nbsp;
-                    <button onClick={() => addCharacter(data)}>
+                    <button className="add-button" onClick={() => addCharacter(data)}>
                       배역 등록
                     </button>
                   </>
@@ -170,11 +170,11 @@ export default function ActorEditDiy() {
               {selectedActor.character} ({selectedActor.actor} 배우)
             </h2>
             <h3>관련 데이터를 모두 삭제할까요?</h3>
-            <button onClick={() => deleteCharacter(selectedActor.no)}>
+            <button className="delete-button" onClick={() => deleteCharacter(selectedActor.no)}>
               삭제
             </button>
             &nbsp;&nbsp;
-            <button onClick={() => setIsModalOpen(false)}>닫기</button>
+            <button className="cancel-button" onClick={() => setIsModalOpen(false)}>취소</button>
           </>
         )}
       </Modal>

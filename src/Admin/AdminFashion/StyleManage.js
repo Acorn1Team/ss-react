@@ -243,7 +243,7 @@ export default function StyleManage() {
   }
   return (
     <>
-      <button onClick={() => navigate(-1)}>배역 목록으로 돌아가기</button>
+      <button className="cancel-button" onClick={() => navigate(-1)}>배역 목록으로 돌아가기</button>
       <h2>
         {actorData.character} ({actorData.actor}) 의 스타일
         <br />
@@ -253,7 +253,7 @@ export default function StyleManage() {
         <br />
         <input type="file" onChange={onStyleFileChange} ref={styleInputRef} />
         <br />
-        <button onClick={addStyle}>추가</button>
+        <button className="add-button" onClick={addStyle}>추가</button>
         <hr />
       </h2>
       <table style={{ margin: "0 auto", textAlign: "center" }}>
@@ -274,7 +274,7 @@ export default function StyleManage() {
               <tr key={index}>
                 <td>
                   <img src={styleData.pic} alt={`${index + 1}번 스타일`} style={{ height: "300px", marginRight: "20px" }}/><br/>
-                  <button onClick={() => {openDeleteStyleModal(styleData)}}>스타일 삭제</button>
+                  <button className="delete-button" onClick={() => {openDeleteStyleModal(styleData)}}>스타일 삭제</button>
                 </td>
                 {[0, 1, 2].map((i) => (
                   <td key={i}>
@@ -293,11 +293,11 @@ export default function StyleManage() {
                           }}
                         />
                         <br />
-                        <button onClick={() => openDeleteItemModal(filteredItems[i])}>아이템 삭제</button><br/>
-                        <button
+                        <button className="delete-button" onClick={() => openDeleteItemModal(filteredItems[i])}>아이템 삭제</button><br/>
+                        <button className="view-all-button"
                           onClick={() =>
                             navigate(
-                              `/admin/product/detail/${filteredItems[i].product}`
+                              `/admin/product/update/${filteredItems[i].product}`
                             )
                           }
                         >
@@ -306,7 +306,7 @@ export default function StyleManage() {
                       </>
                     ) : (
                       <>
-                        <button
+                        <button className="add-button"
                           onClick={() => {
                             setCurrentStyle(styleData);
                             setIsNewItemModalOpen(true);
@@ -316,7 +316,7 @@ export default function StyleManage() {
                         </button>
                         <br />
                         <br />
-                        <button
+                        <button className="add-button"
                           onClick={() => {
                             setCurrentStyle(styleData);
                             setIsExistingItemModalOpen(true);
@@ -398,8 +398,8 @@ export default function StyleManage() {
         <br />
         아이템 이름 <input type="text" onChange={onItemNameChange} />
         <br /><br /><br /><br /><br /><br /><br />
-        <button onClick={() => closeModal()}>닫기</button>&nbsp;&nbsp;
-        <button onClick={addItem}>추가</button>
+        <button className="cancel-button" onClick={() => closeModal()}>닫기</button>&nbsp;&nbsp;
+        <button className="add-button" onClick={addItem}>추가</button>
       </Modal>
 
       <Modal
@@ -463,7 +463,7 @@ export default function StyleManage() {
           )}
         </SearchForm>
         <br />
-        <button onClick={() => closeModal()}>닫기</button>
+        <button className="cancel-button" onClick={() => closeModal()}>닫기</button>
       </Modal>
 
       <Modal
@@ -492,9 +492,9 @@ export default function StyleManage() {
               style={{ maxWidth: "70%", height: "auto", maxHeight:"60%" }}
             />
             <br /><br />
-            <button onClick={() => deleteStyle()}>삭제</button>
+            <button className="delete-button" onClick={() => deleteStyle()}>삭제</button>
             &nbsp;&nbsp;
-            <button onClick={() => setIsDeleteStyleModal(false)}>취소</button>
+            <button className="cancel-button" onClick={() => setIsDeleteStyleModal(false)}>취소</button>
           </>
         ) : (
           <p>삭제할 스타일을 선택하세요.</p>
@@ -527,9 +527,9 @@ export default function StyleManage() {
               style={{ maxWidth: "70%", height: "auto", maxHeight:"60%" }}
             />
             <br /><br />
-            <button onClick={() => deleteItem()}>삭제</button>
+            <button className="delete-button" onClick={() => deleteItem()}>삭제</button>
             &nbsp;&nbsp;
-            <button onClick={() => setIsDeleteItemModal(false)}>취소</button>
+            <button className="cancel-button" onClick={() => setIsDeleteItemModal(false)}>취소</button>
           </>
         ) : (
           <p>삭제할 아이템을 선택하세요.</p>

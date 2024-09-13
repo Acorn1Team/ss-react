@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import axios from "axios";
+import Modal from "react-modal";
 import styles from "../../User/Style/AdminChat.module.css";
 
 function AdminChat() {
@@ -11,7 +12,7 @@ function AdminChat() {
   const [messages, setMessages] = useState([]);
   const [stompClient, setStompClient] = useState(null);
   const [closeState, setCloseState] = useState(false);
-
+  const [isCloseModalOpen, setIsCloseModalOpen] = useState(false);
   const [showClosedChats, setShowClosedChats] = useState(false);
 
   // 채팅방 목록
@@ -77,25 +78,20 @@ function AdminChat() {
   }, [selectedUserId, chatNo]);
 
   const chatClose = () => {
-    if (
-      window.confirm(
-        "채팅을 종료하시겠습니까?\n종료된 채팅은 다시 재개할 수 없습니다."
-      )
-    ) {
-      axios
-        .put(`/chat/user/${selectedUserId}/${chatNo}`)
-        .then((res) => {
-          if (res.data.result) {
-            setSelectedUserId(null);
-            setChatNo(null);
-            setMessages([]);
-            setCloseState(true);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    axios
+      .put(`/chat/user/${selectedUserId}/${chatNo}`)
+      .then((res) => {
+        if (res.data.result) {
+          setSelectedUserId(null);
+          setChatNo(null);
+          setMessages([]);
+          setIsCloseModalOpen(false);
+          setCloseState(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const sendMessage = (messageContent) => {
@@ -174,7 +170,7 @@ function AdminChat() {
 
               <button
                 className={styles.closeButton}
-                onClick={() => chatClose()}
+                onClick={() => setIsCloseModalOpen(true)}
               >
                 채팅 종료
               </button>
@@ -184,7 +180,33 @@ function AdminChat() {
           )}
         </div>
       )}
-    </div>
+    <Modal
+        isOpen={isCloseModalOpen}
+        onRequestClose={() => setIsCloseModalOpen(false)}
+        contentLabel="채팅 종료 확인"
+        style={{
+          overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+          content: {
+            background: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            textAlign: "center",
+            maxWidth: "300px",
+            height: "200px",
+            margin: "auto",
+          },
+        }}
+      >
+          <>
+            <h4>채팅을 종료하시겠습니까?</h4>
+            <h4>종료된 채팅은 다시 재개할 수 없습니다.</h4>
+            <br /><br />
+            <button className="delete-button" onClick={() => chatClose()}>종료</button>
+            &nbsp;&nbsp;
+            <button className="cancel-button" onClick={() => setIsCloseModalOpen(false)}>취소</button>
+          </>
+      </Modal>
+      </div>
   );
 }
 
