@@ -71,7 +71,12 @@ function FindPass() {
           />
         </label>
         {errors.fail && <div className={styles.errors}>{errors.fail}</div>}
-        <button type="submit">임시 비밀번호 요청</button>
+        <input
+          value="임시 비밀번호 요청"
+          className="btn1Long"
+          type="button"
+          onClick={handleSubmit}
+        ></input>
       </form>
       <Modal
         isOpen={modalIsOpen}

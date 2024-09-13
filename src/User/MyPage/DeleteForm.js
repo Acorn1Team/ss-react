@@ -124,19 +124,18 @@ const DeleteForm = () => {
       </div>
       <form onSubmit={handleSubmit}>
         <div className={styles.buttons}>
-          <button
+          <input
+            value="회원탈퇴"
+            className="btn2"
             type="button"
             onClick={() => emailCheck(email, setErrorMessage)}
-          >
-            회원 탈퇴
-          </button>
-          <button
+          ></input>
+          <input
+            value="취소"
+            className="btn3"
             type="button"
-            style={{ backgroundColor: "darkgray" }}
             onClick={handleCancel}
-          >
-            취소
-          </button>
+          ></input>
         </div>
       </form>
 
@@ -154,8 +153,18 @@ const DeleteForm = () => {
           불가합니다. 정말로 탈퇴하시겠습니까?
         </p>
         <div className={styles.modal_buttons}>
-          <button onClick={handleDelete}>떠날래요 ㅠㅠ</button>
-          <button onClick={closeModal}>더 써볼래요</button>
+          <input
+            type="button"
+            className="btn2"
+            value="떠날래요ㅠㅠ"
+            onClick={handleDelete}
+          ></input>
+          <input
+            type="button"
+            className="btn3"
+            value="더 써볼래요"
+            onClick={closeModal}
+          ></input>
         </div>
       </Modal>
     </div>

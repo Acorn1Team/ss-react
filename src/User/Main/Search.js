@@ -184,22 +184,23 @@ function ProductItem({ item }) {
 function UserItem({ item }) {
   return (
     <div className={styles2.profileContainer}>
-      <img
-        src={item.pic || "defaultUserPic.png"} // 기본 이미지 설정
-        alt={`${item.name}`}
-        className={styles2.profilePic}
-      />
-      <div className={styles2.profileInfo}>
-        <Link
-          to={`/user/style/profile/${item.no}`}
-          style={{ textDecoration: "none", color: "inherit" }}
-        >
-          <div className={styles2.profileId}>{item.id || "No data"}</div>
-        </Link>
-        <div className={styles2.profileNickname}>
-          {item.nickname || "No data"}
+      <Link
+        to={`/user/style/profile/${item.no}`}
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <img
+          src={item.pic || "defaultUserPic.png"} // 기본 이미지 설정
+          alt={`${item.name}`}
+          className={styles2.profilePic}
+        />
+        <div className={styles2.profileInfo}>
+          {/* <div className={styles2.profileId}>{item.id || "No data"}</div> */}
+
+          <div className={styles2.profileId}>@{item.nickname || "No data"}</div>
+          <br />
+          <div className={styles2.profileNickname}>{item.bio}</div>
         </div>
-      </div>
+      </Link>
     </div>
   );
 }

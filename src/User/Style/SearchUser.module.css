@@ -1,53 +1,47 @@
-/* 검색 결과 컨테이너 */
 .profileContainer {
   display: flex;
-  justify-content: center; /* 중앙 정렬 */
-  flex-wrap: wrap;
-  gap: 30px; /* 카드 간 간격 */
-  margin: 20px auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  width: 170px; /* 적당한 폭 지정 */
+  margin: 10px auto; /* 가로 중앙 정렬 */
 }
 
-/* 프로필 이미지 */
+.profileContainer:hover {
+  transform: translateY(-5px); /* 호버 시 살짝 올라가는 효과 */
+}
+
 .profilePic {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 10px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%; /* 동그란 프로필 사진 */
+  object-fit: cover; /* 이미지 크기 유지 */
+  margin-bottom: 10px; /* 이미지와 텍스트 사이 여백 */
+  border: 2px solid #df919e; /* 테두리 색상 */
 }
 
-/* 사용자 정보 */
 .profileInfo {
   text-align: center;
 }
 
 .profileId {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
-  color: #333;
+  color: #444; /* 아이디 글자색 */
 }
 
 .profileNickname {
   font-size: 14px;
-  color: #777;
+  color: #777; /* 닉네임 글자색 */
+  margin-top: 5px;
 }
 
-/* 페이징 버튼 */
-.pagingButton {
-  background-color: #df919e;
-  border: none;
-  padding: 10px 20px;
-  font-size: 14px;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.pagingButton:hover {
-  background-color: #c7727e;
-}
-
-.customBtn {
-  margin: 0 10px;
+a {
+  text-decoration: none;
+  color: inherit;
 }

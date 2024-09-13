@@ -388,35 +388,29 @@ const UserUpdate = () => {
               <div className={styles.error_message}>{errors.pwd_chk}</div>
             )}
           </div>
-          <button
+          <input
+            value="비밀번호 변경 취소"
             type="button"
+            className={`btn1Long ${styles.buttonn}`}
             onClick={handlePasswordCancel}
-            style={{ backgroundColor: "whitesmoke", color: "black" }}
-          >
-            비밀번호 변경 취소
-          </button>
+            // style={{ backgroundColor: "whitesmoke", color: "black" }}
+          ></input>
         </>
       )}
       {!showPasswordForm &&
         user.id !== null &&
         (user.idK === null || user.idN === null) && (
-          <button
+          <input
             type="button"
+            value="비밀번호 변경"
             onClick={handlePasswordToggle}
-            style={{ backgroundColor: "whitesmoke", color: "black" }}
-          >
-            비밀번호 변경
-          </button>
+            className={`btn1Long ${styles.buttonn}`}
+            // style={{ backgroundColor: "whitesmoke", color: "black" }}
+          ></input>
         )}
       <form onSubmit={handleSubmit}>
-        <div className={styles.email_input}>
-          <input
-            type="email"
-            name="email"
-            value={user.email}
-            disabled
-            //readOnly={user.idK !== null || user.idN !== null}
-          />
+        <div className={styles.user_input}>
+          <input type="text" name="email" value={user.email} disabled />
 
           {errors.email && <p className={styles.error}>{errors.email}</p>}
         </div>
@@ -441,13 +435,13 @@ const UserUpdate = () => {
             disabled
           />
 
-          <button
+          <input
             type="button"
+            value="주소 검색"
             onClick={openDaumPostcode}
-            style={{ backgroundColor: "whitesmoke", color: "black" }}
-          >
-            주소 검색
-          </button>
+            className="btn1Long style"
+            // style={{ backgroundColor: "whitesmoke", color: "black" }}
+          ></input>
           {errorMessage.address && (
             <p className={styles.error}>{errorMessage.address}</p>
           )}
@@ -474,23 +468,26 @@ const UserUpdate = () => {
           )}
         </div>
         <div className={styles.buttons}>
-          <button
+          <input
+            value="저장"
             type="button"
+            className="btn2"
             onClick={handleSubmit}
             //style={{ backgroundColor: "#BE2E22" }}
-          >
-            저장
-          </button>
-          <button type="button" onClick={handleCancel}>
-            취소
-          </button>
-          <button
+          ></input>
+          <input
+            value="취소"
             type="button"
-            style={{ backgroundColor: "darkgray" }}
+            className="btn2"
+            onClick={handleCancel}
+          ></input>
+          <input
+            value="회원탈퇴"
+            type="button"
+            className="btn3"
+            // style={{ backgroundColor: "darkgray" }}
             onClick={handleDelete}
-          >
-            회원 탈퇴
-          </button>
+          ></input>
         </div>
       </form>
       <Modal
@@ -503,12 +500,13 @@ const UserUpdate = () => {
         <h2>{modalContent.includes("탈퇴") ? "회원탈퇴" : "알림"}</h2>
         <p>{modalContent}</p>
         <div className={styles.modal_buttons}>
-          <button
+          <input
+            type="button"
+            value="확인"
+            className="btn4"
             onClick={() => closeModal(modalContent)}
-            style={{ backgroundColor: "darkred" }}
-          >
-            확인
-          </button>
+            // style={{ backgroundColor: "darkred" }}
+          ></input>
         </div>
       </Modal>
     </div>

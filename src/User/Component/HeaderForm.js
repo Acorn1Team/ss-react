@@ -3,31 +3,31 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { LiaBellSolid } from "react-icons/lia";
 import { GoPerson } from "react-icons/go";
-import styles from "../Style/HeaderForm.module.css";
-import AutoSearch from "./AutoSearch";
-import "../Style/All.css";
 import { IoCartOutline } from "react-icons/io5";
 import { FiSearch } from "react-icons/fi";
+import AutoSearch from "./AutoSearch";
 import Modal from "react-modal";
+import styles from "../Style/HeaderForm.module.css";
+import "../Style/All.css";
 
 function HeaderForm() {
-  const [activeDropdown, setActiveDropdown] = useState(null); // 드롭다운 상태 통합
+  const [activeDropdown, setActiveDropdown] = useState(null); // 드롭다운 상태
   const [alerts, setAlerts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(4);
   const [totalPages, setTotalPages] = useState(1);
-  const [alertCheckForDot, setAlertCheckForDot] = useState();
+  const [alertCheckForDot, setAlertCheckForDot] = useState(false);
 
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [filteredItems, setFilteredItems] = useState([]); // AutoSearch의 결과
   const navigate = useNavigate();
-  const location = useLocation(); // useLocation을 추가하여 페이지 경로를 추적
+  const location = useLocation(); // useLocation을 추가하여 페이지 경로 추적
 
   // 페이지 이동 시 드롭다운 닫기
   useEffect(() => {
-    setActiveDropdown(null); // 페이지 이동 시 드롭다운과 알림 팝업 닫기
-  }, [location]); // location이 변경될 때마다 실행
+    setActiveDropdown(null);
+  }, [location]);
 
   const checkFor = async () => {
     const userId = sessionStorage.getItem("id");
@@ -58,10 +58,17 @@ function HeaderForm() {
     setIsModalOpen(false);
   };
 
+  const calculateModalHeight = () => {
+    const baseHeight = 300;
+    const itemHeight = 50;
+
+    return baseHeight + filteredItems.length * itemHeight; // 검색 결과에 따라 높이 조정
+  };
+
   // 페이지 이동 또는 다른 아이콘 클릭 시 드롭다운 닫기
   useEffect(() => {
     const handleNavigation = () => {
-      setActiveDropdown(null); // 페이지 이동 시 드롭다운 닫기
+      setActiveDropdown(null);
     };
 
     window.addEventListener("popstate", handleNavigation);
@@ -73,7 +80,7 @@ function HeaderForm() {
   const handleProfileClick = () => {
     checkFor();
     if (isLoggedIn) {
-      setActiveDropdown(activeDropdown === "profile" ? null : "profile"); // 프로필 드롭다운 토글
+      setActiveDropdown(activeDropdown === "profile" ? null : "profile");
     }
   };
 
@@ -86,22 +93,26 @@ function HeaderForm() {
   }, []);
 
   const forAlert = () => {
-    axios
-      .get(`/alert/Readcheck/${userNo}`)
-      .then((res) => {
-        if (res.data.result) {
-          setAlertCheckForDot(true);
-        } else {
-          setAlertCheckForDot(false);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const userNo = sessionStorage.getItem("id"); // userNo 정의
+    if (userNo) {
+      axios
+        .get(`/alert/Readcheck/${userNo}`)
+        .then((res) => {
+          if (res.data.result) {
+            setAlertCheckForDot(true);
+          } else {
+            setAlertCheckForDot(false);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
+
   const handleAlarmClick = () => {
     forAlert();
-    setActiveDropdown(activeDropdown === "alert" ? null : "alert"); // 알림 드롭다운 토글
+    setActiveDropdown(activeDropdown === "alert" ? null : "alert");
   };
 
   const handleLogout = () => {
@@ -151,19 +162,19 @@ function HeaderForm() {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
-    const diffInMs = now - date; // 현재 시간과의 차이를 밀리초로 계산
-    const diffInMinutes = Math.floor(diffInMs / (1000 * 60)); // 분 단위로 변환
-    const diffInHours = Math.floor(diffInMinutes / 60); // 시간 단위로 변환
-    const diffInDays = Math.floor(diffInHours / 24); // 일 단위로 변환
+    const diffInMs = now - date;
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
 
     if (diffInMinutes < 60) {
-      return `${diffInMinutes}분 전`; // 1시간 이내면 분으로 표시
+      return `${diffInMinutes}분 전`;
     } else if (diffInHours < 24) {
-      return `${diffInHours}시간 전`; // 24시간 이내면 시간으로 표시
+      return `${diffInHours}시간 전`;
     } else if (diffInDays < 4) {
-      return `${diffInDays}일 전`; // 3일 이내면 일로 표시
+      return `${diffInDays}일 전`;
     } else {
-      return `${date.getMonth() + 1}월 ${date.getDate()}일`; // 4일 이상이면 월/일로 표시
+      return `${date.getMonth() + 1}월 ${date.getDate()}일`;
     }
   };
 
@@ -182,7 +193,7 @@ function HeaderForm() {
 
   return (
     <header className={styles.header}>
-      <div className={styles.leftContainer} onClick={forAlert()}>
+      <div className={styles.leftContainer}>
         <Link to="/user/main" className={styles.styledLink}>
           HOME
         </Link>
@@ -199,13 +210,18 @@ function HeaderForm() {
         </Link>
       </div>
       <div className={styles.rightContainer}>
-        {" "}
         <FiSearch size={25} className={styles.icon} onClick={handleSearch} />
         <Modal
           isOpen={isModalOpen}
           onRequestClose={handleCloseModal}
-          className={styles.modalContent} // 모달 콘텐츠 스타일
-          overlayClassName={styles.modalOverlay} // 오버레이 배경 스타일
+          className={styles.modalContent}
+          overlayClassName={styles.modalOverlay}
+          style={{
+            content: {
+              height: `${calculateModalHeight()}px`,
+              transition: "height 0.3s ease",
+            },
+          }}
         >
           <div>
             <h2>당신에게 어울리는 스타일, 배우와 작품에서 발견하세요</h2>
@@ -284,7 +300,6 @@ function HeaderForm() {
             ) : (
               <div className={styles.noAlerts}>알림 내역이 없습니다.</div>
             )}
-
             {totalPages > 1 && (
               <div id={styles.pagination}>
                 <button
@@ -358,11 +373,12 @@ function HeaderForm() {
           </>
         ) : (
           <span onClick={() => checkFor()}>
-            <GoPerson size={"30"} />
+            <GoPerson className={styles.icon} size={"30"} />
           </span>
         )}
       </div>
     </header>
   );
 }
+
 export default HeaderForm;

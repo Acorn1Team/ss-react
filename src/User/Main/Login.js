@@ -56,7 +56,7 @@ const Login = () => {
     <div className={styles.body}>
       <div className={styles["login-container"]}>
         <form className={styles["login-form"]} onSubmit={handleLogin}>
-          <h1>SceneStealer</h1>
+          <h1>로 그 인</h1>
 
           <input
             type="text"
