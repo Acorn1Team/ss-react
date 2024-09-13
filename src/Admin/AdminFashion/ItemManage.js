@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import Modal from "react-modal";
 
 export default function ItemManage() {
   const [items, setItems] = useState([]);
@@ -9,8 +10,10 @@ export default function ItemManage() {
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수를 저장할 상태
   const navigate = useNavigate();
 
-  // 서버에서 공지사항 목록을 가져오는 함수
-  const fetchNotices = async (page = 0, size = 10) => {
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const [isDeleteItemModalOpen, SetIsDeleteItemModalOpen] = useState(false);
+
+  const fetchItems = async (page = 0, size = 10) => {
     try {
       const response = await axios.get(`/admin/item`, {
         params: {
@@ -27,7 +30,7 @@ export default function ItemManage() {
   };
 
   useEffect(() => {
-    fetchNotices(currentPage, pageSize);
+    fetchItems(currentPage, pageSize);
   }, [currentPage]);
 
   // 페이지 변경 함수
@@ -36,6 +39,25 @@ export default function ItemManage() {
       setCurrentPage(newPage); // 페이지 상태 업데이트
     }
   };
+
+  const openDeleteItemModal = (itemData) => {
+    setItemToDelete(itemData);
+    SetIsDeleteItemModalOpen(true);
+  }
+
+  const deleteItem = (itemNo) => {
+    axios
+      .delete(`/admin/item/${itemNo}`)
+      .then(
+        setItems((prevItems) => prevItems.filter(item => item.no !== itemNo))  // 삭제된 항목만 제외하고 상태 업데이트
+      )
+      .then(
+        SetIsDeleteItemModalOpen(false)
+      )
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   return (
     <>
@@ -54,7 +76,7 @@ export default function ItemManage() {
               <td>
                 <img src={item.pic} alt={`${item.name} 이미지`} style={{ maxHeight: "200px", maxWidth: "150px" }} /><br/>
                 {item.name} ({item.no}번)<br/>
-                <button className="delete-button">아이템 삭제</button>
+                <button className="delete-button" onClick={() => openDeleteItemModal(item)}>아이템 삭제</button>
               </td>
               <td>
                 <img src={item.productPic} alt={`${item.productName} 이미지`} style={{ maxHeight: "200px", maxWidth: "150px" }} /><br/>
@@ -113,6 +135,35 @@ export default function ItemManage() {
         </button>
       </div>
       )}
+      <Modal
+        isOpen={isDeleteItemModalOpen}
+        onRequestClose={() => SetIsDeleteItemModalOpen(false)}
+        contentLabel="아이템 삭제 확인"
+        style={{
+          overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+          content: {
+            background: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            textAlign: "center",
+            maxWidth: "500px",
+            height: "400px",
+            margin: "auto",
+          },
+        }}
+      >
+        {isDeleteItemModalOpen && (
+          <>
+            <h2>이 아이템을 삭제할까요?</h2>
+            <h3>{itemToDelete.name}</h3>
+            <img src={itemToDelete.pic} alt={`${itemToDelete.name} 이미지`} style={{ maxHeight: "100px", maxWidth: "150px" }} />
+            <h4>❗연결된 모든 스타일에서도 해당 아이템 정보가 삭제됩니다❗</h4>
+            <button className="delete-button" onClick={() => deleteItem(itemToDelete.no)}>삭제</button>
+            &nbsp;&nbsp;
+            <button className="cancel-button" onClick={() => SetIsDeleteItemModalOpen(false)}>취소</button>
+          </>
+        )}
+      </Modal>
     </>
   );
 }

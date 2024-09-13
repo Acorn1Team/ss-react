@@ -243,7 +243,7 @@ export default function StyleManage() {
   }
   return (
     <>
-      <button className="cancel-button" onClick={() => navigate(-1)}>배역 목록으로 돌아가기</button>
+      <button className="cancel-button" onClick={() => navigate(-1)}>뒤로</button>
       <h2>
         {actorData.character} ({actorData.actor}) 의 스타일
         <br />
