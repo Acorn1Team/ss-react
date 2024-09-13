@@ -44,7 +44,6 @@ function HeaderForm() {
       }
     } else {
       setIsLoggedIn(false);
-      navigate("/user/auth/login");
     }
   };
 
@@ -86,18 +85,20 @@ function HeaderForm() {
   }, []);
 
   const forAlert = () => {
-    axios
-      .get(`/alert/Readcheck/${userNo}`)
-      .then((res) => {
-        if (res.data.result) {
-          setAlertCheckForDot(true);
-        } else {
-          setAlertCheckForDot(false);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (userNo) {
+      axios
+        .get(`/alert/Readcheck/${userNo}`)
+        .then((res) => {
+          if (res.data.result) {
+            setAlertCheckForDot(true);
+          } else {
+            setAlertCheckForDot(false);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
   const handleAlarmClick = () => {
     forAlert();
