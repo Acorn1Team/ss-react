@@ -122,12 +122,12 @@
 
 .radio-input input[type="radio"]:checked + label:before {
   background-color: white;
-  border-color: #b8d2f1;
+  border-color: #c9aaaf;
   top: 0;
 }
 
 .radio-input input[type="radio"]:checked + label {
-  background-color: #b8d2f1;
+  background-color: #c9aaaf;
   color: #333;
   animation: radio-translate 0.5s ease-in-out;
 }

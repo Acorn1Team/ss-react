@@ -87,7 +87,7 @@ const handleSubmit = () => {
       {/* 오류 메시지를 화면에 표시 */}
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
       
-      <textarea
+      <textarea 
   placeholder="리뷰 내용을 입력하세요"
   value={contents}
   onChange={(e) => {
