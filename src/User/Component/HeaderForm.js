@@ -29,10 +29,19 @@ function HeaderForm() {
     setActiveDropdown(null); // 페이지 이동 시 드롭다운과 알림 팝업 닫기
   }, [location]); // location이 변경될 때마다 실행
 
-  const checkFor = () => {
+  const checkFor = async () => {
     const userId = sessionStorage.getItem("id");
     if (userId) {
       setIsLoggedIn(true);
+      // 알림 데이터 로드
+      try {
+        const response = await axios.get(`/notifications/${userId}`);
+        setAlerts(response.data);
+        // 알림이 있으면 빨간 점 표시
+        setAlertCheckForDot(response.data.length > 0);
+      } catch (error) {
+        console.error("알림 데이터 로드 오류:", error);
+      }
     } else {
       setIsLoggedIn(false);
       navigate("/user/auth/login");
@@ -70,6 +79,10 @@ function HeaderForm() {
 
   useEffect(() => {
     forAlert();
+  }, []);
+
+  useEffect(() => {
+    checkFor(); // 컴포넌트가 처음 렌더링될 때 알림 데이터 확인
   }, []);
 
   const forAlert = () => {
@@ -132,6 +145,7 @@ function HeaderForm() {
     } catch (err) {
       console.log(err);
     }
+    checkFor();
   };
 
   const formatDate = (dateString) => {
@@ -210,7 +224,7 @@ function HeaderForm() {
         {sessionStorage.getItem("id") && (
           <div className={styles.notificationWrapper}>
             <LiaBellSolid onClick={handleAlarmClick} className={styles.icon} />
-            {alertCheckForDot && <div className={styles.redDot}></div>}
+            {alertCheckForDot && <span className={styles.redDot}></span>}
           </div>
         )}
         {activeDropdown === "alert" && (

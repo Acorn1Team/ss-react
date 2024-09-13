@@ -215,13 +215,13 @@
 }
 
 .redDot {
-  width: 10px;
-  height: 10px;
-  background-color: red;
+  width: 8px;
+  height: 8px;
+  background-color: #c7727e;
   border-radius: 50%;
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: 4px;
+  right: 5px;
 }
 
 /* 검색 폼 */

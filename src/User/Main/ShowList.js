@@ -47,7 +47,7 @@ export default function ShowList() {
       <div id="mainPosts">
         {showData.map((s) => (
           <Link to={`/user/main/sub/${s.no}`} key={s.no}>
-            <div className="mainPostsBox">
+            <div className="mainPostsBoxSL">
               <img src={s.pic} alt={s.title} />
               <br />
               {s.title}

@@ -112,6 +112,10 @@ export default function UserProfile() {
       });
   };
 
+  const reloadFollow = () => {
+    followInfo();
+  };
+
   useEffect(() => {
     // nicknameError나 bioError가 변경될 때 저장 버튼 상태 업데이트
     setIsSaveDisabled(nicknameError || bioError);
@@ -130,6 +134,7 @@ export default function UserProfile() {
           <div className={styles.previewContainer}>
             {previewImage ? (
               <img
+                style={{ width: "100px" }}
                 src={previewImage}
                 alt="미리보기"
                 className={styles.previewImage}
@@ -195,7 +200,7 @@ export default function UserProfile() {
             placeholder="소개글 (최대 30자)"
           />
           <button
-            className={styles.editButton}
+            className="btn3"
             onClick={() => profileEdit("save")}
             disabled={isSaveDisabled}
           >

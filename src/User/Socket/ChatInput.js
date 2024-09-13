@@ -12,8 +12,9 @@ function ChatInput({ onSendMessage }) {
   const [chatNo, setChatNo] = useState();
   const [chats, setChats] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCloseModalOpen, setIsCloseModalOpen] = useState(false); // 채팅 종료 모달 상태
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [setStompClient] = useState(null);
+  const [stompClient, setStompClient] = useState(null);
 
   const nv = useNavigate();
 
@@ -40,24 +41,29 @@ function ChatInput({ onSendMessage }) {
     }
   };
 
+  // 채팅 종료 모달 열기
+  const openCloseModal = () => {
+    setIsCloseModalOpen(true);
+  };
+
   // 채팅 종료 함수
-  const chatClose = () => {
-    if (
-      window.confirm(
-        "채팅을 종료하시겠습니까?\n종료된 채팅은 다시 확인할 수 없습니다."
-      )
-    ) {
-      axios
-        .put(`/chat/user/${userNo}/${chatNo}`)
-        .then((res) => {
-          if (res.data.result) {
-            nv(`../user`);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+  const handleCloseChat = () => {
+    axios
+      .put(`/chat/user/${userNo}/${chatNo}`)
+      .then((res) => {
+        if (res.data.result) {
+          nv(`../user`);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setIsCloseModalOpen(false);
+  };
+
+  // 채팅 종료 모달 닫기
+  const closeModal = () => {
+    setIsCloseModalOpen(false);
   };
 
   // 상담 구분 선택 함수
@@ -169,6 +175,12 @@ function ChatInput({ onSendMessage }) {
                 ></input>
               </li>
             </ul>
+            <input
+              type="button"
+              value="뒤로 가기"
+              className="btn3"
+              onClick={() => nv(-1)}
+            ></input>
           </div>
         </div>
       )}
@@ -200,12 +212,34 @@ function ChatInput({ onSendMessage }) {
         </button>
       </div>
       <div style={{ textAlign: "center" }}>
-        <button onClick={chatClose} className="btn3">
+        <button onClick={openCloseModal} className="btn3">
           채팅 종료
         </button>
         <br />
         채팅 종료시, 상담 내역을 다시 확인할 수 없습니다.
       </div>
+      {isCloseModalOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <span className={styles.modalClose} onClick={closeModal}>
+              &times;
+            </span>
+            <div className={styles.modalHeader}>
+              채팅을 종료하시겠습니까?
+              <br />
+              종료된 채팅은 다시 확인할 수 없습니다.
+            </div>
+            <div className={styles.modalFooter}>
+              <button className="btn1" onClick={handleCloseChat}>
+                확인
+              </button>
+              <button className="btn1" onClick={closeModal}>
+                취소
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
