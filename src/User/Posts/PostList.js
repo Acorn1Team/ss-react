@@ -1,37 +1,65 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "./PostList.css"; // CSS 파일을 import
+import "./PostList.css";
 import "../Style/All.css";
 
 export default function PostList() {
-  const [posts, setPosts] = useState([]); // 모든 게시글을 관리
+  const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [pageSize, setPageSize] = useState(4); // 페이지당 4개의 게시글 표시
+  const [pageSize, setPageSize] = useState(8);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [viewMode, setViewMode] = useState("follow"); // "follow" 또는 "all"
-  const [hasFollowPosts, setHasFollowPosts] = useState(false); // 팔로우한 사람의 게시글 여부 확인
-  const [isUserAction, setIsUserAction] = useState(false); // 사용자가 수동으로 모드를 변경했는지 여부
+  const [viewMode, setViewMode] = useState("all");
+  const [sortOrder, setSortOrder] = useState("latest");
+  const [hasFollowers, setHasFollowers] = useState(false); // 팔로우 여부 확인
+  const [isFollowChecked, setIsFollowChecked] = useState(false);
 
   const userNo = sessionStorage.getItem("id");
 
   useEffect(() => {
     if (userNo) {
-      loadFollowPosts(); // 페이지 처음 로드 시 팔로우 게시글을 불러옴
+      checkIfUserHasFollowers(); // 팔로우한 사람 있는지 체크
     }
   }, [userNo]);
 
   useEffect(() => {
-    if (!isLoading) {
-      // viewMode가 변경될 때마다 해당 게시글을 로드
+    if (!isLoading && isFollowChecked) {
       if (viewMode === "all") {
-        loadAllPosts();
-      } else if (viewMode === "follow") {
-        loadFollowPosts();
+        loadAllPosts(); // 전체 게시글 불러오기
+      } else if (viewMode === "follow" && hasFollowers) {
+        loadFollowPosts(); // 팔로우한 사람의 게시글 불러오기
       }
     }
-  }, [viewMode, currentPage]);
+  }, [viewMode, currentPage, sortOrder, isFollowChecked]);
+
+  // 팔로우한 사람이 있는지 확인하는 함수
+  const checkIfUserHasFollowers = () => {
+    setIsLoading(true);
+    axios
+      .get(`/posts/user/follow/followee/${userNo}`, {
+        params: {
+          page: 0, // 첫 페이지에서 팔로우 게시글 확인
+          size: 1, // 팔로우한 사람 1명만 체크
+        },
+      })
+      .then((res) => {
+        if (res.data.content.length > 0) {
+          setHasFollowers(true); // 팔로우한 사람이 있으면 true
+        } else {
+          setHasFollowers(false); // 팔로우한 사람이 없으면 false
+        }
+        setIsFollowChecked(true); // 팔로우 체크 완료
+      })
+      .catch((err) => {
+        console.log("팔로우 체크 오류:", err);
+        setHasFollowers(false);
+        setIsFollowChecked(true); // 오류 발생 시에도 체크 완료로 설정
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   // 팔로우 게시글 불러오기
   const loadFollowPosts = () => {
@@ -45,17 +73,10 @@ export default function PostList() {
       })
       .then((res) => {
         const filteredPosts = res.data.content.filter(
-          (post) => post.deleted < 1 || post.reports_count <= 5
+          (post) => post.deleted < 1 || post.reportsCount <= 5
         );
         setPosts(filteredPosts);
         setTotalPages(res.data.totalPages);
-
-        if (filteredPosts.length === 0 && !isUserAction) {
-          // 팔로우한 사람 게시글이 없을 경우 자동으로 전체 보기로 전환
-          setViewMode("all");
-        } else {
-          setHasFollowPosts(true); // 팔로우한 사람의 게시글이 있음
-        }
       })
       .catch((err) => {
         console.log("팔로우 게시글 로딩 오류:", err);
@@ -68,8 +89,9 @@ export default function PostList() {
   // 전체 게시글 불러오기
   const loadAllPosts = () => {
     setIsLoading(true);
+    const url = sortOrder === "latest" ? "/posts/latest" : "/posts/popular";
     axios
-      .get(`/posts/popular`, {
+      .get(url, {
         params: {
           page: currentPage,
           size: pageSize,
@@ -77,7 +99,7 @@ export default function PostList() {
       })
       .then((res) => {
         const filteredPosts = res.data.content.filter(
-          (post) => post.deleted < 1 || post.reports_count <= 5
+          (post) => post.deleted < 1 || post.reportsCount <= 5
         );
         setPosts(filteredPosts);
         setTotalPages(res.data.totalPages);
@@ -94,7 +116,6 @@ export default function PostList() {
     e.target.style.display = "none";
   };
 
-  // 글 내용을 100자 제한으로 자르기
   const truncateContent = (content, limit = 100) => {
     if (content.length > limit) {
       return content.slice(0, limit) + "...";
@@ -117,30 +138,57 @@ export default function PostList() {
 
   // 뷰 모드 전환 함수
   const handleViewModeChange = (mode) => {
-    // 상태 업데이트 후 바로 useEffect에서 게시글을 로드
-    setViewMode(mode);
-    setIsUserAction(true); // 사용자가 직접 전환함을 표시
+    if (mode === "follow" && !hasFollowers) {
+      setViewMode("all"); // 팔로우한 게시글이 없으면 전체보기로 전환
+    } else {
+      setViewMode(mode);
+    }
+    setCurrentPage(0); // 페이지를 0으로 초기화
+  };
+
+  // 정렬 모드 변경 함수
+  const handleSortChange = (order) => {
+    setSortOrder(order);
     setCurrentPage(0); // 페이지를 0으로 초기화
   };
 
   return (
     <div>
       <div className="view-mode-buttons">
-        <button
-          className={viewMode === "follow" ? "btn2" : "btn1"}
-          onClick={() => handleViewModeChange("follow")}
-          disabled={viewMode === "follow" && hasFollowPosts === false}
-        >
-          팔로우한 사람 게시글 보기
-        </button>
+        {/* 팔로우한 사람이 있을 때만 버튼을 표시 */}
+        {!isLoading && hasFollowers && (
+          <button
+            className={viewMode === "follow" ? "btn2" : "btn1"}
+            onClick={() => handleViewModeChange("follow")}
+          >
+            팔로우한 사람 게시글 보기
+          </button>
+        )}
         <button
           className={viewMode === "all" ? "btn2" : "btn1"}
           onClick={() => handleViewModeChange("all")}
-          disabled={viewMode === "all"}
         >
           전체 보기
         </button>
       </div>
+
+      {/* 팔로우 모드일 때는 정렬 버튼을 숨김 */}
+      {viewMode !== "follow" && (
+        <div className="sort-buttons">
+          <button
+            className={sortOrder === "latest" ? "btn2" : "btn1"}
+            onClick={() => handleSortChange("latest")}
+          >
+            최신순
+          </button>
+          <button
+            className={sortOrder === "popular" ? "btn2" : "btn1"}
+            onClick={() => handleSortChange("popular")}
+          >
+            인기순
+          </button>
+        </div>
+      )}
 
       <div className="post-list-container">
         {posts.length > 0 ? (

@@ -1,89 +1,88 @@
 .reviews-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .average-rating {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-  }
-  
-  .no-reviews {
-    text-align: center;
-    font-size: 1.1rem;
-    color: #888;
-  }
-  
-  .review-list-item {
-    display: flex;
-    border-bottom: 1px solid #ddd;
-    padding: 15px 0;
-  }
-  
-  .review-left {
-    flex: 0 0 100px;
-  }
-  
-  .review-right {
-    flex: 1;
-    padding-left: 15px;
-  }
-  
-  .review-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-  
-  .review-product-name {
-    font-size: 1.1rem;
-    font-weight: bold;
-  }
-  
-  .review-user {
-    font-size: 0.9rem;
-    color: #888;
-  }
-  
-  .review-content {
-    font-size: 0.9rem;
-  }
-  
-  .review-text {
-    margin-bottom: 10px;
-  }
-  
-  .review-rating {
-    font-size: 0.9rem;
-    color: #555;
-  }
-  
-  .review-image2 {
-    width: 70px; /* 이미지 가로 크기 */
-    height: 85px; /* 이미지 세로 크기 */
-    object-fit: cover; /* 이미지 비율 유지하며 자르기 */
-    border-radius: 5px; /* 둥근 모서리 */
-    margin-right: 15px; /* 이미지와 텍스트 간격 */
-  }
-  
-  .pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-  }
-  
-  .pagination button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .pagination button:disabled {
-    background-color: #ddd;
-    cursor: not-allowed;
-  }
-  
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.average-rating {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.no-reviews {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #888;
+}
+
+.review-list-item {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  padding: 15px 0;
+}
+
+.review-left {
+  flex: 0 0 100px;
+}
+
+.review-right {
+  flex: 1;
+  padding-left: 15px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.review-product-name {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.review-user {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.review-content {
+  font-size: 0.9rem;
+}
+
+.review-text {
+  margin-bottom: 10px;
+}
+
+.review-rating {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.review-image2 {
+  width: 70px; /* 이미지 가로 크기 */
+  height: 85px; /* 이미지 세로 크기 */
+  object-fit: cover; /* 이미지 비율 유지하며 자르기 */
+  border-radius: 5px; /* 둥근 모서리 */
+  margin-right: 15px; /* 이미지와 텍스트 간격 */
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}

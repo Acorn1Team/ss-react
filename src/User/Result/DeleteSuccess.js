@@ -9,6 +9,9 @@ const RegisterSuccess = () => {
       <LiaCheckDoubleSolid size={80} className={styles.icon} />
       <h2 className={styles.heading}>회원탈퇴가 완료되었습니다.</h2>
       그동안 SceneStealer를 이용해 주셔서 감사합니다.
+      <br />
+      <br />
+      <br />
       <div className={styles.buttonGroup}>
         <Link to="/user">
           <button type="button" className={styles.button}>

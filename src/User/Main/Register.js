@@ -486,7 +486,7 @@ const Register = () => {
       <div className={styles.container}>
         {loading && <Loading />} {/* 로딩 컴포넌트 표시 */}
         <form className="register_Form" onSubmit={handleRegister}>
-          <h1>SceneStealer</h1>
+          <h1>회원가입</h1>
           {/* 이메일 */}
           <div className={styles.email_input}>
             <input
@@ -528,7 +528,7 @@ const Register = () => {
                 <div className={styles.error_message}>{errorMessage.email}</div>
               )}
               <input
-                className="btn3Long"
+                className="btn1Long"
                 value="인증번호 전송"
                 type="button"
                 onClick={async () => {
@@ -586,7 +586,7 @@ const Register = () => {
               onChange={(e) => setId(e.target.value)}
             />
             <input
-              className="btn3"
+              className="btn1"
               id="idCheck"
               value="중복 확인"
               type="button"
@@ -656,7 +656,7 @@ const Register = () => {
           </div>
 
           {/* 주소 */}
-          <div className={styles.id_input}>
+          <div className={styles.zipcode_input}>
             <input
               type="text"
               placeholder="우편번호"
@@ -670,7 +670,7 @@ const Register = () => {
             <input
               type="button"
               value="검색"
-              className="btn3 "
+              className="btn1"
               onClick={openDaumPostcode}
             ></input>
           </div>
@@ -710,7 +710,7 @@ const Register = () => {
           <input
             type="button"
             value="회원가입"
-            className="btn4"
+            className="btn2"
             id="btnRegister"
             onClick={handleRegister}
           ></input>

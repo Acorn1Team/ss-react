@@ -46,7 +46,7 @@ function AutoSearch({ onSearch }) {
     return () => {
       isCancelled = true; // 이전 요청 취소
     };
-  }, [inputValue, category]);
+  }, [inputValue, category, setFilteredItems]);
 
   useEffect(() => {
     // 페이지 이동 시 입력값 초기화

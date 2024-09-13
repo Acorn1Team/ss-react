@@ -31,19 +31,35 @@ label {
 }
 
 input[type="text"],
+input[type="email"],
 input[type="number"],
+input[type="password"],
+select,
+/* input[type="select"], */
 input[type="date"] {
-  width: 100%;
+  width: 96.5%;
   padding: 12px;
   border: 1px solid #d1d9e6;
   font-size: 16px;
+  border-radius: 8px;
   color: #333;
   transition: border-color 0.3s ease;
   background-color: transparent;
 }
 
+/* 비활성화된 상태에서의 스타일 */
+input[type="text"]:disabled,
+input[type="email"]:disabled {
+  /* background-color: #f0f0f0; */
+  /* color: #999; */
+  border-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 input[type="text"]:focus,
 input[type="number"]:focus,
+input[type="password"]:focus,
 input[type="date"]:focus {
   border-color: #a4c0e4;
   outline: none;

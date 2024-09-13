@@ -304,12 +304,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
+  /* background-color: rgba(0, 0, 0, 0.5); */
+  backdrop-filter: blur(2px);
   z-index: 1000;
 }
 
-/* 모달 컨텐츠 */
 .modalContent {
   position: absolute;
   top: 50%;
@@ -321,15 +320,14 @@
   width: 60%;
   max-width: 800px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
-  z-index: 1001;
   text-align: center;
   overflow: visible; /* 내부 스크롤 방지 */
-  height: auto; /* 자동으로 높이 조절 */
 }
 
-.modalContent.active {
-  max-height: 80vh; /* 모달의 최대 높이 설정 */
-  overflow-y: auto; /* 모달 내 스크롤 */
+/* 자동완성 컨테이너 */
+.autoSearchContainer {
+  max-height: 200px; /* 최대 높이 설정 */
+  overflow-y: auto; /* 검색 결과가 많을 때 스크롤 */
 }
 
 /* 닫기 버튼 */

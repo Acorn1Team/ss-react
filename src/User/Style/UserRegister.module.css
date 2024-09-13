@@ -2,6 +2,7 @@
 .body {
   text-align: center;
 }
+
 .container {
   max-width: 600px;
   margin: 40px auto;
@@ -13,27 +14,27 @@
   box-sizing: border-box;
 }
 
-/* .user_input {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-} */
-.id_input {
+.id_input,
+.zipcode_input {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.pwd_input input {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 45px;
-  width: 101%;
-  padding: 10px;
-  border: 1px solid #ccc;
+.id_input input,
+.zipcode_input input {
+  flex: 1;
+  margin-right: 10px; /* 입력 필드와 버튼 간 간격 */
+}
+
+.id_input [type="button"],
+.zipcode_input [type="button"] {
+  flex: 0;
+  margin-left: 10px;
   border-radius: 4px;
-  box-sizing: border-box; /* padding과 border가 너비에 포함되도록 설정 */
+}
+
+.pwd_input input {
   margin-bottom: 10px; /* 입력 필드 사이에 간격을 줌 */
 }
 
@@ -43,53 +44,22 @@
   margin-right: 5px;
   border-radius: 4px;
 }
-/* 
-.register_Form {
-  width: 100%;
-  max-width: 600px;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-}
-
-.register_Form h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 24px;
-  color: #333;
-} */
 
 .email_input {
   display: flex;
   align-items: center;
 }
 
-/* .id_input [type="password"] {
-  padding: 10px !important;
-  border-bottom: 5px !important;
-  padding-bottom: 5px !important;
-  border: 1px solid #ccc !important;
-  border-radius: 4px !important;
-} */
-
 .email_input input {
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  /* border: 1px solid #ccc;
+  border-radius: 4px; */
   margin-right: 8px;
   width: 50%;
 }
 input[type="button"] {
   margin-left: 3px;
   border-radius: 4px;
-
-  /* margin-right: 100px; */
-  /* padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-right: 8px;
-  width: 50%; */
 }
 
 .email_input span {
@@ -98,25 +68,15 @@ input[type="button"] {
 
 .email_input select {
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+
   width: 150px;
 }
 
-/* 
-.btn1 {
-  background-color: #007bff;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-}
+/* 우편번호와 검색 버튼을 같은 줄에 정렬 */
 
-.btn1:hover {
-  background-color: #0056b3;
-} */
+.zipcode_input input[type="button"] {
+  margin-bottom: 22px;
+}
 
 .error_message {
   text-align: left;
