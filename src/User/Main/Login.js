@@ -74,7 +74,7 @@ const Login = () => {
           />
 
           {loginCheck && (
-            <label className={styles["error_message"]}>{errorMessage}</label>
+            <label className={styles.errorMessage}>{errorMessage}</label>
           )}
 
           <input type="submit" value="로그인" className="btn3Long"></input>
