@@ -13,7 +13,7 @@ function ChatInput({ onSendMessage }) {
   const [chats, setChats] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [stompClient, setStompClient] = useState(null);
+  const [setStompClient] = useState(null);
 
   const nv = useNavigate();
 

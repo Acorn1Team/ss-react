@@ -179,24 +179,22 @@ export default function OtherProfile() {
           )}
           <div className={styles.followStats}>
             <span>
-              팔로우
               <Link
                 to={`/user/style/${profileUserNo}/followList/followee`}
                 onClick={followInfo}
                 className={styles.followLink}
               >
-                {followeeData.length}
+                팔로우 {followeeData.length}
               </Link>
             </span>
             &emsp;
             <span>
-              팔로워{" "}
               <Link
                 to={`/user/style/${profileUserNo}/followList/follower`}
                 onClick={followInfo}
                 className={styles.followLink}
               >
-                {followerData.length}
+                팔로워 {followerData.length}
               </Link>
             </span>
           </div>

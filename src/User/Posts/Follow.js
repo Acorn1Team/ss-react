@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import styles from "../Style/Follow.module.css"; // CSS 모듈 임포트
 
 export default function Follow() {
@@ -19,6 +19,8 @@ export default function Follow() {
 
   // 전체 페이지 수
   const [totalPages, setTotalPages] = useState(1);
+
+  const nv = useNavigate();
 
   const userNo = sessionStorage.getItem("id");
 
@@ -159,25 +161,23 @@ export default function Follow() {
               <img src={f.pic} alt="Profile" className={styles.profilePic} />
               <Link to={`/user/style/profile/${f.no}`}>@{f.nickname}</Link>
               {isMyPage && followInfo === "follower" ? (
-                <button
-                  onClick={() => deleteFollower(f.no)}
-                  className={styles.unfollowButton}
-                >
+                <button onClick={() => deleteFollower(f.no)} className="btn3">
                   삭제하기
                 </button>
+              ) : userNo !== String(f.no) ? (
+                <button
+                  onClick={() => followOrCancel(f.no)}
+                  className={followStatus[f.no] ? `btn3` : `btn1`}
+                >
+                  {followStatus[f.no] ? "팔로우 취소하기" : "팔로우 하기"}
+                </button>
               ) : (
-                userNo !== String(f.no) && (
-                  <button
-                    onClick={() => followOrCancel(f.no)}
-                    className={
-                      followStatus[f.no]
-                        ? styles.unfollowButton
-                        : styles.followButton
-                    }
-                  >
-                    {followStatus[f.no] ? "팔로우 취소하기" : "팔로우 하기"}
-                  </button>
-                )
+                <button
+                  onClick={() => nv(`../profile/${userNo}`)}
+                  className="btn3"
+                >
+                  It's Me!
+                </button>
               )}
             </div>
           ))}

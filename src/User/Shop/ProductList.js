@@ -9,7 +9,7 @@ export default function ProductList() {
   const [products, setProducts] = useState([]);
   const [sortOption, setSortOption] = useState(""); // 기본적으로 셀렉트 박스는 선택되지 않은 상태
   const [currentPage, setCurrentPage] = useState(0);
-  const [pageSize, setPageSize] = useState(12); // 페이지당 상품 수
+  const [pageSize, setPageSize] = useState(9); // 페이지당 상품 수
   const [totalPages, setTotalPages] = useState(1);
   const [selectCategory, setSelectCategory] = useState(category || "");
   const [excludeSoldOut, setExcludeSoldOut] = useState(false); // 품절 상품 제외 여부
@@ -158,7 +158,6 @@ export default function ProductList() {
         )}
       </div>
 
-      {/* 카테고리 선택을 위한 라디오 버튼 */}
       <div className={checkboxStyles["radio-input"]}>
         {categories.map((cate, index) => (
           <React.Fragment key={index}>
@@ -191,7 +190,6 @@ export default function ProductList() {
               </Link>
             </div>
             <div className={styles.productName}>{product.name}</div>
-            {/* 할인가격 적용 */}
             <div className={styles.productPrice}>
               {product.discountRate > 0 ? (
                 <>
@@ -199,7 +197,7 @@ export default function ProductList() {
                     {product.price.toLocaleString()}원
                   </span>
                   &nbsp;
-                  <span style={{ color: '#df919e', fontWeight: "bold" }}>
+                  <span style={{ color: "#df919e", fontWeight: "bold" }}>
                     {calculateSellingPrice(
                       product.price,
                       product.discountRate

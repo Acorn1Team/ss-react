@@ -4,6 +4,10 @@ body {
   font-family: "Hahmlet";
 }
 
+::placeholder {
+  font-family: "Hahmlet";
+}
+
 .hahmlet {
   font-family: "Hahmlet", serif;
   font-optical-sizing: auto;

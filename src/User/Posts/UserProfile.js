@@ -205,7 +205,9 @@ export default function UserProfile() {
       ) : (
         <div className={styles.profileContent}>
           <img src={userData.pic} alt="Profile" className={styles.profilePic} />
-          <div className={styles.profileNickname}>@{userData.nickname}</div>
+          <div className={styles.profileNickname}>
+            <b style={{ fontSize: "105%" }}>@{userData.nickname}</b>
+          </div>
           <div className={styles.profileBio}>{userData.bio}</div>
           <button className={`btn3`} onClick={() => profileEdit()}>
             수정

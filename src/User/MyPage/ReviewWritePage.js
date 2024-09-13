@@ -2,45 +2,43 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
-import './ReviewWritePage.css'; // CSS 파일 import
+import "./ReviewWritePage.css"; // CSS 파일 import
 //import "../Style/All.css"; //  button styles
 
 export default function ReviewWritePage() {
-  const { orderProductNo } = useParams(); 
-  const location = useLocation(); 
+  const { orderProductNo } = useParams();
+  const location = useLocation();
   const { userNo, review, productName } = location.state || {}; // review 받아오기
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-   
-  const [contents, setContents] = useState(review?.contents || ""); 
-  const [score, setScore] = useState(review?.score || 0); 
+  const [contents, setContents] = useState(review?.contents || "");
+  const [score, setScore] = useState(review?.score || 0);
   const [pic, setPic] = useState(review?.pic || null);
   const [errorMessage, setErrorMessage] = useState("");
 
- // 입력 자료 검증 함수
- const validateInputs = () => {
-  if (!contents.trim()) {
-    setErrorMessage("리뷰 내용을 입력해주세요.");
-    return false;
-  }
-  if (contents.length > 40) {
-    setErrorMessage("리뷰 내용은 40자 이하로 작성해주세요.");
-    return false;
-  }
-  if (score === 0) {
-    setErrorMessage("평점을 선택해주세요.");
-    return false;
-  }
-  setErrorMessage(""); // 오류 메시지가 없을 때는 초기화
-  return true;
-};
+  // 입력 자료 검증 함수
+  const validateInputs = () => {
+    if (!contents.trim()) {
+      setErrorMessage("리뷰 내용을 입력해주세요.");
+      return false;
+    }
+    if (contents.length > 40) {
+      setErrorMessage("리뷰 내용은 40자 이하로 작성해주세요.");
+      return false;
+    }
+    if (score === 0) {
+      setErrorMessage("평점을 선택해주세요.");
+      return false;
+    }
+    setErrorMessage(""); // 오류 메시지가 없을 때는 초기화
+    return true;
+  };
 
-// 리뷰 작성 시 서버에 데이터를 전송하는 함수
-const handleSubmit = () => {
-  if (!validateInputs()) return; // 입력 검증 통과하지 않으면 제출 중단
+  // 리뷰 작성 시 서버에 데이터를 전송하는 함수
+  const handleSubmit = () => {
+    if (!validateInputs()) return; // 입력 검증 통과하지 않으면 제출 중단
 
-  const formData = new FormData();
-
+    const formData = new FormData();
 
     // 리뷰 데이터를 객체로 생성
     const reviewDto = {
@@ -60,7 +58,8 @@ const handleSubmit = () => {
     }
 
     axios
-      .post(`/list/review/${orderProductNo}`, formData, { // 서버에서 주문상품번호를 가져와야함
+      .post(`/list/review/${orderProductNo}`, formData, {
+        // 서버에서 주문상품번호를 가져와야함
         headers: {
           "Content-Type": "multipart/form-data", // FormData로 전송하기 위한 헤더 설정
         },
@@ -73,7 +72,7 @@ const handleSubmit = () => {
         console.error("리뷰 제출 실패:", error.response?.data || error);
       });
   };
- 
+
   return (
     <div className="reviews-container">
       <h2>리뷰 작성하기</h2>
@@ -86,19 +85,20 @@ const handleSubmit = () => {
 
       {/* 오류 메시지를 화면에 표시 */}
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-      
-      <textarea 
-  placeholder="리뷰 내용을 입력하세요"
-  value={contents}
-  onChange={(e) => {
-    const input = e.target.value;
-    if (input.length <= 40) {  // 글자 수를 40자로 제한
-      setContents(input);
-    }
-    
-  }}
-></textarea>
-<div>{contents.length} / 40 글자</div>
+
+      <textarea
+        className="textarea"
+        placeholder="리뷰 내용을 입력하세요"
+        value={contents}
+        onChange={(e) => {
+          const input = e.target.value;
+          if (input.length <= 40) {
+            // 글자 수를 40자로 제한
+            setContents(input);
+          }
+        }}
+      ></textarea>
+      <div>{contents.length} / 40 글자</div>
       <br />
 
       <div>

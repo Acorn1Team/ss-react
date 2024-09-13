@@ -1,94 +1,92 @@
-
 /* 전체 컨테이너 스타일 */
 .reviews-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 0 auto; /* 이 한 줄 추가 */
-  }
-  
-  /* 헤딩 스타일 */
-  h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
-  }
-  
-  /* 상품명 텍스트 스타일 */
-  .product-name {
-    margin-bottom: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #555;
-  }
-  
-  /* 텍스트 에어리어 스타일 */
-  .textarea {
-    width: 100%;
-    max-width: 400px;
-    height: 100px;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    resize: none;
-    margin-bottom: 10px;
-  }
-  
-  .textarea:focus {
-    outline: none;
-    border-color: #00aaff;
-  }
-  
-  /* 글자 수 표시 */
-  .char-count {
-    font-size: 14px;
-    color: #999;
-  }
-  
-  /* 평점 섹션 스타일 */
-  h3 {
-    margin-bottom: 10px;
-    font-size: 20px;
-    color: #333;
-  }
-  
-  /* 별점 스타일 */
-  label {
-    margin-right: 5px;
-  }
-  
-  input[type="radio"] {
-    display: none;
-  }
-  
-  svg {
-    transition: color 0.2s ease-in-out;
-  }
-  
-  svg:hover {
-    color: #ffc107;
-  }
-  
-  /* 파일 선택 인풋 스타일 */
-  input[type="file"] {
-    margin-bottom: 15px;
-  }
-  
-  /* 제출 버튼 스타일 */
-  button {
-    background-color: #df919e;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #c7727e;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0 auto; /* 이 한 줄 추가 */
+}
+
+/* 헤딩 스타일 */
+h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+/* 상품명 텍스트 스타일 */
+.product-name {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #555;
+}
+
+/* 텍스트 에어리어 스타일 */
+.textarea {
+  width: 100%;
+  max-width: 400px;
+  height: 100px;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  resize: none;
+  margin-bottom: 10px;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #00aaff;
+}
+
+/* 글자 수 표시 */
+.char-count {
+  font-size: 14px;
+  color: #999;
+}
+
+/* 평점 섹션 스타일 */
+h3 {
+  margin-bottom: 10px;
+  font-size: 20px;
+  color: #333;
+}
+
+/* 별점 스타일 */
+label {
+  margin-right: 5px;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+svg {
+  transition: color 0.2s ease-in-out;
+}
+
+svg:hover {
+  color: #ffc107;
+}
+
+/* 파일 선택 인풋 스타일 */
+input[type="file"] {
+  margin-bottom: 15px;
+}
+
+/* 제출 버튼 스타일 */
+button {
+  background-color: #df919e;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #c7727e;
+}

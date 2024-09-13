@@ -256,31 +256,41 @@ export default function PostWrite() {
 
   return (
     <div className={styles.container}>
-      <div id="photoBox" className={styles.photoBox}>
-        {previewImage && (
-          <img
-            src={previewImage}
-            alt="미리보기"
-            className={styles.previewImage} // 미리보기 이미지에 스타일 적용
-          />
-        )}
+      <div style={{ textAlign: "left" }}>
+        <div id="photoBox" className={styles.photoBox}>
+          {previewImage && (
+            <img
+              src={previewImage}
+              alt="미리보기"
+              className={styles.previewImage} // 미리보기 이미지에 스타일 적용
+            />
+          )}
+        </div>
+        {!postNo && <input type="file" onChange={handleFileChange} />}
       </div>
-      {!postNo && <input type="file" onChange={handleFileChange} />}
       <span style={{ color: "red" }} id="forFileNull"></span>
       <br />
-
       <div className={styles.textareaContainer}>
-        <textarea
-          style={{ width: "580px" }}
-          value={content}
-          onChange={handleContentChange}
-        ></textarea>
+        <textarea value={content} onChange={handleContentChange}></textarea>
         <div className={styles.characterCount}>{content.length} / 500</div>
+      </div>{" "}
+      <div className={styles.buttonClass}>
+        <button className="btn1" onClick={() => insertPost(postNo)}>
+          {postNo ? "수정" : "등록"}
+        </button>
+        <button className="btn1" onClick={resetButton}>
+          초기화
+        </button>
+        <button className="btn3" onClick={() => navigate(-1)}>
+          취소
+        </button>
+        <b id="error" className={styles.error}></b>
       </div>
-
+      <hr />
       <div className={styles.productBox}>
-        상품을 검색해 보세요!&emsp;
+        상품을 검색해 보세요!
         <input
+          style={{ width: "95.5%" }}
           type="text"
           className={styles.productSearchInput}
           value={inputValue}
@@ -296,6 +306,7 @@ export default function PostWrite() {
                   key={index}
                   className={styles.dropdownItem}
                   onMouseDown={() => handleClick(item)}
+                  onBlur={handleBlur}
                 >
                   {item.name}
                 </div>
@@ -339,17 +350,6 @@ export default function PostWrite() {
           </div>
         )}
       </div>
-
-      <button className="btn1Long" onClick={() => insertPost(postNo)}>
-        {postNo ? "수정" : "등록"}
-      </button>
-      <button className="btn1Long" onClick={resetButton}>
-        초기화
-      </button>
-      <button className="btn3Long" onClick={() => navigate(-1)}>
-        취소
-      </button>
-      <b id="error" className={styles.error}></b>
     </div>
   );
 }
