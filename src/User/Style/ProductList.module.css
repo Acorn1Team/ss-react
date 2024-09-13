@@ -6,6 +6,8 @@
   border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  
+  
 }
 
 .header {
@@ -19,6 +21,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  
 }
 
 .sortSelect {
@@ -32,6 +35,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
+  text-align: center; 
+  
 }
 
 .productItem {
@@ -42,6 +47,7 @@
   background-color: #fff;
   border-radius: 5px;
   transition: box-shadow 0.3s;
+  overflow: hidden; /* 이미지가 확대될 때 밖으로 튀어나가지 않게 */
 }
 
 .productItem:hover {
@@ -73,6 +79,12 @@
   object-fit: cover; /* 이미지를 비율에 맞춰 자르고, 정해진 크기에 맞춤 */
   border-radius: 8px; /* 모서리를 둥글게 만들고 싶다면 추가 */
   display: block; /* 이미지를 블록 요소로 처리해, 상하 여백 이슈 방지 */
+  padding-left: 5px; /* 왼쪽으로 10px 공간 추가 */
+  transition: transform 0.3s ease; /* 마우스 오버 시 부드러운 전환 */
+}
+
+.productItem:hover .productImage3 img {
+  transform: scale(1.1); /* 이미지가 살짝 확대되도록 설정 */
 }
 
 .productName {
@@ -80,6 +92,7 @@
   font-size: 16px;
   margin-top: 10px;
   color: #333;
+  
 }
 
 .productPrice {
@@ -129,8 +142,10 @@
 }
 
 .pagination button {
-  background: none;
-  border: 1px solid #dbdbdb;
+  background-color: #d0bbbe;
+  color: white;
+  /* background: none; */
+  border: 1px solid #d0bbbe;
   padding: 10px 20px;
   cursor: pointer;
   border-radius: 5px;

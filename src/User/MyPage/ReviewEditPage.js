@@ -44,6 +44,7 @@ export default function ReviewEditPage() {
         상품명: {review.productName}
       </div>
       <textarea
+       className="textarea"
   value={contents}
   onChange={(e) => {
     const input = e.target.value;

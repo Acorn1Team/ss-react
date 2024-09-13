@@ -73,6 +73,11 @@ export default function ReviewWritePage() {
       });
   };
 
+    // 리뷰 취소 시 이전 페이지로 이동하는 함수
+    const handleCancel = () => {
+      navigate(-1); // 이전 페이지로 이동
+    };
+
   return (
     <div className="reviews-container">
       <h2>리뷰 작성하기</h2>
@@ -134,6 +139,9 @@ export default function ReviewWritePage() {
       />
       <br />
       <button onClick={handleSubmit}>리뷰 제출</button>
+      &nbsp;
+        {/* 리뷰 취소 버튼 */}
+        <button className="reviewcancle"  onClick={handleCancel}>리뷰 취소</button>
     </div>
   );
 }
