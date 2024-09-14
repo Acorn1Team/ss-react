@@ -61,7 +61,7 @@ export default function ItemManage() {
 
   return (
     <>
-      <table border={1}>
+      <table style={{textAlign:"center"}}>
         <thead>
           <tr>
             <th>아이템 정보</th>
@@ -74,12 +74,12 @@ export default function ItemManage() {
           items.map((item) => (
             <tr key={item.no}>
               <td>
-                <img src={item.pic} alt={`${item.name} 이미지`} style={{ maxHeight: "200px", maxWidth: "150px" }} /><br/>
-                {item.name} ({item.no}번)<br/>
+                <img src={item.pic} alt={`${item.name} 이미지`} style={{ maxHeight: "150px", maxWidth: "150px" }} /><br/>
+                {item.name}<br/>
                 <button className="delete-button" onClick={() => openDeleteItemModal(item)}>아이템 삭제</button>
               </td>
               <td>
-                <img src={item.productPic} alt={`${item.productName} 이미지`} style={{ maxHeight: "200px", maxWidth: "150px" }} /><br/>
+                <img src={item.productPic} alt={`${item.productName} 이미지`} style={{ maxHeight: "150px", maxWidth: "150px" }} /><br/>
                 {item.productName}<br/>
                 <button className="update-button" onClick={() => navigate(`/admin/product/update/${item.productNo}`)}>상세보기</button>            
               </td>
@@ -87,14 +87,15 @@ export default function ItemManage() {
               {item.styleInfos && item.styleInfos.length > 0 ? (
               <div style={{ display: "flex", flexWrap: "wrap" }}>
                 {item.styleInfos.map((styleInfo) => (
-                  <div key={styleInfo.no} style={{ backgroundColor:"#e7e7e7", padding: "20px", margin: "20px", width: "200px" }}>
-                    <img src={styleInfo.style.pic} alt={`${styleInfo.no} 이미지`} style={{ maxHeight: "100px", maxWidth: "150px" }} /><br/>
-                    styleItem PK: {styleInfo.no}<br/>
-                    style PK: {styleInfo.style.no}<br/>
+                  <div key={styleInfo.no} style={{ backgroundColor:"#e2e2e2", padding: "20px", margin: "20px", display:"flex", alignItems:"flex-start", width:"250px" }}>
+                    <div style={{flex:"1"}}>
+                    <img src={styleInfo.style.pic} alt={`${styleInfo.no} 이미지`} style={{ maxHeight: "130px", maxWidth: "100px" }} /><br/>
+                    </div>
+                    <div style={{flex:"2"}}>
                     [{styleInfo.showTitle}]<br/>
-                    {styleInfo.actorInfo.actor}
-                    ({styleInfo.actorInfo.character})<br/>
+                    {styleInfo.actorInfo.actor}&nbsp;({styleInfo.actorInfo.character})<br/>
                     <button className="update-button" onClick={() => navigate(`/admin/fashion/character/${styleInfo.actorInfo.no}`, { state: styleInfo.actorInfo })}>스타일 편집</button>
+                    </div>
                   </div>
                 ))}
               </div>

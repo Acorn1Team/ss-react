@@ -244,7 +244,7 @@ const RightSection = styled.div`
 const Divider = styled.div`
   width: 1px;
   background-color: #ccc;
-  height: 500px; /* 고정 높이 설정 */
+  height: 1500px;
   margin: 0 20px;
 `;
 

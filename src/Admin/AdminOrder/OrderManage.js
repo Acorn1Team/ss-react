@@ -10,9 +10,9 @@ function StatusFilterSelect({ status, onStatusChange }) {
     <select
       value={status}
       onChange={onStatusChange}
-      style={{ padding: "5px", marginRight: "10px", width: "120px" }}
+      style={{ padding: "5px", marginRight: "10px", width: "180px" }}
     >
-      <option value="">상태 선택</option>
+      <option value="">주문 상태 선택</option>
       <option value="주문접수">주문접수</option>
       <option value="배송중">배송중</option>
       <option value="배송완료">배송완료</option>
@@ -223,7 +223,7 @@ export default function OrderManage() {
   }, [currentPage, pageSize]);
 
   return (
-    <div>
+    <div id="admin-body">
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
@@ -248,7 +248,7 @@ export default function OrderManage() {
           취소
         </button>
       </Modal>
-      <div id="admin-body" style={{ textAlign: "center" }}>
+      <div>
         <div
           style={{
             display: "flex",
@@ -270,7 +270,7 @@ export default function OrderManage() {
           <div style={{ textAlign: "center" }}>
             <input
               type="text"
-              placeholder="이름을 입력하세요"
+              placeholder="주문자명 입력"
               value={searchTerm}
               onChange={handleSearchChange}
               style={{ padding: "5px", width: "150px" }} // 크기 조정
@@ -309,14 +309,14 @@ export default function OrderManage() {
         </div>
       </div>
 
-      <table border="1" style={{ width: "100%" }}>
+      <table style={{ width: "80%" }}>
         <thead>
           <tr>
-            <th>번호</th>
+            <th>주문번호</th>
             <th>주문자명</th>
-            <th>주문일</th>
             <th>총액</th>
             <th>상태</th>
+            <th>주문일</th>
             <th>상세보기</th>
           </tr>
         </thead>
@@ -325,21 +325,20 @@ export default function OrderManage() {
             orders.map((order) => (
               <React.Fragment key={order.no}>
                 <tr>
-                  <td>{order.no}</td>
+                  <td>9042{order.no}</td>
                   <td>{order.userName}</td>
-                  <td>{new Date(order.date).toLocaleString()}</td>
                   <td>{order.price.toLocaleString("ko-KR")}원</td>
                   <td>
                     <select
                       value={order.state}
                       onChange={(e) => openModal(order.no, e.target.value)}
-                    >
+                      >
                       <option
                         value="주문접수"
                         disabled={
                           order.state === "배송중" || order.state === "배송완료"
                         }
-                      >
+                        >
                         주문접수
                       </option>
                       <option
@@ -351,12 +350,13 @@ export default function OrderManage() {
                       <option
                         value="배송완료"
                         disabled={order.state === "주문취소"}
-                      >
+                        >
                         배송완료
                       </option>
                       <option value="주문취소">주문취소</option>
                     </select>
                   </td>
+                  <td>{new Date(order.date).toLocaleString()}</td>
                   <td>
                     <span
                       style={{ cursor: "pointer", color: "blue" }}
@@ -377,8 +377,8 @@ export default function OrderManage() {
                             <thead>
                               <tr>
                                 <td colSpan={5}>
-                                  <h4>
-                                    전화번호) {userInfo[order.no].tel}
+                                  <h4>주문자 정보<br/>
+                                    연락처) {userInfo[order.no].tel}
                                     <br />
                                     주소) {userInfo[order.no].address}
                                   </h4>

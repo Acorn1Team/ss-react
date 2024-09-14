@@ -111,229 +111,235 @@ export default function PromotionManage() {
   return (
     <>
       <div id="admin-body">
-        <h3 className={styles.header}>
-          🩶 광고 🩶&nbsp;
-          <button
-            className="register-button"
-            onClick={() => {
-              navigate("/admin/promotion/advertise");
-            }}
-          >
-            광고 알림 보내기
-          </button>
-        </h3>
-      </div>
-      <div className={styles.container}>
-        <div className={styles.flexRow}>
-          <div className={styles.card}>
-            <div style={{ textAlign: "center" }}>
-              <h3>
-                🩶 쿠폰 🩶&nbsp;
+        <div className={styles.container}>
+          {/* 광고 섹션 */}
+          <div className={styles.adSection}>
+            <div className={styles.card}>
+              <h3 className={styles.header}>
+                🩶 광고 🩶&nbsp;
                 <button
-                  className="register-button"
+                  className="add-button"
                   onClick={() => {
-                    navigate("/admin/promotion/coupon");
+                    navigate("/admin/promotion/advertise");
                   }}
                 >
-                  쿠폰 발급하기
+                  광고 알림 보내기
                 </button>
               </h3>
-              <h4>발급한 쿠폰 목록</h4>
             </div>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>쿠폰명</th>
-                  <th>할인율</th>
-                  <th>만료일</th>
-                </tr>
-              </thead>
-              <tbody>
-                {coupons.map((coupon) => (
-                  <tr key={coupon.no}>
-                    <td>{coupon.name}</td>
-                    <td>{coupon.discountRate}%</td>
-                    <td>
-                      {coupon.expiryDate ? `${coupon.expiryDate}까지` : "없음"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {totalCouponPages > 1 && (
-              <div id="pagination">
-                <button
-                  onClick={() => handleCouponPageChange(currentCouponPage - 1)}
-                  disabled={currentCouponPage === 0}
-                >
-                  이전
-                </button>
-                <span>
-                  {currentCouponPage + 1} / {totalCouponPages}
-                </span>
-                <button
-                  onClick={() => handleCouponPageChange(currentCouponPage + 1)}
-                  disabled={currentCouponPage + 1 >= totalCouponPages}
-                >
-                  다음
-                </button>
-              </div>
-            )}
           </div>
 
-          <div className={styles.card}>
-            <div style={{ textAlign: "center" }}>
-              <h3>
-                🩶 팝업 🩶&nbsp;
-                <button
-                  className="register-button"
-                  onClick={() => navigate("/admin/promotion/popup")}
-                >
-                  팝업 등록하기
-                </button>
-              </h3>
-              <h4>팝업 목록</h4>
-            </div>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>내용 (클릭 시 설정 경로 이동)</th>
-                  <th>상태 변경</th>
-                  <th>삭제</th>
-                </tr>
-              </thead>
-              <tbody>
-                {popups.map((popup) => (
-                  <tr key={popup.no}>
-                    <td>
-                      <img
-                        onClick={() => navigate(`${popup.path}`)}
-                        className={styles.image}
-                        style={{ cursor: "pointer" }}
-                        src={popup.pic}
-                        alt={`${popup.no} 이미지`}
-                      />
-                    </td>
-                    <td>
-                      <select
-                        value={popup.isShow.toString()}
-                        onChange={(e) =>
-                          openChangeStatusModal(popup, e.target.value)
-                        }
-                      >
-                        <option value="true">보이기</option>
-                        <option value="false">숨기기</option>
-                      </select>
-                    </td>
-                    <td>
-                      <i
-                        onClick={() => openDeletePopupModal(popup)}
-                        className="delete-button"
-                      >
-                        삭제
-                      </i>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {totalPopupPages > 1 && (
-              <div id="pagination">
-                <button
-                  onClick={() => handlePopupPageChange(currentPopupPage - 1)}
-                  disabled={currentPopupPage === 0}
-                >
-                  이전
-                </button>
-                <span>
-                  {currentPopupPage + 1} / {totalPopupPages}
-                </span>
-                <button
-                  onClick={() => handlePopupPageChange(currentPopupPage + 1)}
-                  disabled={currentPopupPage + 1 >= totalPopupPages}
-                >
-                  다음
-                </button>
+          {/* 쿠폰과 팝업 섹션 */}
+          <div className={styles.bottomSection}>
+            <div className={styles.card}>
+              <div style={{ textAlign: "center" }}>
+                <h3>
+                  🩶 쿠폰 🩶&nbsp;
+                  <button
+                    className="add-button"
+                    onClick={() => {
+                      navigate("/admin/promotion/coupon");
+                    }}
+                  >
+                    쿠폰 발급하기
+                  </button>
+                </h3>
+                <h4>발급한 쿠폰 목록</h4>
               </div>
-            )}
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>쿠폰명</th>
+                    <th>할인율</th>
+                    <th>만료일</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {coupons.map((coupon) => (
+                    <tr key={coupon.no}>
+                      <td>{coupon.name}</td>
+                      <td>{coupon.discountRate}%</td>
+                      <td>
+                        {coupon.expiryDate
+                          ? `${coupon.expiryDate}까지`
+                          : "없음"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {totalCouponPages > 1 && (
+                <div id="pagination">
+                  <button
+                    onClick={() => handleCouponPageChange(currentCouponPage - 1)}
+                    disabled={currentCouponPage === 0}
+                  >
+                    이전
+                  </button>
+                  <span>
+                    {currentCouponPage + 1} / {totalCouponPages}
+                  </span>
+                  <button
+                    onClick={() => handleCouponPageChange(currentCouponPage + 1)}
+                    disabled={currentCouponPage + 1 >= totalCouponPages}
+                  >
+                    다음
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className={styles.card}>
+              <div style={{ textAlign: "center" }}>
+                <h3>
+                  🩶 팝업 🩶&nbsp;
+                  <button
+                    className="add-button"
+                    onClick={() => navigate("/admin/promotion/popup")}
+                  >
+                    팝업 등록하기
+                  </button>
+                </h3>
+                <h4>팝업 목록</h4>
+              </div>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>내용 (클릭 시 설정 경로 이동)</th>
+                    <th>상태 변경</th>
+                    <th>삭제</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {popups.map((popup) => (
+                    <tr key={popup.no}>
+                      <td>
+                        <img
+                          onClick={() => navigate(`${popup.path}`)}
+                          className={styles.image}
+                          style={{ cursor: "pointer" }}
+                          src={popup.pic}
+                          alt={`${popup.no} 이미지`}
+                          style={{maxHeight:"120px",maxWidth:"120px"}}
+                        />
+                      </td>
+                      <td>
+                        <select
+                          value={popup.isShow.toString()}
+                          onChange={(e) =>
+                            openChangeStatusModal(popup, e.target.value)
+                          }
+                        >
+                          <option value="true">보이기</option>
+                          <option value="false">숨기기</option>
+                        </select>
+                      </td>
+                      <td>
+                        <i
+                          onClick={() => openDeletePopupModal(popup)}
+                          className="delete-button"
+                        >
+                          삭제
+                        </i>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {totalPopupPages > 1 && (
+                <div id="pagination">
+                  <button
+                    onClick={() => handlePopupPageChange(currentPopupPage - 1)}
+                    disabled={currentPopupPage === 0}
+                  >
+                    이전
+                  </button>
+                  <span>
+                    {currentPopupPage + 1} / {totalPopupPages}
+                  </span>
+                  <button
+                    onClick={() => handlePopupPageChange(currentPopupPage + 1)}
+                    disabled={currentPopupPage + 1 >= totalPopupPages}
+                  >
+                    다음
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-        <Modal
-          isOpen={isDeletePopupModal}
-          onRequestClose={() => setIsDeletePopupModalOpen(false)}
-          contentLabel="팝업 삭제 확인"
-          style={{
-            overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
-            content: {
-              background: "white",
-              padding: "20px",
-              borderRadius: "8px",
-              textAlign: "center",
-              maxWidth: "400px",
-              height: "300px",
-              margin: "auto",
-            },
-          }}
-        >
-          {popupToDelete && (
-            <>
-              <img
-                src={popupToDelete.pic}
-                alt={`${popupToDelete.no} 이미지`}
-                style={{ maxWidth: "70%", maxHeight: "30%" }}
-              />
-              <h3>해당 팝업을 삭제할까요?</h3>
-              <button onClick={() => deletePopup(popupToDelete.no)}>
-                삭제
-              </button>
-              <button onClick={() => setIsDeletePopupModalOpen(false)}>
-                취소
-              </button>
-            </>
-          )}
-        </Modal>
-        <Modal
-          isOpen={isChangeStatusModal}
-          onRequestClose={() => setIsChangeStatusModalOpen(false)}
-          contentLabel="팝업 상태 변경 확인"
-          style={{
-            overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
-            content: {
-              background: "white",
-              padding: "20px",
-              borderRadius: "8px",
-              textAlign: "center",
-              maxWidth: "400px",
-              height: "300px",
-              margin: "auto",
-            },
-          }}
-        >
-          {popupToChange && (
-            <>
-              <h3>
-                팝업 상태를 "{newStatus === "true" ? "보이기" : "숨기기"}"로
-                변경할까요?
-              </h3>
-              <img
-                src={popupToChange.pic}
-                alt={`${popupToChange.no} 이미지`}
-                style={{ maxWidth: "70%", maxHeight: "30%" }}
-              />
-              <br />
-              <button
-                className="cancel-button"
-                onClick={() => setIsChangeStatusModalOpen(false)}
-              >
-                취소
-              </button>
-              <button className="confirm-button" onClick={handleStatusChange}>
-                변경
-              </button>
-            </>
-          )}
-        </Modal>
       </div>
+
+      {/* 모달들 */}
+      <Modal
+        isOpen={isDeletePopupModal}
+        onRequestClose={() => setIsDeletePopupModalOpen(false)}
+        contentLabel="팝업 삭제 확인"
+        style={{
+          overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+          content: {
+            background: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            textAlign: "center",
+            maxWidth: "400px",
+            height: "300px",
+            margin: "auto",
+          },
+        }}
+      >
+        {popupToDelete && (
+          <>
+            <h3>해당 팝업을 삭제할까요?</h3><br/>
+            <img
+              src={popupToDelete.pic}
+              alt={`${popupToDelete.no} 이미지`}
+              style={{ maxWidth: "70%", maxHeight: "30%" }}
+            /><br/><br/>
+            <button className="delete-button" onClick={() => deletePopup(popupToDelete.no)}>삭제</button>
+            <button className="cancel-button" onClick={() => setIsDeletePopupModalOpen(false)}>취소</button>
+          </>
+        )}
+      </Modal>
+
+      <Modal
+        isOpen={isChangeStatusModal}
+        onRequestClose={() => setIsChangeStatusModalOpen(false)}
+        contentLabel="팝업 상태 변경 확인"
+        style={{
+          overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+          content: {
+            background: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            textAlign: "center",
+            maxWidth: "400px",
+            height: "300px",
+            margin: "auto",
+          },
+        }}
+      >
+        {popupToChange && (
+          <>
+            <h3>
+              팝업 상태를 "{newStatus === "true" ? "보이기" : "숨기기"}"로
+              변경할까요?
+            </h3><br/>
+            <img
+              src={popupToChange.pic}
+              alt={`${popupToChange.no} 이미지`}
+              style={{ maxWidth: "70%", maxHeight: "30%" }}
+            />
+            <br /><br/>
+            <button className="cancel-button" onClick={() => setIsChangeStatusModalOpen(false)}>
+              취소
+            </button>
+            <button className="confirm-button" onClick={handleStatusChange}>
+              변경
+            </button>
+          </>
+        )}
+      </Modal>
     </>
   );
 }

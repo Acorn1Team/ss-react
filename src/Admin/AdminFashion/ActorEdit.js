@@ -109,11 +109,11 @@ export default function ActorEdit() {
     };
 
     return (
-        <>
-            <h2>[{show.title}]</h2>
+        <div id="admin-body">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div style={{ width: '20%' }}>
                     <div style={{ textAlign: 'center' }}>
+                        <h2>[{show.title}]</h2>
                         <img src={show.pic} alt={`${show.title} 이미지`} style={{ width: '70%', height: 'auto' }} />
                     </div>
                     <button className="delete-button" onClick={() => setIsShowModalOpen(true)}>작품 삭제</button>
@@ -121,7 +121,7 @@ export default function ActorEdit() {
 
                 {actors.length > 0 && (
                     <div style={{ width: '80%' }}>
-                        <h4>등록된 배우들</h4>
+                        <h3>등록된 배우들</h3>
                         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                             {actors.map((actorData, index) => (
                                 <div key={index} style={{ textAlign: 'center' }}>
@@ -144,7 +144,7 @@ export default function ActorEdit() {
             <hr />
             {scrapedDatas.length > 0 ? (
                 <div>
-                    <h4>등록되지 않은 배우들</h4>
+                    <h3>등록되지 않은 배우들</h3>
                     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                         {scrapedDatas.map((data, index) => {
                             const isRegistered = isActorRegistered(data);
@@ -266,6 +266,6 @@ export default function ActorEdit() {
                     </>
                 )}
             </Modal>
-        </>
+        </div>
     );
 }

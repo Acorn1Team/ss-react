@@ -8,7 +8,7 @@ export default function PromotionPopup() {
   const navigate = useNavigate();
   const [locationCategory, setLocationCategory] = useState("");
   const [inputValue, setInputValue] = useState("");
-  const [path, setPath] = useState("");
+  const [path, setPath] = useState("/user/shop/productlist");
   const [pic, setPic] = useState(null);
   const [filteredItems, setFilteredItems] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -32,15 +32,18 @@ export default function PromotionPopup() {
         setFilteredItems([]);
       }
     };
-    if (locationCategory && inputValue) {
+    if (locationCategory && inputValue && locationCategory !== "productlist") {
       fetchData();
     }
   }, [locationCategory, inputValue]);
 
+  // selectPath 메소드 수정
   const selectPath = (item) => {
     const newPath =
       locationCategory === "product"
         ? `/user/shop/productlist/detail/${item.no}`
+        : locationCategory === "productlist"
+        ? `/user/shop/productlist`
         : `/user/main/sub/${item.no}`;
     setPath(newPath);
     setShowDropdown(false);
@@ -51,6 +54,7 @@ export default function PromotionPopup() {
     setPic(e.target.files[0]);
   };
 
+  // validateForm 메소드 수정
   const validateForm = () => {
     if (!pic) {
       setErrorMessage("파일을 선택해 주세요.");
@@ -60,7 +64,7 @@ export default function PromotionPopup() {
       setErrorMessage("유도 경로를 선택해 주세요.");
       return false;
     }
-    if (!inputValue) {
+    if (locationCategory !== "productlist" && !inputValue) {
       setErrorMessage(" 입력 필드를 선택해 주세요.");
       return false;
     }
@@ -108,19 +112,25 @@ export default function PromotionPopup() {
           className={styles.select}
         >
           <option value="">유도 경로 선택</option>
-          <option value="product">상품 페이지</option>
+          <option value="productlist">상품 목록 페이지</option>
+          <option value="product">상품 상세 페이지</option>
           <option value="show">작품 등장인물 페이지</option>
         </select>
-        <input
-          placeholder="어디로?"
-          type="text"
-          value={inputValue}
-          onChange={changeInputValue}
-          onBlur={() => setShowDropdown(false)}
-          onFocus={() => setShowDropdown(true)}
-          className={styles.inputText}
-        />
-        {showDropdown && (
+
+        {/* productlist 선택 시 input 태그를 숨기기 */}
+        {locationCategory !== "productlist" && (
+          <input
+            placeholder="어디로?"
+            type="text"
+            value={inputValue}
+            onChange={changeInputValue}
+            onBlur={() => setShowDropdown(false)}
+            onFocus={() => setShowDropdown(true)}
+            className={styles.inputText}
+          />
+        )}
+
+        {showDropdown && locationCategory !== "productlist" && (
           <div className={styles.autoSearchContainer}>
             {filteredItems.map((item, index) => (
               <div
@@ -158,7 +168,7 @@ export default function PromotionPopup() {
       >
         <>
           <br />
-          <h3>팝업이 등록되었습니다!</h3>
+          <h3>팝업이 등록되었습니다!</h3><br/>
           <button onClick={() => navigate("/admin/promotion")}>
             목록으로 돌아가기
           </button>

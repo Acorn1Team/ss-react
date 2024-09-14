@@ -101,9 +101,9 @@ export default function ProductInsert() {
       })
       .then((res) => {
         if (res.data.isSuccess) {
-          openModal("상품이 성공적으로 추가되었습니다.");
+          openModal("상품이 성공적으로 등록되었습니다.");
         } else {
-          openModal("상품 추가에 실패했습니다: " + res.data.message);
+          openModal("상품 등록에 실패했습니다: " + res.data.message);
         }
       })
       .catch((error) => {
@@ -210,12 +210,12 @@ export default function ProductInsert() {
             bottom: "auto",
             marginRight: "-50%",
             transform: "translate(-50%, -50%)",
+            textAlign: "center"
           },
         }}
       >
-        <h2>알림</h2>
-        <p>{modalMessage}</p>
-        <button onClick={closeModal}>확인</button>
+        <h3>{modalMessage}</h3>
+        <button className="confirm-button" onClick={closeModal}>확인</button>
       </Modal>
     </div>
   );

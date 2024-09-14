@@ -139,6 +139,7 @@ td {
   display: block;
 }
 #admin-body {
+  align-items: center;
   text-align: center; /* 모든 텍스트와 요소를 가운데 정렬 */
   padding: 20px;
 }

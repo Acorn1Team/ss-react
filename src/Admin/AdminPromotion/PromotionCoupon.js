@@ -138,7 +138,7 @@ export default function PromotionCoupon() {
         }}
       >
         <br />
-        <h3>쿠폰 발급이 완료되었습니다!</h3>
+        <h3>쿠폰 발급이 완료되었습니다!</h3><br/>
         <button onClick={() => navigate("/admin/promotion")}>
           목록으로 돌아가기
         </button>

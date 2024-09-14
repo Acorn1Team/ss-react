@@ -242,21 +242,13 @@ export default function StyleManage() {
     return <p>상세 정보를 불러올 수 없습니다.</p>;
   }
   return (
-    <>
-      <button className="cancel-button" onClick={() => navigate(-1)}>뒤로</button>
-      <h2>
-        {actorData.character} ({actorData.actor}) 의 스타일
-        <br />
-        <img src={actorData.pic} alt={`${actorData.character} 이미지`} />
-        <hr />
-        스타일 추가하기
-        <br />
-        <input type="file" onChange={onStyleFileChange} ref={styleInputRef} />
-        <br />
-        <button className="add-button" onClick={addStyle}>추가</button>
-        <hr />
+    <div>
+        <button style={{alignSelf:"left"}} className="cancel-button" onClick={() => navigate(-1)}>
+          뒤로
+        </button>
+        <h2>{actorData.actor} ({actorData.character}) 스타일 편집
       </h2>
-      <table style={{ margin: "0 auto", textAlign: "center" }}>
+      <table style={{ flex: "2", margin: "0 auto", textAlign: "center", verticalAlign: "middle"}}>
         <thead>
           <tr>
             <th>스타일</th>
@@ -273,8 +265,20 @@ export default function StyleManage() {
             return (
               <tr key={index}>
                 <td>
-                  <img src={styleData.pic} alt={`${index + 1}번 스타일`} style={{ height: "300px", marginRight: "20px" }}/><br/>
-                  <button className="delete-button" onClick={() => {openDeleteStyleModal(styleData)}}>스타일 삭제</button>
+                  <img
+                    src={styleData.pic}
+                    alt={`${index + 1}번 스타일`}
+                    style={{ height: "180px", marginRight: "20px" }}
+                  />
+                  <br />
+                  <button
+                    className="delete-button"
+                    onClick={() => {
+                      openDeleteStyleModal(styleData);
+                    }}
+                  >
+                    스타일 삭제
+                  </button>
                 </td>
                 {[0, 1, 2].map((i) => (
                   <td key={i}>
@@ -286,15 +290,22 @@ export default function StyleManage() {
                           src={filteredItems[i].pic}
                           alt={`${index + 1}번 스타일 아이템${i + 1}`}
                           style={{
-                            width: "200px",
-                            height: "200px",
+                            width: "150px",
+                            height: "150px",
                             borderRadius: "50%",
                             marginRight: "20px",
                           }}
                         />
                         <br />
-                        <button className="delete-button" onClick={() => openDeleteItemModal(filteredItems[i])}>아이템 삭제</button><br/>
-                        <button className="view-all-button"
+                        <button
+                          className="delete-button"
+                          onClick={() => openDeleteItemModal(filteredItems[i])}
+                        >
+                          아이템 삭제
+                        </button>
+                        <br />
+                        <button
+                          className="view-all-button"
                           onClick={() =>
                             navigate(
                               `/admin/product/update/${filteredItems[i].product}`
@@ -306,7 +317,8 @@ export default function StyleManage() {
                       </>
                     ) : (
                       <>
-                        <button className="add-button"
+                        <button
+                          className="add-button"
                           onClick={() => {
                             setCurrentStyle(styleData);
                             setIsNewItemModalOpen(true);
@@ -316,7 +328,8 @@ export default function StyleManage() {
                         </button>
                         <br />
                         <br />
-                        <button className="add-button"
+                        <button
+                          className="add-button"
                           onClick={() => {
                             setCurrentStyle(styleData);
                             setIsExistingItemModalOpen(true);
@@ -331,6 +344,13 @@ export default function StyleManage() {
               </tr>
             );
           })}
+          <tr>
+            <td colSpan={4}>         
+              스타일 추가하기<br />
+              <input type="file" onChange={onStyleFileChange} ref={styleInputRef} /><br/>
+              <button className="add-button" onClick={addStyle}>추가</button>
+              </td>  
+          </tr>
         </tbody>
       </table>
 
@@ -536,7 +556,7 @@ export default function StyleManage() {
         )}
       </Modal>
 
-    </>
+    </div>
   );
 }
 

@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 
-// 문자열을 잘라주는 함수
 const truncateText = (text, maxLength) => {
   if (text.length > maxLength) {
     return text.substring(0, maxLength) + "...";
@@ -13,8 +12,8 @@ const truncateText = (text, maxLength) => {
 export default function CommunityManage() {
   const [view, setView] = useState("all"); // "all"은 전체 글, "reported"는 신고 글을 의미
   const [sortOrder, setSortOrder] = useState("latest"); // "latest"는 최신보기, "mostReported"는 신고 많은 순 보기
-  const [posts, setPosts] = useState([]); // 전체 글 데이터를 저장할 상태
-  const [filteredPosts, setFilteredPosts] = useState([]); // 신고된 글 데이터 저장
+  const [posts, setPosts] = useState([]); // 전체 글
+  const [filteredPosts, setFilteredPosts] = useState([]); // 신고된 글
   const [reportedInfos, setReportedInfos] = useState([]); // 각 신고된 게시글의 신고 내역
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
@@ -31,7 +30,6 @@ export default function CommunityManage() {
       );
 
       const { content, totalPages } = response.data;
-
       const filteredPosts = content.filter((post) => !post.deleted);
 
       setPosts(filteredPosts);
@@ -133,7 +131,7 @@ export default function CommunityManage() {
     });
 
     return (
-      <div>
+      <div id="admin-body">
         <ul className="post-list-horizontal">
           {displayPosts.map((post) => {
             const counts = categoryCounts[post.no] || {
@@ -302,7 +300,6 @@ export default function CommunityManage() {
         `}
       </style>
       <div id="admin-body">
-        <h1>게시글 관리</h1>
         <button
           className={view === "all" ? "button-disabled" : "button-abled"}
           onClick={() => {
