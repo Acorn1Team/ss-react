@@ -184,7 +184,11 @@ function HeaderForm() {
       </div>
       <div className={styles.rightContainer}>
         {" "}
-        <FiSearch size={25} className={styles.icon} onClick={handleSearch} />
+        <FiSearch
+          size={26}
+          className={styles.searchIcon}
+          onClick={handleSearch}
+        />
         <Modal
           isOpen={isModalOpen} // 모달을 열기 위한 조건
           onRequestClose={handleCloseModal} // 모달 바깥 클릭 시 닫히도록 설정
@@ -335,7 +339,7 @@ function HeaderForm() {
           </>
         ) : (
           <span onClick={() => checkFor()}>
-            <GoPerson size={"30"} />
+            <GoPerson className={styles.icon} size={"30"} />
           </span>
         )}
       </div>

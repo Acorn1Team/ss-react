@@ -187,6 +187,8 @@
 }
 
 .icon {
+  margin-right: 5px;
+  /* margin-left: 5px; */
   width: 30px;
   height: 30px;
   color: #444;
@@ -195,6 +197,21 @@
 }
 
 .icon:hover {
+  color: #c7727e;
+  transform: scale(1.1);
+}
+
+.searchIcon {
+  margin-right: 5px;
+  /* width: 30px; */
+  /* height: 30px; */
+  color: #444;
+  cursor: pointer;
+  margin-bottom: 5px;
+  transition: transform 0.3s ease;
+}
+
+.searchIcon:hover {
   color: #c7727e;
   transform: scale(1.1);
 }
