@@ -114,6 +114,22 @@ input[type="button"] {
     transform: rotate(360deg);
   }
 }
+.modal {
+  /* 모달 창의 내용 부분 */
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 500px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  outline: none; /* 포커스 시 기본 윤곽선 제거 */
+  text-align: center;
+}
 
 .modalContent {
   background-color: rgba(255, 255, 255, 0.8); /* 투명도 조절 */

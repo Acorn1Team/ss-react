@@ -173,8 +173,6 @@ const UserUpdate = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // zipcodeDisplayRef 및 addrStartRef가 비어 있는지 확인
-
     if (!validateForm()) {
       return;
     }

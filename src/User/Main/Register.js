@@ -280,8 +280,8 @@ const Register = () => {
     else if (!emailRegex.test(`${email}@${emailDomain}`))
       errors.email = "올바른 이메일 형식을 입력하세요.";
     if (!tel) errors.tel = "전화번호를 입력하세요.";
-    if (!zipcode || !addrStart || !addrEnd)
-      errors.address = "주소를 입력하세요.";
+    if (!zipcode || !addrStart)
+      errors.address = "우편번호와 기본 주소는 필수 항목입니다.";
 
     return errors;
   };
@@ -367,9 +367,8 @@ const Register = () => {
         if (zipcodeDisplayRef.current)
           zipcodeDisplayRef.current.value = data.zonecode;
         if (addrStartRef.current) addrStartRef.current.value = addr;
+        setShowAddrEnd(true); // 상세 주소 입력 필드 표시
         if (addrEndRef.current) addrEndRef.current.focus();
-        if (userZipcodeRef.current)
-          userZipcodeRef.current.value = data.zonecode;
       },
     }).open();
   };
@@ -458,6 +457,7 @@ const Register = () => {
       address: `${addrStart} ${addrEnd}`,
       zipcode,
     };
+
     setLoading(true);
     try {
       const response = await fetch("http://localhost:8080/user/auth/register", {
@@ -694,14 +694,25 @@ const Register = () => {
             />
           </div>
           <div className={styles.user_input}>
-            <input
+            {showAddrEnd && (
+              <input
+                type="text"
+                ref={addrEndRef}
+                name="addr_end"
+                placeholder="상세 주소"
+                onChange={(e) => setAddrEnd(e.target.value)}
+                value={addrEnd}
+                style={{ marginTop: "5px" }}
+              />
+            )}
+            {/* <input
               type="text"
               name="addr_end"
               id="addr_end"
               placeholder="상세 주소"
               value={addrEnd}
               onChange={(e) => setAddrEnd(e.target.value)}
-            />
+            /> */}
           </div>
           {errorMessage.address && (
             <div className={styles.error_message}>{errorMessage.address}</div>
@@ -726,20 +737,20 @@ const Register = () => {
           <p>{modalContent}</p>
           {modalType === "integrated" && (
             <>
-              <button
+              <input
+                type="button"
+                value="확인"
                 onClick={updateModal}
-                className={styles.modal_buttons}
-                style={{ backgroundColor: "darkred" }}
-              >
-                확인
-              </button>
-              <button
+                className="btn2"
+                // style={{ backgroundColor: "darkred" }}
+              ></input>
+              <input
+                type="button"
                 onClick={loginModal}
-                className={styles.modal_buttons}
-                style={{ backgroundColor: "gray" }}
-              >
-                로그인
-              </button>
+                className="btn3"
+                value="로그인"
+                // style={{ backgroundColor: "gray" }}
+              ></input>
             </>
           )}
           {modalType === "code" && (
