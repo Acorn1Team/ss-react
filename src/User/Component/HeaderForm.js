@@ -3,47 +3,37 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { LiaBellSolid } from "react-icons/lia";
 import { GoPerson } from "react-icons/go";
+import styles from "../Style/HeaderForm.module.css";
+import AutoSearch from "./AutoSearch";
 import { IoCartOutline } from "react-icons/io5";
 import { FiSearch } from "react-icons/fi";
-import AutoSearch from "./AutoSearch";
 import Modal from "react-modal";
-import styles from "../Style/HeaderForm.module.css";
-import "../Style/All.css";
 
 function HeaderForm() {
-  const [activeDropdown, setActiveDropdown] = useState(null); // 드롭다운 상태
+  const [activeDropdown, setActiveDropdown] = useState(null); // 드롭다운 상태 통합
   const [alerts, setAlerts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(4);
   const [totalPages, setTotalPages] = useState(1);
-  const [alertCheckForDot, setAlertCheckForDot] = useState(false);
+  const [alertCheckForDot, setAlertCheckForDot] = useState();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [filteredItems, setFilteredItems] = useState([]); // AutoSearch의 결과
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const navigate = useNavigate();
-  const location = useLocation(); // useLocation을 추가하여 페이지 경로 추적
+  const location = useLocation(); // useLocation을 추가하여 페이지 경로를 추적
 
   // 페이지 이동 시 드롭다운 닫기
   useEffect(() => {
-    setActiveDropdown(null);
-  }, [location]);
+    setActiveDropdown(null); // 페이지 이동 시 드롭다운과 알림 팝업 닫기
+  }, [location]); // location이 변경될 때마다 실행
 
-  const checkFor = async () => {
+  const checkFor = () => {
     const userId = sessionStorage.getItem("id");
     if (userId) {
       setIsLoggedIn(true);
-      // 알림 데이터 로드
-      try {
-        const response = await axios.get(`/notifications/${userId}`);
-        setAlerts(response.data);
-        // 알림이 있으면 빨간 점 표시
-        setAlertCheckForDot(response.data.length > 0);
-      } catch (error) {
-        console.error("알림 데이터 로드 오류:", error);
-      }
     } else {
       setIsLoggedIn(false);
+      navigate("/user/auth/login");
     }
   };
 
@@ -57,17 +47,10 @@ function HeaderForm() {
     setIsModalOpen(false);
   };
 
-  const calculateModalHeight = () => {
-    const baseHeight = 300;
-    const itemHeight = 50;
-
-    return baseHeight + filteredItems.length * itemHeight; // 검색 결과에 따라 높이 조정
-  };
-
   // 페이지 이동 또는 다른 아이콘 클릭 시 드롭다운 닫기
   useEffect(() => {
     const handleNavigation = () => {
-      setActiveDropdown(null);
+      setActiveDropdown(null); // 페이지 이동 시 드롭다운 닫기
     };
 
     window.addEventListener("popstate", handleNavigation);
@@ -79,39 +62,31 @@ function HeaderForm() {
   const handleProfileClick = () => {
     checkFor();
     if (isLoggedIn) {
-      setActiveDropdown(activeDropdown === "profile" ? null : "profile");
+      setActiveDropdown(activeDropdown === "profile" ? null : "profile"); // 프로필 드롭다운 토글
     }
   };
 
   useEffect(() => {
     forAlert();
-  }, []);
-
-  useEffect(() => {
-    checkFor(); // 컴포넌트가 처음 렌더링될 때 알림 데이터 확인
   }, []);
 
   const forAlert = () => {
-    const userNo = sessionStorage.getItem("id"); // userNo 정의
-    if (userNo) {
-      axios
-        .get(`/alert/Readcheck/${userNo}`)
-        .then((res) => {
-          if (res.data.result) {
-            setAlertCheckForDot(true);
-          } else {
-            setAlertCheckForDot(false);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    axios
+      .get(`/alert/Readcheck/${userNo}`)
+      .then((res) => {
+        if (res.data.result) {
+          setAlertCheckForDot(true);
+        } else {
+          setAlertCheckForDot(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
-
   const handleAlarmClick = () => {
     forAlert();
-    setActiveDropdown(activeDropdown === "alert" ? null : "alert");
+    setActiveDropdown(activeDropdown === "alert" ? null : "alert"); // 알림 드롭다운 토글
   };
 
   const handleLogout = () => {
@@ -155,25 +130,24 @@ function HeaderForm() {
     } catch (err) {
       console.log(err);
     }
-    checkFor();
   };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
-    const diffInMs = now - date;
-    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    const diffInDays = Math.floor(diffInHours / 24);
+    const diffInMs = now - date; // 현재 시간과의 차이를 밀리초로 계산
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60)); // 분 단위로 변환
+    const diffInHours = Math.floor(diffInMinutes / 60); // 시간 단위로 변환
+    const diffInDays = Math.floor(diffInHours / 24); // 일 단위로 변환
 
     if (diffInMinutes < 60) {
-      return `${diffInMinutes}분 전`;
+      return `${diffInMinutes}분 전`; // 1시간 이내면 분으로 표시
     } else if (diffInHours < 24) {
-      return `${diffInHours}시간 전`;
+      return `${diffInHours}시간 전`; // 24시간 이내면 시간으로 표시
     } else if (diffInDays < 4) {
-      return `${diffInDays}일 전`;
+      return `${diffInDays}일 전`; // 3일 이내면 일로 표시
     } else {
-      return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+      return `${date.getMonth() + 1}월 ${date.getDate()}일`; // 4일 이상이면 월/일로 표시
     }
   };
 
@@ -192,7 +166,7 @@ function HeaderForm() {
 
   return (
     <header className={styles.header}>
-      <div className={styles.leftContainer}>
+      <div className={styles.leftContainer} onClick={forAlert()}>
         <Link to="/user/main" className={styles.styledLink}>
           HOME
         </Link>
@@ -209,29 +183,17 @@ function HeaderForm() {
         </Link>
       </div>
       <div className={styles.rightContainer}>
+        {" "}
         <FiSearch size={25} className={styles.icon} onClick={handleSearch} />
         <Modal
-          isOpen={isModalOpen}
-          onRequestClose={handleCloseModal}
-          className={styles.modalContent}
-          overlayClassName={styles.modalOverlay}
-          style={{
-            content: {
-              height: `${calculateModalHeight()}px`,
-              transition: "height 0.3s ease",
-            },
-          }}
+          isOpen={isModalOpen} // 모달을 열기 위한 조건
+          onRequestClose={handleCloseModal} // 모달 바깥 클릭 시 닫히도록 설정
+          // contentLabel="Search Modal"
+          className={styles.modalContent} // 모달 콘텐츠에 대한 스타일 적용
+          // overlayClassName={styles.modalOverlay} // 모달 오버레이에 대한 스타일 적용
         >
-          <div>
-            <h2>당신에게 어울리는 스타일, 배우와 작품에서 발견하세요</h2>
-            <AutoSearch
-              setFilteredItems={setFilteredItems}
-              onSearch={handleCloseModal}
-            />
-            <button onClick={handleCloseModal} className={styles.closeButton}>
-              X
-            </button>
-          </div>
+          <AutoSearch />
+          <button onClick={handleCloseModal}>Close</button>
         </Modal>
         <Link to="/user/shop/cart">
           <IoCartOutline className={styles.icon} />
@@ -239,7 +201,7 @@ function HeaderForm() {
         {sessionStorage.getItem("id") && (
           <div className={styles.notificationWrapper}>
             <LiaBellSolid onClick={handleAlarmClick} className={styles.icon} />
-            {alertCheckForDot && <span className={styles.redDot}></span>}
+            {alertCheckForDot && <div className={styles.redDot}></div>}
           </div>
         )}
         {activeDropdown === "alert" && (
@@ -299,6 +261,7 @@ function HeaderForm() {
             ) : (
               <div className={styles.noAlerts}>알림 내역이 없습니다.</div>
             )}
+
             {totalPages > 1 && (
               <div id={styles.pagination}>
                 <button
@@ -364,7 +327,7 @@ function HeaderForm() {
                   마이쿠폰
                 </Link>
                 <br />
-                <button className="btn2Small" onClick={handleLogout}>
+                <button className="btn1Small" onClick={handleLogout}>
                   로그아웃
                 </button>
               </div>
@@ -372,12 +335,11 @@ function HeaderForm() {
           </>
         ) : (
           <span onClick={() => checkFor()}>
-            <GoPerson className={styles.icon} size={"30"} />
+            <GoPerson size={"30"} />
           </span>
         )}
       </div>
     </header>
   );
 }
-
 export default HeaderForm;
