@@ -255,3 +255,11 @@
     opacity: 0;
   }
 }
+
+/* PostsModal.module.css 또는 PostDetail.module.css에 추가 */
+input[type="radio"] {
+  appearance: radio; /* 기본 브라우저 스타일 강제 적용 */
+  display: inline-block;
+  width: auto;
+  margin-right: 5px;
+}

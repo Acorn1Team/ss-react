@@ -229,11 +229,11 @@ function ChatInput({ onSendMessage }) {
               <br />
               종료된 채팅은 다시 확인할 수 없습니다.
             </div>
-            <div className={styles.modalFooter}>
+            <div>
               <button className="btn1" onClick={handleCloseChat}>
                 확인
               </button>
-              <button className="btn1" onClick={closeModal}>
+              <button className="btn3" onClick={closeModal}>
                 취소
               </button>
             </div>

@@ -245,6 +245,8 @@ export default function PostWrite() {
       fileInput.value = "";
     }
 
+    setPreviewImage("");
+
     setContent("");
 
     // 상품 정보 초기화
@@ -254,9 +256,13 @@ export default function PostWrite() {
     setInputValue("");
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0); // 페이지 로드 시 스크롤을 맨 위로 이동
+  }, []);
+
   return (
     <div className={styles.container}>
-      <div style={{ textAlign: "left" }}>
+      <div>
         <div id="photoBox" className={styles.photoBox}>
           {previewImage && (
             <img
@@ -334,8 +340,11 @@ export default function PostWrite() {
           </div>
         )}
         {productInfo && productInfo.name && (
-          <div className={styles.productInfoContainer}>
-            <p>선택한 상품 정보:</p>
+          <div
+            className={styles.productInfoContainer}
+            style={{ textAlign: "center" }}
+          >
+            <h3>선택한 상품 정보</h3>
             <div className={styles.productInfoDetails}>
               <img
                 src={productInfo.pic}

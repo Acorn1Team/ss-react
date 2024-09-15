@@ -8,12 +8,12 @@ import {
   PiCaretCircleDoubleLeftFill,
   PiCaretCircleDoubleRightFill,
 } from "react-icons/pi";
+
 export default function Sub() {
   const { no } = useParams();
   const locationState = useLocation();
   const nv = useNavigate();
 
-  // 로그인된 정보라고 가정
   const userNo = sessionStorage.getItem("id");
 
   // 전체 정보 저장용
@@ -27,7 +27,8 @@ export default function Sub() {
   const [selectCharacter, setSelectCharacter] = useState(null);
 
   // 스크랩 여부 저장용
-  const [scrap, setScrap] = useState();
+  const [scrap, setScrap] = useState(false);
+  const [scrapCount, setScrapCount] = useState(0);
 
   // 마우스 오버된 아이템 저장용
   const [hoveredItem, setHoveredItem] = useState(null);
@@ -55,6 +56,22 @@ export default function Sub() {
       });
   };
 
+  const updateScrapInfo = (characterNo) => {
+    // 스크랩 여부 확인
+    isScrap(characterNo);
+
+    // 스크랩 수 확인
+    axios
+      .get(`/main/scrap/count/${characterNo}`) // 이 API는 캐릭터의 스크랩 수를 반환한다고 가정
+      .then((res) => {
+        console.log(res.data); // 데이터 구조 확인을 위해 콘솔 출력
+        setScrapCount(res.data.likesCount || 0);
+      })
+      .catch((error) => {
+        console.log("스크랩 수 조회 실패 :", error);
+      });
+  };
+
   const isScrap = (characterNo) => {
     axios
       .get(`/main/like/${characterNo}/${userNo}`)
@@ -66,6 +83,7 @@ export default function Sub() {
       });
   };
 
+  // 캐릭터 변경 함수에서 스크랩 정보도 업데이트
   const changeCharacter = (d) => {
     if (selectCharacter) {
       const index = characters.findIndex((c) => c.no === selectCharacter.no);
@@ -78,6 +96,7 @@ export default function Sub() {
       const newCharacter = characters[nextIndex];
 
       setSelectCharacter(newCharacter);
+      updateScrapInfo(newCharacter.no); // 캐릭터 변경 시 스크랩 정보 업데이트
     }
   };
 
@@ -88,16 +107,7 @@ export default function Sub() {
           .delete(`/main/scrap/${selectCharacter.no}/${userNo}`)
           .then((res) => {
             if (res.data.result === true) {
-              setScrap(false);
-              // 스크랩 수 감소 반영
-              setSelectCharacter((prevCharacter) => ({
-                ...prevCharacter,
-                characterLikeNo:
-                  prevCharacter.characterLikeNo &&
-                  prevCharacter.characterLikeNo > 0
-                    ? prevCharacter.characterLikeNo - 1
-                    : 0, // 최소 값은 0으로 설정
-              }));
+              setScrap(false); // 스크랩 취소 후 상태 업데이트
             }
           })
           .catch((error) => {
@@ -111,14 +121,7 @@ export default function Sub() {
           })
           .then((res) => {
             if (res.data.result === true) {
-              setScrap(true);
-              // 스크랩 수 증가 반영
-              setSelectCharacter((prevCharacter) => ({
-                ...prevCharacter,
-                characterLikeNo: prevCharacter.characterLikeNo
-                  ? parseInt(prevCharacter.characterLikeNo) + 1
-                  : 1, // 처음 스크랩일 경우 1로 설정
-              }));
+              setScrap(true); // 스크랩 후 상태 업데이트
             }
           })
           .catch((error) => {
@@ -141,125 +144,120 @@ export default function Sub() {
     showSubData();
   }, [no]);
 
+  // 컴포넌트 첫 로드 시 스크랩 정보도 업데이트
   useEffect(() => {
     if (selectCharacter) {
-      isScrap(selectCharacter.no);
+      updateScrapInfo(selectCharacter.no);
     }
   }, [selectCharacter]);
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>{show.title}</h1>
+      <div className={styles.leftSection}>
+        <h1 className={styles.showTitle}>{show.title}</h1>
+        {selectCharacter && (
+          <>
+            <h2 className={styles.characterTitle}>{selectCharacter.name}</h2>
+            <div className={styles.characterImgWrapper}>
+              <img
+                className={styles.characterImg}
+                src={selectCharacter.pic}
+                alt={selectCharacter.name}
+              />
+            </div>
+            <div className={styles.characterNav}>
+              <span className="movePage" onClick={() => changeCharacter(-1)}>
+                <PiCaretCircleDoubleLeftFill size={50} color="df919e" />
+              </span>
+              <span onClick={() => changeCharacter(1)}>
+                <PiCaretCircleDoubleRightFill size={50} color="df919e" />
+              </span>
+            </div>
 
-      <div className={styles.characterNavigation}>
-        <span className="movePage" onClick={() => changeCharacter(-1)}>
-          <PiCaretCircleDoubleLeftFill size={50} color="df919e" />
-        </span>
-
-        <span onClick={() => changeCharacter(1)}>
-          <PiCaretCircleDoubleRightFill size={50} color="df919e" />
-        </span>
+            <div className={styles.scrapSection}>
+              <span
+                className="ui-bookmark"
+                onClick={() => scrapProc()}
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <input
+                  type="checkbox"
+                  checked={scrap}
+                  onChange={scrapProc} // 좋아요 처리 함수
+                  style={{ display: "none" }} // 체크박스 숨김
+                />
+                <div className="bookmark" style={{ marginRight: "10px" }}>
+                  <svg
+                    viewBox="0 0 16 16"
+                    height="25"
+                    width="25"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+                      fillRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </span>
+              <span className={styles.scrapCount}>
+                {scrapCount > 0
+                  ? `${scrapCount} 명이 좋아합니다!`
+                  : "하트를 눌러 스크랩해 보세요."}
+              </span>
+              <hr />
+              <div style={{ fontSize: "80%", color: "gray" }}>
+                {selectCharacter.name}의 스타일이 마음에 드신다면,
+                <br /> 해당하는 제품의 판매처로 이동하거나
+                <br /> SceneStealer 에서 유사 상품을 <br />
+                구매할 수 있어요!
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
-      {selectCharacter && (
-        <div className={styles.characterDetails}>
-          <h2 className={styles.characterName}>{selectCharacter.name}</h2>
-          <img
-            className={styles.characterImg}
-            src={selectCharacter.pic}
-            alt={selectCharacter.name}
-          />
-
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <span
-              className="ui-bookmark"
-              onClick={() => scrapProc()}
-              style={{ display: "flex", alignItems: "center" }}
-            >
-              <input
-                type="checkbox"
-                checked={scrap}
-                onChange={scrapProc} // 좋아요 처리 함수
-                style={{ display: "none" }} // 체크박스 숨김
-              />
-              <div className="bookmark" style={{ marginRight: "10px" }}>
-                {" "}
-                {/* 하트와 텍스트 사이 간격 */}
-                <svg
-                  viewBox="0 0 16 16"
-                  height="25" // 하트 크기 유지
-                  width="25" // 하트 크기 유지
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
-                    fillRule="evenodd"
-                  />
-                </svg>
+      <div className={styles.rightSection}>
+        {styleData
+          .filter((s) => s.characterNo === selectCharacter.no)
+          .map((s) => (
+            <div className={styles.styleBox} key={s.no}>
+              <div className={styles.styleItemsWrapper}>
+                <img
+                  className={styles.styleImg}
+                  src={s.pic}
+                  alt={`Style ${s.no}`}
+                />
+                {styleItems
+                  .filter((si) => si.styleNo === s.no)
+                  .map((si) =>
+                    items
+                      .filter((i) => si.itemNo === i.no)
+                      .map((i) => (
+                        <div
+                          className={styles.productLink}
+                          onMouseEnter={() => setHoveredItem(i.no)}
+                          onMouseLeave={() => setHoveredItem(null)}
+                          key={i.no}
+                        >
+                          <img src={i.pic} alt={`Item ${i.no}`} />
+                          {hoveredItem === i.no && (
+                            <div className={styles.hoverOverlay}>
+                              <Link
+                                to={`/user/shop/productList/detail/${i.productNo}`}
+                                style={{ fontSize: "60%", color: "#444" }}
+                              >
+                                해당 상품 보러 가기
+                              </Link>
+                            </div>
+                          )}
+                        </div>
+                      ))
+                  )}
               </div>
-            </span>
-
-            <span>
-              {selectCharacter.characterLikeNo !== null &&
-              selectCharacter.characterLikeNo !== undefined
-                ? selectCharacter.characterLikeNo > 0
-                  ? `${selectCharacter.characterLikeNo} 명이 좋아합니다!`
-                  : "하트를 눌러 스크랩해 보세요." // 스크랩 수가 0인 경우
-                : "하트를 눌러 스크랩해 보세요."}
-            </span>
-          </div>
-
-          <div className={styles.styles}>
-            {styleData
-              .filter((s) => s.characterNo === selectCharacter.no)
-              .map((s) => (
-                <div className={styles.styleItem} key={s.no}>
-                  <h3>Style {s.no}</h3>
-                  <img
-                    className={styles.styleImg}
-                    src={s.pic}
-                    alt={`Style ${s.no}`}
-                  />
-                  {styleItems
-                    .filter((si) => si.styleNo === s.no)
-                    .map((si) =>
-                      items
-                        .filter((i) => si.itemNo === i.no)
-                        .map((i) => (
-                          <div
-                            className={styles.productLink}
-                            onMouseEnter={() => setHoveredItem(i.no)}
-                            onMouseLeave={() => setHoveredItem(null)}
-                            key={i.no}
-                          >
-                            <img src={i.pic} alt={`Item ${i.no}`} />
-                            {hoveredItem === i.no && (
-                              <div className={styles.hoverOverlay}>
-                                <Link
-                                  to={`/user/shop/productList/detail/${i.productNo}`}
-                                  style={{ fontSize: "60%", color: "#444" }}
-                                >
-                                  해당 상품 보러 가기
-                                  <br />
-                                  (외부 사이트 이동)
-                                </Link>
-                                <Link
-                                  style={{ fontSize: "60%", color: "#444" }}
-                                  to={`/user/shop/productList/detail/${i.productNo}`}
-                                >
-                                  SceneStealer에서 <br />
-                                  유사한 상품 구경하기
-                                </Link>
-                              </div>
-                            )}
-                          </div>
-                        ))
-                    )}
-                </div>
-              ))}
-          </div>
-        </div>
-      )}
+            </div>
+          ))}
+      </div>
     </div>
   );
 }

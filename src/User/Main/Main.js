@@ -241,11 +241,10 @@ export default function UserHome() {
                             <p></p>
                           </p>
                           <br />
-
                           <p style={{ fontSize: "80%" }}>
                             클릭해 보세요!
-                            <br /> '{forMainRandom?.show?.title}'의 더 많은
-                            스타일을 <br />볼 수 있어요.
+                            <br /> '{forMainRandom?.show?.title}'의
+                            <br /> 더 많은 스타일을 <br />볼 수 있어요.
                           </p>
                         </div>
                       </section>
@@ -291,41 +290,40 @@ export default function UserHome() {
                       </svg>
                     </button>
                   </div>
-                  <div className="random-style-container">
-                    <span style={{ color: "#555" }}>이 스타일 어때요?</span>
-                    {randomStyle ? (
-                      <div>
-                        <img
-                          src={randomStyle.pic}
-                          alt={`style-${randomStyle.no}`}
-                        />
-                        <div className="random-style-items">
-                          {randomItems.length > 0 ? (
-                            randomItems.map((item) => (
-                              <div key={item.no}>
-                                <Link
-                                  to={`/user/shop/productlist/detail/${item.productNo}`}
-                                >
-                                  <img src={item.pic} alt={`item-${item.no}`} />
-                                </Link>
-                              </div>
-                            ))
-                          ) : (
-                            <p>아이템 정보가 없습니다.</p>
-                          )}
 
-                          <div style={{ fontSize: "80%" }}>
-                            SceneStealer에서 비슷한 상품을 <br />
-                            구매할 수 있어요. <br />
-                            마음에 드는 상품을 클릭해 보세요!
-                          </div>
+                  <div className="random-layout">
+                    <div className="random-style-container">
+                      {randomStyle ? (
+                        <div>
+                          <img
+                            src={randomStyle.pic}
+                            alt={`style-${randomStyle.no}`}
+                          />
                         </div>
-                      </div>
-                    ) : (
-                      <p>스타일 정보가 없습니다.</p>
-                    )}
+                      ) : (
+                        <p>스타일 정보가 없습니다.</p>
+                      )}
+                    </div>
+
+                    <div className="random-style-items">
+                      {randomItems.length > 0 ? (
+                        randomItems.map((item) => (
+                          <div key={item.no}>
+                            <Link
+                              to={`/user/shop/productlist/detail/${item.productNo}`}
+                            >
+                              <img src={item.pic} alt={`item-${item.no}`} />
+                            </Link>
+                          </div>
+                        ))
+                      ) : (
+                        <p>
+                          아이템 정보가
+                          <br /> 없습니다.
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <div></div>
                 </div>
 
                 <h3 style={{ color: "#c7727e" }}>

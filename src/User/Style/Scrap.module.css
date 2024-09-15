@@ -1,7 +1,7 @@
 .scrapContainer {
   max-width: 1200px;
-  margin: 40px auto;
-  padding: 20px;
+  margin: 0px auto;
+  /* padding: 20px; */
 }
 
 .title {
@@ -14,7 +14,7 @@
 
 .scrapGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 한 줄에 두 개씩 */
+  grid-template-columns: repeat(5, 1fr);
   gap: 20px; /* 카드 사이 간격 */
 }
 

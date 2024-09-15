@@ -73,10 +73,10 @@ export default function ReviewWritePage() {
       });
   };
 
-    // 리뷰 취소 시 이전 페이지로 이동하는 함수
-    const handleCancel = () => {
-      navigate(-1); // 이전 페이지로 이동
-    };
+  // 리뷰 취소 시 이전 페이지로 이동하는 함수
+  const handleCancel = () => {
+    navigate(-1); // 이전 페이지로 이동
+  };
 
   return (
     <div className="reviews-container">
@@ -87,10 +87,8 @@ export default function ReviewWritePage() {
         사용자 번호: {userNo} */}
         상품명 : {productName}
       </div>
-
       {/* 오류 메시지를 화면에 표시 */}
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-
       <textarea
         className="textarea"
         placeholder="리뷰 내용을 입력하세요"
@@ -105,7 +103,6 @@ export default function ReviewWritePage() {
       ></textarea>
       <div>{contents.length} / 40 글자</div>
       <br />
-
       <div>
         <h3>평점:</h3>
         {[...Array(5)].map((star, index) => {
@@ -131,7 +128,6 @@ export default function ReviewWritePage() {
         })}
       </div>
       <br />
-
       <input
         type="file"
         accept="image/*"
@@ -140,8 +136,10 @@ export default function ReviewWritePage() {
       <br />
       <button onClick={handleSubmit}>리뷰 제출</button>
       &nbsp;
-        {/* 리뷰 취소 버튼 */}
-        <button className="reviewcancle"  onClick={handleCancel}>리뷰 취소</button>
+      {/* 리뷰 취소 버튼 */}
+      <button className="reviewcancle" onClick={handleCancel}>
+        리뷰 취소
+      </button>
     </div>
   );
 }

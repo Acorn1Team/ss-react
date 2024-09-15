@@ -39,6 +39,15 @@
   margin: 0; /* 아이콘 간격이 자동으로 잘 정렬되도록 */
 }
 
+.scrapSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 세로 방향 중앙 정렬 */
+  align-items: center; /* 가로 방향 중앙 정렬 */
+  margin-top: 20px;
+  text-align: center; /* 텍스트도 중앙 정렬 */
+}
+
 /* 기존 CSS 수정 */
 .characterCount {
   font-size: 12px;
@@ -63,11 +72,11 @@
   margin-bottom: 5px; /* textarea와 버튼 간의 간격 추가 */
 }
 
-.ui-bookmark input {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  display: none;
+.ui-bookmark {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; /* 가로 중앙 정렬 */
 }
 
 .ui-bookmark .bookmark {

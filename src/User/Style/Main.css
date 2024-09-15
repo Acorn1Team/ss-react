@@ -114,10 +114,10 @@ body {
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin: 10px;
-  padding: 20px;
+  padding: 10px;
   text-align: center;
-  width: 200px; /* 하얀 박스의 고정 너비 */
-  height: 300px; /* 하얀 박스의 고정 높이 */
+  width: 200px; /* 고정된 너비 */
+  height: 250px; /* 고정된 높이 */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
   display: flex;
@@ -125,6 +125,14 @@ body {
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
+}
+
+.mainPostsBox img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  aspect-ratio: 1; /* 3:4 비율 설정 */
+  border-radius: 8px;
 }
 
 .mainPostsBoxSL {
@@ -135,7 +143,7 @@ body {
   padding: 20px;
   text-align: center;
   width: 200px; /* 하얀 박스의 고정 너비 */
-  height: 320px; /* 하얀 박스의 고정 높이 */
+  height: 300px; /* 하얀 박스의 고정 높이 */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
   display: flex;
@@ -155,13 +163,6 @@ body {
 .mainPostsBoxSL:hover {
   transform: scale(1.05);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.mainPostsBox img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 8px;
 }
 
 .mainPostsBox:hover {
@@ -255,8 +256,8 @@ b {
 /* 카드 섹션 스타일 */
 section.card {
   position: relative;
-  width: 250px;
-  height: 350px;
+  width: 200px;
+  height: 280px;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -302,7 +303,7 @@ section.card {
   width: 100%;
   height: 100%;
   padding: 20px;
-  padding-top: 50%;
+  padding-top: 20%;
   box-sizing: border-box;
   backdrop-filter: blur(5px);
   background-color: rgba(0, 0, 0, 0.5); /* 어두운 불투명 배경 추가 */
@@ -328,15 +329,6 @@ section.card {
   font-size: 14px;
   color: #ffffff;
   line-height: 1.4;
-}
-/* 랜덤 캐릭터 이미지 스타일 */
-.random-character img {
-  width: 200px; /* 고정된 너비 */
-  height: 250px; /* 고정된 높이 */
-  object-fit: cover; /* 이미지가 고정된 타원 안에 비율 유지되며 크롭 */
-  border-radius: 50% / 50%; /* 타원 고정 */
-  margin: 20px auto;
-  display: block;
 }
 
 /* 가로로 배치되는 컨테이너 */
@@ -370,36 +362,55 @@ section.card {
 
 .random-layout {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-between; /* 왼쪽 스타일과 오른쪽 아이템 간의 여백을 균등하게 */
+  align-items: flex-start; /* 세로 정렬을 시작점으로 맞춤 */
   width: 100%;
   max-width: 1200px;
   margin: 40px auto;
+  gap: 30px; /* 캐릭터와 스타일 사이의 간격을 80px로 설정 */
 }
 
-/* 랜덤 스타일 컨테이너 */
 .random-style-container {
-  flex: 1;
+  flex: 2; /* 스타일 부분을 더 크게 만듦 */
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
+.random-style-items {
+  flex: 1;
+  display: flex;
+  flex-direction: column; /* 세로 정렬 */
+  gap: 20px; /* 아이템 사이의 간격 */
+  justify-content: center;
+}
+
+.random-character {
+  margin-right: 40px;
+}
+
+.random-character img {
+  width: 200px !important; /* 캐릭터 이미지 고정 너비 */
+  height: 280px !important; /* 캐릭터 이미지 고정 높이 */
+  object-fit: cover !important; /* 비율 유지하며 크롭 */
+  border-radius: 50% !important; /* 타원 형태 유지 */
+  margin: 20px auto !important;
+  display: block !important;
+}
+
+/* 스타일 이미지 크기 조정 */
 .random-style-container img {
-  width: 150px;
-  height: 150px;
+  width: 120px; /* 적절한 크기로 줄임 */
+  height: 350px; /* 비율 유지하며 크기 조정 */
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 10px;
 }
 
-.random-style-items {
-  display: flex;
-  flex-direction: column; /* 세로 정렬 */
-  align-items: center; /* 수평 중앙 정렬 */
-  gap: 10px; /* 아이템 사이의 간격 */
-  margin-top: 20px;
-}
-
+/* 스타일 아이템 크기 조정 */
 .random-style-items img {
-  width: 100px;
+  width: 100px; /* 정사각형 */
   height: 100px;
   object-fit: cover;
   border-radius: 8px;

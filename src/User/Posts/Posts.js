@@ -807,9 +807,9 @@ export default function Posts() {
               <div>작성된 댓글이 없습니다.</div>
             )}
 
-            <div>
+            <div style={{ textAlign: "center" }}>
               <textarea
-                style={{ width: "550px" }}
+                style={{ width: "500px" }}
                 className={stylesPost.textarea}
                 value={commentContent}
                 onChange={handleContentChange}
@@ -860,16 +860,10 @@ export default function Posts() {
                   선정성
                 </label>
                 <br />
-                <button
-                  className={styles.submitButton}
-                  onClick={() => submitReport()}
-                >
+                <button className="btn1" onClick={() => submitReport()}>
                   신고
                 </button>
-                <button
-                  className={styles.submitButton}
-                  onClick={() => closeReportModal()}
-                >
+                <button className="btn3" onClick={() => closeReportModal()}>
                   취소
                 </button>
               </div>

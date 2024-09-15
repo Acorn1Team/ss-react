@@ -156,7 +156,7 @@ export default function PostList() {
     <div>
       <div className="view-mode-buttons">
         {/* 팔로우한 사람이 있을 때만 버튼을 표시 */}
-        {!isLoading && hasFollowers && (
+        {hasFollowers && (
           <button
             className={viewMode === "follow" ? "btn2" : "btn1"}
             onClick={() => handleViewModeChange("follow")}
@@ -172,7 +172,6 @@ export default function PostList() {
         </button>
       </div>
 
-      {/* 팔로우 모드일 때는 정렬 버튼을 숨김 */}
       {viewMode !== "follow" && (
         <div className="sort-buttons">
           <button

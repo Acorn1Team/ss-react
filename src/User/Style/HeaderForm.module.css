@@ -41,37 +41,42 @@
   height: 80px;
 }
 
-#pagination {
+.alertPaging {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 10px;
 }
 
-#pagination button {
-  background-color: #df919e;
+.alertPaging button {
+  background-color: #d0bbbe;
   color: white;
   border: none;
+  padding: 8px 16px;
   border-radius: 5px;
-  padding: 5px 10px;
+  font-family: "Hahmlet";
   cursor: pointer;
-  margin: 0 10px;
+  margin: 0 5px;
+  transition: background-color 0.3s ease;
 }
 
-#pagination button:disabled {
-  background-color: #ccc;
+.alertPaging button:disabled {
+  background-color: #c9aaaf;
+}
+
+.alertPaging button:disabled {
+  background-color: #ddd;
   cursor: not-allowed;
 }
 
-#pagination span {
-  margin: 0 10px;
-  font-size: 16px;
-  font-weight: bold;
+.alertPaging span {
+  font-size: 1rem;
+  color: #333;
 }
 
 .alertPopupContainer {
   position: absolute;
-  top: 60px;
+  top: 30px;
   text-align: center;
   right: 0;
   background-color: white;

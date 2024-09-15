@@ -97,17 +97,25 @@ function HeaderForm() {
     setIsLoggedIn(false);
   };
 
-  const filteredAlerts = alerts.filter(
-    (alert) =>
-      selectedCategory === "전체" || alert.category === selectedCategory
-  );
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category); // 카테고리 상태 업데이트
+    setCurrentPage(0); // 페이지를 0으로 초기화
+  };
+
+  useEffect(() => {
+    fetchAlerts(); // 카테고리나 페이지가 변경될 때마다 알림 목록을 가져옴
+  }, [selectedCategory, currentPage]); // selectedCategory와 currentPage 변경 시 실행
 
   const fetchAlerts = async () => {
     const userNo = sessionStorage.getItem("id");
     if (userNo) {
       try {
         const response = await axios.get(`/alert/${userNo}`, {
-          params: { page: currentPage, size: pageSize },
+          params: {
+            page: currentPage,
+            size: pageSize,
+            category: selectedCategory, // 선택된 카테고리를 서버로 전송
+          },
         });
         setAlerts(response.data.content || []);
         setTotalPages(response.data.totalPages || 1);
@@ -213,32 +221,41 @@ function HeaderForm() {
           <div className={styles.alertPopupContainer}>
             <div>
               <button
-                onClick={() => setSelectedCategory("전체")}
-                className="btn1Small"
+                onClick={() => handleCategoryChange("전체")}
+                className={`alertCategoryButton ${
+                  selectedCategory === "전체" ? "btn2Small" : "btn1Small"
+                }`}
               >
                 전체
               </button>
               <button
-                onClick={() => setSelectedCategory("주문")}
-                className="btn1Small"
+                onClick={() => handleCategoryChange("주문")}
+                className={`alertCategoryButton ${
+                  selectedCategory === "주문" ? "btn2Small" : "btn1Small"
+                }`}
               >
                 주문
               </button>
               <button
-                onClick={() => setSelectedCategory("커뮤니티")}
-                className="btn1Small"
+                onClick={() => handleCategoryChange("커뮤니티")}
+                className={`alertCategoryButton ${
+                  selectedCategory === "커뮤니티" ? "btn2Small" : "btn1Small"
+                }`}
               >
                 커뮤니티
               </button>
               <button
-                onClick={() => setSelectedCategory("프로모션")}
-                className="btn1Small"
+                onClick={() => handleCategoryChange("프로모션")}
+                className={`alertCategoryButton ${
+                  selectedCategory === "프로모션" ? "btn2Small" : "btn1Small"
+                }`}
               >
                 프로모션
               </button>
             </div>
-            {filteredAlerts.length > 0 ? (
-              filteredAlerts.map((alert, index) => (
+
+            {alerts.length > 0 ? (
+              alerts.map((alert, index) => (
                 <div
                   key={alert.no || index}
                   className={`${styles.alertItem} ${
@@ -268,7 +285,7 @@ function HeaderForm() {
             )}
 
             {totalPages > 1 && (
-              <div id={styles.pagination}>
+              <div className={styles.alertPaging}>
                 <button
                   onClick={() => setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 0}
