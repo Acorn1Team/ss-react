@@ -250,6 +250,7 @@
   margin-bottom: 20px;
   position: relative; /* 부모 요소가 기준 */
   width: 100%;
+  z-index: 50;
 }
 
 /* 카테고리 선택박스 */
@@ -275,7 +276,6 @@
   box-sizing: border-box;
   margin-right: 10px;
   position: relative;
-  z-index: 1;
 }
 
 /* 검색 버튼 */

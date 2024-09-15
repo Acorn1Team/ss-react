@@ -1,12 +1,11 @@
 /* CartList.module.css */
 .cartContainer {
   padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
+  /* background-color: #f9f9f9;
+  border-radius: 8px; */
   max-width: 1100px;
   margin: 0 auto;
   text-align: center;
-  
 }
 
 .cartTitle {
@@ -14,9 +13,7 @@
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 20px;
-
 }
-
 
 .cartItem {
   display: flex;
@@ -118,6 +115,3 @@
   gap: 10px; /* 버튼과 체크박스 사이 간격 */
   padding-left: 400px; /* 왼쪽에 약간의 여백 추가 */
 }
-
-
-

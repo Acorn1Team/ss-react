@@ -117,7 +117,7 @@ body {
   padding: 20px;
   text-align: center;
   width: 200px; /* 하얀 박스의 고정 너비 */
-  height: 200px; /* 하얀 박스의 고정 높이 */
+  height: 300px; /* 하얀 박스의 고정 높이 */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
   display: flex;
@@ -503,6 +503,10 @@ section.card {
   padding: 0;
   display: inline-flex;
   align-items: center;
+}
+
+.refresh-button svg:hover {
+  color: #c7727e;
 }
 
 .moreButton {

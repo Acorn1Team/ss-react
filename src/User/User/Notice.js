@@ -47,6 +47,7 @@ export default function Notice() {
 
   return (
     <div className={styles.container}>
+      <h2>공지사항</h2>
       {loading && <p>로딩 중...</p>}
       {!loading &&
         noticeData.map((nd) => (

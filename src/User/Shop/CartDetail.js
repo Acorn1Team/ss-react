@@ -103,14 +103,13 @@ export default function CartDetail() {
 
   return (
     <div className={styles.orderContainer}>
-      <h2 className={styles.orderTitle}>주문 상세 페이지</h2>
+      <h2 className={styles.orderTitle}>주문 확인</h2>
 
       {user && (
         <div className={styles.userInfo}>
-          <h3>유저 정보</h3>
-          <p>이름: {user.name}</p>
-          <p>이메일: {user.email}</p>
-          <p>주소: {user.address}</p>
+          <h3>{user.name} 님</h3>
+          <p>{user.tel}</p>
+          <p>{user.address}</p>
         </div>
       )}
 

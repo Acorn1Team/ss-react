@@ -44,12 +44,12 @@ function AdminChat() {
     setCloseState(closeState);
   };
 
-  useEffect(() => {
-    const chatWindow = document.querySelector(`.${styles.messageList}`);
-    if (chatWindow) {
-      chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-  }, [messages]);
+  // useEffect(() => {
+  //   const chatWindow = document.querySelector(`.${styles.messageList}`);
+  //   if (chatWindow) {
+  //     chatWindow.scrollTop = chatWindow.scrollHeight;
+  //   }
+  // }, [messages]);
 
   useEffect(() => {
     if (!selectedUserId || !chatNo) return;
@@ -198,7 +198,7 @@ function AdminChat() {
           )}
         </div>
       )}
-    <Modal
+      <Modal
         isOpen={isCloseModalOpen}
         onRequestClose={() => setIsCloseModalOpen(false)}
         contentLabel="채팅 종료 확인"
@@ -215,16 +215,24 @@ function AdminChat() {
           },
         }}
       >
-          <>
-            <h4>채팅을 종료하시겠습니까?</h4>
-            <h4>종료된 채팅은 다시 재개할 수 없습니다.</h4>
-            <br /><br />
-            <button className="delete-button" onClick={() => chatClose()}>종료</button>
-            &nbsp;&nbsp;
-            <button className="cancel-button" onClick={() => setIsCloseModalOpen(false)}>취소</button>
-          </>
+        <>
+          <h4>채팅을 종료하시겠습니까?</h4>
+          <h4>종료된 채팅은 다시 재개할 수 없습니다.</h4>
+          <br />
+          <br />
+          <button className="delete-button" onClick={() => chatClose()}>
+            종료
+          </button>
+          &nbsp;&nbsp;
+          <button
+            className="cancel-button"
+            onClick={() => setIsCloseModalOpen(false)}
+          >
+            취소
+          </button>
+        </>
       </Modal>
-      </div>
+    </div>
   );
 }
 

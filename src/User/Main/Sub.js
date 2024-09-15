@@ -116,7 +116,7 @@ export default function Sub() {
               setSelectCharacter((prevCharacter) => ({
                 ...prevCharacter,
                 characterLikeNo: prevCharacter.characterLikeNo
-                  ? prevCharacter.characterLikeNo + 1
+                  ? parseInt(prevCharacter.characterLikeNo) + 1
                   : 1, // 처음 스크랩일 경우 1로 설정
               }));
             }
@@ -237,14 +237,14 @@ export default function Sub() {
                               <div className={styles.hoverOverlay}>
                                 <Link
                                   to={`/user/shop/productList/detail/${i.productNo}`}
-                                  style={{ fontSize: "70%" }}
+                                  style={{ fontSize: "60%", color: "#444" }}
                                 >
                                   해당 상품 보러 가기
                                   <br />
                                   (외부 사이트 이동)
                                 </Link>
                                 <Link
-                                  style={{ fontSize: "70%" }}
+                                  style={{ fontSize: "60%", color: "#444" }}
                                   to={`/user/shop/productList/detail/${i.productNo}`}
                                 >
                                   SceneStealer에서 <br />
