@@ -1,16 +1,17 @@
-/* General layout for the actor, show, or product cards */
+/* 가로로 포스터를 배치하는 스타일 */
 .actorsContainer {
   display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  margin: 20px 0;
-  gap: 20px;
+  justify-content: flex-start; /* 왼쪽 정렬 */
+  flex-direction: row; /* 가로로 배치 */
+  gap: 20px; /* 포스터 간격 */
+  padding: 20px;
 }
 
 .profileContainer {
-  position: relative;
-  max-width: 180px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 180px;
   cursor: pointer;
 }
 
