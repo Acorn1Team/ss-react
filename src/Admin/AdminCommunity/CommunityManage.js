@@ -161,10 +161,9 @@ export default function CommunityManage() {
                     <strong>신고 횟수:</strong> {post.reportsCount}
                     <br />
                     <strong>신고 사유:</strong> {displayedCategories}
-                    <br />
+                    <hr />
                   </>
                 )}
-                <hr />
                 {post.deleted > 0 && view === "reported" && (
                   <strong>휴지통에 있는 게시물입니다</strong>
                 )}
@@ -260,7 +259,7 @@ export default function CommunityManage() {
 
 .post-list-horizontal {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   list-style-type: none;
   padding: 0;
   flex-wrap: wrap;
@@ -274,7 +273,7 @@ export default function CommunityManage() {
   margin-right: 10px;
   margin-bottom: 10px;
   width: 250px;
-  height: 500px;
+  height: 350px;
 }
 
 .image-container {
@@ -320,19 +319,20 @@ export default function CommunityManage() {
         >
           신고된 글 보기
         </button>
-        <br />
-        <br />
-      </div>
       {view === "reported" && (
+        <>
+        &nbsp;&nbsp;
         <select
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
-          style={{ width: "150px" }} // 너비 설정
+        value={sortOrder}
+        onChange={(e) => setSortOrder(e.target.value)}
+        style={{ width: "150px" }} // 너비 설정
         >
           <option value="latest">최신순</option>
           <option value="mostReported">신고 많은 순</option>
         </select>
+        </>
       )}
+      </div>
       {renderContent()}
       <div id="pagination">
         <button
