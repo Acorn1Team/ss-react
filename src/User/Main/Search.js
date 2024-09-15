@@ -3,6 +3,7 @@ import { useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import styles from "../Style/ActorProfile.module.css";
 import styles2 from "../Style/SearchUser.module.css";
+import styles3 from "../Style/ProductItem.module.css";
 
 function Search() {
   const location = useLocation();
@@ -168,15 +169,28 @@ function ShowItem({ item }) {
   );
 }
 
+// 가격에 쉼표 추가하는 함수
+function formatPrice(price) {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+
 function ProductItem({ item }) {
   return (
-    <div>
-      <div>
-        <Link to={`/user/shop/productlist/detail/${item.no}`}>
-          Product Name: {item.name || "No data"}
-        </Link>
-      </div>
-      <div>Price: {item.price || "No data"}</div>
+    <div className={styles3.productItemContainer}>
+      <Link to={`/user/shop/productlist/detail/${item.no}`} className={styles.productLink}>
+        <img
+          src={item.pic || "defaultShowPic.png"}
+          alt={item.name}
+          className={styles3.productImage}
+        />
+        <div className={styles3.productDetails}>
+          <div className={styles3.productName}>{item.name || "No data"}</div>
+          <div className={styles3.productPrice}>
+            {item.price ? `${formatPrice(item.price)} 원` : "No data"}
+          </div>
+        </div>
+      </Link>
     </div>
   );
 }

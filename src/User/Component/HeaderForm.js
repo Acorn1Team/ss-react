@@ -203,10 +203,11 @@ function HeaderForm() {
           onRequestClose={handleCloseModal} // 모달 바깥 클릭 시 닫히도록 설정
           // contentLabel="Search Modal"
           className={styles.modalContent} // 모달 콘텐츠에 대한 스타일 적용
-          // overlayClassName={styles.modalOverlay} // 모달 오버레이에 대한 스타일 적용
+          overlayClassName={styles.modalOverlay} // 모달 오버레이에 대한 스타일 적용
         >
+          
           <AutoSearch />
-          <button onClick={handleCloseModal}>Close</button>
+          <button className={styles.closeButton} onClick={handleCloseModal}>X</button>
         </Modal>
         <Link to="/user/shop/cart">
           <IoCartOutline className={styles.icon} />

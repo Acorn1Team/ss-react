@@ -111,6 +111,7 @@ const DeleteForm = () => {
     <div className={styles.container}>
       {loading && <Loading />}
       <div className={styles.user_input}>
+        <h2>회원탈퇴</h2>
         <input
           type="text"
           name="pass"

@@ -52,6 +52,7 @@ function FindPass() {
     <div>
       {loading && <Loading />}
       <form className={styles["form-container"]} onSubmit={handleSubmit}>
+      <h2>비밀번호 찾기</h2>
         <label>
           <input
             type="email"

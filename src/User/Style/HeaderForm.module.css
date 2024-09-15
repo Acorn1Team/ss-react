@@ -262,7 +262,7 @@
 /* 카테고리 선택박스 */
 .searchSelect {
   padding: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #333;
   border-radius: 10px;
   margin-right: 10px;
   font-size: 14px;
@@ -276,7 +276,7 @@
 .searchInput {
   padding: 10px;
   width: 400px;
-  border: 1px solid #ccc;
+  border: 1px solid #333 !important;
   border-radius: 4px;
   font-size: 16px;
   box-sizing: border-box;
@@ -296,7 +296,7 @@
 /* 자동완성 컨테이너 */
 .autoSearchContainer {
   position: absolute;
-  top: calc(100% + 10px); /* 검색창 바로 아래에 위치 */
+  top: calc(70% + 10px); /* 검색창 바로 아래에 위치 */
   left: 0;
   width: 100%; /* 검색창과 같은 너비 */
   background-color: white;
@@ -327,24 +327,27 @@
   left: 0;
   right: 0;
   bottom: 0;
-  /* background-color: rgba(0, 0, 0, 0.5); */
+  background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(2px);
   z-index: 1000;
 }
 
 .modalContent {
-  position: absolute;
+  position: relative;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 40px;
-  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.5);
+  /* backdrop-filter: blur(5px); */
+  padding: 100%;
+  /* padding: 20px;  */
+  /* border-radius: 8px; */
   width: 60%;
-  max-width: 800px;
+  max-width: 500px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
   text-align: center;
-  overflow: visible; /* 내부 스크롤 방지 */
+  z-index: 1000;
+  /* overflow: visible; 내부 스크롤 방지 */
 }
 
 /* 자동완성 컨테이너 */
@@ -355,19 +358,16 @@
 
 /* 닫기 버튼 */
 .closeButton {
+  /* padding-top: 10px; */
+    top: 10px; /* 모달 상단에서 10px 아래 */
+  right: 10px; /* 모달 오른쪽에서 10px 왼쪽 */
   position: absolute;
-  top: 15px;
-  right: 15px;
-  background-color: transparent; /* 배경색 투명으로 설정 */
-  color: black; /* X 표시 색상 */
+  background: none;
   border: none;
-  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
   width: 30px;
   height: 30px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.closeButton:hover {
-  background-color: transparent;
+  color: black;
+  z-index: 1001; /* 모달 내용 위에 나타나도록 설정 */
 }
