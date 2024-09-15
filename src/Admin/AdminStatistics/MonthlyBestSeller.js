@@ -79,7 +79,7 @@ export default function MonthlyBestSellerChart() {
     };
 
     return (
-        <div>
+        <div id='admin-body'>
             <h2>이번 달의 인기 상품</h2>
             <Bar data={chartData} options={chartOptions} />
             <strong style={{ cursor:"pointer"}} onClick={() => navigate('/admin/statistics/monthly-bestseller')}>자세히</strong>

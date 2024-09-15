@@ -38,7 +38,7 @@ export default function MonthlyRevenueDetail(){
     };
 
     return (
-        <div>
+        <div id='admin-body'>
             <h3>2024년 월별 매출</h3>
             <table>
                 <tbody>

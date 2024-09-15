@@ -32,13 +32,14 @@ export default function MonthlyRevenueChart(){
                 fill: false, 
                 backgroundColor: '#a5d6a7',
                 borderColor: 'gray', 
+                borderWidth: 1,
                 tension: 0.1,
             },
         ]
     };
 
     return (
-        <div>
+        <div id='admin-body'>
             <h2>2024년 월별 매출</h2>
             <Line data={chartData} options={{ responsive: true }} /><br/>
             <strong style={{ cursor:"pointer"}} onClick={() => navigate('/admin/statistics/monthly-revenue')}>자세히</strong>

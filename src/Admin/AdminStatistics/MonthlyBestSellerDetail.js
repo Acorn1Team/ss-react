@@ -79,7 +79,7 @@ export default function MonthlyBestSellerDetail() {
     };
 
     return (
-        <div>
+        <div id='admin-body'>
             <h3>이번 달의 인기 상품</h3>
             <table>
                 <thead>

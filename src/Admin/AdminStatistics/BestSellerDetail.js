@@ -79,7 +79,7 @@ export default function BestSellerDetail() {
     };
 
     return (
-        <div>
+        <div id='admin-body'>
             <h2>인기 상품</h2>
             <table>
                 <thead>

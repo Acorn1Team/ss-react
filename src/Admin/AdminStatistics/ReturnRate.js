@@ -50,7 +50,7 @@ export default function ReturnRateChart() {
     };
 
     return (
-        <div>
+        <div id='admin-body'>
             <h2>불만족 상품</h2>
             <Bar
                 data={chartData}
