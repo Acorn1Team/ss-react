@@ -25,6 +25,7 @@ function HeaderForm() {
   // 페이지 이동 시 드롭다운 닫기
   useEffect(() => {
     setActiveDropdown(null); // 페이지 이동 시 드롭다운과 알림 팝업 닫기
+    setIsModalOpen(false);
   }, [location]); // location이 변경될 때마다 실행
 
   const checkFor = () => {
