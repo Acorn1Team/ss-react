@@ -347,7 +347,7 @@
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
   text-align: center;
   z-index: 1000;
-  /* overflow: visible; 내부 스크롤 방지 */
+  overflow: visible;
 }
 
 /* 자동완성 컨테이너 */
@@ -356,11 +356,7 @@
   overflow-y: auto; /* 검색 결과가 많을 때 스크롤 */
 }
 
-/* 닫기 버튼 */
 .closeButton {
-  /* padding-top: 10px; */
-    top: 10px; /* 모달 상단에서 10px 아래 */
-  right: 10px; /* 모달 오른쪽에서 10px 왼쪽 */
   position: absolute;
   background: none;
   border: none;
@@ -370,4 +366,7 @@
   height: 30px;
   color: black;
   z-index: 1001; /* 모달 내용 위에 나타나도록 설정 */
+}
+.closeButton:hover {
+  background: none;
 }

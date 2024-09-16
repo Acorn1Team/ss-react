@@ -205,9 +205,10 @@ function HeaderForm() {
           className={styles.modalContent} // 모달 콘텐츠에 대한 스타일 적용
           overlayClassName={styles.modalOverlay} // 모달 오버레이에 대한 스타일 적용
         >
-          
           <AutoSearch />
-          <button className={styles.closeButton} onClick={handleCloseModal}>X</button>
+          <button className={styles.closeButton} onClick={handleCloseModal}>
+            X
+          </button>
         </Modal>
         <Link to="/user/shop/cart">
           <IoCartOutline className={styles.icon} />
