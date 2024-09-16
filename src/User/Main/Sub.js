@@ -243,11 +243,16 @@ export default function Sub() {
                           <img src={i.pic} alt={`Item ${i.no}`} />
                           {hoveredItem === i.no && (
                             <div className={styles.hoverOverlay}>
-                              <Link
-                                to={`/user/shop/productList/detail/${i.productNo}`}
-                                style={{ fontSize: "60%", color: "#444" }}
-                              >
+                              <Link className="btn1Small" to={i.path}>
                                 해당 상품 보러 가기
+                                <br /> (외부 사이트 이동)
+                              </Link>
+                              <Link
+                                className="btn1Small"
+                                to={`/user/shop/productList/detail/${i.productNo}`}
+                              >
+                                SceneStealer 에서
+                                <br /> 유사한 상품 보러 가기
                               </Link>
                             </div>
                           )}

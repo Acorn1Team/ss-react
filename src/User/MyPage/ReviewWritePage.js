@@ -3,7 +3,6 @@ import axios from "axios";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import "./ReviewWritePage.css"; // CSS 파일 import
-//import "../Style/All.css"; //  button styles
 
 export default function ReviewWritePage() {
   const { orderProductNo } = useParams();
@@ -14,6 +13,7 @@ export default function ReviewWritePage() {
   const [contents, setContents] = useState(review?.contents || "");
   const [score, setScore] = useState(review?.score || 0);
   const [pic, setPic] = useState(review?.pic || null);
+  const [previewImage, setPreviewImage] = useState(null); // 이미지 미리보기 상태 추가
   const [errorMessage, setErrorMessage] = useState("");
 
   // 입력 자료 검증 함수
@@ -32,6 +32,21 @@ export default function ReviewWritePage() {
     }
     setErrorMessage(""); // 오류 메시지가 없을 때는 초기화
     return true;
+  };
+
+  // 파일 변경 시 호출되는 함수 (미리보기 이미지 설정)
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result); // 미리보기 이미지 설정
+      };
+      reader.readAsDataURL(file);
+      setPic(file); // 선택된 파일을 상태로 저장
+    } else {
+      setPreviewImage(null); // 파일이 없으면 미리보기 초기화
+    }
   };
 
   // 리뷰 작성 시 서버에 데이터를 전송하는 함수
@@ -81,12 +96,7 @@ export default function ReviewWritePage() {
   return (
     <div className="reviews-container">
       <h2>리뷰 작성하기</h2>
-      <div>
-        {/* 주문상품 번호: {orderProductNo}
-        <br />
-        사용자 번호: {userNo} */}
-        상품명 : {productName}
-      </div>
+      <div>{productName}</div>
       {/* 오류 메시지를 화면에 표시 */}
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
       <textarea
@@ -96,15 +106,13 @@ export default function ReviewWritePage() {
         onChange={(e) => {
           const input = e.target.value;
           if (input.length <= 40) {
-            // 글자 수를 40자로 제한
             setContents(input);
           }
         }}
       ></textarea>
-      <div>{contents.length} / 40 글자</div>
+      <div>{contents.length} / 40</div>
       <br />
       <div>
-        <h3>평점:</h3>
         {[...Array(5)].map((star, index) => {
           const ratingValue = index + 1;
           return (
@@ -120,8 +128,6 @@ export default function ReviewWritePage() {
                 size={30}
                 color={ratingValue <= score ? "#ffc107" : "#e4e5e9"}
                 style={{ cursor: "pointer" }}
-                onMouseEnter={() => setScore(ratingValue)}
-                onMouseLeave={() => setScore(ratingValue)}
               />
             </label>
           );
@@ -131,13 +137,24 @@ export default function ReviewWritePage() {
       <input
         type="file"
         accept="image/*"
-        onChange={(e) => setPic(e.target.files[0])} // 파일 선택 시 상태 업데이트
+        onChange={handleFileChange} // 파일 선택 시 미리보기 설정
       />
+      {/* 미리보기 이미지 표시 */}
+      {previewImage && (
+        <div className="image-preview">
+          <img
+            src={previewImage}
+            alt="이미지 미리보기"
+            style={{ width: "200px", marginTop: "10px" }}
+          />
+        </div>
+      )}
       <br />
-      <button onClick={handleSubmit}>리뷰 제출</button>
-      &nbsp;
-      {/* 리뷰 취소 버튼 */}
-      <button className="reviewcancle" onClick={handleCancel}>
+      <button className="btn1" onClick={handleSubmit}>
+        리뷰 제출
+      </button>
+
+      <button className="btn3" onClick={handleCancel}>
         리뷰 취소
       </button>
     </div>

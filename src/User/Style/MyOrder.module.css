@@ -1,6 +1,7 @@
 .container {
   max-width: 800px;
   margin: 0 auto;
+
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 10px;
@@ -36,8 +37,10 @@ h2 {
 }
 
 .orderDetails {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr; /* 상품명, 가격, 상태, 버튼의 비율을 좀 더 균형있게 조정 */
+  grid-gap: 20px; /* 각 열 사이의 간격을 넓혀 보기 좋게 개선 */
+  align-items: center; /* 수직 정렬을 중앙으로 맞춤 */
   margin-bottom: 10px;
 }
 
@@ -45,7 +48,9 @@ h2 {
   text-decoration: none;
   color: #df919e;
   font-weight: bold;
-  transition: color 0.3s;
+  white-space: nowrap; /* 텍스트를 한 줄로 유지 */
+  overflow: hidden;
+  text-overflow: ellipsis; /* 넘치는 텍스트는 ... 표시 */
 }
 
 .orderProductLink:hover {
@@ -55,12 +60,14 @@ h2 {
 .orderPrice {
   font-size: 1.1rem;
   color: #333;
+  text-align: right; /* 가격을 오른쪽 정렬 */
 }
 
 .orderState {
   font-size: 1rem;
   font-weight: bold;
   color: #a8a5a0;
+  text-align: center;
 }
 
 hr {
@@ -96,13 +103,16 @@ hr {
   color: #333;
 }
 
-/* 상태에 따른 버튼 스타일링 */
+/* 버튼 기본 스타일 */
 .orderDetails button {
   padding: 8px 15px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
+  justify-self: end; /* 버튼을 오른쪽에 정렬 */
+  min-width: 120px;
+  text-align: center; /* 버튼 텍스트 가운데 정렬 */
   transition: background-color 0.3s ease;
 }
 
@@ -112,8 +122,8 @@ hr {
   color: white;
 }
 
-.orderDetails button.cancel:hover {
-  background-color: #c82333;
+.orderDetails button.cancel[disabled] {
+  visibility: hidden; /* 버튼이 비활성화되면 숨김 처리 */
 }
 
 /* 교환/환불하기 */
@@ -152,36 +162,4 @@ hr {
 .popup h3 {
   margin-bottom: 20px;
   color: #333;
-}
-
-.popupButtons {
-  display: flex;
-  justify-content: space-between;
-}
-
-.popupButtons button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.popupButtons button.cancel {
-  background-color: #dc3545;
-  color: white;
-}
-
-.popupButtons button.confirm {
-  background-color: #28a745;
-  color: white;
-}
-
-.popupButtons button.cancel:hover {
-  background-color: #c82333;
-}
-
-.popupButtons button.confirm:hover {
-  background-color: #218838;
 }

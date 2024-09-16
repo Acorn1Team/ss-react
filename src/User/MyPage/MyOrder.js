@@ -5,7 +5,6 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "../Style/MyOrder.module.css";
 
 export default function MyOrder() {
-
   const navigate = useNavigate(); // useNavigate 사용 선언
   // 현재 페이지
   const [currentPage, setCurrentPage] = useState(0);
@@ -33,7 +32,7 @@ export default function MyOrder() {
         params: {
           page: currentPage,
           size: pageSize,
-          sort: 'no,desc' // 주문 번호를 기준으로 내림차순 정렬
+          sort: "no,desc", // 주문 번호를 기준으로 내림차순 정렬
         },
       })
       .then((res) => {
@@ -48,7 +47,9 @@ export default function MyOrder() {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
+    return `${date.getFullYear()}년 ${
+      date.getMonth() + 1
+    }월 ${date.getDate()}일`;
   };
 
   // 페이지 변경 함수
@@ -71,19 +72,18 @@ export default function MyOrder() {
 
   //주문 취소시 쿠폰 재사용
   const getCouponData = () => {
-    
-    axios.get(`/coupon/${userNo}`)
+    axios
+      .get(`/coupon/${userNo}`)
       .then((response) => {
         console.log("쿠폰 데이터 갱신:", response.data);
-        
       })
       .catch((err) => {
         console.log("쿠폰 데이터를 불러오는 중 오류 발생:", err);
       });
   };
 
-   // 주문 상태 변경 함수 (주문 취소 처리)
-   const orderStateChange = () => {
+  // 주문 상태 변경 함수 (주문 취소 처리)
+  const orderStateChange = () => {
     if (selectedOrder && selectedOrder.state === "주문접수") {
       // 주문 취소 요청 (DELETE)
       axios
@@ -98,7 +98,7 @@ export default function MyOrder() {
                   : order
               )
             );
-           
+
             getCouponData(); // 쿠폰재사용
           }
         })
@@ -109,11 +109,11 @@ export default function MyOrder() {
   };
 
   // 주문취소 후 새로고침안해도 주문취소 처리되게 useEffect 추가
-useEffect(() => {
-  if (orderList.some(order => order.state === "주문취소")) {
-    getOrderList(); // 주문 목록을 다시 가져옴
-  }
-}, [orderList]); // orderList 상태가 변경되면 실행됨
+  useEffect(() => {
+    if (orderList.some((order) => order.state === "주문취소")) {
+      getOrderList(); // 주문 목록을 다시 가져옴
+    }
+  }, [orderList]); // orderList 상태가 변경되면 실행됨
 
   // 팝업 닫기 함수
   const handlePopupClose = () => {
@@ -121,8 +121,8 @@ useEffect(() => {
     setSelectedOrder(null);
   };
 
-   // 팝업에서 확인 버튼을 클릭했을 때 실행되는 함수
-   const handlePopupConfirm = () => {
+  // 팝업에서 확인 버튼을 클릭했을 때 실행되는 함수
+  const handlePopupConfirm = () => {
     if (popupMessage === "교환/환불을 신청하시겠습니까?") {
       navigate("/user/chat"); // 교환/환불일 때 /user/chat으로 이동
     } else if (popupMessage === "주문을 취소하시겠습니까?") {
@@ -134,10 +134,14 @@ useEffect(() => {
   return (
     <div className={styles.container}>
       <h2>주문 내역</h2>
+      <div style={{ textAlign: "center" }}>
+        상품명을 클릭하면 상세 주문 정보를 볼 수 있어요.
+      </div>
+      <br />
       {orderList.map((ol) => (
         <div key={ol.no} className={styles.orderItem}>
           <div className={styles.orderHeader}>
-            주문번호 {ol.no}  &emsp;{formatDate(ol.date)}
+            주문번호 {ol.no} &emsp;{formatDate(ol.date)}
           </div>
 
           <div className={styles.orderDetails}>
@@ -149,12 +153,10 @@ useEffect(() => {
               {ol.productNoList.length > 1 && (
                 <span> 외 {ol.productNoList.length - 1}건</span>
               )}
-              &emsp;&emsp;
-              <span className={styles.orderPrice}>
-                {ol.price.toLocaleString()}원
-              </span>
             </Link>
-
+            <span className={styles.orderPrice}>
+              {ol.price.toLocaleString()}원
+            </span>
             <span className={styles.orderState}>{ol.state}</span>
             {/* 상태에 따른 버튼 표시 */}
             {ol.state === "주문접수" && (
@@ -198,15 +200,18 @@ useEffect(() => {
           </button>
         </div>
       )}
-
       {/* 팝업 */}
       {showPopup && (
         <div className={styles.popupOverlay}>
           <div className={styles.popup}>
             <h3>{popupMessage}</h3>
             <div className={styles.popupButtons}>
-              <button onClick={handlePopupClose}>취소</button>
-              <button onClick={handlePopupConfirm}>확인</button> {/* 팝업 확인 버튼 하나로 통합 */}
+              <button className="btn1" onClick={handlePopupConfirm}>
+                확인
+              </button>
+              <button className="btn3" onClick={handlePopupClose}>
+                취소
+              </button>
             </div>
           </div>
         </div>

@@ -6,13 +6,10 @@
   border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  
-  
 }
 
 .header {
-  display: flex;
-  align-items: center;
+  align-items: right;
   justify-content: space-between;
   margin-bottom: 20px;
 }
@@ -21,10 +18,10 @@
   display: flex;
   align-items: center;
   margin-bottom: 20px;
-  
 }
 
 .sortSelect {
+  width: 150px;
   margin-left: 10px;
   padding: 5px;
   border: 1px solid #dbdbdb;
@@ -35,8 +32,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
-  text-align: center; 
-  
+  text-align: center;
 }
 
 .productItem {
@@ -92,7 +88,6 @@
   font-size: 16px;
   margin-top: 10px;
   color: #333;
-  
 }
 
 .productPrice {

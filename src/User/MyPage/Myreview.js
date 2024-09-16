@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "../Style/Myreview.module.css";
 import Modal from "react-modal";
 import "../Style/All.css"; //  button styles
+import { FaStar } from "react-icons/fa";
 
 function Myreview() {
   const [reviews, setReviews] = useState([]);
@@ -11,7 +12,7 @@ function Myreview() {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false); // 모달 상태
-  const [selectedReviewNo, setSelectedReviewNo] = useState(null)
+  const [selectedReviewNo, setSelectedReviewNo] = useState(null);
   const navigate = useNavigate();
 
   const myreviewOnly = (page = 0) => {
@@ -41,7 +42,9 @@ function Myreview() {
       axios
         .delete(`/review/delete/${selectedReviewNo}`)
         .then(() => {
-          setReviews(reviews.filter((review) => review.no !== selectedReviewNo));
+          setReviews(
+            reviews.filter((review) => review.no !== selectedReviewNo)
+          );
           closeModal(); // 모달 닫기
         })
         .catch((error) => {
@@ -80,20 +83,47 @@ function Myreview() {
         reviews.map((review) => (
           <div key={review.no} className={styles.reviewCard}>
             <Link to={`/user/shop/productlist/detail/${review.productNo}`}>
-              <img src={review.pic} alt={review.name} /><br/>
+              <img src={review.pic} alt={review.name} />
+              <br />
               {review.productName}
             </Link>
             <div className={styles.reviewInfo}>
-              <div>리뷰 평점: {review.score}</div>
-              <div className={styles.reviewContent}>리뷰 내용: {review.contents}</div>
+              <div>
+                <label>
+                  <input
+                    type="radio"
+                    name="rating"
+                    value={review.score}
+                    style={{ display: "none" }}
+                  />
+                  {[...Array(5)].map((_, index) => {
+                    const ratingValue = index + 1;
+                    return (
+                      <FaStar
+                        key={index}
+                        size={30}
+                        color={
+                          ratingValue <= review.score ? "#ffc107" : "#e4e5e9"
+                        } // score에 따라 색상 변경
+                        style={{ cursor: "pointer" }}
+                      />
+                    );
+                  })}
+                </label>
+              </div>
+              <div className={styles.reviewContent}>{review.contents}</div>
               <div className={styles.buttonContainer}>
                 <button
-                   className={`btn1`}
-                  onClick={() => navigate(`../review/edit/${review.no}`, { state: { review } })}
+                  className={`btn1`}
+                  onClick={() =>
+                    navigate(`../review/edit/${review.no}`, {
+                      state: { review },
+                    })
+                  }
                 >
                   수정
                 </button>
-                <button  className={`btn3`} onClick={() => openModal(review.no)}>
+                <button className={`btn3`} onClick={() => openModal(review.no)}>
                   삭제
                 </button>
               </div>
@@ -101,32 +131,32 @@ function Myreview() {
           </div>
         ))
       ) : (
-        <div>리뷰가 없습니다.</div>
+        <div style={{ textAlign: "center" }}>작성한 리뷰가 없습니다.</div>
       )}
 
-    {totalPages > 1 && (
-      <div className={styles.paginationContainer}>
-        <button
-          onClick={goToPreviousPage}
-          className={styles.paginationButton}
-          disabled={currentPage === 0}
-        >
-          이전
-        </button>
-        <span>
-          {currentPage + 1} / {totalPages}
-        </span>
-        <button
-          onClick={goToNextPage}
-          className={styles.paginationButton}
-          disabled={currentPage + 1 >= totalPages}
-        >
-          다음
-        </button>
-      </div>
-    )}
-    {/* 리뷰 삭제 모달 */}
-    <Modal
+      {totalPages > 1 && (
+        <div className={styles.paginationContainer}>
+          <button
+            onClick={goToPreviousPage}
+            className={styles.paginationButton}
+            disabled={currentPage === 0}
+          >
+            이전
+          </button>
+          <span>
+            {currentPage + 1} / {totalPages}
+          </span>
+          <button
+            onClick={goToNextPage}
+            className={styles.paginationButton}
+            disabled={currentPage + 1 >= totalPages}
+          >
+            다음
+          </button>
+        </div>
+      )}
+      {/* 리뷰 삭제 모달 */}
+      <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         contentLabel="리뷰 삭제 확인 모달"
@@ -144,7 +174,8 @@ function Myreview() {
       >
         <h3>정말로 이 리뷰를 삭제하시겠습니까?</h3>
         <div className={styles.modalButtons}>
-          <button onClick={deleteReview}>예</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <button onClick={deleteReview}>예</button>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <button onClick={closeModal}>아니요</button>
         </div>
       </Modal>

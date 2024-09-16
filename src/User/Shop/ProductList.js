@@ -7,11 +7,11 @@ import checkboxStyles from "./ProductListCheckbox.module.css"; // 체크박스 �
 export default function ProductList() {
   const { category } = useParams();
   const [products, setProducts] = useState([]);
-  const [sortOption, setSortOption] = useState(""); // 기본적으로 셀렉트 박스는 선택되지 않은 상태
+  const [sortOption, setSortOption] = useState("latest"); // 기본 정렬 옵션: 최신순
   const [currentPage, setCurrentPage] = useState(0);
   const [pageSize, setPageSize] = useState(9); // 페이지당 상품 수
   const [totalPages, setTotalPages] = useState(1);
-  const [selectCategory, setSelectCategory] = useState(category || "");
+  const [selectCategory, setSelectCategory] = useState("전체");
   const [excludeSoldOut, setExcludeSoldOut] = useState(false); // 품절 상품 제외 여부
 
   const categories = ["전체", "상의", "하의", "신발", "기타"];
@@ -25,34 +25,30 @@ export default function ProductList() {
   const hasSoldOutProducts = products.some((product) => product.stock === 0);
 
   // 데이터 새로고침: 카테고리 및 정렬 기준에 따라
-  const refresh = (selectedCategory, sortOption) => {
+  const refresh = async (selectedCategory, sortOption) => {
     const endpoint =
       selectedCategory && selectedCategory !== "전체"
         ? `/list/category/${selectedCategory}`
         : "/list"; // "전체"일 때는 기본 전체 상품 목록 호출
 
-    axios
-      .get(endpoint)
-      .then((res) => {
-        // 판매 가능한 상품만 필터링
-        let filteredProducts = res.data.content.filter(
-          (product) => product.available === true // available이 true인 상품만 필터링
-        );
+    try {
+      const res = await axios.get(endpoint);
+      // 판매 가능한 상품만 필터링
+      let filteredProducts = res.data.content.filter(
+        (product) => product.available === true // available이 true인 상품만 필터링
+      );
 
-        // 정렬 기준 적용
-        let sortedProducts = sortProducts(filteredProducts, sortOption);
+      // 정렬 기준 적용
+      let sortedProducts = sortProducts(filteredProducts, sortOption);
 
-        if (excludeSoldOut) {
-          sortedProducts = sortedProducts.filter(
-            (product) => product.stock > 0
-          ); // 품절 상품 제외
-        }
-        setProducts(sortedProducts);
-        setTotalPages(Math.ceil(sortedProducts.length / pageSize)); // 페이지 수 계산
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      if (excludeSoldOut) {
+        sortedProducts = sortedProducts.filter((product) => product.stock > 0); // 품절 상품 제외
+      }
+      setProducts(sortedProducts);
+      setTotalPages(Math.ceil(sortedProducts.length / pageSize)); // 페이지 수 계산
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // 페이지 변경 핸들러
@@ -66,16 +62,10 @@ export default function ProductList() {
   const handleCategoryChange = (newCategory) => {
     setSelectCategory(newCategory); // 선택한 카테고리 업데이트
     setCurrentPage(0); // 페이지 초기화
-    setSortOption("latest");
     refresh(newCategory, "latest"); // 최신순으로 상품 목록 새로고침
   };
 
-  // 컴포넌트가 마운트되거나 카테고리가 변경될 때 새로고침
-  useEffect(() => {
-    refresh(selectCategory, sortOption);
-  }, [selectCategory, sortOption, excludeSoldOut]);
-
-  // 정렬 함수
+  // 정렬 함수 추가
   const sortProducts = (products, option) => {
     let sorted = [...products];
     switch (option) {
@@ -118,6 +108,11 @@ export default function ProductList() {
     (currentPage + 1) * pageSize
   );
 
+  // 컴포넌트가 마운트될 때 처음으로 최신순으로 "전체" 카테고리를 새로고침
+  useEffect(() => {
+    refresh("전체", "latest"); // 기본값: "전체" 카테고리, "최신순"
+  }, []);
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -128,9 +123,6 @@ export default function ProductList() {
             value={sortOption} // 현재 선택된 정렬 옵션
             onChange={handleSortChange}
           >
-            <option value="" disabled>
-              선택해주세요
-            </option>
             <option value="latest">최신순</option>
             <option value="sales">판매순</option>
             <option value="priceHigh">가격 높은 순</option>

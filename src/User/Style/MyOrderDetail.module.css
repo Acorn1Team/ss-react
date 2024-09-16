@@ -31,17 +31,26 @@
   padding: 15px;
   background-color: #fff;
   border-radius: 8px;
-  margin-bottom: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   display: flex;
   justify-content: space-between;
-  align-items: center;
+
+  display: grid;
+  grid-template-columns: 1.8fr 1fr 1.5fr 1fr; /* 비율을 설정 (상품명, 수량, 가격, 리뷰 버튼) */
+  grid-gap: 10px; /* 각 열 사이의 간격 */
+  align-items: center; /* 각 항목을 수직 가운데 정렬 */
+  margin-bottom: 15px;
 }
 
 .productName {
   font-weight: bold;
   font-size: 1.1rem;
-  color: #333;
+  color: #c7727e;
+  transition: font-size 0.3s ease; /* 크기 변화에 애니메이션을 적용하여 부드럽게 변경되도록 설정 */
+}
+
+.productName:hover {
+  font-size: 1.11rem; /* hover 시에 폰트 크기를 조금 더 크게 설정 */
 }
 
 .productQuantity {
