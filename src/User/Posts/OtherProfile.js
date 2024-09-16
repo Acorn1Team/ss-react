@@ -199,13 +199,19 @@ export default function OtherProfile() {
             </span>
           </div>
           <div className={styles.postList}>
-            {postList.map((pl) => (
+          {postList.length > 0 ? (
+            postList.map((pl) => (
               <div key={pl.no} className={styles.postItem}>
                 <Link to={`/user/style/detail/${pl.no}`}>
                   <img src={pl.pic} alt={pl.no} className={styles.postImage} />
                 </Link>
               </div>
-            ))}
+            ))
+          ) : (
+            <div className={styles.noPostsMessage}>
+              게시글이 없습니다.
+            </div>
+          )}
           </div>
           {totalPages > 1 && (
             <div className={styles.pagination}>

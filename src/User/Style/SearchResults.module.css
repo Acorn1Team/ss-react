@@ -1,0 +1,216 @@
+/* 검색 결과를 가로로 나열하는 컨테이너 */
+.searchContainer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap; /* 줄바꿈을 하지 않도록 설정 */
+  gap: 20px;
+  padding: 20px;
+  overflow-x: auto; /* 가로로 넘치면 스크롤 가능하도록 설정 */
+  position: relative;
+  min-height: 80vh;
+  margin-bottom: 100px;
+}
+
+
+/* ActorItem, ShowItem, ProductItem, UserItem 공통 */
+.cardLink {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  color: #444;
+}
+
+.cardImage, .actorImage, .profileImage {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.cardTitle {
+  font-size: 16px;
+  color: #444;
+}
+
+/* 배우 검색 결과 */
+.actorCardContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px; /* 여백을 추가하여 요소 간 공간 확보 */
+  transition: transform 0.3s ease;
+  width: auto; /* 고정된 너비 제거, 콘텐츠에 맞춤 */
+  margin: 20px;
+}
+
+.actorCardContainer:hover {
+  transform: scale(1.05); /* 호버 시 전체 확대 효과 */
+}
+
+/* 배우 이미지 */
+.actorImage {
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 1px; /* 이미지만 둥글게 처리 */
+  transition: transform 0.3s ease;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* 그림자 추가 */
+}
+
+.actorCardContainer:hover .actorImage {
+  transform: scale(1.08); /* 호버 시 이미지 약간 확대 */
+}
+
+/* 배우 카드 타이틀 */
+.actorCardTitle {
+  font-weight: bold;
+  font-size: 20px;
+  margin-top: 10px;
+  margin-bottom: 17px;
+  color: #222; /* 좀 더 강한 색상 */
+  text-align: center;
+  line-height: 1.4;
+}
+
+
+
+
+/* 작품 검색 결과 */
+.cardImage {
+  width: 200px;
+  height: 300px;
+  border-radius: 10px;
+}
+
+.cardTitle {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+
+/* ProductItem 스타일 */
+/* 상품 목록 컨테이너를 격자 형태로 정렬 */
+.productGridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 각 아이템의 최소 너비를 설정하고 자동으로 칸을 채움 */
+  gap: 20px; /* 아이템 간 간격 */
+  justify-items: center; /* 아이템들을 중앙에 정렬 */
+  padding: 20px;
+}
+
+/* 각 상품 카드 스타일 */
+.productCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  background-color: #fff; /* 배경색을 흰색으로 */
+  border-radius: 10px; /* 모서리를 둥글게 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 가벼운 그림자 추가 */
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.productCard:hover {
+  transform: translateY(-5px); /* 호버 시 약간 떠오르는 효과 */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 확대 */
+}
+
+/* 상품 이미지 */
+.productImage {
+  width: 180px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 0px;
+  margin-bottom: 10px;
+}
+
+/* 상품명 텍스트 */
+.productName {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 10px;
+  text-align: left;
+}
+
+/* 상품 가격 텍스트 */
+.productPrice {
+  font-size: 14px;
+  color: #df919e;
+  margin-top: 5px;
+  text-align: left;
+}
+
+
+/* UserItem 스타일 */
+.profileImage {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid #ffcce7; /* 핑크색 테두리 추가 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* 애니메이션 */
+}
+
+.profileImage:hover {
+  transform: scale(1.1); /* 호버 시 이미지 확대 */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 확대 */
+}
+
+/* 카드 타이틀 (닉네임) */
+.userTitle {
+  font-size: 16px;
+  color: #ff66b2; /* 밝은 핑크색 텍스트 */
+  font-weight: bold; /* 굵은 글씨 */
+  margin-top: 10px;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(255, 102, 178, 0.5); /* 텍스트 그림자 */
+}
+
+/* 링크 스타일 */
+.cardLink {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.cardLink:hover {
+  transform: translateY(-5px); /* 호버 시 살짝 위로 이동 */
+}
+
+
+/* 페이지네이션 버튼을 하단 가운데에 위치시키기 위한 컨테이너 */
+.paginationContainer {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+}
+
+/* 페이지네이션 버튼 스타일 */
+.paginationButton {
+  background-color: #df919e;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 0 5px;
+}
+
+.paginationButton:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.paginationButton:hover:not(:disabled) {
+  background-color: #c36f79;
+}
