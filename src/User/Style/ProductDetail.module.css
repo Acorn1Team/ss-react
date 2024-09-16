@@ -25,31 +25,6 @@ h2 {
   color: #555;
 }
 
-/* .quantityControls {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-} */
-
-/* .quantityControls button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-size: 16px;
-} */
-
-/* .quantityControls button:hover {
-  background-color: #0056b3;
-} */
-
-/* .quantityControls span {
-  margin: 0 10px;
-  font-size: 16px;
-} */
-
 .price {
   font-size: 20px;
   font-weight: bold;
@@ -62,22 +37,6 @@ h2 {
   color: #5cb85c;
   margin-left: 10px;
 }
-
-/* .addToCartButton {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-  margin-top: 20px;
-} */
-
-/* .addToCartButton:hover {
-  background-color: #218838;
-} */
 
 .productDescription {
   margin: 20px 0;
@@ -123,8 +82,8 @@ h2 {
 }
 
 .productImage2 {
-  width: 400px; /* 원하는 가로 크기 */
-  height: 400px; /* 원하는 세로 크기 */
+  max-width: 70%;
+  max-height: 400px;
   object-fit: cover; /* 비율을 유지하면서 크기에 맞게 자름 */
   border-radius: 8px; /* 모서리 둥글게 */
   display: block; /* 이미지 블록 요소로 처리 */

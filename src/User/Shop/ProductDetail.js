@@ -45,6 +45,11 @@ export default function ProductDetail() {
     }
   };
 
+  // 할인가격 계산 함수
+  const calculateSellingPrice = (price, discountRate) => {
+    return price - (price * discountRate) / 100;
+  };
+
   const getTotalPrice = () => {
     return getDiscountedPrice() * count;
   };
@@ -115,72 +120,80 @@ export default function ProductDetail() {
 
   return (
     <div className={styles.container}>
-      <h2>상품 상세 정보</h2>
-   <div>
+      <h2>{product.name}</h2>
+      <div className={styles.productDescription}>
+        {/* <span className={styles.label}>상품 설명:</span> */}
+        <span>{product.contents}</span>
+      </div>
+      <div>
         <img
           src={product.pic}
           alt={product.name}
           className={styles.productImage2}
         />
-      </div>
-      <div>
-        <span className={styles.label}>이름:</span>
-        <span className={styles.value}>{product.name}</span>
-      </div>
-   
+      </div><br/>
       <div>
         <span className={styles.label}>가격:</span>
-        <span className={styles.price}>
-          {getTotalPrice().toLocaleString()} 원
-        </span>
-        {product.discountRate > 0 && (
-          <span className={styles.discountRate}>
-            할인율: {product.discountRate}%
-          </span>
+        <span className={styles.productPrice}>
+        {product.price !== undefined && product.discountRate !== undefined ? (
+          product.discountRate > 0 ? (
+            <>
+              <span style={{ textDecoration: "line-through" }}>
+                {product.price.toLocaleString()}원
+              </span>
+              &nbsp;
+              <span style={{ color: "#df919e", fontWeight: "bold" }}>
+                {calculateSellingPrice(
+                  product.price,
+                  product.discountRate
+                ).toLocaleString()}
+                원 ({product.discountRate}% 할인)
+              </span>
+            </>
+          ) : (
+            <>{product.price.toLocaleString()}원</>
+          )
+        ) : (
+          <span>가격 정보 없음</span>
         )}
+        </span>
       </div>
       <div className={styles.quantityControls}>
-  {product.stock > 0 ? (
-    <>
-      <span className={styles.label}>수량:</span>
-      <button className={`btn1`} onClick={decrementQuantity}>
-        -
-      </button>
-      <span>{count}</span>
-      <button
-        className={`btn1`}
-        onClick={incrementQuantity}
-        disabled={product.stock <= count}
-      >
-        +
-      </button>
-    </>
-  ) : (
-    <span></span>
-  )}
-  &nbsp;
-  <button className={`btn2`} onClick={handleAddToCart} disabled={product.stock === 0}>
-    {product.stock === 0 ? "품절된 상품입니다" : "장바구니에 담기"}
-  </button>
-</div>
-
-      <div className={styles.productDescription}>
-        <span className={styles.label}>상품 설명:</span>
-        <span>{product.contents}</span>
+        {product.stock > 0 ? (
+          <>
+            <span className={styles.label}>수량:</span>
+            <button className={`btn2Small`} onClick={decrementQuantity}>
+              -
+            </button>
+            <span>{count}</span>
+            <button
+              className={`btn2Small`}
+              onClick={incrementQuantity}
+              disabled={product.stock <= count}
+            >
+              +
+            </button>
+            <span className={styles.price}>
+              총 {getTotalPrice().toLocaleString()} 원
+            </span>
+            &nbsp;
+            <button className={`btn2`} onClick={handleAddToCart} disabled={product.stock === 0}>
+              장바구니에 담기
+            </button>
+          </>
+        ) : (
+          <h2>SOLD OUT</h2>
+        )}
       </div>
-      {/* <div className={styles.productCategory}>
-        <span className={styles.label}>카테고리:</span>
-        <span>{product.category}</span>
-      </div> */}
-     
-      <Link to={`/user/style/write/${no}`} className={`btn3`}>
-        커뮤니티 공유하기
-      </Link>
+
       <div className={styles.reviewSection}>
         <h3>리뷰 보기</h3>
         <ProductReviews setAverageRating={setAverageRating} />
       </div>
       <br />
+      <Link to={`/user/style/write/${no}`} className={`btn4`}>
+        커뮤니티 공유하기
+      </Link>
 
       {/* 모달 구현 */}
       <Modal

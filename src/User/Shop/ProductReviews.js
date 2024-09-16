@@ -119,7 +119,6 @@ const ProductReviews = () => {
             </div>
             <div className="review-right">
               <div className="review-header">
-                <div className="review-product-name">{review.productName}</div>
                 <div className="review-user">@{review.userNickname}</div>
               </div>
               <div className="review-content">
