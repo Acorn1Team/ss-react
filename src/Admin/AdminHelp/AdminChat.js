@@ -3,7 +3,7 @@ import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import axios from "axios";
 import Modal from "react-modal";
-import styles from "../../User/Style/AdminChat.module.css";
+import styles from "../Style/AdminChat.module.css";
 
 function AdminChat() {
   const [selectedUserId, setSelectedUserId] = useState(null);
@@ -132,7 +132,7 @@ function AdminChat() {
         <button onClick={() => setShowClosedChats(!showClosedChats)}>
           {showClosedChats ? "진행 중인 채팅 보기" : "종료된 채팅 보기"}
         </button>
-        <ul>
+        <ul className={styles.chatRoomItems}>
           {chatRooms
             .filter((room) => room.closeChat === showClosedChats)
             .map((room) => (
@@ -145,10 +145,9 @@ function AdminChat() {
                   room.closeChat ? styles.closed : ""
                 } ${chatNo === room.no ? styles.active : ""}`}
               >
-                {room.no} 번 상담 <br />
-                {room.userNo} 번 회원
-                <br />
-                {room.userName} ({room.category})
+                💬 {room.no}번 상담 <br />
+                {room.category}<br />
+                {room.userName} (9042{room.userNo})
               </li>
             ))}
         </ul>

@@ -16,15 +16,22 @@
   overflow-y: auto;
 }
 
+.chatRoomItems {
+  list-style: none;
+  padding: 10px;
+  margin: 0;
+}
+
 .chatRoomItem {
   padding: 10px;
   cursor: pointer;
   border-radius: 5px;
   transition: background-color 0.3s ease;
+  background-color: #f8efef;
 }
 
 .chatRoomItem:hover {
-  background-color: #eef;
+  background-color: #e4dddd;
 }
 
 .chatRoomItem.closed {
@@ -32,7 +39,7 @@
 }
 
 .chatRoomItem.active {
-  background-color: #e4dddd;
+  background-color: #ddd2d2;
 }
 
 .chatWindow {
@@ -101,3 +108,5 @@
 .closeButton:hover {
   background-color: #c82333;
 }
+
+

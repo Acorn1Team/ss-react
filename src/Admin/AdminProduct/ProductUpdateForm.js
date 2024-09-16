@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import "./ProductForm.css";
+import "../Style/ProductForm.css";
 import Modal from "react-modal";
 import "../Style/admin.css";
 export default function ProductUpdateForm() {

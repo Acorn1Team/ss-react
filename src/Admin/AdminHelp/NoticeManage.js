@@ -62,23 +62,18 @@ export default function NoticeManage() {
 
   return (
     <>
-      <table border={1} style={{ fontSize: "12px" }}>
+      <h2>
+        공지 목록 &nbsp;
+        <button className="add-button" onClick={() => navigate("/admin/help/notices/new")}>
+          공지 추가하기
+        </button>
+      </h2>
+      <table className="adminTable" style={{width:"60%"}}>
         <thead>
-          <tr>
-            <td colSpan={4}>
-              {/* 카테고리 선택 및 전체보기 버튼 */}
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px", alignItems: "center", padding: "0 20px", fontSize: "20px" }}>
-              공지 목록<br/>
-              <button className="add-button" onClick={() => navigate("/admin/help/notices/new")}>
-                공지 추가하기
-              </button>
-              </div>
-            </td>
-          </tr>
           <tr>
             <th>번호</th>
             <th>
-              <select id="category" value={selectedCategory} onChange={handleCategoryChange} style={{ padding: "5px", fontSize: "12px", width:"100px" }}>
+              <select id="category" value={selectedCategory} onChange={handleCategoryChange} style={{ marginTop:"10px", padding: "1px", height:"30px", fontSize: "15px", width:"100px" }}>
                 <option value="">카테고리</option>
                 <option value="주문">주문 상태</option>
                 <option value="결제">결제</option>

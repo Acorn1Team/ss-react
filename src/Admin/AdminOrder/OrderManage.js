@@ -218,6 +218,10 @@ export default function OrderManage() {
     }
   };
 
+  const makeOrderNo = (orderDate) => {
+    return orderDate.substring(2, 10).replace(/-/g, '');
+  }
+
   useEffect(() => {
     fetchOrders(currentPage, pageSize);
   }, [currentPage, pageSize]);
@@ -309,15 +313,14 @@ export default function OrderManage() {
         </div>
       </div>
 
-      <table style={{ width: "80%" }}>
+      <table className="adminTable">
         <thead>
           <tr>
             <th>주문번호</th>
             <th>주문자명</th>
-            <th>총액</th>
             <th>상태</th>
             <th>주문일</th>
-            <th>상세보기</th>
+            <th>주문총액</th>
           </tr>
         </thead>
         <tbody>
@@ -325,11 +328,10 @@ export default function OrderManage() {
             orders.map((order) => (
               <React.Fragment key={order.no}>
                 <tr>
-                  <td>9042{order.no}</td>
+                  <td>{makeOrderNo(`${order.date}`)}{order.no}</td>
                   <td>{order.userName}</td>
-                  <td>{order.price.toLocaleString("ko-KR")}원</td>
                   <td>
-                    <select
+                    <select style={{padding:"1px", height:"40px", width:"100px", fontSize:"15px"}}
                       value={order.state}
                       onChange={(e) => openModal(order.no, e.target.value)}
                       >
@@ -358,17 +360,15 @@ export default function OrderManage() {
                   </td>
                   <td>{new Date(order.date).toLocaleString()}</td>
                   <td>
-                    <span
-                      style={{ cursor: "pointer", color: "blue" }}
-                      onClick={() => toggleRowExpansion(order.no)}
-                    >
+                    {order.price.toLocaleString("ko-KR")}원&nbsp;
+                    <button className="btn1Small" onClick={() => toggleRowExpansion(order.no)}>
                       {expandedRows.includes(order.no) ? "닫기" : "상세보기"}
-                    </span>
+                    </button>
                   </td>
                 </tr>
                 {expandedRows.includes(order.no) && (
                   <tr>
-                    <td colSpan="6">
+                    <td colSpan="5">
                       <div>
                         {orderDetails[order.no] &&
                         userInfo[order.no] &&
@@ -397,7 +397,7 @@ export default function OrderManage() {
                                 <tr key={p.productNo}>
                                   <td>{p.productNo}</td>
                                   <td
-                                    style={{ cursor: "pointer", color: "blue" }}
+                                    style={{ cursor: "pointer", color: "#C32E61" }}
                                     onClick={() =>
                                       navigate(
                                         `/admin/product/update/${p.productNo}`
@@ -408,7 +408,7 @@ export default function OrderManage() {
                                   </td>
                                   <td>{p.quantity}</td>
                                   <td>
-                                    {(p.price / p.quantity).toLocaleString(
+                                    {(p.price / p.quantity).toFixed(0).toLocaleString(
                                       "ko-KR"
                                     )}
                                     원

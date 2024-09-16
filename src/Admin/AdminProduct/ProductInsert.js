@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
-import "./ProductForm.css";
+import "../Style/ProductForm.css";
 
 Modal.setAppElement("#root"); // 접근성 설정
 

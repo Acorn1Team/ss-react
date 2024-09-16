@@ -252,3 +252,22 @@ body {
   font-size: 16px;
   font-weight: bold;
 }
+
+.adminTable {
+  width: 70%;
+  font-size: 17px;
+}
+
+.adminTable th {
+  font-weight: bold;
+  text-align: center;
+  background-color: #f0f0f0; /* 헤더 배경색 */
+  padding: 10px;
+}
+
+.adminTable td {
+  font-weight: normal;
+  text-align: left;
+  padding: 10px;
+}
+

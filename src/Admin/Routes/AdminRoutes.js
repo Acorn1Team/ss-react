@@ -3,7 +3,7 @@ import AdminHome from "../AdminHome";
 import ShowSearch from "../AdminFashion/ShowSearch";
 import ProductManage from "../AdminProduct/ProductManage";
 import HelpManage from "../AdminHelp/HelpManage";
-import PromotionManage from "../AdminPromotion/PromotionManage";
+import PromotionMain from "../AdminPromotion/PromotionMain";
 import CommunityManage from "../AdminCommunity/CommunityManage";
 import OrderManage from "../AdminOrder/OrderManage";
 import NoticeDetail from "../AdminHelp/NoticeDetail";
@@ -44,7 +44,7 @@ export default function AdminRoutes() {
 
       <Route path="/community" element={<CommunityManage />} />
 
-      <Route path="/promotion" element={<PromotionManage />} />
+      <Route path="/promotion" element={<PromotionMain />} />
         <Route path="/promotion/coupon" element={<PromotionCoupon />} />
         <Route path="/promotion/advertise" element={<PromotionAdvertise />} />
         <Route path="/promotion/popup" element={<PromotionPopup />} />

@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Modal from "react-modal"; // react-modal 추가
-import styles from "./NoticeDetail.module.css"; // CSS 모듈 임포트
+import styles from "../Style/NoticeDetail.module.css"; // CSS 모듈 임포트
 
 Modal.setAppElement("#root"); // 접근성 설정
 
@@ -158,8 +158,8 @@ export default function NoticeDetail() {
             transform: "translate(-50%, -50%)",
             padding: "20px",
             borderRadius: "10px",
-            maxWidth: "500px",
-            width: "90%",
+            width:"25%",
+            textAlign: "center",
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
           },
           overlay: {
@@ -167,8 +167,7 @@ export default function NoticeDetail() {
           },
         }}
       >
-        <h2 style={{ fontSize: "20px" }}>{modalType} 확인</h2>
-        <p style={{ fontSize: "16px" }}>{modalType}하시겠습니까?</p>
+        <h2>{modalType}하시겠습니까?</h2>
         <div>
           <button
             className="delete-button"
