@@ -263,7 +263,7 @@ export default function OrderManage() {
           }}
         >
           {/* 상태 필터 */}
-          <div style={{ textAlign: "center" }}>
+          <div style={{ marginTop:"9px", textAlign: "center" }}>
             <StatusFilterSelect
               status={status}
               onStatusChange={handleStatusFilterChange}
@@ -277,7 +277,7 @@ export default function OrderManage() {
               placeholder="주문자명 입력"
               value={searchTerm}
               onChange={handleSearchChange}
-              style={{ padding: "5px", width: "150px" }} // 크기 조정
+              style={{ marginTop:"10px", padding: "5px", width: "150px" }} // 크기 조정
             />
           </div>
 
@@ -306,7 +306,7 @@ export default function OrderManage() {
           <button
             className="view-all-button"
             onClick={handleReset}
-            style={{ padding: "5px 10px" }}
+            style={{ marginTop:"10px", padding: "5px 10px" }}
           >
             전체보기
           </button>

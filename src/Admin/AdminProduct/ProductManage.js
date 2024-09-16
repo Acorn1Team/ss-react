@@ -17,7 +17,7 @@ export default function ProductManage() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(8);
   const [totalPages, setTotalPages] = useState(1);
   const [searchTriggered, setSearchTriggered] = useState(false);
   const navigate = useNavigate();
@@ -246,44 +246,54 @@ export default function ProductManage() {
   return (
     <div id="admin-body">
       <style>
-        {`.product-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch; /* 세로 길이를 동일하게 맞추기 */
-}
+        {`
+          .product-container {
+            display: flex;
+            flex-wrap: wrap; /* 여러 개의 카드를 한 줄에 배치할 수 있도록 함 */
+            justify-content: center;
+            justify-items: center;
+            margin-top: 20px;
+          }
 
-.product-card {
-  width: 60%; /* 제품 카드의 너비 줄이기 */
-  margin: 0 auto 20px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 400px; /* 고정 높이 설정 */
-  overflow-y: auto; /* 콘텐츠가 넘칠 경우 스크롤 */
-}
+          .product-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch; /* 세로 길이를 동일하게 맞추기 */
+          }
 
-.product-card img {
-  margin: 10px 0;
-}
+          .product-card {
+            width: 250px; /* 제품 카드의 너비 줄이기 */
+            height: 500px; /* 고정 높이 설정 */
+            margin: 0 auto 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin: 20px;
+            overflow-y: auto; /* 콘텐츠가 넘칠 경우 스크롤 */
+          }
 
-.reviews-container {
-  padding: 20px;
-  background-color: #f9f9f9;
-  border: 1px solid #ccc;
-  width: 35%;
-  margin-left: 20px;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 400px; /* 고정 높이 설정 */
-  overflow-y: auto; /* 콘텐츠가 넘칠 경우 스크롤 */
-}
-`}
+          .product-card img {
+            margin: 10px 0;
+          }
+
+          .reviews-container {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            width: 35%;
+            margin-left: 20px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 400px; /* 고정 높이 설정 */
+            overflow-y: auto; /* 콘텐츠가 넘칠 경우 스크롤 */
+          }
+          `}
       </style>
 
       <Modal
@@ -414,7 +424,7 @@ export default function ProductManage() {
                     {item.stock}
                     &nbsp;
                     <button
-                      className="delete-button"
+                      className="btn4Small"
                       onClick={() => openSoldoutModal(item.no)}
                     >
                       품절 처리하기
@@ -431,13 +441,13 @@ export default function ProductManage() {
                 </div>
                 <div>
                 <button
-                  className="delete-button"
+                  className="btn3"
                   onClick={() => openDeleteModal(item)}
                 >
-                  판매 종료하기
+                  판매 종료
                 </button>
                 <button
-                  className="update-button"
+                  className="btn1"
                   onClick={() => navigate(`/admin/product/update/${item.no}`)}
                 >
                   수정하기
@@ -447,6 +457,7 @@ export default function ProductManage() {
                 ): (
                   <>
                   <h2>판매 종료된 상품</h2>
+                  <h2></h2>
                   </>
                 )}
               </div>
