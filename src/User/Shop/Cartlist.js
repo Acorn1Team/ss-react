@@ -6,10 +6,9 @@ import styles from "../Style/CartList.module.css";
 import "../Style/All.css"; // button styles
 
 export default function CartList() {
-
   const userNo = sessionStorage.getItem("id");
   const cartItems = useSelector((state) => state.cart.cartItems[userNo] || []);
-  
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -39,10 +38,16 @@ export default function CartList() {
           const stockInfo = stockData.find(
             (stock) => stock.productNo === ci.product.no
           );
-          
+
           // 재고와 판매 가능 여부를 설정
           const availableStock = stockInfo ? stockInfo.stock : 0;
           const available = stockInfo ? stockInfo.available : false;
+
+          // 고정된 할인된 가격 계산
+          const fixedDiscountPrice =
+            ci.product.discountRate > 0
+              ? ci.product.price * (1 - ci.product.discountRate / 100)
+              : ci.product.price;
 
           return {
             no: ci.product.no,
@@ -51,6 +56,7 @@ export default function CartList() {
             quantity: ci.quantity,
             price: ci.product.price,
             discountRate: ci.product.discountRate,
+            fixedDiscountPrice, // 고정된 할인된 가격
             resultPrice:
               ci.product.discountRate > 0
                 ? ci.product.price *
@@ -84,13 +90,24 @@ export default function CartList() {
       setSelectedItems([]);
     } else {
       // 전체 선택
-      const selectableItems = cartProductInfo.filter(
-        (item) => item.purchaseCheck
-      ).map((item) => item.no);
+      const selectableItems = cartProductInfo
+        .filter((item) => item.purchaseCheck)
+        .map((item) => item.no);
       setSelectedItems(selectableItems);
     }
     setIsAllSelected(!isAllSelected);
   };
+
+  useEffect(() => {
+    const selectableItems = cartProductInfo.filter(
+      (item) => item.purchaseCheck
+    ).length;
+    if (selectedItems.length === selectableItems && selectableItems > 0) {
+      setIsAllSelected(true);
+    } else {
+      setIsAllSelected(false);
+    }
+  }, [selectedItems, cartProductInfo]);
 
   // 총 가격을 계산하는 함수
   const getTotalCartPrice = () => {
@@ -128,13 +145,13 @@ export default function CartList() {
     setSelectedItems([]);
   };
 
-    // **개별 상품을 삭제하는 함수**
-    const handleRemoveItem = (productNo) => {
-      dispatch({
-        type: "REMOVE_FROM_CART",
-        payload: { productNo, userNo },
-      });
-    };
+  // **개별 상품을 삭제하는 함수**
+  const handleRemoveItem = (productNo) => {
+    dispatch({
+      type: "REMOVE_FROM_CART",
+      payload: { productNo, userNo },
+    });
+  };
 
   const incrementQuantity = (productNo) => {
     const selectedItem = cartProductInfo.find((item) => item.no === productNo);
@@ -170,7 +187,7 @@ export default function CartList() {
   // 선택된 상품을 주문하는 함수
   const handleOrder = () => {
     const total = getTotalCartPrice();
-    
+
     // 선택된 상품들을 주문 항목으로 변환
     const selectedCartItems = cartProductInfo
       .filter((item) => selectedItems.includes(item.no))
@@ -183,7 +200,7 @@ export default function CartList() {
         resultPrice: item.resultPrice,
       }));
 
-    // 주문 생성 
+    // 주문 생성
     dispatch({
       type: "CREATE_ORDER",
       payload: { items: selectedCartItems, total: total, userNo },
@@ -200,68 +217,46 @@ export default function CartList() {
         <p>장바구니가 비어 있습니다.</p>
       ) : (
         <>
-          <div className={styles.cartHeader}>
-            <input
-              type="checkbox"
-              checked={isAllSelected}
-              onChange={toggleSelectAll} // 전체 선택/해제 토글
-            />
-            <label>전체 선택</label>
-            
-          </div>
           <div className={styles.cartContainer}>
+            <div className={styles.cartHeader}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={isAllSelected}
+                  onChange={toggleSelectAll}
+                />
+                전체 선택
+              </label>
+              <input
+                type="button"
+                value="선택 삭제"
+                onClick={handleRemoveSelected}
+                disabled={selectedItems.length === 0}
+              />
+            </div>
+
             {cartProductInfo.map((item) => (
               <div key={item.no} className={styles.cartItem}>
                 <input
                   type="checkbox"
                   checked={selectedItems.includes(item.no)}
                   onChange={() => handleCheckboxChange(item.no)}
-                  disabled={item.stock === 0 || !item.purchaseCheck}
                 />
-                &nbsp;&nbsp;
-                <span>
-                  <img src={item.pic} alt={item.name} />
-                </span>
-                &nbsp;&nbsp;
-                <span
-                  onClick={() => handleProductClick(item.no)} // 클릭 시 상품 상세 페이지로 이동
-                  style={{ cursor: "pointer", textDecoration: "underline" }}
-                >
-                  {item.name}
-                  {item.stock === 0 && (
-                  <div className={styles.stockWarning}>품절</div> // 재고가 0일 경우 품절 표시
-                )}
-                {item.stock > 0 && item.quantity >= item.stock && (
-                  <div className={styles.stockWarning}>
-                    재고가 {item.stock}개 남았습니다
-                  </div> // 재고가 한정적일 때 재고량 표시
-                )}
-                
-                </span>
-                <div className={styles.cartQuantity}>
-                  <button className={`btn1`} onClick={() => decrementQuantity(item.no)}>-</button>
-                  <span>{item.quantity}</span>
-                  <button
-                    className={`btn1`}
-                    onClick={() => incrementQuantity(item.no)}
-                    disabled={item.quantity >= item.stock} // 재고량에 따른 수량 제한
+                <img src={item.pic} alt={item.name} />
+                <div className={styles.cartItemDetails}>
+                  <span
+                    onClick={() => handleProductClick(item.no)} // 클릭 시 상품 상세 페이지로 이동
+                    style={{ cursor: "pointer", textDecoration: "underline" }}
                   >
-                    +
-                  </button>
+                    {item.name}
+                  </span>
+                  <div className={styles.cartItemPriceOriginal}>
+                    {item.price.toLocaleString()}
+                  </div>
+                  <div className={styles.cartItemPriceDiscounted}>
+                    {item.fixedDiscountPrice.toLocaleString()}
+                  </div>
                 </div>
-                &nbsp;&nbsp;
-                <span className={styles.cartItemPrice}>
-                  {item.price.toLocaleString()}원
-                </span>
-                &emsp;
-                <span>
-                  {item.discountRate < 1 ? "" : `${item.discountRate}% 할인`}
-                </span>
-                &emsp;
-                <span className={styles.cartItemPrice}>
-                  {item.resultPrice.toLocaleString()}원
-                </span>
-
                 {/* {item.stock === 0 && (
                   <div className={styles.stockWarning}>품절</div> // 재고가 0일 경우 품절 표시
                 )}
@@ -270,33 +265,45 @@ export default function CartList() {
                     재고가 {item.stock}개 남았습니다
                   </div> // 재고가 한정적일 때 재고량 표시
                 )} */}
-
-                  {/* 개별 삭제 버튼 추가 */}
-                <button className={`btn3`} onClick={() => handleRemoveItem(item.no)}>
-                  삭제
-                </button>
-
+                <div className={styles.cartQuantityWrapper}>
+                  <div className={styles.cartQuantity}>
+                    <button onClick={() => decrementQuantity(item.no)}>
+                      -
+                    </button>
+                    <span>{item.quantity}</span>
+                    <button
+                      onClick={() => incrementQuantity(item.no)}
+                      disabled={item.quantity >= item.stock}
+                    >
+                      +
+                    </button>
+                  </div>
+                  {item.stock > 0 && item.quantity >= item.stock && (
+                    <div className={styles.stockWarning}>
+                      재고가 {item.stock}개 남았습니다
+                    </div>
+                  )}
+                </div>
+                <span className={styles.cartItemPrice}>
+                  {item.resultPrice.toLocaleString()}원
+                </span>
+                <input
+                  type="button"
+                  value="X"
+                  className={styles.rmButton}
+                  onClick={() => handleRemoveItem(item.no)}
+                />
               </div>
             ))}
-          </div>
 
-          
-          <div className={styles.cartHeader}>
-            <button
-             
-              onClick={handleRemoveSelected}
-              disabled={selectedItems.length === 0} // 선택된 항목이 없으면 버튼 비활성화
-            >
-              선택 삭제
-            </button>
-          </div>
-          <div>
-            <div className={styles.cartTotalPrice}>
-              <h3>총 가격: {getTotalCartPrice().toLocaleString()}원</h3>
+            <div className={styles.cartFooter}>
+              <span className={styles.totalPrice}>
+                총 가격: {getTotalCartPrice().toLocaleString()}원
+              </span>
               <button
-                className={`btn4`}
+                className="btn4"
                 onClick={handleOrder}
-                disabled={selectedItems.length === 0} // 선택된 항목이 없으면 주문 버튼 비활성화
+                disabled={selectedItems.length === 0}
               >
                 주문하기
               </button>
