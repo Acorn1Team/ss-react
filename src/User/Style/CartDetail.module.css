@@ -1,47 +1,73 @@
-/* CartDetail.module.css */
 .orderContainer {
+  width: 50%; /* 전체 컨테이너 너비를 줄임 */
+  margin: 0 auto; /* 중앙 정렬 */
   padding: 20px;
-  /* background-color: #f9f9f9;
-  border-radius: 10px; */
-  max-width: 800px;
-  margin: 0 auto;
-  /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
 }
 
 .orderTitle {
-  text-align: center;
-  font-size: 2rem;
+  font-size: 20px;
   font-weight: bold;
   margin-bottom: 20px;
+  color: #333;
+  text-align: left; /* 왼쪽 정렬 */
 }
 
-.userInfo,
-.orderItems,
-.couponSection,
-.totalPrice {
-  background-color: #fff;
+.quantityLabel {
+  display: inline-block;
+  padding: 2px 2px;
+  font-size: 12px;
+  color: gray;
+  border: 1px solid #ddd;
+  border-radius: 10px; /* 둥근 모서리 설정 */
+  text-align: center;
+  background-color: white; /* 배경색 설정 */
+  min-width: 30px; /* 최소 너비 설정 */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
+}
+
+.quantityWrapper {
+  flex-basis: 20%; /* 수량 부분의 일정한 너비 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.userInfo {
+  background-color: white;
   padding: 20px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  text-align: left; /* 왼쪽 정렬 */
 }
 
-.userInfo h3,
-.orderItems h3,
-.couponSection h3,
-.totalPrice h3 {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-}
-
-.userInfo p,
-.orderItems p {
-  font-size: 1rem;
-  color: #555;
+.userInfo p {
   margin: 5px 0;
+  font-size: 16px;
+  color: #666;
+}
+
+.userInfo strong {
+  font-size: 18px;
+  color: #333;
+}
+
+.orderItems {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  text-align: left; /* 왼쪽 정렬 */
 }
 
 .orderItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 10px 0;
   border-bottom: 1px solid #ddd;
 }
@@ -50,37 +76,68 @@
   border-bottom: none;
 }
 
+.orderItem p {
+  flex-basis: 40%; /* 상품명에 일정한 너비를 줘서 요소의 위치가 동일하게 */
+  margin: 0;
+}
+.orderItemPrice {
+  flex-basis: 20%; /* 가격에 일정한 너비를 줌 */
+  text-align: right; /* 가격을 오른쪽 끝에 정렬 */
+  font-weight: bold;
+  color: #333;
+}
+
+.couponSection {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  text-align: left; /* 왼쪽 정렬 */
+}
+
+.couponSection label {
+  font-size: 16px;
+  color: #333;
+  margin-right: 10px;
+}
+
 .couponSection select {
   padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
   border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
+}
+
+.totalPrice {
+  background-color: #ffffff; /* 흰색 배경 */
+  padding: 20px; /* 여백 추가 */
+  border-radius: 10px; /* 모서리 둥글게 */
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+  text-align: right; /* 텍스트 오른쪽 정렬 */
+  margin-top: 20px;
 }
 
 .totalPrice h3 {
-  font-size: 1.5rem;
-  color: #df919e;
-  text-align: right;
+  margin: 10px 0; /* 상하 여백 */
+  font-size: 18px; /* 글자 크기 */
+  color: #333; /* 기본 텍스트 색상 */
+}
+
+.totalPrice h3:first-child {
+  color: #888; /* 기본 금액은 회색 */
+}
+
+.totalPrice h3:nth-child(2) {
+  color: #b39297; /* 할인 금액은 녹색으로 강조 */
+}
+
+.totalPrice h3:last-child {
+  color: #df919e; /* 할인 적용 금액은 강조된 색 */
+  font-weight: bold; /* 굵게 강조 */
 }
 
 .payButton {
-  width: 100%;
-  padding: 15px;
-  background-color: #df919e;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  text-align: center;
-}
-
-.payButton:hover {
-  background-color: #c7727e;
-}
-
-.payButton:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+  margin-left: auto; /* 자동으로 좌측 여백을 만들어 버튼을 오른쪽으로 이동 */
+  cursor: pointer; /* 마우스 커서를 포인터로 변경 */
 }

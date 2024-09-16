@@ -103,26 +103,33 @@ export default function CartDetail() {
 
   return (
     <div className={styles.orderContainer}>
-      <h2 className={styles.orderTitle}>주문 확인</h2>
-
+      <h1 style={{ textAlign: "center" }}>주문 확인</h1>
+      <h2 className={styles.orderTitle}>배송지</h2>
       {user && (
         <div className={styles.userInfo}>
-          <h3>{user.name} 님</h3>
+          <p>
+            <strong>{user.name}</strong>
+          </p>
           <p>{user.tel}</p>
           <p>{user.address}</p>
         </div>
       )}
-
+      <h2 className={styles.orderTitle}>주문상품</h2>
       <div className={styles.orderItems}>
         {orderItems.map((item) => (
           <div key={item.productNo} className={styles.orderItem}>
-            <p>상품: {item.name}</p>
-            <p>수량: {item.quantity}</p>
-            <p>최종 가격: {item.resultPrice.toLocaleString()}원</p>
+            <p>{item.name}</p>
+            <div className={styles.quantityWrapper}>
+              <span className={styles.quantityLabel}>수량</span>
+              &nbsp;&nbsp;<p>{item.quantity} 개</p>
+            </div>
+            <p className={styles.orderItemPrice}>
+              {item.resultPrice.toLocaleString()}원
+            </p>
           </div>
         ))}
       </div>
-
+      <h2 className={styles.orderTitle}>혜택</h2>
       <div className={styles.couponSection}>
         <label htmlFor="coupon">쿠폰 선택: </label>
         <select
@@ -147,14 +154,22 @@ export default function CartDetail() {
           )}
         </select>
       </div>
-
+      <h2 className={styles.orderTitle}>결제 상세</h2>
       <div className={styles.totalPrice}>
-        <h3>총 가격: {orderTotal.toLocaleString()}원</h3>
+        <h3>상품 총 액 : {orderTotal.toLocaleString()}원</h3>
         {selectedCoupon && (
-          <h3>할인된 가격: {discountedPrice.toLocaleString()}원</h3>
+          <>
+            <h3>
+              할인된 금액 : -{(orderTotal - discountedPrice).toLocaleString()}원
+            </h3>
+            <h3>최종 결제 금액 : {discountedPrice.toLocaleString()}원</h3>
+          </>
         )}
       </div>
-      <button className={styles.payButton} onClick={() => orderProc()}>
+      <button
+        className={`btn2Long ${styles.payButton}`}
+        onClick={() => orderProc()}
+      >
         결제하기
       </button>
     </div>
