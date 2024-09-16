@@ -20,9 +20,13 @@ export default function ProductManage() {
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [searchTriggered, setSearchTriggered] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
-  const [selectedProductNo, setSelectedProductNo] = useState(null); // 품절 처리할 상품 번호
   const navigate = useNavigate();
+  
+  const [isSoldOutModalOpen, setIsSoldOutModalOpen] = useState(false); // 모달 상태
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isResultModalOpen, setIsResultModalOpen] = useState(false);
+  const [selectedProductNo, setSelectedProductNo] = useState(null); // 품절 처리할 상품 번호
+  const [productToDelete, setProductToDelete] = useState(null);
 
   const fetchProducts = async (
     page = 0,
@@ -89,14 +93,24 @@ export default function ProductManage() {
     }
   };
 
-  const openModal = (productNo) => {
+  const openSoldoutModal = (productNo) => {
     setSelectedProductNo(productNo);
-    setIsModalOpen(true);
+    setIsSoldOutModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const closeSoldoutModal = () => {
+    setIsSoldOutModalOpen(false);
     setSelectedProductNo(null);
+  };
+
+  const openDeleteModal = (product) => {
+    setProductToDelete(product);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setProductToDelete(null);
+    setIsDeleteModalOpen(false);
   };
 
   const handleSoldOutConfirm = async () => {
@@ -104,11 +118,23 @@ export default function ProductManage() {
       try {
         await axios.put(`/admin/product/soldout/${selectedProductNo}`);
         fetchProducts(currentPage, pageSize);
-        closeModal(); // 모달 닫기
+        closeSoldoutModal(); // 모달 닫기
       } catch (error) {
         console.error("Error updating product to sold out:", error);
-        closeModal(); // 에러 발생 시에도 모달 닫기
+        closeSoldoutModal(); // 에러 발생 시에도 모달 닫기
       }
+    }
+  };
+
+  const handleDelete = async (no) => {
+    try {
+      await axios.delete(`/admin/product/${no}`);
+      setIsDeleteModalOpen(false);
+      setIsResultModalOpen(true);
+    } catch (error) {
+      console.log("삭제 중 오류가 발생했습니다.");
+    } finally {
+      setIsDeleteModalOpen(false);
     }
   };
 
@@ -261,8 +287,8 @@ export default function ProductManage() {
       </style>
 
       <Modal
-        isOpen={isModalOpen}
-        onRequestClose={closeModal}
+        isOpen={isSoldOutModalOpen}
+        onRequestClose={closeSoldoutModal}
         contentLabel="품절 처리 확인"
         style={{
           content: {
@@ -275,14 +301,16 @@ export default function ProductManage() {
           },
         }}
       >
+        <div id="admin-body">
         <h2>품절 처리</h2>
         <p>이 상품을 품절 처리하시겠습니까?</p>
         <button className="confirm-button" onClick={handleSoldOutConfirm}>
           확인
         </button>
-        <button className="cancel-button" onClick={closeModal}>
+        <button className="cancel-button" onClick={closeSoldoutModal}>
           취소
         </button>
+        </div>
       </Modal>
 
       <button
@@ -333,6 +361,13 @@ export default function ProductManage() {
                   </h3>
                 </div>
                 <div>
+                  <img
+                    src={item.pic}
+                    alt={item.name}
+                    style={{ height: "100px" }}
+                  />
+                </div>
+                <div>
                   <strong>가격: </strong>
                   {item.discountRate > 0 ? (
                     <>
@@ -353,14 +388,11 @@ export default function ProductManage() {
                   )}
                 </div>
                 <div>
-                  <img
-                    src={item.pic}
-                    alt={item.name}
-                    style={{ height: "100px" }}
-                  />
+                  <strong>판매량:</strong> {item.count}건
                 </div>
-                {item.reviewCount > 0 && (
-                  <div>
+                <div>
+                {item.reviewCount > 0 ? (
+                  <>
                     <strong>평점: </strong>
                     <span
                       onClick={() => toggleRowExpansion(item.no)}
@@ -368,31 +400,55 @@ export default function ProductManage() {
                     >
                       {item.score}점 (리뷰 총 {item.reviewCount || 0}건)
                     </span>
-                  </div>
+                  </>
+                ) : (
+                  <strong>리뷰 없음</strong>
                 )}
-                <div>
-                  <strong>재고:</strong> {item.stock}
-                  &nbsp;
-                  <button
-                    className="delete-button"
-                    onClick={() => openModal(item.no)}
-                    disabled={item.stock === 0}
-                  >
-                    품절 처리하기
-                  </button>
                 </div>
+                {item.available ? (
+                <>
                 <div>
-                  <strong>판매량:</strong> {item.count}건
+                  <strong>재고:</strong>&nbsp;
+                  {item.stock !== 0 ? (
+                    <>
+                    {item.stock}
+                    &nbsp;
+                    <button
+                      className="delete-button"
+                      onClick={() => openSoldoutModal(item.no)}
+                    >
+                      품절 처리하기
+                    </button>
+                    </>
+                  ) : (
+                    <>
+                      품절
+                    </>
+                  )}
                 </div>
                 <div>
                   <strong>등록일:</strong> {formatDate(item.date)}
                 </div>
+                <div>
+                <button
+                  className="delete-button"
+                  onClick={() => openDeleteModal(item)}
+                >
+                  판매 종료하기
+                </button>
                 <button
                   className="update-button"
                   onClick={() => navigate(`/admin/product/update/${item.no}`)}
                 >
                   수정하기
                 </button>
+                </div>
+                </>
+                ): (
+                  <>
+                  <h2>판매 종료된 상품</h2>
+                  </>
+                )}
               </div>
 
               {/* 옆에 리뷰 표시 */}
@@ -447,6 +503,61 @@ export default function ProductManage() {
           다음
         </button>
       </div>
+
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onRequestClose={() => setIsDeleteModalOpen(false)}
+        contentLabel="상품 삭제 확인"
+        style={{
+          overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+          content: {
+            background: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            textAlign: "center",
+            maxWidth: "500px",
+            height: "200px",
+            margin: "auto",
+          },
+        }}
+      >
+        {isDeleteModalOpen && (
+          <>
+            <p>
+              <b>{productToDelete.name}</b> 판매를 종료하시겠습니까?
+            </p>
+            <button onClick={() => handleDelete(productToDelete.no)}>삭제</button>
+            &nbsp;&nbsp;
+            <button onClick={closeDeleteModal}>취소</button>
+          </>
+        )}
+      </Modal>
+
+      <Modal
+        isOpen={isResultModalOpen}
+        onRequestClose={() => setIsResultModalOpen(false)}
+        contentLabel="판매종료 처리 확인"
+        style={{
+          overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+          content: {
+            background: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            textAlign: "center",
+            maxWidth: "300px",
+            height: "180px",
+            margin: "auto",
+          },
+        }}
+      >
+        <>
+          <br />
+          <h3>판매 종료 처리가 완료되었습니다.</h3>
+          <button onClick={() => navigate("/admin/product")}>
+            목록으로 돌아가기
+          </button>
+        </>
+      </Modal>
     </div>
   );
 }
