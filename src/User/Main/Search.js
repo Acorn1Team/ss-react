@@ -97,14 +97,8 @@ function ActorItem({ item }) {
   return (
     <div className={styles.actorCardContainer}>
       <Link to={`/user/main/sub/${showNo}`} className={styles.actorCard}>
-        <div className={styles.actorCardTitle}>
-          👁‍🗨 {item.name} 출연작
-        </div>
-        <img
-          src={actorPic}
-          alt={`배우 사진`}
-          className={styles.actorImage}
-        />
+        <div className={styles.actorCardTitle}>👁‍🗨 {item.name} 출연작</div>
+        <img src={actorPic} alt={`배우 사진`} className={styles.actorImage} />
       </Link>
     </div>
   );
@@ -127,7 +121,6 @@ function ActorItem({ item }) {
 //           </Link>
 //   );
 // }
-
 
 // function ActorItem({ item }) {
 //   return (
@@ -162,7 +155,10 @@ function formatPrice(price) {
 
 function ProductItem({ item }) {
   return (
-    <Link to={`/user/shop/productlist/detail/${item.no}`} className={styles.cardLink}>
+    <Link
+      to={`/user/shop/productlist/detail/${item.no}`}
+      className={styles.cardLink}
+    >
       <img
         src={item.pic || "defaultShowPic.png"}
         alt="상품 사진"
@@ -180,14 +176,19 @@ function ProductItem({ item }) {
 
 function UserItem({ item }) {
   return (
-    <Link to={`/user/style/profile/${item.no}`} className={styles.cardLink}>
-      <img
-        src={item.pic || "defaultUserPic.png"}
-        alt="사용자 사진"
-        className={styles.profileImage}
-      />
-      <div className={styles.userTitle}>@{item.nickname || "No data"}</div>
-    </Link>
+    <div className="userItemContainer">
+      <Link to={`/user/style/profile/${item.no}`} className={styles.userLink}>
+        <img
+          src={item.pic || "defaultUserPic.png"}
+          alt="사용자 사진"
+          className={styles.profileImage}
+        />
+        <div className={styles.userTextContainer}>
+          <div className={styles.userTitle}>@{item.nickname}</div>
+          <div className={styles.userBio}>{item.bio}</div>
+        </div>
+      </Link>
+    </div>
   );
 }
 
