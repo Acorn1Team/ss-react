@@ -85,6 +85,7 @@ export default function MyOrderDetail() {
           const orderProduct = orderProductList.find(
             (op) => op.productNo === pl.no
           );
+          console.log(orderProduct);
           const hasReviewed = reviewedProducts.includes(pl.no); // 해당 상품에 리뷰가 있는지 확인
 
           return (
@@ -121,8 +122,23 @@ export default function MyOrderDetail() {
                       리뷰 작성 완료
                     </span> // 리뷰 완료 시 텍스트 출력
                   ) : (
+                    // <button
+                    //   className="btn1"
+                    //   onClick={() =>
+                    //     orderProduct && goToReviewPage(orderProduct.no, pl.name)
+                    //   }
+                    //   disabled={
+                    //     orderInfo.state === "주문취소" ||
+                    //     orderInfo.state === "주문접수"
+                    //   }
+                    // >
                     <button
-                      className="btn1"
+                      className={
+                        orderInfo.state === "주문취소" ||
+                        orderInfo.state === "주문접수"
+                          ? styles.btnDisabled
+                          : "btn1"
+                      }
                       onClick={() =>
                         orderProduct && goToReviewPage(orderProduct.no, pl.name)
                       }

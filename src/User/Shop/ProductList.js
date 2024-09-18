@@ -176,31 +176,31 @@ export default function ProductList() {
             {product.stock === 0 && (
               <div className={styles.soldOutMessage}>품절된 상품입니다.</div>
             )}
-            <div className={styles.productImage3}>
-              <Link to={`/user/shop/productlist/detail/${product.no}`}>
+            <Link to={`/user/shop/productlist/detail/${product.no}`}>
+              <div className={styles.productImage3}>
                 <img src={product.pic} alt={`${product.name} 사진`} />
-              </Link>
-            </div>
-            <div className={styles.productName}>{product.name}</div>
-            <div className={styles.productPrice}>
-              {product.discountRate > 0 ? (
-                <>
-                  <span style={{ textDecoration: "line-through" }}>
-                    {product.price.toLocaleString()}원
-                  </span>
-                  &nbsp;
-                  <span style={{ color: "#df919e", fontWeight: "bold" }}>
-                    {calculateSellingPrice(
-                      product.price,
-                      product.discountRate
-                    ).toLocaleString()}
-                    원 ({product.discountRate}% 할인)
-                  </span>
-                </>
-              ) : (
-                <>{product.price.toLocaleString()}원</>
-              )}
-            </div>
+                <div className={styles.productName}>{product.name}</div>
+                <div className={styles.productPrice}>
+                  {product.discountRate > 0 ? (
+                    <>
+                      <span style={{ textDecoration: "line-through" }}>
+                        {product.price.toLocaleString()}원
+                      </span>
+                      &nbsp;
+                      <span style={{ color: "#df919e", fontWeight: "bold" }}>
+                        {calculateSellingPrice(
+                          product.price,
+                          product.discountRate
+                        ).toLocaleString()}
+                        원 ({product.discountRate}% 할인)
+                      </span>
+                    </>
+                  ) : (
+                    <>{product.price.toLocaleString()}원</>
+                  )}
+                </div>
+              </div>
+            </Link>
           </div>
         ))}
       </div>
