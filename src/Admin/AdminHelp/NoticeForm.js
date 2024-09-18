@@ -118,13 +118,16 @@ export default function NoticeForm() {
       </div>
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
 
-        <button className="cancel-button"
-          onClick={() => navigate(-1)}
-          style={{ backgroundColor: "gray" }}
-        >
-          뒤로가기
-        </button>
-        <button className="add-button" onClick={handleSave}>추가</button>
+      <button
+        className="cancel-button"
+        onClick={() => navigate(-1)}
+        style={{ backgroundColor: "gray" }}
+      >
+        뒤로가기
+      </button>
+      <button className="add-button" onClick={handleSave}>
+        추가
+      </button>
 
       <Modal
         isOpen={isModalOpen}

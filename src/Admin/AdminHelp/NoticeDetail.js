@@ -122,8 +122,8 @@ export default function NoticeDetail() {
           내용
           <textarea
             style={{
-              width: "200px !important", // 가로 100%로 설정
-              height: "300px", // 세로 300px로 설정
+              width: "60%", // 가로 100%로 설정
+              height: "150px", // 세로 300px로 설정
               padding: "10px", // 내부 여백 10px
               boxSizing: "border-box", // 패딩과 경계 포함
               display: "block", // 블록 디스플레이로 설정
@@ -158,7 +158,7 @@ export default function NoticeDetail() {
             transform: "translate(-50%, -50%)",
             padding: "20px",
             borderRadius: "10px",
-            width:"25%",
+            width: "25%",
             textAlign: "center",
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
           },

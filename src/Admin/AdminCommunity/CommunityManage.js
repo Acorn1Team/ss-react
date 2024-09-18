@@ -18,7 +18,7 @@ export default function CommunityManage() {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [pageSize] = useState(5); // 한 페이지에 보여줄 게시글 수
-  const [selectedPost, setSelectedPost] = useState(null); // 선택된 게시글
+  const [selectedPosts, setSelectedPosts] = useState([]); // 선택된 게시글들 (배열로 변경)
 
   const [postToDelete, setPostToDelete] = useState(null); // 삭제할 게시글
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -35,7 +35,7 @@ export default function CommunityManage() {
       setPosts(filteredPosts);
       setTotalPages(totalPages);
       setCurrentPage(page);
-      setSelectedPost(null);
+      setSelectedPosts([]); // 초기화
     } catch (error) {
       console.error("글 데이터를 불러오는 중 오류 발생:", error);
     }
@@ -54,7 +54,7 @@ export default function CommunityManage() {
       setFilteredPosts(filteredPosts);
       setTotalPages(response.data.totalPages);
       setCurrentPage(page);
-      setSelectedPost(null);
+      setSelectedPosts([]); // 초기화
     } catch (error) {
       console.error("신고 글 데이터를 불러오는 중 오류 발생:", error);
     }
@@ -82,7 +82,9 @@ export default function CommunityManage() {
       if (response.data.isSuccess) {
         setPosts(posts.filter((post) => post.no !== postNo));
         setFilteredPosts(filteredPosts.filter((post) => post.no !== postNo));
-        setSelectedPost(null);
+        setSelectedPosts(
+          selectedPosts.filter((selected) => selected.no !== postNo)
+        );
         setIsDeleteModalOpen(false);
       }
     } catch (error) {
@@ -93,9 +95,19 @@ export default function CommunityManage() {
   const fetchPostDetail = async (postNo) => {
     try {
       const response = await axios.get(`/admin/posts/detail/${postNo}`);
-      setSelectedPost(response.data);
+      setSelectedPosts([...selectedPosts, response.data]); // 기존 선택된 게시글에 추가
     } catch (error) {
       console.error("게시글 상세 내용을 불러오는 중 오류 발생:", error);
+    }
+  };
+
+  const togglePostDetail = (post) => {
+    if (selectedPosts.some((selected) => selected.no === post.no)) {
+      setSelectedPosts(
+        selectedPosts.filter((selected) => selected.no !== post.no)
+      );
+    } else {
+      fetchPostDetail(post.no);
     }
   };
 
@@ -111,7 +123,7 @@ export default function CommunityManage() {
   const handlePageChange = (newPage) => {
     if (newPage >= 0 && newPage < totalPages) {
       setCurrentPage(newPage);
-      setSelectedPost(null);
+      setSelectedPosts([]); // 페이지 이동 시 선택된 게시글 초기화
     }
   };
 
@@ -179,21 +191,17 @@ export default function CommunityManage() {
                     />
                   </div>
                 )}
-                {selectedPost?.no === post.no
+                {selectedPosts.some((selected) => selected.no === post.no)
                   ? post.content
                   : truncateText(post.content, 20)}
                 {post.content.length > 20 && (
                   <span
                     style={{ cursor: "pointer", color: "blue" }} // 클릭 가능한 스타일 추가
-                    onClick={() => {
-                      if (selectedPost?.no === post.no) {
-                        setSelectedPost(null); // 이미 선택된 게시글이라면 취소
-                      } else {
-                        fetchPostDetail(post.no); // 새로 선택
-                      }
-                    }}
+                    onClick={() => togglePostDetail(post)} // 상세보기 토글
                   >
-                    {selectedPost?.no === post.no ? "닫기" : "상세보기"}
+                    {selectedPosts.some((selected) => selected.no === post.no)
+                      ? "닫기"
+                      : "상세보기"}
                   </span>
                 )}
               </li>
@@ -319,19 +327,19 @@ export default function CommunityManage() {
         >
           신고된 글 보기
         </button>
-      {view === "reported" && (
-        <>
-        &nbsp;&nbsp;
-        <select
-        value={sortOrder}
-        onChange={(e) => setSortOrder(e.target.value)}
-        style={{ width: "150px" }} // 너비 설정
-        >
-          <option value="latest">최신순</option>
-          <option value="mostReported">신고 많은 순</option>
-        </select>
-        </>
-      )}
+        {view === "reported" && (
+          <>
+            &nbsp;&nbsp;
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              style={{ width: "150px" }} // 너비 설정
+            >
+              <option value="latest">최신순</option>
+              <option value="mostReported">신고 많은 순</option>
+            </select>
+          </>
+        )}
       </div>
       {renderContent()}
       <div id="pagination">
