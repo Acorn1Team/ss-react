@@ -129,9 +129,8 @@ export default function CartDetail() {
           </div>
         ))}
       </div>
-      <h2 className={styles.orderTitle}>혜택</h2>
+      <h2 className={styles.orderTitle}>쿠폰</h2>
       <div className={styles.couponSection}>
-        <label htmlFor="coupon">쿠폰 선택: </label>
         <select
           id="coupon"
           onChange={(e) => {
@@ -141,7 +140,7 @@ export default function CartDetail() {
             setSelectedCoupon(selected);
           }}
         >
-          <option value="">쿠폰을 선택하세요</option>
+          <option value="">사용하실 쿠폰을 선택하세요</option>
           {/* 사용되지 않은 쿠폰만 렌더링 */}
           {coupons.length > 0 ? (
             coupons.map((c) => (
@@ -156,14 +155,16 @@ export default function CartDetail() {
       </div>
       <h2 className={styles.orderTitle}>결제 상세</h2>
       <div className={styles.totalPrice}>
-        <h3>상품 총 액 : {orderTotal.toLocaleString()}원</h3>
-        {selectedCoupon && (
+        {selectedCoupon ? (
           <>
+            <h3>쿠폰 적용 전 : {orderTotal.toLocaleString()}원</h3>
             <h3>
-              할인된 금액 : -{(orderTotal - discountedPrice).toLocaleString()}원
+              쿠폰 할인 금액 : -{(orderTotal - discountedPrice).toLocaleString()}원
             </h3>
             <h3>최종 결제 금액 : {discountedPrice.toLocaleString()}원</h3>
           </>
+        ) : (
+            <h3>최종 결제 금액 : {orderTotal.toLocaleString()}원</h3>
         )}
       </div>
       <button

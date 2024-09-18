@@ -108,9 +108,7 @@
 
 .cartFooter {
   width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  text-align: right;
   padding-top: 20px;
 }
 
@@ -135,4 +133,29 @@
   font-size: 12px;
   margin-top: 5px;
   text-align: center;
+}
+
+#originalPrice {
+  font-size: 16px;
+  color: #444;
+  text-decoration: line-through; /* 취소선으로 할인 전 가격 표시 */
+}
+
+#discountAmount {
+  font-size: 18px;
+  color: red; /* 할인 금액 강조 */
+}
+
+#finalPrice {
+  font-size: 20px;
+  color: #000;
+  font-weight: bold; /* 할인 후 총액을 굵게 강조 */
+}
+
+.cartItemContainer {
+  transition: transform 0.3s ease; /* 부드러운 애니메이션을 위해 추가 */
+}
+
+.cartItemContainer:hover {
+  transform: scale(1.05); /* 마우스를 올렸을 때 1.05배 커짐 */
 }
