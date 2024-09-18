@@ -131,31 +131,32 @@ export default function ProductDetail() {
           alt={product.name}
           className={styles.productImage2}
         />
-      </div><br/>
+      </div>
+      <br />
       <div>
         <span className={styles.label}>가격:</span>
         <span className={styles.productPrice}>
-        {product.price !== undefined && product.discountRate !== undefined ? (
-          product.discountRate > 0 ? (
-            <>
-              <span style={{ textDecoration: "line-through" }}>
-                {product.price.toLocaleString()}원
-              </span>
-              &nbsp;
-              <span style={{ color: "#df919e", fontWeight: "bold" }}>
-                {calculateSellingPrice(
-                  product.price,
-                  product.discountRate
-                ).toLocaleString()}
-                원 ({product.discountRate}% 할인)
-              </span>
-            </>
+          {product.price !== undefined && product.discountRate !== undefined ? (
+            product.discountRate > 0 ? (
+              <>
+                <span style={{ textDecoration: "line-through" }}>
+                  {product.price.toLocaleString()}원
+                </span>
+                &nbsp;
+                <span style={{ color: "#df919e", fontWeight: "bold" }}>
+                  {calculateSellingPrice(
+                    product.price,
+                    product.discountRate
+                  ).toLocaleString()}
+                  원 ({product.discountRate}% 할인)
+                </span>
+              </>
+            ) : (
+              <>{product.price.toLocaleString()}원</>
+            )
           ) : (
-            <>{product.price.toLocaleString()}원</>
-          )
-        ) : (
-          <span>가격 정보 없음</span>
-        )}
+            <span>가격 정보 없음</span>
+          )}
         </span>
       </div>
       <div className={styles.quantityControls}>
@@ -177,7 +178,11 @@ export default function ProductDetail() {
               총 {getTotalPrice().toLocaleString()} 원
             </span>
             &nbsp;
-            <button className={`btn2`} onClick={handleAddToCart} disabled={product.stock === 0}>
+            <button
+              className={`btn2`}
+              onClick={handleAddToCart}
+              disabled={product.stock === 0}
+            >
               장바구니에 담기
             </button>
           </>
@@ -188,7 +193,7 @@ export default function ProductDetail() {
 
       <div className={styles.reviewSection}>
         <h3>리뷰 보기</h3>
-        <ProductReviews setAverageRating={setAverageRating} />
+        <ProductReviews product={product} setAverageRating={setAverageRating} />
       </div>
       <br />
       <Link to={`/user/style/write/${no}`} className={`btn4`}>
@@ -216,8 +221,13 @@ export default function ProductDetail() {
           <FiShoppingCart size={100} color="#c7727e" />
         </div>
         <h3>선택한 상품이 장바구니에 담겼습니다.</h3>
-        <button className={`btn3`} onClick={continueShopping}>계속 쇼핑하기</button>&nbsp;&nbsp;
-        <button className={`btn4`} onClick={goToCart}>장바구니 보기</button>
+        <button className={`btn3`} onClick={continueShopping}>
+          계속 쇼핑하기
+        </button>
+        &nbsp;&nbsp;
+        <button className={`btn4`} onClick={goToCart}>
+          장바구니 보기
+        </button>
       </Modal>
     </div>
   );

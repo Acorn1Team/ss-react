@@ -8,6 +8,7 @@ import { FaStar } from "react-icons/fa";
 
 function Myreview() {
   const [reviews, setReviews] = useState([]);
+  const [productImages, setProductImages] = useState({});
   const userNo = sessionStorage.getItem("id");
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -24,9 +25,26 @@ function Myreview() {
         if (res.data.reviews) {
           setReviews(res.data.reviews.content);
           setTotalPages(res.data.reviews.totalPages);
+          res.data.reviews.content.forEach((review) => {
+            fetchProductImage(review.productNo);
+          });
         } else {
           setReviews([]);
         }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const fetchProductImage = (productNo) => {
+    axios
+      .get(`/list/product/${productNo}`)
+      .then((res) => {
+        setProductImages((prev) => ({
+          ...prev,
+          [productNo]: res.data.pic, // 각 productNo에 대한 상품 사진 저장
+        }));
       })
       .catch((error) => {
         console.log(error);
@@ -83,11 +101,18 @@ function Myreview() {
         reviews.map((review) => (
           <div key={review.no} className={styles.reviewCard}>
             <Link to={`/user/shop/productlist/detail/${review.productNo}`}>
-              <img src={review.pic} alt={review.name} />
+              <img
+                src={
+                  review.pic
+                    ? review.pic
+                    : productImages[review.productNo] || "" // 리뷰 사진이 없을 경우 상품 사진 사용
+                }
+                alt={review.productName}
+              />
               <br />
-              {review.productName}
             </Link>
             <div className={styles.reviewInfo}>
+              <div className={styles.productName}>{review.productName}</div>
               <div>
                 <label>
                   <input

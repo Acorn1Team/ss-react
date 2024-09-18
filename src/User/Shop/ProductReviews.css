@@ -1,95 +1,14 @@
 .reviews-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .average-rating {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-  }
-  
-  .no-reviews {
-    text-align: center;
-    font-size: 1.1rem;
-    color: #888;
-  }
-  
-  .review-list-item {
-    display: flex;
-    border-bottom: 1px solid #ddd;
-    padding: 15px 0;
-  }
-  
-  .review-left {
-    flex: 0 0 100px;
-  }
-  
-  .review-right {
-    flex: 1;
-    padding-left: 15px;
-  }
-  
-  .review-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-  
-  .review-product-name {
-    font-size: 1.1rem;
-    font-weight: bold;
-  }
-  
-  .review-user {
-    font-size: 0.9rem;
-    color: #888;
-  }
-  
-  .review-content {
-    font-size: 0.9rem;
-  }
-  
-  .review-text {
-    margin-bottom: 10px;
-  }
-  
-  .review-rating {
-    font-size: 0.9rem;
-    color: #555;
-  }
-  
-  .review-image2 {
-    width: 70px; /* 이미지 가로 크기 */
-    height: 85px; /* 이미지 세로 크기 */
-    object-fit: cover; /* 이미지 비율 유지하며 자르기 */
-    border-radius: 5px; /* 둥근 모서리 */
-    margin-right: 15px; /* 이미지와 텍스트 간격 */
-  }
-  
-  .pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-  }
-  
-  .pagination button {
-    background-color:  #d0bbbe;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .pagination button:disabled {
-    background-color: #ddd;
-    cursor: not-allowed;
-  }
-  
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
 .average-rating {
-  font-size: 1.2rem;
+  font-size: 1.2rem; /* 평균 평점 글씨 크기 조정 */
   margin-bottom: 20px;
+  text-align: center; /* 가운데 정렬 */
+  font-weight: bold;
 }
 
 .no-reviews {
@@ -100,54 +19,63 @@
 
 .review-list-item {
   display: flex;
+  align-items: center; /* 이미지와 텍스트가 수직으로 가운데 정렬 */
   border-bottom: 1px solid #ddd;
-  padding: 15px 0;
+  padding: 20px 0;
+  margin-bottom: 20px;
 }
 
 .review-left {
   flex: 0 0 100px;
+  display: flex;
+  justify-content: center;
 }
 
 .review-right {
-  flex: 1;
-  padding-left: 15px;
+  flex: 1; /* 텍스트 부분을 넓게 차지 */
+  padding-left: 30px; /* 텍스트와 이미지 사이 간격을 넓게 설정 */
 }
 
 .review-header {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
+  justify-content: flex-start; /* 왼쪽 정렬 */
+  align-items: center; /* 아이템들을 수직 중앙에 맞춤 */
+  margin-bottom: 0px;
 }
 
 .review-product-name {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: bold;
 }
 
 .review-user {
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   color: #888;
+  margin-left: 10px; /* 사용자 이름과 이미지 사이 간격 조정 */
 }
 
 .review-content {
-  font-size: 0.9rem;
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.5;
+  margin-top: 0px; /* 닉네임과 리뷰 텍스트 사이 간격 없애기 */
+  padding-top: 0px; /* 불필요한 패딩 제거 */
 }
-
 .review-text {
-  margin-bottom: 10px;
+  margin-bottom: 5px; /* 텍스트와 점수 사이의 간격 */
 }
 
 .review-rating {
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   color: #555;
 }
 
 .review-image2 {
-  width: 70px; /* 이미지 가로 크기 */
-  height: 85px; /* 이미지 세로 크기 */
+  width: 100px; /* 이미지 가로 크기 */
+  height: 120px; /* 이미지 세로 크기 */
   object-fit: cover; /* 이미지 비율 유지하며 자르기 */
-  border-radius: 5px; /* 둥근 모서리 */
-  margin-right: 15px; /* 이미지와 텍스트 간격 */
+  border-radius: 8px; /* 모서리를 조금 더 둥글게 설정 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 이미지에 약간의 그림자 추가 */
 }
 
 .pagination {

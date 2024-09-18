@@ -38,6 +38,14 @@
   line-height: 1.6;
 }
 
+.productName {
+  font-size: 1.1rem; /* 적당한 크기로 상품명을 강조 */
+  font-weight: bold;
+  color: #333; /* 다크 그레이 색상으로 깔끔한 텍스트 */
+  margin-bottom: 2px; /* 상품명과 별점 사이에 간격 추가 */
+  text-align: left; /* 상품명을 왼쪽 정렬 */
+}
+
 .buttonContainer {
   display: flex;
   gap: 10px;
