@@ -115,7 +115,7 @@ export default function ProductList() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
+      <div style={{display: 'flex', alignItems: 'center', justifyContent:'space-between'}}>
         <label id={styles.sortOptions} className={styles.sortOptions}>
           <select
             id={styles.sortSelect}
