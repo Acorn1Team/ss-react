@@ -34,10 +34,6 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   display: flex;
   justify-content: space-between;
-
-  display: grid;
-  grid-template-columns: 1.8fr 1fr 1.5fr 1fr; /* 비율을 설정 (상품명, 수량, 가격, 리뷰 버튼) */
-  grid-gap: 10px; /* 각 열 사이의 간격 */
   align-items: center; /* 각 항목을 수직 가운데 정렬 */
   margin-bottom: 15px;
 }

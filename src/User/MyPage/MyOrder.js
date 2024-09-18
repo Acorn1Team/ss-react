@@ -134,30 +134,33 @@ export default function MyOrder() {
   return (
     <div className={styles.container}>
       <h2>주문 내역</h2>
-      <div style={{ textAlign: "center" }}>
-        상품명을 클릭하면 상세 주문 정보를 볼 수 있어요.
-      </div>
       <br />
+      {orderList.length === 0 ? (
+        <h2>주문하신 내역이 존재하지 않습니다.</h2>
+      ) : (
+      <>
       {orderList.map((ol) => (
         <div key={ol.no} className={styles.orderItem}>
           <div className={styles.orderHeader}>
-            주문번호 {ol.no} &emsp;{formatDate(ol.date)}
-          </div>
-
-          <div className={styles.orderDetails}>
+            {ol.state}
+            <strong>{ol.price.toLocaleString()}원</strong>
+            <span className={styles.orderState}>{formatDate(ol.date)}</span>
             <Link
               to={`/user/mypage/order/${ol.no}`}
               className={styles.orderProductLink}
-            >
-              {productList.find((pl) => pl.no === ol.productNoList[0])?.name}
-              {ol.productNoList.length > 1 && (
-                <span> 외 {ol.productNoList.length - 1}건</span>
-              )}
+              >
+              상세보기
             </Link>
-            <span className={styles.orderPrice}>
-              {ol.price.toLocaleString()}원
+          </div>
+          <hr/>
+          <div className={styles.orderDetails}>
+            <span>
+            {productList.find((pl) => pl.no === ol.productNoList[0])?.name}
+            {ol.productNoList.length > 1 && (
+              <> 외 {ol.productNoList.length - 1}건</>
+            )}
             </span>
-            <span className={styles.orderState}>{ol.state}</span>
+            <span>
             {/* 상태에 따른 버튼 표시 */}
             {ol.state === "주문접수" && (
               <button
@@ -170,15 +173,14 @@ export default function MyOrder() {
             {["배송중", "배송완료"].includes(ol.state) && (
               <button
                 onClick={() =>
-                  handlePopupOpen(ol, "교환/환불을 신청하시겠습니까?")
+                  handlePopupOpen(ol, `교환/환불 신청을 위해 채팅 문의로 이동할까요?`)
                 }
               >
                 교환/환불하기
               </button>
             )}
+            </span>
           </div>
-
-          <hr />
         </div>
       ))}
       {totalPages > 1 && (
@@ -199,6 +201,8 @@ export default function MyOrder() {
             다음
           </button>
         </div>
+      )}
+      </>
       )}
       {/* 팝업 */}
       {showPopup && (

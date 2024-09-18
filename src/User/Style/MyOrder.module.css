@@ -34,14 +34,20 @@ h2 {
   font-size: 1.1rem;
   color: #555;
   margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .orderDetails {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr; /* 상품명, 가격, 상태, 버튼의 비율을 좀 더 균형있게 조정 */
+  margin-left: 20px;
+  margin-right: 20px;
   grid-gap: 20px; /* 각 열 사이의 간격을 넓혀 보기 좋게 개선 */
   align-items: center; /* 수직 정렬을 중앙으로 맞춤 */
   margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .orderProductLink {

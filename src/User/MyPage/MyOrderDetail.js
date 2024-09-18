@@ -5,17 +5,12 @@ import styles from "../Style/MyOrderDetail.module.css";
 
 export default function MyOrderDetail() {
   const { orderNo } = useParams();
-  const navigate = useNavigate(); // useNavigate 훅 사용
-
+  const navigate = useNavigate();
   const [orderInfo, setOrderInfo] = useState({});
   const [userInfo, setUserInfo] = useState({});
-
   const [productList, setProductList] = useState([]);
   const [orderProductList, setOrderProductList] = useState([]);
-
   const [reviewedProducts, setReviewedProducts] = useState([]); // 이미 리뷰를 작성한 상품 목록
-  // 로그인 정보라고 가정
-  //const userNo = 31;
   const userNo = sessionStorage.getItem("id");
 
   const formatDate = (dateString) => {
@@ -73,8 +68,15 @@ export default function MyOrderDetail() {
 
   return (
     <div className={styles.container}>
-      <h2>주문 상세 페이지</h2>
+      <button style={{alignSelf:"left"}} className="btn3Small" onClick={() => navigate(-1)}>
+        뒤로
+      </button>
+      <h2>주문 상세</h2>
       <div className={styles.orderInfo}>
+        <span>주문 번호:</span> {orderInfo.no}
+        <br />
+        <span>주문 상태:</span> {orderInfo.state}
+        <br />
         <span>주문 날짜:</span> {formatDate(orderInfo.date)}
         <br />
         <span>총 금액:</span> {orderInfo.price?.toLocaleString()}원
@@ -115,48 +117,29 @@ export default function MyOrderDetail() {
               <span className={styles.productPrice}>
                 {orderProduct?.price.toLocaleString()}원
               </span>
-              <div style={{ textAlign: "center" }}>
-                {pl.available ? (
-                  hasReviewed ? (
-                    <span className={styles.reviewCompleted}>
-                      리뷰 작성 완료
-                    </span> // 리뷰 완료 시 텍스트 출력
-                  ) : (
-                    // <button
-                    //   className="btn1"
-                    //   onClick={() =>
-                    //     orderProduct && goToReviewPage(orderProduct.no, pl.name)
-                    //   }
-                    //   disabled={
-                    //     orderInfo.state === "주문취소" ||
-                    //     orderInfo.state === "주문접수"
-                    //   }
-                    // >
+              {pl.available ? (
+                hasReviewed ? (
+                  <span className={styles.reviewCompleted}>
+                    리뷰 작성 완료
+                  </span> // 리뷰 완료 시 텍스트 출력
+                ) : (
+                  orderInfo.state === "배송완료" && (
                     <button
-                      className={
-                        orderInfo.state === "주문취소" ||
-                        orderInfo.state === "주문접수"
-                          ? styles.btnDisabled
-                          : "btn1"
-                      }
+                      className={styles.btn1}
                       onClick={() =>
                         orderProduct && goToReviewPage(orderProduct.no, pl.name)
-                      }
-                      disabled={
-                        orderInfo.state === "주문취소" ||
-                        orderInfo.state === "주문접수"
                       }
                     >
                       리뷰 쓰기
                     </button>
                   )
-                ) : (
-                  <span className={styles.productUnavailable}>
-                    판매가 종료된
-                    <br /> 상품입니다.
-                  </span>
-                )}
-              </div>
+                )
+              ) : (
+                <span className={styles.productUnavailable}>
+                  판매 종료 상품
+                </span>
+              )}
+
             </div>
           );
         })}
@@ -168,7 +151,7 @@ export default function MyOrderDetail() {
           <span>이름:</span> {userInfo.name}
         </p>
         <p>
-          <span>주소:</span> {userInfo.zipcode} {userInfo.address}
+          <span>주소:</span> {userInfo.address} ({userInfo.zipcode})
         </p>
         <p>
           <span>전화번호:</span> {userInfo.tel}
