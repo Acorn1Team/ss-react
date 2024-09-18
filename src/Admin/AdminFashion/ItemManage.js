@@ -6,7 +6,7 @@ import Modal from "react-modal";
 export default function ItemManage() {
   const [items, setItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지를 저장할 상태
-  const [pageSize, setPageSize] = useState(5); // 페이지 크기를 저장할 상태
+  const [pageSize, setPageSize] = useState(6); // 페이지 크기를 저장할 상태
   const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수를 저장할 상태
   const navigate = useNavigate();
 
@@ -37,6 +37,7 @@ export default function ItemManage() {
   const handlePageChange = (newPage) => {
     if (newPage >= 0 && newPage < totalPages) {
       setCurrentPage(newPage); // 페이지 상태 업데이트
+      window.scrollTo({ top: 0 }); // 페이지 맨 위로 스크롤
     }
   };
 
@@ -61,60 +62,95 @@ export default function ItemManage() {
 
   return (
     <>
-      <table style={{textAlign:"center"}}>
-        <thead>
-          <tr>
-            <th>아이템 정보</th>
-            <th>연결 상품 정보</th>
-            <th>연결 스타일 정보</th>
-          </tr>
-        </thead>
-        <tbody>
+      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
         {items.length > 0 ? (
           items.map((item) => (
-            <tr key={item.no}>
-              <td>
-                <img src={item.pic} alt={`${item.name} 이미지`} style={{ maxHeight: "150px", maxWidth: "150px" }} /><br/>
-                {item.name}<br/>
-                <button className="delete-button" onClick={() => openDeleteItemModal(item)}>아이템 삭제</button>
-              </td>
-              <td>
-                <img src={item.productPic} alt={`${item.productName} 이미지`} style={{ maxHeight: "150px", maxWidth: "150px" }} /><br/>
-                {item.productName}<br/>
-                <button className="update-button" onClick={() => navigate(`/admin/product/update/${item.productNo}`)}>상세보기</button>            
-              </td>
-              <td>
-              {item.styleInfos && item.styleInfos.length > 0 ? (
-              <div style={{ display: "flex", flexWrap: "wrap" }}>
-                {item.styleInfos.map((styleInfo) => (
-                  <div key={styleInfo.no} style={{ backgroundColor:"#e2e2e2", padding: "20px", margin: "20px", display:"flex", alignItems:"flex-start", width:"250px" }}>
-                    <div style={{flex:"1"}}>
-                    <img src={styleInfo.style.pic} alt={`${styleInfo.no} 이미지`} style={{ maxHeight: "130px", maxWidth: "100px" }} /><br/>
-                    </div>
-                    <div style={{flex:"2"}}>
-                    [{styleInfo.showTitle}]<br/>
-                    {styleInfo.actorInfo.actor}&nbsp;({styleInfo.actorInfo.character})<br/>
-                    <button className="update-button" onClick={() => navigate(`/admin/fashion/character/${styleInfo.actorInfo.no}`, { state: styleInfo.actorInfo })}>스타일 편집</button>
-                    </div>
-                  </div>
-                ))}
+            <div
+              id="itemContainer"
+              key={item.no}
+              style={{
+                width: "30%",
+                border: "1px solid #ccc",
+                borderRadius: "10px",
+                padding: "20px",
+                margin: "10px",
+                boxSizing: "border-box",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center"
+              }}
+            >
+              <div id="itemInfo" style={{ textAlign: "center" }}>
+                <h4>{item.name}</h4>
+                <img
+                  src={item.pic}
+                  alt={`${item.name} 이미지`}
+                  style={{ height: "150px", maxWidth: "180px" }}
+                />
+                <br />
+                <button className="btn3Small" onClick={() => openDeleteItemModal(item)}>
+                  아이템 삭제
+                </button>
               </div>
+              <div id="itemStyleInfo" style={{ textAlign: "center", marginTop: "10px" }}>
+                {item.styleInfos && item.styleInfos.length > 0 ? (
+                  <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+                    {item.styleInfos.map((styleInfo) => (
+                      <div
+                        key={styleInfo.no}
+                        style={{
+                          backgroundColor: "#e2e2e2",
+                          padding: "10px",
+                          margin: "10px",
+                          display: "flex",
+                          alignItems: "flex-start",
+                          textAlign: "center"
+                        }}
+                      >
+                        <div style={{ flex: "1" }}>
+                          <img
+                            src={styleInfo.style.pic}
+                            alt={`${styleInfo.no} 이미지`}
+                            style={{ maxHeight: "130px", maxWidth: "100px" }}
+                          />
+                        </div>
+                        <div style={{ flex: "2" }}>
+                          [{styleInfo.showTitle}]<br />
+                          {styleInfo.actorInfo.actor}<br/>
+                          ({styleInfo.actorInfo.character})<br />
+                          <button
+                            className="btn1Small"
+                            onClick={() =>
+                              navigate(`/admin/fashion/character/${styleInfo.actorInfo.no}`, {
+                                state: styleInfo.actorInfo
+                              })
+                            }
+                          >
+                            스타일 편집
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 ) : (
-                  <div>정보 없음</div>
+                  <div>연결된 스타일 정보 없음</div>
                 )}
-              </td>
-            </tr>
+              </div>
+              <div id="itemProductInfo" style={{ textAlign: "center", marginTop: "10px" }}>
+                연결 상품:&nbsp;
+              <span
+                style={{color:"#D5006D", cursor:"pointer"}}
+                onClick={() => navigate(`/admin/product/update/${item.productNo}`)}
+              >
+              {item.productName}
+              </span>
+              </div>
+            </div>
           ))
         ) : (
-          <tr>
-            <td colSpan="4" style={{ textAlign: "center", padding: "20px" }}>
-              결과가 없습니다.
-            </td>
-          </tr>
+          <div>결과가 없습니다.</div>
         )}
-
-        </tbody>
-      </table>
+      </div>
 
       {/* 페이지네이션 */}
       {totalPages > 1 && (

@@ -244,7 +244,7 @@ const RightSection = styled.div`
 const Divider = styled.div`
   width: 1px;
   background-color: #ccc;
-  height: 1500px;
+  height: 1200px;
   margin: 0 20px;
 `;
 

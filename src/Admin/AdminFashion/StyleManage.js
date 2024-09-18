@@ -20,6 +20,7 @@ export default function StyleManage() {
   const [productKeyword, setProductKeyword] = useState(""); // 상품 검색 입력값
   const [productNo, setProductNo] = useState(); // 새로운 아이템 추가 시 연결할 상품 PK
   const [newItemName, setNewItemName] = useState(""); // 새로운 아이템 이름
+  const [newItemPath, setNewItemPath] = useState(""); // 아이템 판매처
 
   const [isNewItemModalOpen, setIsNewItemModalOpen] = useState(false);
   const [isExistingItemModalOpen, setIsExistingItemModalOpen] = useState(false);
@@ -127,6 +128,10 @@ export default function StyleManage() {
     setNewItemName(e.target.value);
   };
 
+  const onItemPathChange = (e) => {
+    setNewItemPath(e.target.value);
+  }
+
   const addStyle = async () => {
     const styleForm = new FormData();
     styleForm.append("file", newStyle);
@@ -175,6 +180,7 @@ export default function StyleManage() {
     itemForm.append("file", newItemPic);
     itemForm.append("product", productNo);
     itemForm.append("name", newItemName);
+    itemForm.append("path", newItemPath);
 
     try {
       await axios.post(`/admin/fashion/${currentStyle.no}/item`, itemForm, {
@@ -417,7 +423,9 @@ export default function StyleManage() {
         아이템 사진 <input type="file" onChange={onItemFileChange} />
         <br />
         아이템 이름 <input type="text" onChange={onItemNameChange} />
-        <br /><br /><br /><br /><br /><br /><br />
+        <br />
+        아이템 경로 <input type="text" onChange={onItemPathChange} />
+        <br/>
         <button className="cancel-button" onClick={() => closeModal()}>닫기</button>&nbsp;&nbsp;
         <button className="add-button" onClick={addItem}>추가</button>
       </Modal>
