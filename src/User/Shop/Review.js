@@ -9,15 +9,40 @@ import "./Review.css"; // CSS 파일 추가
 export default function Review() {
   const { no } = useParams();
   const [reviewData, setReviewData] = useState([]);
+  const [reviewImage, setReviewImage] = useState(""); // 리뷰 이미지 상태 추가
 
   const getReviewData = () => {
     axios
       .get(`/mypage/review/detail/${no}`)
-      .then((res) => setReviewData(res.data))
+      .then((res) => {
+        setReviewData(res.data);
+
+        // 리뷰 이미지가 있는 경우 이미지 데이터를 받아오기
+        if (res.data.pic) {
+          setReviewImage(res.data.pic);
+        } else {
+          // 리뷰 이미지가 없으면 상품 이미지 가져오기
+          fetchProductImage(res.data.productNo);
+        }
+      })
       .catch((err) => {
         console.log(err);
       });
   };
+
+    // 상품 이미지를 가져오는 함수 (리뷰 이미지가 없을 때 대체)
+    const fetchProductImage = (productNo) => {
+      axios
+        .get(`/list/product/${productNo}`)
+        .then((res) => {
+          setReviewImage(res.data.pic); // 상품 이미지 설정
+          
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
 
   useEffect(() => {
     getReviewData();
@@ -41,7 +66,13 @@ export default function Review() {
   return (
     <div className="review-container">
       <div className="review-card">
-        <img src={reviewData.pic} alt={`${reviewData.productName} 사진`} className="review-image" />
+           {/* 리뷰 이미지가 없으면 상품 이미지를 대신 사용 */}
+           <img
+          src={reviewImage} // reviewImage 상태에서 가져온 이미지 사용
+          alt={`${reviewData.productName} 사진`}
+          className="review-image"
+        />
+        {/* <img src={reviewData.pic} alt={`${reviewData.productName} 사진`} className="review-image" /> */}
         <div className="review-content">
           <div className="review-header">
             <span className="user-nickname">@{reviewData.userNickname}</span>

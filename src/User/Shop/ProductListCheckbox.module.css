@@ -1,3 +1,13 @@
+/* 기본 체크박스를 숨기는 스타일 */
+.input {
+  position: absolute;
+  opacity: 0; /* 기본 체크박스 숨김 */
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+}
+
 /* 체크박스 스타일 */
 .cbx {
   position: relative;
@@ -10,6 +20,7 @@
   display: block;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
   top: 8.2px;
+  
 }
 
 .cbx:after {
@@ -29,11 +40,23 @@
 
 #cbx:checked ~ .cbx {
   border-color: transparent;
-  background: #dee7ff;
+  background: #df919e;
   animation: jelly 0.4s ease;
 }
 
 #cbx:checked ~ .cbx:after {
+  opacity: 1;
+  transform: rotate(45deg) scale(1);
+}
+
+체크된 상태에서 스타일 적용
+.input[type="checkbox"]:checked + .cbx {
+  border-color: transparent;
+  background: #dee7ff;
+  animation: jelly 0.4s ease;
+}
+
+.input[type="checkbox"]:checked + .cbx:after {
   opacity: 1;
   transform: rotate(45deg) scale(1);
 }
@@ -45,8 +68,14 @@
 }
 
 .hidden-xs-up {
-  display: none !important;
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
 }
+
 
 @keyframes jelly {
   from {

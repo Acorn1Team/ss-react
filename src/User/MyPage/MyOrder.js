@@ -60,8 +60,10 @@ export default function MyOrder() {
   };
 
   useEffect(() => {
-    getOrderList();
-  }, [userNo, currentPage]);
+    if (currentPage >= 0 && userNo) {
+      getOrderList();
+    }
+  }, [userNo, currentPage]); // 의존성 배열에 orderList 제거
 
   // 팝업 열기 함수
   const handlePopupOpen = (order, message) => {
@@ -109,11 +111,11 @@ export default function MyOrder() {
   };
 
   // 주문취소 후 새로고침안해도 주문취소 처리되게 useEffect 추가
-  useEffect(() => {
-    if (orderList.some((order) => order.state === "주문취소")) {
-      getOrderList(); // 주문 목록을 다시 가져옴
-    }
-  }, [orderList]); // orderList 상태가 변경되면 실행됨
+  // useEffect(() => {
+  //   if (orderList.some((order) => order.state === "주문취소")) {
+  //     getOrderList(); // 주문 목록을 다시 가져옴
+  //   }
+  // }, [orderList]); // orderList 상태가 변경되면 실행됨
 
   // 팝업 닫기 함수
   const handlePopupClose = () => {
@@ -127,6 +129,7 @@ export default function MyOrder() {
       navigate("/user/chat"); // 교환/환불일 때 /user/chat으로 이동
     } else if (popupMessage === "주문을 취소하시겠습니까?") {
       orderStateChange(); // 주문 취소 처리
+      getOrderList();
     }
     handlePopupClose(); // 팝업 닫기
   };

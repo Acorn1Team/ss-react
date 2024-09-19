@@ -141,25 +141,27 @@ export default function ProductList() {
           </select>
         </label>
 
-        {/* 품절 상품이 있을 때만 체크박스 표시 */}
-        {hasSoldOutProducts && (
-          <div className={styles.excludeSoldOutContainer}>
-            <div className={checkboxStyles.cntr}>
-              {/* 체크박스 스타일 적용 */}
-              <input
-                className={checkboxStyles["hidden-xs-up"]}
-                id="cbx"
-                type="checkbox"
-                checked={excludeSoldOut}
-                onChange={handleExcludeSoldOutChange}
-              />
-              <label className={checkboxStyles.cbx} htmlFor="cbx"></label>
-            </div>
-            <label className={styles.excludeSoldOutLabel} htmlFor="cbx">
-              품절 상품 제외
-            </label>
-          </div>
-        )}
+
+       {/* 체크박스가 항상 표시되도록 하고, 체크 상태에 따라 체크 표시를 보여줌 */}
+       <div className={styles.excludeSoldOutContainer}>
+  <div className={checkboxStyles.cntr}>
+    {/* 기본 체크박스를 숨기기 위한 클래스 적용 */}
+    <input
+      className={checkboxStyles.input} // input 클래스 사용
+      id="cbx"
+      type="checkbox"
+      checked={excludeSoldOut}
+      onChange={handleExcludeSoldOutChange}
+    />
+    <label className={checkboxStyles.cbx} htmlFor="cbx"></label> {/* 커스텀 체크박스 */}
+  </div>
+  <label className={styles.excludeSoldOutLabel} htmlFor="cbx">
+    품절 상품 제외
+  </label>
+</div>
+
+
+
       </div>
 
       <div className={checkboxStyles["radio-input"]}>
