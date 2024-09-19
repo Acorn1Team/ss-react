@@ -175,18 +175,17 @@ export default function Sub() {
             </div>
 
             <div className={styles.scrapSection}>
-              <span
-                className="ui-bookmark"
-                onClick={() => scrapProc()}
-                style={{ display: "flex", alignItems: "center" }}
-              >
+              <span className={styles.uiBookmark} onClick={() => scrapProc()}>
                 <input
                   type="checkbox"
                   checked={scrap}
-                  onChange={scrapProc} // 좋아요 처리 함수
+                  onChange={scrapProc}
                   style={{ display: "none" }} // 체크박스 숨김
                 />
-                <div className="bookmark" style={{ marginRight: "10px" }}>
+                <div
+                  className={styles.bookmark}
+                  style={{ marginRight: "10px" }}
+                >
                   <svg
                     viewBox="0 0 16 16"
                     height="25"
@@ -200,6 +199,7 @@ export default function Sub() {
                   </svg>
                 </div>
               </span>
+
               <span className={styles.scrapCount}>
                 {scrapCount > 0
                   ? `${scrapCount} 명이 좋아합니다!`
