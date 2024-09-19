@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "../Style/UserUpdate.module.css";
 import axios from "axios";
-import styled from "styled-components";
 import { RiAccountPinCircleFill } from "react-icons/ri";
 import { SiNaver } from "react-icons/si";
 import { SiKakaotalk } from "react-icons/si";

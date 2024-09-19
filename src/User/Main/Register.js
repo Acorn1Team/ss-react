@@ -460,7 +460,7 @@ const Register = () => {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:8080/user/auth/register", {
+      const response = await fetch("/user/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(registerData),
@@ -524,9 +524,9 @@ const Register = () => {
 
           {showEmail && (
             <>
-              {errorMessage.email && (
+              {/* {errorMessage.email && (
                 <div className={styles.error_message}>{errorMessage.email}</div>
-              )}
+              )} */}
               <input
                 className="btn1Long"
                 value="인증번호 전송"
@@ -705,14 +705,6 @@ const Register = () => {
                 style={{ marginTop: "5px" }}
               />
             )}
-            {/* <input
-              type="text"
-              name="addr_end"
-              id="addr_end"
-              placeholder="상세 주소"
-              value={addrEnd}
-              onChange={(e) => setAddrEnd(e.target.value)}
-            /> */}
           </div>
           {errorMessage.address && (
             <div className={styles.error_message}>{errorMessage.address}</div>
@@ -731,7 +723,6 @@ const Register = () => {
           className={styles.modal}
           onRequestClose={closeModal}
           overlayClassName={styles.overlay}
-          // contentLabel={modalType === "integrated" ? "통합 가입" : "번호"}
         >
           <h2>알림</h2>
           <p>{modalContent}</p>
@@ -742,23 +733,17 @@ const Register = () => {
                 value="확인"
                 onClick={updateModal}
                 className="btn2"
-                // style={{ backgroundColor: "darkred" }}
               ></input>
               <input
                 type="button"
                 onClick={loginModal}
                 className="btn3"
                 value="로그인"
-                // style={{ backgroundColor: "gray" }}
               ></input>
             </>
           )}
           {modalType === "code" && (
-            <button
-              onClick={closeModal}
-              className={styles.modal_buttons}
-              style={{ backgroundColor: "darkblue" }}
-            >
+            <button onClick={closeModal} className="btn2">
               확인
             </button>
           )}

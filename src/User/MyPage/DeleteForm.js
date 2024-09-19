@@ -12,7 +12,6 @@ const DeleteForm = () => {
   const nv = useNavigate();
   const [loading, setLoading] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalContent, setModalContent] = useState("");
 
   const openModal = () => {
     setModalIsOpen(true);
