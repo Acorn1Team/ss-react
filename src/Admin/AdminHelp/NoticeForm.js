@@ -24,9 +24,10 @@ const InputField = styled.input`
 `;
 
 const Textarea = styled.textarea`
-  width: 100%;
+  width: calc(100% - 20px);
   padding: 10px;
   margin: 10px 0;
+  margin-right: 20px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;
@@ -109,7 +110,7 @@ export default function NoticeForm() {
         </select>
       </div>
       <div>
-        내용{" "}
+        내용<br/>
         <Textarea
           onChange={handleChange}
           name="contents"
@@ -117,18 +118,17 @@ export default function NoticeForm() {
         />
       </div>
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-
+      <div style={{textAlign:'center'}}>
       <button
-        className="cancel-button"
+        className="btn3"
         onClick={() => navigate(-1)}
-        style={{ backgroundColor: "gray" }}
       >
         뒤로가기
       </button>
-      <button className="add-button" onClick={handleSave}>
+      <button className="btn1" onClick={handleSave}>
         추가
       </button>
-
+      </div>
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}

@@ -82,11 +82,11 @@
 }
 
 .cancel-button {
-  background-color: #888888;
+  background-color: #a7a6a6;
 }
 
 .cancel-button:hover {
-  background-color: #777777;
+  background-color: #3f3e3e;
 }
 
 .button-disabled {
