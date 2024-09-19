@@ -102,6 +102,10 @@ export default function ProductList() {
     setExcludeSoldOut(e.target.checked); // 품절 상품 제외 여부 설정
   };
 
+  useEffect(() => {
+    refresh(selectCategory, sortOption);
+  }, [excludeSoldOut, selectCategory, sortOption]);
+
   // 현재 페이지에 맞는 제품 목록을 자르기
   const paginatedProducts = products.slice(
     currentPage * pageSize,
@@ -115,7 +119,13 @@ export default function ProductList() {
 
   return (
     <div className={styles.container}>
-      <div style={{display: 'flex', alignItems: 'center', justifyContent:'space-between'}}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         <label id={styles.sortOptions} className={styles.sortOptions}>
           <select
             id={styles.sortSelect}
@@ -145,7 +155,9 @@ export default function ProductList() {
               />
               <label className={checkboxStyles.cbx} htmlFor="cbx"></label>
             </div>
-            <label className={styles.excludeSoldOutLabel}>품절 상품 제외</label>
+            <label className={styles.excludeSoldOutLabel} htmlFor="cbx">
+              품절 상품 제외
+            </label>
           </div>
         )}
       </div>

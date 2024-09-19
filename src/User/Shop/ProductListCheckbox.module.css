@@ -3,14 +3,13 @@
   position: relative;
   width: 15px;
   height: 15px;
-  border: 1px solid #df919e;; /* 라디오 버튼과 동일한 테두리 색상 */
+  border: 1px solid #df919e; /* 라디오 버튼과 동일한 테두리 색상 */
   border-radius: 5px;
   transition: background 0.2s ease;
   cursor: pointer;
   display: block;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
   top: 8.2px;
-  
 }
 
 .cbx:after {
@@ -43,7 +42,6 @@
   position: relative;
   display: inline-block;
   margin-right: 10px;
-  
 }
 
 .hidden-xs-up {
