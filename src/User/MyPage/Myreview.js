@@ -100,7 +100,7 @@ function Myreview() {
       {Array.isArray(reviews) && reviews.length > 0 ? (
         reviews.map((review) => (
           <div key={review.no} className={styles.reviewCard}>
-            <Link to={`/user/shop/productlist/detail/${review.productNo}`}>
+            <Link to={`/user/shop/review/${review.no}`}>
               <img
                 src={
                   review.pic
