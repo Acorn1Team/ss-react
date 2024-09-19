@@ -7,8 +7,9 @@ import Main from "../Main/Main";
 import SearchRoutes from "./SearchRoutes";
 import AuthRoutes from "./AuthRoutes";
 import SocialKakao from "../Component/SocialKakao";
-import SocailNaver from "../Component/SocialNaver";
-import { PrivateRoute, AdminRoute } from "../Component/PrivateRoute";
+import SocialNaver from "../Component/SocialNaver";
+
+import { PrivateRoute } from "../Component/PrivateRoute";
 import SupportButton from "../Component/SupportButton"; // 고객지원 버튼 컴포넌트 import
 import NotAdmin from "../User/NotAdmin";
 import FooterForm from "../Component/FooterForm";
@@ -32,7 +33,7 @@ export default function UserRoutes() {
         <Route path="/search/*" element={<SearchRoutes />} />
         <Route path="/auth/*" element={<AuthRoutes />} />
         <Route path="/callback" element={<SocialKakao />} />
-        <Route path="/callback/naver" element={<SocailNaver />} />
+        <Route path="/callback/naver" element={<SocialNaver />} />
         <Route path="/find/*" element={<AuthRoutes />} />
         <Route path="/admin/auth" element={<NotAdmin />} />
         <Route path="/register/*" element={<AuthRoutes />} />

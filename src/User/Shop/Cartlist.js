@@ -115,7 +115,12 @@ export default function CartList() {
       const selectedItem = cartProductInfo.find(
         (item) => item.no === productNo
       );
-      return total + (selectedItem ? parseInt(selectedItem.price * selectedItem.quantity) : 0);
+      return (
+        total +
+        (selectedItem
+          ? parseInt(selectedItem.price * selectedItem.quantity)
+          : 0)
+      );
     }, 0);
   };
 
@@ -255,27 +260,27 @@ export default function CartList() {
                 <div
                   onClick={() => handleProductClick(item.no)} // 클릭 시 상품 상세 페이지로 이동
                   className={styles.cartItemContainer}
-                  style={{ cursor: "pointer", display: "flex"}}
+                  style={{ cursor: "pointer", display: "flex" }}
                 >
                   <img src={item.pic} alt={item.name} />
-                  <div className={styles.cartItemDetails}>  
+                  <div className={styles.cartItemDetails}>
                     {item.name}
-                    {item.discountRate===0 ? (
-                    <>
-                    <div className={styles.cartItemPriceDiscounted}>
-                    {item.price.toLocaleString()}
-                    </div>
-                    </>
+                    {item.discountRate === 0 ? (
+                      <>
+                        <div className={styles.cartItemPriceDiscounted}>
+                          {item.price.toLocaleString()}
+                        </div>
+                      </>
                     ) : (
-                    <>
-                    <div className={styles.cartItemPriceOriginal}>
-                    {item.price.toLocaleString()}
-                    </div>
-                    <div className={styles.cartItemPriceDiscounted}>
-                    {item.fixedDiscountPrice.toLocaleString()}
-                    </div>
-                    </>
-                   )}
+                      <>
+                        <div className={styles.cartItemPriceOriginal}>
+                          {item.price.toLocaleString()}
+                        </div>
+                        <div className={styles.cartItemPriceDiscounted}>
+                          {item.fixedDiscountPrice.toLocaleString()}
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
                 {/* {item.stock === 0 && (
@@ -288,11 +293,15 @@ export default function CartList() {
                 )} */}
                 <div className={styles.cartQuantityWrapper}>
                   <div className={styles.cartQuantity}>
-                    <button onClick={() => decrementQuantity(item.no)}>
+                    <button
+                      style={{ color: "#c7727e" }}
+                      onClick={() => decrementQuantity(item.no)}
+                    >
                       -
                     </button>
                     <span>{item.quantity}</span>
                     <button
+                      style={{ color: "#c7727e" }}
                       onClick={() => incrementQuantity(item.no)}
                       disabled={item.quantity >= item.stock}
                     >
@@ -323,14 +332,18 @@ export default function CartList() {
                   {getTotalCartPriceBefore().toLocaleString()}원
                 </div>
                 <div id={styles.discountAmount}>
-                  - { (getTotalCartPriceBefore() - getTotalCartPrice()).toLocaleString()}원
+                  -{" "}
+                  {(
+                    getTotalCartPriceBefore() - getTotalCartPrice()
+                  ).toLocaleString()}
+                  원
                 </div>
                 <div id={styles.finalPrice}>
                   총 {getTotalCartPrice().toLocaleString()}원
                 </div>
               </div>
               <button
-                className="btn4"
+                className="btn2"
                 onClick={handleOrder}
                 disabled={selectedItems.length === 0}
               >

@@ -13,7 +13,7 @@
   justify-content: space-between; /* 좌우로 퍼지도록 설정 */
   padding: 10px 0;
   margin-bottom: 10px;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid #d3c2c2;
 }
 
 .cartHeader label {
@@ -38,7 +38,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 15px 0;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #d3c2c2;
   width: 100%;
 }
 

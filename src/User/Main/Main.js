@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import "../Style/Main.css";
 import { PiCaretCircleDoubleLeftFill } from "react-icons/pi";
 import { PiCaretCircleDoubleRightFill } from "react-icons/pi";
+
 export default function UserHome() {
   const [show, setShow] = useState([]);
   const [review, setReview] = useState([]);

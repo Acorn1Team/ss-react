@@ -67,8 +67,9 @@ function AdminChat() {
       .catch((err) => {
         console.log(err);
       });
+    const socket = new SockJS(`http://${window.location.hostname}:8080/ws`);
 
-    const socket = new SockJS("/ws");
+    // const socket = new SockJS("/ws");
     const client = new Client({
       webSocketFactory: () => socket,
       debug: (str) => console.log(str),
@@ -146,7 +147,8 @@ function AdminChat() {
                 } ${chatNo === room.no ? styles.active : ""}`}
               >
                 💬 {room.no}번 상담 <br />
-                {room.category}<br />
+                {room.category}
+                <br />
                 {room.userName} (9042{room.userNo})
               </li>
             ))}
