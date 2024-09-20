@@ -573,3 +573,11 @@ section.card {
     transform: rotate(360deg);
   }
 }
+
+.randomItemPic {
+  transition: transform 0.3s ease-in-out;
+}
+
+.randomItemPic:hover {
+  transform: scale(1.1);
+}
