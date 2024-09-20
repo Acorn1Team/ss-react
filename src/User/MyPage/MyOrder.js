@@ -145,7 +145,16 @@ export default function MyOrder() {
       {orderList.map((ol) => (
         <div key={ol.no} className={styles.orderItem}>
           <div className={styles.orderHeader}>
+          <span style={{
+            color: ol.state === '주문접수' ? 'black'
+                  : ol.state === '배송중' ? 'black'
+                  : ol.state === '배송완료' ? '#f44336'
+                  : ol.state === '주문취소' ? 'gray'
+                  : 'black'
+          }}>
             {ol.state}
+          </span>
+
             <strong>{ol.price.toLocaleString()}원</strong>
             <span className={styles.orderState}>{formatDate(ol.date)}</span>
             <Link
