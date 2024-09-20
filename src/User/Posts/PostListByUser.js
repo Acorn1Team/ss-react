@@ -295,9 +295,12 @@ export default function PostListByUser() {
       ) : (
         <>
           <h2>휴지통</h2>
-          휴지통에 있는 게시글은 작성자 외 다른 회원은 볼 수 없습니다.
-          <br />
-          복구하거나 영구적으로 삭제할 수 있어요.
+          <div style={{ textAlign: "center" }}>
+            휴지통에 있는 게시글은 작성자 외 다른 회원은 볼 수 없습니다.
+            <br />
+            복구하거나 영구적으로 삭제할 수 있어요.
+          </div>
+
           <hr />
           {deletedPosts.length > 0 ? (
             deletedPosts.map((post) => (

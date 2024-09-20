@@ -75,6 +75,20 @@ body {
   box-sizing: border-box;
 }
 
+/* 메인 포스트 섹션 스타일 */
+#mainPostsSL {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  justify-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  /* min-height: 800px; */
+  box-sizing: border-box;
+  margin-top: 30px;
+}
+
 /* 팝업 모달 스타일 */
 .popup-modal {
   position: fixed;
