@@ -21,6 +21,7 @@ export default function ProductDetail() {
   const navigate = useNavigate();
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
+ // const [stockInfo, setStockInfo] = useState(null);
 
   const refresh = (no) => {
     axios

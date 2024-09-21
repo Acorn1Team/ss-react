@@ -125,7 +125,8 @@ export default function MyOrder() {
 
   // 팝업에서 확인 버튼을 클릭했을 때 실행되는 함수
   const handlePopupConfirm = () => {
-    if (popupMessage === "교환/환불을 신청하시겠습니까?") {
+    if (popupMessage === "교환/환불 신청을 위해 채팅 문의로 이동할까요?") {
+      alert('aa');
       navigate("/user/chat"); // 교환/환불일 때 /user/chat으로 이동
     } else if (popupMessage === "주문을 취소하시겠습니까?") {
       orderStateChange(); // 주문 취소 처리
