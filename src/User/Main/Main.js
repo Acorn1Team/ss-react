@@ -70,7 +70,7 @@ export default function UserHome() {
       const n = Math.floor(Math.random() * styleItemCount) + 1;
 
       axios
-        .get(`/main/sub/${n}`)
+        .get(`/main/random/${n}`)
         .then((res) => {
           setRandomShow(res.data.show);
           setRandomCharacterNames(res.data.names)
