@@ -151,11 +151,11 @@ export default function ReviewWritePage() {
       )}
       <br />
       <button className="btn1" onClick={handleSubmit}>
-        리뷰 제출
+        등록
       </button>
 
       <button className="btn3" onClick={handleCancel}>
-        리뷰 취소
+        취소
       </button>
     </div>
   );

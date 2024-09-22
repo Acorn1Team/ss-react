@@ -7,7 +7,7 @@ import "../Style/All.css";
 export default function PostList() {
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [pageSize, setPageSize] = useState(8);
+  const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [viewMode, setViewMode] = useState("all");
