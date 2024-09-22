@@ -302,7 +302,10 @@ export default function CartList() {
                 />
               </div>
             ))}
-
+            {/* 에러 메시지 출력 */}
+            {errorMessage && (
+              <div className={styles.errorMessage}>{errorMessage}</div>
+            )}
             <div className={styles.cartFooter}>
               <div className={styles.totalPrice}>
                 <div id={styles.originalPrice}>
@@ -327,11 +330,6 @@ export default function CartList() {
               >
                 주문하기
               </button>
-
-              {/* 에러 메시지 출력 */}
-              {errorMessage && (
-                <div className={styles.errorMessage}>{errorMessage}</div>
-              )}
             </div>
           </div>
         </>
