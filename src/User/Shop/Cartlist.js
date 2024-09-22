@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styles from "../Style/CartList.module.css";
-import "../Style/All.css"; // button styles
+import "../Style/All.css"; // 버튼 스타일
 
 export default function CartList() {
   const userNo = sessionStorage.getItem("id");
@@ -15,7 +15,7 @@ export default function CartList() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [cartProductInfo, setCartProductInfo] = useState([]);
   const [isAllSelected, setIsAllSelected] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); // 경고 메시지 상태 추가
+  const [errorMessage, setErrorMessage] = useState(""); // 에러 메시지 상태 추가
 
   const fetchStockInfo = async () => {
     try {
@@ -68,7 +68,7 @@ export default function CartList() {
 
       setCartProductInfo(filteredProducts);
     } catch (error) {
-      console.error("Error fetching stock info:", error);
+      console.error("재고 정보를 가져오는 중 오류 발생:", error);
     }
   };
 
@@ -79,6 +79,7 @@ export default function CartList() {
   }, [cartItems, userNo]);
 
   const toggleSelectAll = () => {
+    setErrorMessage(""); // 에러 메시지 초기화
     if (isAllSelected) {
       setSelectedItems([]);
     } else {
@@ -92,19 +93,29 @@ export default function CartList() {
 
   const getTotalCartPriceBefore = () => {
     return selectedItems.reduce((total, productNo) => {
-      const selectedItem = cartProductInfo.find((item) => item.no === productNo);
-      return total + (selectedItem ? parseInt(selectedItem.price * selectedItem.quantity) : 0);
+      const selectedItem = cartProductInfo.find(
+        (item) => item.no === productNo
+      );
+      return (
+        total +
+        (selectedItem
+          ? parseInt(selectedItem.price * selectedItem.quantity)
+          : 0)
+      );
     }, 0);
   };
 
   const getTotalCartPrice = () => {
     return selectedItems.reduce((total, productNo) => {
-      const selectedItem = cartProductInfo.find((item) => item.no === productNo);
+      const selectedItem = cartProductInfo.find(
+        (item) => item.no === productNo
+      );
       return total + (selectedItem ? parseInt(selectedItem.resultPrice) : 0);
     }, 0);
   };
 
   const handleCheckboxChange = (productNo) => {
+    setErrorMessage(""); // 에러 메시지 초기화
     const selectedItem = cartProductInfo.find((item) => item.no === productNo);
 
     if (selectedItem && selectedItem.purchaseCheck) {
@@ -165,9 +176,13 @@ export default function CartList() {
 
   const handleOrder = () => {
     if (selectedItems.length === 0) {
-      setErrorMessage("제품을 선택 후 주문하기 버튼을 눌러주세요."); // 경고 메시지 표시
+      setErrorMessage("선택한 상품이 없습니다."); // 에러 메시지 설정
       return;
     }
+
+    // 주문 처리 로직...
+    // 주문 성공 시 에러 메시지 초기화
+    setErrorMessage("");
 
     const total = getTotalCartPrice();
 
@@ -239,15 +254,15 @@ export default function CartList() {
                     {item.name}
                     {item.discountRate === 0 ? (
                       <div className={styles.cartItemPriceDiscounted}>
-                        {item.price.toLocaleString()}
+                        {item.price.toLocaleString()}원
                       </div>
                     ) : (
                       <>
                         <div className={styles.cartItemPriceOriginal}>
-                          {item.price.toLocaleString()}
+                          {item.price.toLocaleString()}원
                         </div>
                         <div className={styles.cartItemPriceDiscounted}>
-                          {item.fixedDiscountPrice.toLocaleString()}
+                          {item.fixedDiscountPrice.toLocaleString()}원
                         </div>
                       </>
                     )}
@@ -307,11 +322,12 @@ export default function CartList() {
               <button
                 className="btn2"
                 onClick={handleOrder}
-                disabled={selectedItems.length === 0}
+                // 주문하기 버튼은 항상 활성화된 상태로 유지합니다.
+                // disabled={selectedItems.length === 0}
               >
                 주문하기
               </button>
-              
+
               {/* 에러 메시지 출력 */}
               {errorMessage && (
                 <div className={styles.errorMessage}>{errorMessage}</div>
