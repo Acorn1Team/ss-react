@@ -182,3 +182,12 @@
 .cartQuantity button:hover {
   color: #c7727e;
 }
+
+.errorMessage {
+  color: red; /* 빨간색으로 에러 표시 */
+  font-weight: bold; /* 에러 메시지를 강조 */
+  margin-top: 10px; /* 버튼과의 간격 */
+  text-align: center; /* 중앙 정렬 */
+}
+
+
