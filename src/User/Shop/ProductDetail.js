@@ -96,11 +96,15 @@ export default function ProductDetail() {
   // 장바구니에 제품 추가
   const handleAddToCart = () => {
     const userNo = sessionStorage.getItem("id");
-    dispatch({
-      type: "ADD_TO_CART",
-      payload: { product, quantity: count, userNo },
-    });
-    openModal();
+    if (userNo) {
+      dispatch({
+        type: "ADD_TO_CART",
+        payload: { product, quantity: count, userNo },
+      });
+      openModal();
+    } else {
+      navigate("/user/auth/login");
+    }
   };
 
   return (

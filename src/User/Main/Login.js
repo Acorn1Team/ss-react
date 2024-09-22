@@ -37,7 +37,7 @@ const Login = () => {
       if (result.success) {
         sessionStorage.setItem("id", result.user.no); // 로그인 성공 시 사용자 ID 저장
         sessionStorage.setItem("token", result.token); // JWT 토큰을 세션 스토리지에 저장합니다.
-        navigate("/user"); // 로그인 성공 시 리다이렉트합니다.
+        navigate(-1); // 로그인 성공 시 리다이렉트합니다.
       } else {
         // 로그인 실패 시 오류 메시지를 콘솔에 로그하고 상태를 설정합니다.
         console.error("Login failed:", result.message);
