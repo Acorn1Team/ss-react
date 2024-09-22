@@ -1,16 +1,18 @@
+/* 장바구니 전체 컨테이너 */
 .cartContainer {
-  width: 60%; /* 전체 컨테이너의 너비를 60%로 설정 */
-  margin: 0 auto; /* 중앙 정렬 */
+  width: 60%;
+  margin: 0 auto;
   padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* 내부 요소 중앙 정렬 */
+  align-items: center;
 }
 
+/* 장바구니 헤더 (전체 선택, 삭제 버튼) */
 .cartHeader {
-  width: 100%; /* cartContainer의 너비에 맞추기 */
+  width: 100%;
   display: flex;
-  justify-content: space-between; /* 좌우로 퍼지도록 설정 */
+  justify-content: space-between;
   padding: 10px 0;
   margin-bottom: 10px;
   border-bottom: 2px solid #d3c2c2;
@@ -18,7 +20,6 @@
 
 .cartHeader label {
   font-size: 16px;
-  margin-left: 0;
 }
 
 .cartHeader input[type="button"] {
@@ -33,63 +34,44 @@
   color: red;
 }
 
+/* 장바구니 상품 아이템 */
 .cartItem {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px 0;
+  padding: 10px 0; /* 여백 줄이기 */
   border-bottom: 1px solid #d3c2c2;
   width: 100%;
+  min-height: 120px; /* 여백을 줄이기 위해 최소 높이도 줄임 */
+}
+
+/* 상품 이미지와 제품명 정렬 */
+.cartItemContainer {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  width: 50%; /* 이미지와 텍스트 영역의 총 비율 */
 }
 
 .cartItem img {
   width: 100px;
   height: 100px;
   object-fit: cover;
-  margin-right: 15px;
-  flex-basis: 10%; /* 이미지가 차지할 비율 */
+  margin-right: 10px; /* 이미지와 텍스트 사이 마진 줄이기 */
 }
 
+/* 제품명 및 가격 영역 */
 .cartItemDetails {
-  flex-basis: 45%; /* 상품 정보 부분이 차지할 비율 */
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-right: 15px;
 }
 
-.cartQuantityWrapper {
-  display: flex;
-  flex-direction: column; /* 수직 정렬 */
-  align-items: center;
-  flex-basis: 15%; /* 수량 조절 부분 */
-}
-
-.cartQuantity {
-  flex-basis: 15%;
-  display: flex;
-  align-items: center;
-}
-.cartItemPrice {
-  flex-basis: 15%; /* 가격 부분이 차지할 비율 */
-  text-align: right;
-  font-weight: bold;
-  font-size: 18px;
-  color: #333;
-}
-
-.rmButton {
-  flex-basis: 5%; /* 삭제 버튼 부분이 차지할 비율 */
-  text-align: center;
-  background: none;
-  border: none;
-  color: #000;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.rmButton:hover {
-  color: red;
+.cartItemDetails span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* 너무 긴 텍스트는 생략(...) 처리 */
 }
 
 .cartItemPriceOriginal {
@@ -106,6 +88,56 @@
   margin-bottom: 10px;
 }
 
+/* 수량 조절 및 재고 문구 */
+.cartQuantityWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+}
+
+.cartQuantity {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+.stockWarning {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+  text-align: center;
+  min-height: 20px;
+  line-height: 20px;
+}
+
+/* 가격 표시 영역 */
+.cartItemPrice {
+  flex-basis: 15%;
+  text-align: right;
+  font-weight: bold;
+  font-size: 18px;
+  color: #333;
+}
+
+/* 삭제 버튼 */
+.rmButton {
+  flex-basis: 5%;
+  text-align: center;
+  background: none;
+  border: none;
+  color: #000;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.rmButton:hover {
+  color: red;
+}
+
+/* 장바구니 하단 (총 가격 표시, 주문 버튼) */
 .cartFooter {
   width: 100%;
   text-align: right;
@@ -118,6 +150,24 @@
   font-weight: bold;
 }
 
+#originalPrice {
+  font-size: 16px;
+  color: #444;
+  text-decoration: line-through;
+}
+
+#discountAmount {
+  font-size: 18px;
+  color: red;
+}
+
+#finalPrice {
+  font-size: 20px;
+  color: #000;
+  font-weight: bold;
+}
+
+/* 수량 조절 버튼 */
 .cartQuantity button {
   border: none;
   background-color: transparent;
@@ -128,34 +178,7 @@
   color: #000;
 }
 
-.stockWarning {
-  color: red;
-  font-size: 12px;
-  margin-top: 5px;
-  text-align: center;
-}
-
-#originalPrice {
-  font-size: 16px;
-  color: #444;
-  text-decoration: line-through; /* 취소선으로 할인 전 가격 표시 */
-}
-
-#discountAmount {
-  font-size: 18px;
-  color: red; /* 할인 금액 강조 */
-}
-
-#finalPrice {
-  font-size: 20px;
-  color: #000;
-  font-weight: bold; /* 할인 후 총액을 굵게 강조 */
-}
-
-.cartItemContainer {
-  transition: transform 0.3s ease; /* 부드러운 애니메이션을 위해 추가 */
-}
-
-.cartItemContainer:hover {
-  transform: scale(1.05); /* 마우스를 올렸을 때 1.05배 커짐 */
+/* 수량 조절 버튼 마우스 오버 효과 */
+.cartQuantity button:hover {
+  color: #c7727e;
 }
