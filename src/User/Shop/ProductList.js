@@ -30,26 +30,35 @@ export default function ProductList() {
       selectedCategory && selectedCategory !== "전체"
         ? `/list/category/${selectedCategory}`
         : "/list"; // "전체"일 때는 기본 전체 상품 목록 호출
-
+  
     try {
+      // 1. API 호출을 기다림
       const res = await axios.get(endpoint);
-      // 판매 가능한 상품만 필터링
+  
+      // 2. 판매 가능한 상품만 필터링 (순차적으로 처리됨)
       let filteredProducts = res.data.content.filter(
         (product) => product.available === true // available이 true인 상품만 필터링
       );
-
-      // 정렬 기준 적용
+  
+      // 3. 정렬 기준 적용
       let sortedProducts = sortProducts(filteredProducts, sortOption);
-
+  
+      // 4. 품절 상품 제외 (옵션 적용)
       if (excludeSoldOut) {
         sortedProducts = sortedProducts.filter((product) => product.stock > 0); // 품절 상품 제외
       }
+  
+      // 5. 상품 목록 업데이트
       setProducts(sortedProducts);
-      setTotalPages(Math.ceil(sortedProducts.length / pageSize)); // 페이지 수 계산
+  
+      // 6. 페이지 수 계산
+      setTotalPages(Math.floor(sortedProducts.length / pageSize) + (sortedProducts.length % pageSize > 0 ? 1 : 0));
     } catch (error) {
+      // 7. 에러 처리
       console.log(error);
     }
   };
+  
 
   // 페이지 변경 핸들러
   const handlePageChange = (newPage) => {
