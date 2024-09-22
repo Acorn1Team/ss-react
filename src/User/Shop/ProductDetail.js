@@ -6,7 +6,7 @@ import ProductReviews from "./ProductReviews";
 import { FiShoppingCart } from "react-icons/fi";
 
 import styles from "../Style/ProductDetail.module.css";
-import "../Style/All.css"; //  button styles
+import "../Style/All.css"; // button styles
 
 import Modal from "react-modal";
 
@@ -17,11 +17,11 @@ export default function ProductDetail() {
   const [product, setProduct] = useState({});
   const [count, setCount] = useState(1);
   const [averageRating, setAverageRating] = useState(0);
+  const [lowStockWarning, setLowStockWarning] = useState(""); // 재고 부족 경고 메시지
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
- // const [stockInfo, setStockInfo] = useState(null);
 
   const refresh = (no) => {
     axios
@@ -55,12 +55,29 @@ export default function ProductDetail() {
     return getDiscountedPrice() * count;
   };
 
+  const updateLowStockWarning = (quantity) => {
+    // 재고가 선택된 수량만큼 남았을 때 "재고가 X개 남았습니다" 표시
+    if (product.stock === quantity) {
+      setLowStockWarning(`재고가 ${product.stock}개 남았습니다.`);
+    } else {
+      setLowStockWarning(""); // 선택한 수량이 재고보다 적으면 메시지 숨기기
+    }
+  };
+
   const incrementQuantity = () => {
-    setCount((prevQuantity) => prevQuantity + 1);
+    setCount((prevQuantity) => {
+      const newQuantity = prevQuantity + 1;
+      updateLowStockWarning(newQuantity);
+      return newQuantity;
+    });
   };
 
   const decrementQuantity = () => {
-    setCount((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
+    setCount((prevQuantity) => {
+      const newQuantity = prevQuantity > 1 ? prevQuantity - 1 : 1;
+      updateLowStockWarning(newQuantity);
+      return newQuantity;
+    });
   };
 
   const openModal = () => setModalIsOpen(true);
@@ -86,44 +103,10 @@ export default function ProductDetail() {
     openModal();
   };
 
-  // 주문 완료 후 장바구니 비우기
-  const handleOrder = () => {
-    const userNo = sessionStorage.getItem("id");
-    const total = getTotalPrice();
-    const selectedCartItems = [
-      {
-        productNo: product.no,
-        name: product.name,
-        quantity: count,
-        price: product.price,
-        discountRate: product.discountRate,
-        resultPrice: getDiscountedPrice() * count,
-      },
-    ];
-
-    // 주문 생성 액션 디스패치
-    dispatch({
-      type: "CREATE_ORDER",
-      payload: { items: selectedCartItems, total: total, userNo },
-    });
-
-    // 주문 후 장바구니 비우기
-    dispatch({
-      type: "CLEAR_CART",
-      payload: { userNo },
-    });
-
-    // 로컬 스토리지에서도 해당 장바구니 비우기
-    localStorage.removeItem("cart");
-
-    navigate(`/user/shop/order/detail`);
-  };
-
   return (
     <div className={styles.container}>
       <h2>{product.name}</h2>
       <div className={styles.productDescription}>
-        {/* <span className={styles.label}>상품 설명:</span> */}
         <span>{product.contents}</span>
       </div>
       <div>
@@ -186,6 +169,10 @@ export default function ProductDetail() {
             >
               장바구니에 담기
             </button>
+            {/* 선택된 수량이 재고와 같을 때 경고 메시지 표시 */}
+            {lowStockWarning && (
+              <div className={styles.lowStockWarning}>{lowStockWarning}</div>
+            )}
           </>
         ) : (
           <h2>SOLD OUT</h2>
