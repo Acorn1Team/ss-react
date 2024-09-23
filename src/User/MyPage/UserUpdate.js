@@ -222,7 +222,7 @@ const UserUpdate = () => {
     try {
       console.log("Sending request with userNo:", userNo);
       const response = await axios.get(
-        "http://localhost:8080/user/passwordCheck",
+        "/user/passwordCheck",
         {
           params: { no: userNo },
         }

@@ -16,26 +16,29 @@ function Search() {
   const [pageSize, setPageSize] = useState(5);
   const [totalPages, setTotalPages] = useState(1);
 
+
+  useEffect(() => {
+    setCurrentPage(0);  // 검색어가 바뀔 때 페이지를 0으로 초기화
+  }, [name, category]);
+
+  
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
-
+  
       if (name && category) {
         try {
-          const validPage = Math.max(currentPage - 1, 0);
-          const response = await axios.get(
-            `http://localhost:8080/user/search/${category}/${name}`,
-            {
-              params: {
-                page: validPage,
-                size: pageSize,
-              },
-            }
-          );
-
+          const validPage = Math.max(currentPage, 0); // 페이지 계산 수정
+          const response = await axios.get(`/user/search/${category}/${name}`, {
+            params: {
+              page: validPage,
+              size: pageSize,
+            },
+          });
+  
           if (response.data) {
-            setTotalPages(response.data.totalPages);
+            setTotalPages(response.data.totalPages); // 총 페이지 수 설정
             setDbData(response.data.results || []);
           }
         } catch (error) {
@@ -47,15 +50,40 @@ function Search() {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, [name, category, currentPage, pageSize]);
-
+  
   const handlePageChange = (newPage) => {
     if (newPage >= 0 && newPage < totalPages) {
       setCurrentPage(newPage);
     }
   };
+  
+  function Pagination({ totalPages, currentPage, handlePageChange }) {
+    return (
+      <div className={styles.paginationContainer}>
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 0} // 첫 페이지일 때 비활성화
+          className={styles.paginationButton}
+        >
+          이전
+        </button>
+        <span>
+          {currentPage + 1} / {totalPages}
+        </span>
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage + 1 >= totalPages} // 마지막 페이지일 때 비활성화
+          className={styles.paginationButton}
+        >
+          다음
+        </button>
+      </div>
+    );
+  }
+  
 
   if (loading) {
     return <div>Loading...</div>;
