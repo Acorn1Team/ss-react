@@ -61,11 +61,16 @@ function Search() {
   };
   
   function Pagination({ totalPages, currentPage, handlePageChange }) {
+    // totalPages가 1보다 크면 페이징 버튼을 보여줌
+    if (totalPages <= 1) {
+      return null; // totalPages가 1이하일 때는 아무것도 렌더링하지 않음
+    }
+  
     return (
       <div className={styles.paginationContainer}>
         <button
           onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 0} // 첫 페이지일 때 비활성화
+          disabled={currentPage === 0}
           className={styles.paginationButton}
         >
           이전
@@ -75,7 +80,7 @@ function Search() {
         </span>
         <button
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage + 1 >= totalPages} // 마지막 페이지일 때 비활성화
+          disabled={currentPage + 1 >= totalPages}
           className={styles.paginationButton}
         >
           다음
@@ -84,7 +89,6 @@ function Search() {
     );
   }
   
-
   if (loading) {
     return <div>Loading...</div>;
   }

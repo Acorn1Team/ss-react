@@ -270,6 +270,7 @@
   transition: background-color 0.3s ease;
   width: 80px;
   height: 44px;
+  z-index: 10004;
 }
 
 /* 검색 입력 필드 */
@@ -302,7 +303,7 @@
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 4px;
-  z-index: 1002; /* 자동완성 목록이 모달 위에 표시되도록 설정 */
+  z-index: 10003; /* 자동완성 목록이 모달 위에 표시되도록 설정 */
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -314,6 +315,7 @@
   background-color: #fff;
   color: #333;
   transition: background-color 0.2s ease;
+  z-index: 10003;
 }
 
 .autoSearchItem:hover {
@@ -346,7 +348,7 @@
   max-width: 500px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
   text-align: center;
-  z-index: 1000;
+  z-index: 10002;
   overflow: visible;
 }
 
@@ -354,6 +356,7 @@
 .autoSearchContainer {
   max-height: 200px; /* 최대 높이 설정 */
   overflow-y: auto; /* 검색 결과가 많을 때 스크롤 */
+  z-index: 10003;
 }
 
 .closeButton {
@@ -365,7 +368,7 @@
   width: 30px;
   height: 30px;
   color: black;
-  z-index: 1001; /* 모달 내용 위에 나타나도록 설정 */
+  z-index: 1; /* 모달 내용 위에 나타나도록 설정 */
 }
 .closeButton:hover {
   background: none;
