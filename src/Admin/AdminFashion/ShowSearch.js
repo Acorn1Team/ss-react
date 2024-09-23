@@ -172,8 +172,8 @@ export default function ShowSearch() {
           style={{ maxWidth: "100%", height: "auto" }}
         /><br/>
         <h3>작품을 추가하고 등장인물을 불러올까요?</h3>
-        <button onClick={() => setIsModalOpen(false)}>취소</button>&nbsp;&nbsp;
-        <button onClick={addShow}>확인</button>
+        <button className="btn3" onClick={() => setIsModalOpen(false)}>취소</button>&nbsp;&nbsp;
+        <button className="btn2" onClick={addShow}>확인</button>
       </Modal>
 
       <Modal

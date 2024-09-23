@@ -318,7 +318,7 @@ export default function StyleManage() {
                             )
                           }
                         >
-                          연결된 상품 조회
+                          연결된 상품 편집
                         </button>
                       </>
                     ) : (

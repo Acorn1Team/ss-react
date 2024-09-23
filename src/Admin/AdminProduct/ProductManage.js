@@ -135,7 +135,7 @@ export default function ProductManage() {
       setIsDeleteModalOpen(false);
       setIsResultModalOpen(true);
     } catch (error) {
-      console.log("삭제 중 오류가 발생했습니다.");
+      console.log("판매종료 처리 중 오류가 발생했습니다.");
     } finally {
       setIsDeleteModalOpen(false);
     }
@@ -212,6 +212,11 @@ export default function ProductManage() {
       date.getMonth() + 1
     }월 ${date.getDate()}일`;
   };
+
+  const gobacktoproductlist= () => {
+    setCurrentPage(0);
+    setIsResultModalOpen(false);
+  }
 
   // 텍스트바 크기 조정을 위한 함수
   const renderSearchField = () => {
@@ -558,11 +563,11 @@ export default function ProductManage() {
             <p>
               <b>{productToDelete.name}</b> 판매를 종료하시겠습니까?
             </p>
-            <button onClick={() => handleDelete(productToDelete.no)}>
-              삭제
+            <button className="btn3" onClick={() => handleDelete(productToDelete.no)}>
+              확인
             </button>
             &nbsp;&nbsp;
-            <button onClick={closeDeleteModal}>취소</button>
+            <button className="btn2" onClick={closeDeleteModal}>취소</button>
           </>
         )}
       </Modal>
@@ -586,8 +591,8 @@ export default function ProductManage() {
       >
         <>
           <br />
-          <h3>판매 종료 처리가 완료되었습니다.</h3>
-          <button onClick={() => navigate("/admin/product")}>
+          <h3>판매 종료 처리가 완료되었습니다.</h3><br/>
+          <button onClick={() => gobacktoproductlist()}>
             목록으로 돌아가기
           </button>
         </>
