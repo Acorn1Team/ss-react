@@ -214,7 +214,7 @@ export default function ProductManage() {
   };
 
   const gobacktoproductlist= () => {
-    setCurrentPage(0);
+    fetchProducts(0, pageSize);
     setIsResultModalOpen(false);
   }
 
