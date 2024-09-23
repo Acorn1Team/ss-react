@@ -64,7 +64,6 @@ export default function Sub() {
     axios
       .get(`/main/scrap/count/${characterNo}`) // 이 API는 캐릭터의 스크랩 수를 반환한다고 가정
       .then((res) => {
-        console.log(res.data); // 데이터 구조 확인을 위해 콘솔 출력
         setScrapCount(res.data.likesCount || 0);
       })
       .catch((error) => {
@@ -108,6 +107,7 @@ export default function Sub() {
           .then((res) => {
             if (res.data.result === true) {
               setScrap(false); // 스크랩 취소 후 상태 업데이트
+              setScrapCount((prev) => prev - 1); // 스크랩 수 감소
             }
           })
           .catch((error) => {
@@ -122,6 +122,7 @@ export default function Sub() {
           .then((res) => {
             if (res.data.result === true) {
               setScrap(true); // 스크랩 후 상태 업데이트
+              setScrapCount((prev) => prev + 1); // 스크랩 수 증가
             }
           })
           .catch((error) => {
