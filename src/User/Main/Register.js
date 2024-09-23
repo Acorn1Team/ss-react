@@ -89,7 +89,7 @@ const Register = () => {
 
     try {
       const response = await axios.get(
-        "http://localhost:8080/user/emailCheck",
+        "/user/emailCheck",
         { params: { email: fullEmail } } // 이메일을 파라미터로 전달
       ); // API 엔드포인트와 이메일 파라미터를 적절히 설정하세요
       const userInfo = response.data;
@@ -119,7 +119,7 @@ const Register = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/user/auth/check?id=${encodeURIComponent(id)}`,
+        `/user/auth/check?id=${encodeURIComponent(id)}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -194,7 +194,7 @@ const Register = () => {
     console.log(email, setVerificationCode, setErrorMessage);
     try {
       const response = await fetch(
-        "http://localhost:8080/user/auth/send-verification-code",
+        "/user/auth/send-verification-code",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -224,7 +224,7 @@ const Register = () => {
   const verifyEmailCodeOnServer = async (email, inputCode, setErrorMessage) => {
     try {
       const response = await fetch(
-        "http://localhost:8080/user/auth/verify-code",
+        "/user/auth/verify-code",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
