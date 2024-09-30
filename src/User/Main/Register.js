@@ -466,13 +466,13 @@ const Register = () => {
         body: JSON.stringify(registerData),
       });
 
-      if (!response.ok) {
+      if (response.ok) {
+        // 요청이 성공했을 때, 본문이 없어도 OK 상태 코드만으로 성공 처리
+        navigate("/user/register/success");
+      } else {
         const errorText = await response.text();
         throw new Error(`회원가입 요청이 실패했습니다: ${errorText}`);
       }
-      <Loading />;
-      await response.json();
-      navigate("/user/register/success");
     } catch (error) {
       console.error("회원가입 요청 중 오류 발생:", error);
       setErrorMessage({ global: error.message });
@@ -480,6 +480,23 @@ const Register = () => {
       setLoading(false); // 로딩 종료
     }
   };
+
+  //     if (!response.ok) {
+  //       const errorText = await response.text();
+  //       throw new Error(`회원가입 요청이 실패했습니다: ${errorText}`);
+  //     }
+  //     <Loading />;
+  //     const responseData = await response.json(); // 응답 데이터를 받고 처리
+
+  //     // 회원가입이 성공하면 리다이렉트
+  //     navigate("/user/register/success");
+  //   } catch (error) {
+  //     console.error("회원가입 요청 중 오류 발생:", error);
+  //     setErrorMessage({ global: error.message });
+  //   } finally {
+  //     setLoading(false); // 로딩 종료
+  //   }
+  // };
 
   return (
     <div className={styles.body}>
