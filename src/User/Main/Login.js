@@ -8,14 +8,13 @@ import "../Style/All.css";
 const Login = () => {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
-  const [loginCheck, setLoginCheck] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();
-
+  
     const loginData = { id, pwd };
     try {
       const response = await fetch("/user/auth/login", {
@@ -25,30 +24,29 @@ const Login = () => {
         },
         body: JSON.stringify(loginData),
       });
-
-      if (!response.ok) {
-        // 응답이 정상적이지 않을 경우 오류를 발생시킵니다.
-        const errorData = await response.json(); // 오류 메시지를 응답에서 가져옵니다.
-        throw new Error(errorData.message || "Login failed");
-      }
-
-      const result = await response.json();
-
-      if (result.success) {
-        sessionStorage.setItem("id", result.user.no); // 로그인 성공 시 사용자 ID 저장
-        sessionStorage.setItem("token", result.token); // JWT 토큰을 세션 스토리지에 저장합니다.
-        navigate(-1); // 로그인 성공 시 리다이렉트합니다.
+  
+      // 응답이 HTML인지 JSON인지 확인
+      const contentType = response.headers.get("content-type");
+  
+      if (contentType && contentType.includes("application/json")) {
+        const result = await response.json();
+  
+        if (response.ok && result.success) {
+          // 로그인 성공 처리
+          sessionStorage.setItem("id", result.user.no);
+          sessionStorage.setItem("token", result.token);
+          navigate(-1);
+        } else {
+          // 서버에서 전달된 오류 메시지
+          setErrorMessage(result.message || "아이디 혹은 비밀번호가 틀렸습니다.");
+        }
       } else {
-        // 로그인 실패 시 오류 메시지를 콘솔에 로그하고 상태를 설정합니다.
-        console.error("Login failed:", result.message);
-        setErrorMessage(result.message || "아이디 혹은 비밀번호가 틀렸습니다.");
-        setLoginCheck(true);
+        // JSON이 아닌 응답을 받을 때 (예: HTML 에러 페이지)
+        const errorText = await response.text(); // HTML 내용을 텍스트로 받음
+        setErrorMessage("서버 오류가 발생했습니다: " + errorText);
       }
     } catch (error) {
-      // 네트워크 오류 등 예외적인 상황을 처리합니다.
-      console.error("Error during login:", error);
       setErrorMessage(error.message || "로그인 처리 중 오류가 발생했습니다.");
-      setLoginCheck(true);
     }
   };
 
@@ -73,7 +71,7 @@ const Login = () => {
             onChange={(e) => setPwd(e.target.value)}
           />
 
-          {loginCheck && (
+          {errorMessage && (
             <label className={styles.errorMessage}>{errorMessage}</label>
           )}
 
