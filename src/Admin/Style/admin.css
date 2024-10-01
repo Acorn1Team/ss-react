@@ -271,3 +271,43 @@ body {
   padding: 10px;
 }
 
+
+.adminShowList {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  padding: 20px;
+  text-align: center;
+  width: 150px;
+  height: 200px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.adminShowList img {
+  width: 80%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.adminShowList :hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+#connected-product {
+  color: #D5006D;
+  cursor: pointer;
+  transition: font-size 0.1s ease-in-out; 
+}
+
+#connected-product:hover {
+  font-size: 1.2em; /* 원하는 크기로 조절하세요 */
+}

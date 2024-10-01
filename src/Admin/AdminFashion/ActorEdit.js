@@ -122,7 +122,7 @@ export default function ActorEdit() {
                 {actors.length > 0 && (
                     <div style={{ width: '80%' }}>
                         <h3>등록된 배우들</h3>
-                        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', flexWrap: 'wrap'}}>
                             {actors.map((actorData, index) => (
                                 <div key={index} style={{ textAlign: 'center' }}>
                                     <img
@@ -130,7 +130,7 @@ export default function ActorEdit() {
                                         alt={`${actorData.character} 이미지`}
                                         style={{ height: '220px', display: 'block', margin: '0 auto' }}
                                     />
-                                    {actorData.actor} ({actorData.character})<br />
+                                    {actorData.actor}<br/>({actorData.character})<br />
                                     <button className="update-button" onClick={() => navigate(`/admin/fashion/character/${actorData.no}`, { state: actorData })}>
                                         스타일 편집
                                     </button><br />
@@ -145,7 +145,7 @@ export default function ActorEdit() {
             {scrapedDatas.length > 0 ? (
                 <div>
                     <h3>등록되지 않은 배우들</h3>
-                    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent:"center"  }}>
                         {scrapedDatas.map((data, index) => {
                             const isRegistered = isActorRegistered(data);
                             return (
@@ -153,8 +153,9 @@ export default function ActorEdit() {
                                     {!isRegistered && (
                                         <>
                                             <img src={data.pic} alt={`${data.character} 이미지`} style={{ height: '220px', display: 'block' }} />
-                                            <button className="add-button" onClick={() => addCharacter(data)}>배역 등록</button><br />
-                                            {data.actor}<br />({data.character})
+                                            {data.actor}<br />({data.character})<br />
+                                            <button className="add-button" onClick={() => addCharacter(data)}>배역 등록</button>
+                                            <div><br/><br/></div>
                                         </>
                                     )}
                                 </div>

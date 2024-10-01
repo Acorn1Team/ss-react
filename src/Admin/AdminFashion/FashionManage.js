@@ -93,14 +93,7 @@ export default function FashionManage() {
           setFilteredItems([]);
         }
       } else {
-        // 입력값 없을 때는 전체 목록을 가져온다.
-        try {
-          const response = await axios.get("/api/admin/show/autocomplete");
-          setFilteredItems(response.data);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-          setFilteredItems([]);
-        }
+       setFilteredItems([]); 
       }
     };
     fetchData();
@@ -134,38 +127,7 @@ export default function FashionManage() {
     <>
       <Container>
         <LeftSection>
-        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
-        {showData.map((s) => (
-          <Link to={`/user/main/sub/${s.no}`} key={s.no}>
-            <div className="mainPostsBoxSL">
-              <img src={s.pic} alt={s.title} />
-              <br />
-              {s.title}
-            </div>
-          </Link>
-        ))}
-      </div>
-      {totalShowPages > 1 && (
-        <div style={{ marginTop: "10px" }}>
-          <button
-            onClick={() => handlePageChange(currentShowPage - 1)}
-            disabled={currentShowPage === 0}
-          >
-            이전
-          </button>
-          <span style={{ margin: "0 10px" }}>
-            {currentShowPage + 1} / {totalShowPages}
-          </span>
-          <button
-            onClick={() => handlePageChange(currentShowPage + 1)}
-            disabled={currentShowPage + 1 >= totalShowPages}
-          >
-            다음
-          </button>
-        </div>
-      )}
-
-          <h2>패션 정보 관리</h2>
+        <h2>패션 정보 관리</h2>
           <SearchForm>
             <SearchInput
               id="inputValue"
@@ -198,12 +160,46 @@ export default function FashionManage() {
               </AutoSearchContainer>
             )}
           </SearchForm>
+
+        <hr/>
+
+        <h2>등록된 작품 목록</h2>
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+        {showData.map((s) => (
+          <Link to={`/admin/fashion/show/${s.no}`} key={s.no}>
+            <div className="adminShowList">
+              <img src={s.pic} alt={s.title} />
+              <br />
+              {s.title}
+            </div>
+          </Link>
+        ))}
+        </div>
+        {totalShowPages > 1 && (
+          <div id="pagination">
+            <button
+              onClick={() => handlePageChange(currentShowPage - 1)}
+              disabled={currentShowPage === 0}
+            >
+              이전
+            </button>
+            <span style={{ margin: "0 10px" }}>
+              {currentShowPage + 1} / {totalShowPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentShowPage + 1)}
+              disabled={currentShowPage + 1 >= totalShowPages}
+            >
+              다음
+            </button>
+          </div>
+        )}
         </LeftSection>
 
         <Divider />
 
         <RightSection>
-          <h2>등록된 아이템 관리</h2>
+          <h2>등록된 아이템 목록</h2>
           <ItemManage />
         </RightSection>
       </Container>

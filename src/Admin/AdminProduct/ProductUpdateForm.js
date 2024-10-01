@@ -132,6 +132,9 @@ export default function ProductUpdateForm() {
       >
         뒤로
       </button>
+      <div style={{textAlign:'center'}}>
+        <img src={state.pic} alt={state.name} style={{width:'30%'}}/><br/>
+      </div>
       <h2 className="form-title">상품 정보 수정</h2>
       <div className="form-group">
         <input
@@ -174,7 +177,7 @@ export default function ProductUpdateForm() {
         </select>
       </div>
       <div className="form-group">
-        이미지: <input type="file" name="pic" onChange={handleFileChange} />
+        수정할 이미지: <input type="file" name="pic" onChange={handleFileChange} />
       </div>
       <div className="form-group">
         <label>재고 :</label>
