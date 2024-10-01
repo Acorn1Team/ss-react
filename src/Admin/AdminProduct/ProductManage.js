@@ -213,10 +213,10 @@ export default function ProductManage() {
     }월 ${date.getDate()}일`;
   };
 
-  const gobacktoproductlist= () => {
+  const gobacktoproductlist = () => {
     fetchProducts(0, pageSize);
     setIsResultModalOpen(false);
-  }
+  };
 
   // 텍스트바 크기 조정을 위한 함수
   const renderSearchField = () => {
@@ -302,43 +302,47 @@ export default function ProductManage() {
           }
 
           .product-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: stretch;
-          }
+  display: flex;
+  justify-content: space-around; /* space-between 대신 space-around로 변경 */
+  align-items: stretch;
+  margin-bottom: 20px; /* 필요시 여백 조정 */
+}
 
           .product-card {
-            width: 250px;
-            height: 500px;
-            margin: 0 auto 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            margin: 20px;
-            overflow-y: auto;
-          }
-
+  width: 250px;
+  height: 500px;
+  margin: 0 auto 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 20px;
+  overflow-y: auto;
+  /* 높이를 고정 */
+  height: 500px; /* 고정된 높이 */
+}
+  
           .product-card img {
             margin: 10px 0;
           }
 
-          .reviews-container {
-            padding: 20px;
-            background-color: #f9f9f9;
-            border: 1px solid #ccc;
-            width: 35%;
-            margin-left: 20px;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 400px;
-            overflow-y: auto;
-          }
+          .product-card, .reviews-container {
+  width: 250px;
+  height: 500px;
+  margin: 0 20px 20px 20px; /* 좌우에 20px의 간격 추가 */
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto;
+}
+
         `}
       </style>
 
@@ -491,6 +495,10 @@ export default function ProductManage() {
               {/* 옆에 리뷰 표시 */}
               {expandedRows.includes(item.no) && (
                 <div className="reviews-container">
+                  <h3 style={{ textAlign: "center", marginBottom: "10px" }}>
+                    리뷰
+                  </h3>{" "}
+                  {/* 타이틀 추가 */}
                   <div>
                     {reviews[item.no] && reviews[item.no].length > 0 ? (
                       reviews[item.no].map((review) => (
@@ -563,11 +571,16 @@ export default function ProductManage() {
             <p>
               <b>{productToDelete.name}</b> 판매를 종료하시겠습니까?
             </p>
-            <button className="btn3" onClick={() => handleDelete(productToDelete.no)}>
+            <button
+              className="btn3"
+              onClick={() => handleDelete(productToDelete.no)}
+            >
               확인
             </button>
             &nbsp;&nbsp;
-            <button className="btn2" onClick={closeDeleteModal}>취소</button>
+            <button className="btn2" onClick={closeDeleteModal}>
+              취소
+            </button>
           </>
         )}
       </Modal>
@@ -591,7 +604,8 @@ export default function ProductManage() {
       >
         <>
           <br />
-          <h3>판매 종료 처리가 완료되었습니다.</h3><br/>
+          <h3>판매 종료 처리가 완료되었습니다.</h3>
+          <br />
           <button onClick={() => gobacktoproductlist()}>
             목록으로 돌아가기
           </button>
