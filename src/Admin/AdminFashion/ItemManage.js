@@ -15,7 +15,7 @@ export default function ItemManage() {
 
   const fetchItems = async (page = 0, size = 10) => {
     try {
-      const response = await axios.get(`/admin/item`, {
+      const response = await axios.get(`/api/admin/item`, {
         params: {
           page,
           size
@@ -48,7 +48,7 @@ export default function ItemManage() {
 
   const deleteItem = (itemNo) => {
     axios
-      .delete(`/admin/item/${itemNo}`)
+      .delete(`/api/admin/item/${itemNo}`)
       .then(
         setItems((prevItems) => prevItems.filter(item => item.no !== itemNo))  // 삭제된 항목만 제외하고 상태 업데이트
       )

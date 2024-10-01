@@ -30,7 +30,7 @@ export default function ProductUpdateForm() {
 
   useEffect(() => {
     axios
-      .get("/admin/product/" + no)
+      .get("/api/admin/product/" + no)
       .then((res) => {
         setState(res.data);
       })
@@ -103,7 +103,7 @@ export default function ProductUpdateForm() {
     }
 
     axios
-      .put("/admin/product/" + no, formData, {
+      .put("/api/admin/product/" + no, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

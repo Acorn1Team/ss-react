@@ -26,7 +26,7 @@ export default function CommunityManage() {
   const fetchPosts = async (page = 0) => {
     try {
       const response = await axios.get(
-        `/admin/posts?page=${page}&size=${pageSize}`
+        `/api/admin/posts?page=${page}&size=${pageSize}`
       );
 
       const { content, totalPages } = response.data;
@@ -44,7 +44,7 @@ export default function CommunityManage() {
   const fetchFilteredPosts = async (page = 0, sort = "latest") => {
     try {
       const response = await axios.get(
-        `/admin/posts/reported?page=${page}&size=${pageSize}&sort=${sort}`
+        `/api/admin/posts/reported?page=${page}&size=${pageSize}&sort=${sort}`
       );
 
       const filteredPosts = response.data.content.filter(
@@ -67,7 +67,7 @@ export default function CommunityManage() {
 
   const fetchReportedInfos = async () => {
     try {
-      const response = await axios.get(`/admin/posts/reportedInfos`);
+      const response = await axios.get(`/api/admin/posts/reportedInfos`);
       setReportedInfos(response.data);
     } catch (error) {
       console.error("신고 내역을 불러오는 중 오류 발생:", error);
@@ -77,7 +77,7 @@ export default function CommunityManage() {
   // 신고 글 삭제 (Backend에서 작성자에게 알림도 전송!)
   const deletePost = async (postNo) => {
     try {
-      const response = await axios.delete(`/admin/posts/${postNo}`);
+      const response = await axios.delete(`/api/admin/posts/${postNo}`);
 
       if (response.data.isSuccess) {
         setPosts(posts.filter((post) => post.no !== postNo));
@@ -94,7 +94,7 @@ export default function CommunityManage() {
 
   const fetchPostDetail = async (postNo) => {
     try {
-      const response = await axios.get(`/admin/posts/detail/${postNo}`);
+      const response = await axios.get(`/api/admin/posts/detail/${postNo}`);
       setSelectedPosts([...selectedPosts, response.data]); // 기존 선택된 게시글에 추가
     } catch (error) {
       console.error("게시글 상세 내용을 불러오는 중 오류 발생:", error);

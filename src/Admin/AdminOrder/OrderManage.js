@@ -56,7 +56,7 @@ export default function OrderManage() {
   // 주문 상태 변경
   const handleStatusChange = async () => {
     try {
-      await axios.put(`/admin/orders/${modalOrderNo}/status`, {
+      await axios.put(`/api/admin/orders/${modalOrderNo}/status`, {
         status: modalStatus,
       });
       setError(null);
@@ -88,7 +88,7 @@ export default function OrderManage() {
     status = ""
   ) => {
     try {
-      const response = await axios.get("/admin/orders", {
+      const response = await axios.get("/api/admin/orders", {
         params: {
           page,
           size,
@@ -112,7 +112,7 @@ export default function OrderManage() {
   // 주문 상세 정보 가져오기
   const fetchOrderDetail = async (orderNo) => {
     try {
-      const response = await axios.get(`/admin/orders/detail/${orderNo}`);
+      const response = await axios.get(`/api/admin/orders/detail/${orderNo}`);
       const { order, user, product } = response.data;
       setOrderDetails((prevDetails) => ({
         ...prevDetails,
