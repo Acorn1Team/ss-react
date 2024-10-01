@@ -14,7 +14,7 @@ export default function NoticeManage() {
   // 서버에서 공지사항 목록을 가져오는 함수
   const fetchNotices = async (page = 0, size = 10, category = "") => {
     try {
-      const response = await axios.get(`/admin/help/notice`, {
+      const response = await axios.get(`/api/admin/help/notice`, {
         params: {
           page,
           size,

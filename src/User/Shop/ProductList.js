@@ -28,8 +28,8 @@ export default function ProductList() {
   const refresh = async (selectedCategory, sortOption) => {
     const endpoint =
       selectedCategory && selectedCategory !== "전체"
-        ? `/list/category/${selectedCategory}`
-        : "/list"; // "전체"일 때는 기본 전체 상품 목록 호출
+        ? `/api/list/category/${selectedCategory}`
+        : "/api/list"; // "전체"일 때는 기본 전체 상품 목록 호출
 
     try {
       const res = await axios.get(endpoint);

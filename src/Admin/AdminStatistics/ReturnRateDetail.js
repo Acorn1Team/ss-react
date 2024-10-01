@@ -14,7 +14,7 @@ export default function ReturnRateDetail() {
 
     useEffect(() => {
         axios
-            .get('/admin/statistics/products/return-rate')
+            .get('/api/admin/statistics/products/return-rate')
             .then((response) => { setReturnRateData(response.data); })
             .catch((err) => { setError(err); })
             .finally(() => { setLoading(false); });

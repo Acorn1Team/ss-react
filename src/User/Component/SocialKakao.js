@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const SocialKakao = ({ props }) => {
   const Rest_api_key = "a8472f7278389dd9d8c2ed629df1ad30"; // REST API KEY
-  const redirect_uri = "http://localhost:3000/user/callback"; // Redirect URI
+  const redirect_uri = "http://scenestealer.kr/user/callback"; // Redirect URI
   const client_secret = "KI4VoBFOCJ5lsEf26ivoI0QYdAZpSVSl";
   const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
 

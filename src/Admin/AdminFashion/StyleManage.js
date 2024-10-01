@@ -39,7 +39,7 @@ export default function StyleManage() {
 
   useEffect(() => {
     axios
-      .get(`/admin/fashion/character/${no}/style`)
+      .get(`/api/admin/fashion/character/${no}/style`)
       .then((response) => {
         setStyles(response.data);
         getItems(no);
@@ -51,7 +51,7 @@ export default function StyleManage() {
 
   const getItems = (no) => {
     axios
-      .get(`/admin/fashion/character/${no}/item`)
+      .get(`/api/admin/fashion/character/${no}/item`)
       .then((response) => {
         setItems(response.data);
       })
@@ -82,7 +82,7 @@ export default function StyleManage() {
     if (itemKeyword) {
       try {
         const response = await axios.get(
-          `/admin/item/autocomplete/${itemKeyword}`
+          `/api/admin/item/autocomplete/${itemKeyword}`
         );
         setFilteredItems(response.data);
       } catch (error) {
@@ -92,7 +92,7 @@ export default function StyleManage() {
     } else {
       // 입력값 없을 때는 전체 목록을 가져온다.
       try {
-        const response = await axios.get("/admin/item/autocomplete");
+        const response = await axios.get("/api/admin/item/autocomplete");
         setFilteredItems(response.data);
       } catch (error) {
         console.error("아이템 못 가져오겠어: ", error);
@@ -105,7 +105,7 @@ export default function StyleManage() {
     if (productKeyword) {
       try {
         const response = await axios.get(
-          `/admin/product/autocomplete/${productKeyword}`
+          `/api/admin/product/autocomplete/${productKeyword}`
         );
         setFilteredProducts(response.data);
       } catch (error) {
@@ -115,7 +115,7 @@ export default function StyleManage() {
     } else {
       // 입력값 없을 때는 전체 목록을 가져온다.
       try {
-        const response = await axios.get("/admin/product/autocomplete");
+        const response = await axios.get("/api/admin/product/autocomplete");
         setFilteredProducts(response.data);
       } catch (error) {
         console.error("상품 못 가져오겠어: ", error);
@@ -137,7 +137,7 @@ export default function StyleManage() {
     styleForm.append("file", newStyle);
 
     await axios
-      .post(`/admin/fashion/character/${no}/style`, styleForm, {
+      .post(`/api/admin/fashion/character/${no}/style`, styleForm, {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((response) => {
@@ -155,10 +155,10 @@ export default function StyleManage() {
   const addExistingItem = async (style_no, item_no) => {
     try {
       // 아이템을 스타일에 연결
-      await axios.post(`/admin/fashion/${style_no}/item/${item_no}`);
+      await axios.post(`/api/admin/fashion/${style_no}/item/${item_no}`);
 
       // 아이템 리스트를 다시 불러오기
-      const response = await axios.get(`/admin/fashion/character/${no}/item`);
+      const response = await axios.get(`/api/admin/fashion/character/${no}/item`);
       setItems(response.data);
 
       // 모달을 닫기
@@ -183,11 +183,11 @@ export default function StyleManage() {
     itemForm.append("path", newItemPath);
 
     try {
-      await axios.post(`/admin/fashion/${currentStyle.no}/item`, itemForm, {
+      await axios.post(`/api/admin/fashion/${currentStyle.no}/item`, itemForm, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      const response = await axios.get(`/admin/fashion/character/${no}/item`);
+      const response = await axios.get(`/api/admin/fashion/character/${no}/item`);
       setItems(response.data);
       setItemKeyword('');
       setProductKeyword('');
@@ -210,10 +210,10 @@ export default function StyleManage() {
 
   const deleteStyle = () => {
     axios
-      .delete(`/admin/style/${styleToDelete.no}`)
+      .delete(`/api/admin/style/${styleToDelete.no}`)
       .then(
         axios
-          .get(`/admin/fashion/character/${no}/style`)
+          .get(`/api/admin/fashion/character/${no}/style`)
           .then((response) => {
             setStyles(response.data);
             getItems(no);
@@ -232,7 +232,7 @@ export default function StyleManage() {
 
   const deleteItem = () => {
     axios
-      .delete(`/admin/item/${itemToDelete.style}/${itemToDelete.no}`)
+      .delete(`/api/admin/item/${itemToDelete.style}/${itemToDelete.no}`)
       .then(() => {
         getItems(no)
       })

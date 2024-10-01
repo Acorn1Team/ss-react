@@ -94,7 +94,7 @@ export default function ProductInsert() {
 
     // 서버에 데이터 전송
     axios
-      .post("/admin/product", formData, {
+      .post("/api/admin/product", formData, {
         headers: {
           "Content-Type": "multipart/form-data", // FormData로 전송
         },

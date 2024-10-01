@@ -39,7 +39,7 @@ export default function ProductManage() {
     category = ""
   ) => {
     try {
-      const response = await axios.get("/admin/product", {
+      const response = await axios.get("/api/admin/product", {
         params: {
           page,
           size,
@@ -61,7 +61,7 @@ export default function ProductManage() {
 
   const fetchReviews = async (productId, page = 0, size = 5) => {
     try {
-      const response = await axios.get(`/admin/product/${productId}/reviews`, {
+      const response = await axios.get(`/api/admin/product/${productId}/reviews`, {
         params: {
           page,
           size,
@@ -119,7 +119,7 @@ export default function ProductManage() {
   const handleSoldOutConfirm = async () => {
     if (selectedProductNo !== null) {
       try {
-        await axios.put(`/admin/product/soldout/${selectedProductNo}`);
+        await axios.put(`/api/admin/product/soldout/${selectedProductNo}`);
         fetchProducts(currentPage, pageSize);
         closeSoldoutModal(); // 모달 닫기
       } catch (error) {
@@ -131,7 +131,7 @@ export default function ProductManage() {
 
   const handleDelete = async (no) => {
     try {
-      await axios.delete(`/admin/product/${no}`);
+      await axios.delete(`/api/admin/product/${no}`);
       setIsDeleteModalOpen(false);
       setIsResultModalOpen(true);
     } catch (error) {

@@ -19,10 +19,9 @@ export default function ShowSearch() {
   const scrapShow = async (e) => {
     e.preventDefault(); // 폼 제출 방지
     setShowDropdown(false);
-    console.log("스크래핑 시작");
     setShow({ no: "", title: "", pic: "" }); // 선택한 작품 초기화
     await axios
-      .get(`/admin/scrap/show/${inputValue}`)
+      .get(`/api/admin/scrap/show/${inputValue}`)
       .then((response) => {
         if (response.data.pic !== null) {
           setShow(response.data);
@@ -38,7 +37,7 @@ export default function ShowSearch() {
 
   const addShow = () => {
     axios
-      .post("/admin/show", show)
+      .post("/api/admin/show", show)
       .then((response) => {
         const showNo = response.data;
         setShow({ ...show, no: showNo });
@@ -54,7 +53,7 @@ export default function ShowSearch() {
       if (inputValue) {
         try {
           const response = await axios.get(
-            `/admin/show/autocomplete/${inputValue}`
+            `/api/admin/show/autocomplete/${inputValue}`
           );
           setFilteredItems(response.data);
         } catch (error) {
@@ -64,7 +63,7 @@ export default function ShowSearch() {
       } else {
         // 입력값 없을 때는 전체 목록을 가져온다.
         try {
-          const response = await axios.get("/admin/show/autocomplete");
+          const response = await axios.get("/api/admin/show/autocomplete");
           setFilteredItems(response.data);
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -86,7 +85,7 @@ export default function ShowSearch() {
     showForm.append("file", file);
 
     axios
-      .post("/admin/show/diy", showForm, {
+      .post("/api/admin/show/diy", showForm, {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((response) => {

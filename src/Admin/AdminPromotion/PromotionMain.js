@@ -30,7 +30,7 @@ export default function PromotionMain() {
 
   const fetchCoupons = () => {
     axios
-      .get("/admin/coupons", {
+      .get("/api/admin/coupons", {
         params: { page: currentCouponPage, size: couponPageSize },
       })
       .then((response) => {

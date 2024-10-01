@@ -19,7 +19,7 @@ function AdminChat() {
   useEffect(() => {
     const fetchChatRooms = () => {
       axios
-        .get(`/chat/admin`)
+        .get(`/api/chat/admin`)
         .then((res) => {
           setChatRooms(res.data);
         })
@@ -60,14 +60,14 @@ function AdminChat() {
     }
 
     axios
-      .get(`/chat/admin/${chatNo}`)
+      .get(`/api/chat/admin/${chatNo}`)
       .then((res) => {
         setMessages(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-    const socket = new SockJS(`http://${window.location.hostname}:8080/ws`);
+    const socket = new SockJS(`http://scenestealer.kr/ws`);
 
     // const socket = new SockJS("/ws");
     const client = new Client({
@@ -98,7 +98,7 @@ function AdminChat() {
 
   const chatClose = () => {
     axios
-      .put(`/chat/user/${selectedUserId}/${chatNo}`)
+      .put(`/api/chat/user/${selectedUserId}/${chatNo}`)
       .then((res) => {
         if (res.data.result) {
           setSelectedUserId(null);

@@ -22,7 +22,7 @@ const KakaoShareButton = ({ title, description, imageUrl, webUrl }) => {
             description: description,
             imageUrl: "https://i.ibb.co/s9r1cty/ready.png",
             link: {
-              webUrl: "http://192.168.0.12:3000/user",
+              webUrl: "http://scenestealer.kr/user",
             },
           },
           buttons: [

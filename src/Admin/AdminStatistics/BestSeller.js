@@ -14,7 +14,7 @@ export default function BestSellerChart() {
 
     useEffect(() => {
         axios
-            .get('/admin/statistics/products/best')
+            .get('/api/admin/statistics/products/best')
             .then((response) => {
                 setBestSellerData(response.data);
             })
