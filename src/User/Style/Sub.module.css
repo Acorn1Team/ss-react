@@ -64,6 +64,24 @@
   transform: scale(1.05);
 }
 
+.characterNav {
+  cursor: pointer;
+}
+
+.movePage {
+  display: inline-block;
+  transition: transform 0.3s ease; /* 애니메이션 속도와 스타일 */
+}
+
+.movePage:hover {
+  transform: scale(1.1); /* 마우스를 올렸을 때 살짝 커지게 설정 */
+}
+
+.noStyleMessage {
+  padding-top: 50%;
+  text-align: center;
+}
+
 /* 캐릭터 이미지 부모 요소 - 3:4 비율 유지 */
 .characterImgWrapper {
   width: 70%;

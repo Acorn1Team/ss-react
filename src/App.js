@@ -22,7 +22,7 @@ function App() {
 
   useEffect(() => {
     dispatch({ type: "SET_LOADING", payload: true });
-    const socket = new SockJS(`http://${window.location.hostname}:8080/ws`);
+    const socket = new SockJS(`http://scenestealer.kr/ws`);
 
     // const socket = new SockJS("/ws");
     const client = new Client({

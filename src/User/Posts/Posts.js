@@ -820,10 +820,14 @@ export default function Posts() {
               >
                 {commentContent.length} / 100
               </div>
+              <button
+                onClick={insertComment}
+                className="btn1"
+                disabled={loading}
+              >
+                댓글 등록
+              </button>
             </div>
-            <button onClick={insertComment} className="btn1" disabled={loading}>
-              댓글 등록
-            </button>
           </div>
 
           {isReportModalOpen && (

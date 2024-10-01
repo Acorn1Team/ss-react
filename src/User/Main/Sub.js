@@ -167,10 +167,16 @@ export default function Sub() {
               />
             </div>
             <div className={styles.characterNav}>
-              <span className="movePage" onClick={() => changeCharacter(-1)}>
+              <span
+                className={styles.movePage}
+                onClick={() => changeCharacter(-1)}
+              >
                 <PiCaretCircleDoubleLeftFill size={50} color="df919e" />
               </span>
-              <span onClick={() => changeCharacter(1)}>
+              <span
+                className={styles.movePage}
+                onClick={() => changeCharacter(1)}
+              >
                 <PiCaretCircleDoubleRightFill size={50} color="df919e" />
               </span>
             </div>
@@ -219,50 +225,58 @@ export default function Sub() {
       </div>
 
       <div className={styles.rightSection}>
-        {styleData
-          .filter((s) => s.characterNo === selectCharacter.no)
-          .map((s) => (
-            <div className={styles.styleBox} key={s.no}>
-              <div className={styles.styleItemsWrapper}>
-                <img
-                  className={styles.styleImg}
-                  src={s.pic}
-                  alt={`Style ${s.no}`}
-                />
-                {styleItems
-                  .filter((si) => si.styleNo === s.no)
-                  .map((si) =>
-                    items
-                      .filter((i) => si.itemNo === i.no)
-                      .map((i) => (
-                        <div
-                          className={styles.productLink}
-                          onMouseEnter={() => setHoveredItem(i.no)}
-                          onMouseLeave={() => setHoveredItem(null)}
-                          key={i.no}
-                        >
-                          <img src={i.pic} alt={`Item ${i.no}`} />
-                          {hoveredItem === i.no && (
-                            <div className={styles.hoverOverlay}>
-                              <Link className="btn1Small" to={i.path}>
-                                해당 상품 보러 가기
-                                <br /> (외부 사이트 이동)
-                              </Link>
-                              <Link
-                                className="btn1Small"
-                                to={`/user/shop/productList/detail/${i.productNo}`}
-                              >
-                                SceneStealer 에서
-                                <br /> 유사한 상품 보러 가기
-                              </Link>
-                            </div>
-                          )}
-                        </div>
-                      ))
-                  )}
+        {styleData &&
+        styleData.filter((s) => s.characterNo === selectCharacter?.no).length >
+          0 ? (
+          styleData
+            .filter((s) => s.characterNo === selectCharacter.no)
+            .map((s) => (
+              <div className={styles.styleBox} key={s.no}>
+                <div className={styles.styleItemsWrapper}>
+                  <img
+                    className={styles.styleImg}
+                    src={s.pic}
+                    alt={`Style ${s.no}`}
+                  />
+                  {styleItems
+                    .filter((si) => si.styleNo === s.no)
+                    .map((si) =>
+                      items
+                        .filter((i) => si.itemNo === i.no)
+                        .map((i) => (
+                          <div
+                            className={styles.productLink}
+                            onMouseEnter={() => setHoveredItem(i.no)}
+                            onMouseLeave={() => setHoveredItem(null)}
+                            key={i.no}
+                          >
+                            <img src={i.pic} alt={`Item ${i.no}`} />
+                            {hoveredItem === i.no && (
+                              <div className={styles.hoverOverlay}>
+                                <Link className="btn1Small" to={i.path}>
+                                  해당 상품 보러 가기
+                                  <br /> (외부 사이트 이동)
+                                </Link>
+                                <Link
+                                  className="btn1Small"
+                                  to={`/user/shop/productList/detail/${i.productNo}`}
+                                >
+                                  SceneStealer 에서
+                                  <br /> 유사한 상품 보러 가기
+                                </Link>
+                              </div>
+                            )}
+                          </div>
+                        ))
+                    )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+        ) : (
+          <div className={styles.noStyleMessage}>
+            아직 등록된 스타일 정보가 없습니다.
+          </div>
+        )}
       </div>
     </div>
   );

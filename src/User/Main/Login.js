@@ -14,7 +14,7 @@ const Login = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-  
+
     const loginData = { id, pwd };
     try {
       const response = await fetch("/api/user/auth/login", {
@@ -24,13 +24,13 @@ const Login = () => {
         },
         body: JSON.stringify(loginData),
       });
-  
+
       // 응답이 HTML인지 JSON인지 확인
       const contentType = response.headers.get("content-type");
-  
+
       if (contentType && contentType.includes("application/json")) {
         const result = await response.json();
-  
+
         if (response.ok && result.success) {
           // 로그인 성공 처리
           sessionStorage.setItem("id", result.user.no);
@@ -38,7 +38,9 @@ const Login = () => {
           navigate(-1);
         } else {
           // 서버에서 전달된 오류 메시지
-          setErrorMessage(result.message || "아이디 혹은 비밀번호가 틀렸습니다.");
+          setErrorMessage(
+            result.message || "아이디 혹은 비밀번호가 틀렸습니다."
+          );
         }
       } else {
         // JSON이 아닌 응답을 받을 때 (예: HTML 에러 페이지)
