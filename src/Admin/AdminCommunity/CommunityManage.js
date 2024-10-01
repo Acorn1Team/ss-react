@@ -22,6 +22,8 @@ export default function CommunityManage() {
 
   const [postToDelete, setPostToDelete] = useState(null); // 삭제할 게시글
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false); // 상세보기 모달 상태
+  const [postToView, setPostToView] = useState(null); // 상세보기할 게시글
 
   const fetchPosts = async (page = 0) => {
     try {
@@ -65,6 +67,11 @@ export default function CommunityManage() {
     setIsDeleteModalOpen(true);
   };
 
+  const openDetailModal = (post) => {
+    setPostToView(post); // 상세보기할 게시글 저장
+    setIsDetailModalOpen(true); // 상세보기 모달 열기
+  };
+
   const fetchReportedInfos = async () => {
     try {
       const response = await axios.get(`/api/admin/posts/reportedInfos`);
@@ -89,25 +96,6 @@ export default function CommunityManage() {
       }
     } catch (error) {
       console.error("신고 글 삭제 중 오류 발생:", error);
-    }
-  };
-
-  const fetchPostDetail = async (postNo) => {
-    try {
-      const response = await axios.get(`/api/admin/posts/detail/${postNo}`);
-      setSelectedPosts([...selectedPosts, response.data]); // 기존 선택된 게시글에 추가
-    } catch (error) {
-      console.error("게시글 상세 내용을 불러오는 중 오류 발생:", error);
-    }
-  };
-
-  const togglePostDetail = (post) => {
-    if (selectedPosts.some((selected) => selected.no === post.no)) {
-      setSelectedPosts(
-        selectedPosts.filter((selected) => selected.no !== post.no)
-      );
-    } else {
-      fetchPostDetail(post.no);
     }
   };
 
@@ -191,23 +179,73 @@ export default function CommunityManage() {
                     />
                   </div>
                 )}
-                {selectedPosts.some((selected) => selected.no === post.no)
-                  ? post.content
-                  : truncateText(post.content, 20)}
-                {post.content.length > 20 && (
-                  <span
-                    style={{ cursor: "pointer", color: "blue" }} // 클릭 가능한 스타일 추가
-                    onClick={() => togglePostDetail(post)} // 상세보기 토글
-                  >
-                    {selectedPosts.some((selected) => selected.no === post.no)
-                      ? "닫기"
-                      : "상세보기"}
-                  </span>
-                )}
+                {truncateText(post.content, 20)}
+                <span
+                  style={{ cursor: "pointer", color: "blue" }} // 클릭 가능한 스타일 추가
+                  onClick={() => openDetailModal(post)} // 상세보기 모달 열기
+                >
+                  상세보기
+                </span>
               </li>
             );
           })}
         </ul>
+
+        {/* 게시글 상세보기 모달 */}
+        <Modal
+          isOpen={isDetailModalOpen}
+          onRequestClose={() => setIsDetailModalOpen(false)}
+          contentLabel="게시글 상세보기"
+          style={{
+            overlay: {
+              backgroundColor: "rgba(0, 0, 0, 0.5)", // 배경 흐리게
+              display: "flex",
+              justifyContent: "center", // 모달을 중앙에 정렬
+              alignItems: "center", // 세로 방향 중앙 정렬
+            },
+            content: {
+              background: "white",
+              padding: "20px", // 내부 패딩
+              borderRadius: "8px",
+              textAlign: "center",
+              width: "500px", // 모달의 고정 너비
+              height: "350px", // 모달의 고정 높이
+              margin: "auto",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between", // 내용을 적절히 배치
+              overflowY: "auto", // 내용이 많을 경우 스크롤 허용
+            },
+          }}
+        >
+          {postToView && (
+            <>
+              <h3 style={{ marginBottom: "10px" }}>게시글 상세보기</h3>
+              <div
+                style={{
+                  flexGrow: 1,
+                  overflowY: "auto",
+                  wordBreak: "break-word",
+                }}
+              >
+                <p>{postToView.content}</p> {/* 글 내용 표시 */}
+              </div>
+              <button
+                className="confirm-button"
+                onClick={() => setIsDetailModalOpen(false)}
+                style={{
+                  padding: "10px 20px",
+                  marginBottom: "0",
+                  width: "100px",
+                  alignSelf: "center",
+                }}
+              >
+                닫기
+              </button>
+            </>
+          )}
+        </Modal>
+
         <Modal
           isOpen={isDeleteModalOpen}
           onRequestClose={() => setIsDeleteModalOpen(false)}
@@ -292,16 +330,6 @@ export default function CommunityManage() {
 .post-image {
   height: 150px;
   width: auto;
-}
-
-.post-detail {
-  border-top: 1px solid #ccc;
-  padding-top: 20px;
-  margin-top: 20px;
-}
-
-.post-detail img {
-  height: 200px;
 }
 
         `}
