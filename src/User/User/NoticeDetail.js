@@ -17,7 +17,7 @@ export default function NoticeDetail() {
 
   const getNoticeInfo = () => {
     axios
-      .get(`/user/notice/${noticeNo}`)
+      .get(`/api/user/notice/${noticeNo}`)
       .then((res) => {
         setNoticeInfo(res.data);
       })
