@@ -39,17 +39,17 @@ export default function UserHome() {
 
   const fetchData = () => {
     axios
-      .get("/main/showData")
+      .get("/api/main/showData") // /api 추가
       .then((res) => setShow(Array.isArray(res.data) ? res.data : []))
       .catch(() => setShow([]));
 
     axios
-      .get("/main/showNewReview")
+      .get("/api/main/showNewReview") // /api 추가
       .then((res) => setReview(Array.isArray(res.data) ? res.data : []))
       .catch(() => setReview([]));
 
     axios
-      .get("/main/showStyleBest")
+      .get("/api/main/showStyleBest") // /api 추가
       .then((res) => setPosts(Array.isArray(res.data) ? res.data : []))
       .catch(() => setPosts([]));
   };
@@ -58,7 +58,7 @@ export default function UserHome() {
     fetchData();
 
     axios
-      .get(`/main/forRandom`)
+      .get(`/api/main/forRandom`) // /api 추가
       .then((res) => setStyleItemCount(res.data))
       .catch((err) => {
         console.log(err);
@@ -70,13 +70,13 @@ export default function UserHome() {
       const n = Math.floor(Math.random() * styleItemCount) + 1;
 
       axios
-        .get(`/main/random/${n}`)
+        .get(`/api/main/random/${n}`) // /api 추가
         .then((res) => {
           setRandomShow(res.data.show);
-          setRandomCharacterNames(res.data.names)
-          setRandomCharacter(res.data.character)
-          setRandomStyle(res.data.style)
-          setRandomItems(res.data.items)
+          setRandomCharacterNames(res.data.names);
+          setRandomCharacter(res.data.character);
+          setRandomStyle(res.data.style);
+          setRandomItems(res.data.items);
         })
         .catch((err) => {
           console.log(err);
@@ -93,7 +93,7 @@ export default function UserHome() {
 
     if (popupCookieCheck === null) {
       axios
-        .get(`/main/popup`)
+        .get(`/api/main/popup`) // /api 추가
         .then((res) => {
           const popupData = res.data.map((p) => ({
             ...p,
@@ -187,96 +187,114 @@ export default function UserHome() {
                 </span>
 
                 <div className="horizontal-container">
-                <div style={{ textAlign: "center" }}>
-                  <Link to={`/user/main/sub/${randomShow?.no}`}>
-                    <section id="card1" className="card">
-                      <img src={randomShow?.pic} alt="mainpic" />
-                      <div className="card__content">
-                        <p className="card__title">{randomShow?.title || "제목 없음"}</p>
-                        <p className="card__description">
-                          {randomCharacterNames && randomCharacterNames.length > 0 ? (
-                            randomCharacterNames.map((c) => (
-                              <div key={c}>{c.slice(0, -2)}</div>
-                            ))
-                          ) : (
-                            <p>캐릭터 정보가 없습니다.</p>
-                          )}
-                        </p>
-                        <br />
-                        <p style={{ fontSize: "80%" }}>
-                          클릭해 보세요!
-                          <br /> '{randomShow?.title}'의
-                          <br /> 더 많은 스타일을 <br />볼 수 있어요.
-                        </p>
-                      </div>
-                    </section>
-                  </Link>
-                  <Link to="/user/main/show">
-                    <button className="btn3Small">작품 목록 보러 가기</button>
-                  </Link>
-                </div>
-
-                <div className="random-character">
-                  <img className="characterPic" src={randomCharacter?.pic} alt="characterPic" />
-                  {randomCharacter?.name.slice(0, -2)}
-                  <br />
-                  <button
-                    onClick={() => {
-                      mainLoad(); // 기존 새로고침 기능
-                      const refreshIcon = document.querySelector(".refresh-button svg");
-                      refreshIcon.style.animation = "none"; // 애니메이션 리셋
-                      setTimeout(() => {
-                        refreshIcon.style.animation = ""; // 애니메이션 재시작
-                      }, 0); // 짧은 지연 후 애니메이션 재시작
-                    }}
-                    className="refresh-button"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      className="bi bi-arrow-repeat"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z" />
-                      <path
-                        fillRule="evenodd"
-                        d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-
-                <div className="random-layout">
-                  <div className="random-style-container">
-                    {randomStyle ? (
-                      <div>
-                        <img src={randomStyle.pic} alt={`style-${randomStyle.no}`} />
-                      </div>
-                    ) : (
-                      <p>스타일 정보가 없습니다.</p>
-                    )}
-                  </div>
-
-                  <div className="random-style-items">
-                    {randomItems.length > 0 ? (
-                      randomItems.map((item) => (
-                        <div key={item.no}>
-                          <Link to={`/user/shop/productlist/detail/${item.productNo}`}>
-                            <img className="randomItemPic" src={item.pic} alt={`item-${item.no}`} />
-                          </Link>
+                  <div style={{ textAlign: "center" }}>
+                    <Link to={`/user/main/sub/${randomShow?.no}`}>
+                      <section id="card1" className="card">
+                        <img src={randomShow?.pic} alt="mainpic" />
+                        <div className="card__content">
+                          <p className="card__title">
+                            {randomShow?.title || "제목 없음"}
+                          </p>
+                          <p className="card__description">
+                            {randomCharacterNames && randomCharacterNames.length > 0 ? (
+                              randomCharacterNames.map((c) => (
+                                <div key={c}>{c.slice(0, -2)}</div>
+                              ))
+                            ) : (
+                              <p>캐릭터 정보가 없습니다.</p>
+                            )}
+                          </p>
+                          <br />
+                          <p style={{ fontSize: "80%" }}>
+                            클릭해 보세요!
+                            <br /> '{randomShow?.title}'의
+                            <br /> 더 많은 스타일을 <br />
+                            볼 수 있어요.
+                          </p>
                         </div>
-                      ))
-                    ) : (
-                      <p>
-                        아이템 정보가
-                        <br /> 없습니다.
-                      </p>
-                    )}
+                      </section>
+                    </Link>
+                    <Link to="/user/main/show">
+                      <button className="btn3Small">작품 목록 보러 가기</button>
+                    </Link>
+                  </div>
+
+                  <div className="random-character">
+                    <img
+                      className="characterPic"
+                      src={randomCharacter?.pic}
+                      alt="characterPic"
+                    />
+                    {randomCharacter?.name.slice(0, -2)}
+                    <br />
+                    <button
+                      onClick={() => {
+                        mainLoad(); // 기존 새로고침 기능
+                        const refreshIcon = document.querySelector(
+                          ".refresh-button svg"
+                        );
+                        refreshIcon.style.animation = "none"; // 애니메이션 리셋
+                        setTimeout(() => {
+                          refreshIcon.style.animation = ""; // 애니메이션 재시작
+                        }, 0); // 짧은 지연 후 애니메이션 재시작
+                      }}
+                      className="refresh-button"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        className="bi bi-arrow-repeat"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z" />
+                        <path
+                          fillRule="evenodd"
+                          d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+
+                  <div className="random-layout">
+                    <div className="random-style-container">
+                      {randomStyle ? (
+                        <div>
+                          <img
+                            src={randomStyle.pic}
+                            alt={`style-${randomStyle.no}`}
+                          />
+                        </div>
+                      ) : (
+                        <p>스타일 정보가 없습니다.</p>
+                      )}
+                    </div>
+
+                    <div className="random-style-items">
+                      {randomItems.length > 0 ? (
+                        randomItems.map((item) => (
+                          <div key={item.no}>
+                            <Link
+                              to={`/user/shop/productlist/detail/${item.productNo}`}
+                            >
+                              <img
+                                className="randomItemPic"
+                                src={item.pic}
+                                alt={`item-${item.no}`}
+                              />
+                            </Link>
+                          </div>
+                        ))
+                      ) : (
+                        <p>
+                          아이템 정보가
+                          <br /> 없습니다.
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
 
                 <h3 style={{ color: "#c7727e" }}>
                   FIND THE STYLE YOU LOVE!
