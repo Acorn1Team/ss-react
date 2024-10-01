@@ -18,6 +18,12 @@
   height: 150px;
   object-fit: cover;
   border-radius: 5px;
+  transition: transform 0.3s ease; /* 호버 시 부드러운 변화를 위해 트랜지션 추가 */
+}
+
+.reviewCard img:hover {
+  transform: scale(1.1); /* 호버 시 이미지 확대 */
+  opacity: 0.8; /* 호버 시 이미지 투명도 조절 */
 }
 
 .reviewInfo {
