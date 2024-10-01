@@ -89,7 +89,7 @@ const Register = () => {
 
     try {
       const response = await axios.get(
-        "/user/emailCheck",
+        "/api/user/emailCheck",
         { params: { email: fullEmail } } // 이메일을 파라미터로 전달
       ); // API 엔드포인트와 이메일 파라미터를 적절히 설정하세요
       const userInfo = response.data;
@@ -119,7 +119,7 @@ const Register = () => {
 
     try {
       const response = await fetch(
-        `/user/auth/check?id=${encodeURIComponent(id)}`,
+        `/api/user/auth/check?id=${encodeURIComponent(id)}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -155,7 +155,7 @@ const Register = () => {
   // 이메일 중복 확인 함수
   const checkEmailDuplication = async (email, setErrorMessage) => {
     try {
-      const response = await axios.get("/user/emailCheck", {
+      const response = await axios.get("/api/user/emailCheck", {
         params: { email }, // 파라미터로 이메일 전달
       });
       const data = response.data;
@@ -194,7 +194,7 @@ const Register = () => {
     console.log(email, setVerificationCode, setErrorMessage);
     try {
       const response = await fetch(
-        "/user/auth/send-verification-code",
+        "/api/user/auth/send-verification-code",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -224,7 +224,7 @@ const Register = () => {
   const verifyEmailCodeOnServer = async (email, inputCode, setErrorMessage) => {
     try {
       const response = await fetch(
-        "/user/auth/verify-code",
+        "/api/user/auth/verify-code",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -460,7 +460,7 @@ const Register = () => {
 
     setLoading(true);
     try {
-      const response = await fetch("/user/auth/register", {
+      const response = await fetch("/api/user/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(registerData),
@@ -480,23 +480,6 @@ const Register = () => {
       setLoading(false); // 로딩 종료
     }
   };
-
-  //     if (!response.ok) {
-  //       const errorText = await response.text();
-  //       throw new Error(`회원가입 요청이 실패했습니다: ${errorText}`);
-  //     }
-  //     <Loading />;
-  //     const responseData = await response.json(); // 응답 데이터를 받고 처리
-
-  //     // 회원가입이 성공하면 리다이렉트
-  //     navigate("/user/register/success");
-  //   } catch (error) {
-  //     console.error("회원가입 요청 중 오류 발생:", error);
-  //     setErrorMessage({ global: error.message });
-  //   } finally {
-  //     setLoading(false); // 로딩 종료
-  //   }
-  // };
 
   return (
     <div className={styles.body}>

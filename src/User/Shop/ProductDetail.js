@@ -25,7 +25,7 @@ export default function ProductDetail() {
 
   const refresh = (no) => {
     axios
-      .get(`/list/product/${no}`)
+      .get(`/api/list/product/${no}`)
       .then((res) => {
         setProduct(res.data);
       })

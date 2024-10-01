@@ -25,7 +25,7 @@ export default function ReviewEditPage() {
     }
   
     axios
-      .put(`/review/update/${no}`, formData)
+      .put(`/api/review/update/${no}`, formData)
       .then((response) => {
         console.log("리뷰 제출 성공:", response.data);
         navigate(`../review`); // 성공 시 페이지 이동

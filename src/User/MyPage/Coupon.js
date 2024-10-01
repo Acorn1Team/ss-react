@@ -30,7 +30,7 @@ export default function Coupon() {
 
   const getCouponData = () => {
     axios
-      .get(`/coupon/${userNo}`, {
+      .get(`/api/coupon/${userNo}`, {
         // 사용하지 않은 쿠폰만 불러옴!!
         params: {
           page: currentPage,

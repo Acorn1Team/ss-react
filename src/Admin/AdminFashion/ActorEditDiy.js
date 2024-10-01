@@ -14,7 +14,7 @@ export default function ActorEditDiy() {
 
   const scrapActors = (title) => {
     axios
-      .get(`/admin/scrap/actors/${title}`)
+      .get(`/api/admin/scrap/actors/${title}`)
       .then((response) => {
         const updatedData = response.data.map((actor) => ({
           ...actor,
@@ -33,7 +33,7 @@ export default function ActorEditDiy() {
 
   const getShowInfo = () => {
     axios
-      .get(`/admin/fashion/show/${no}`)
+      .get(`/api/admin/fashion/show/${no}`)
       .then((response) => {
         setShow(response.data.show);
         setActors(response.data.actorsInfo);
@@ -52,7 +52,7 @@ export default function ActorEditDiy() {
 
   const addCharacter = (data) => {
     axios
-      .post(`/admin/show/${show.no}/character`, data)
+      .post(`/api/admin/show/${show.no}/character`, data)
       .then((response) => {
         // 추가된 캐릭터의 PK 반환
         navigate(`/admin/fashion/character/${response.data}`, { state: data }); // 배역 정보 들고 감
@@ -69,7 +69,7 @@ export default function ActorEditDiy() {
 
   const deleteCharacter = (no) => {
     axios
-      .delete(`/admin/character/${no}`)
+      .delete(`/api/admin/character/${no}`)
       .then(getShowInfo)
       .then(setIsModalOpen(false))
       .catch((error) => {

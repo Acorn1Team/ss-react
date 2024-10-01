@@ -24,7 +24,7 @@ export default function PromotionPopup() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `/admin/promotion/autocomplete/${locationCategory}/${inputValue}`
+          `/api/admin/promotion/autocomplete/${locationCategory}/${inputValue}`
         );
         setFilteredItems(response.data);
       } catch (error) {

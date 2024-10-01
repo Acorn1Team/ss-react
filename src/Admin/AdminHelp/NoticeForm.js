@@ -73,7 +73,7 @@ export default function NoticeForm() {
 
     // 서버에 데이터 전송
     axios
-      .post("/admin/help/notice", state)
+      .post("/api/admin/help/notice", state)
       .then((res) => {
         if (res.data.isSuccess) {
           setIsModalOpen(true);

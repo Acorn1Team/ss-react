@@ -22,7 +22,7 @@ export default function Scrap() {
   // 스크랩한 정보 가져오기
   const getScrapList = () => {
     axios
-      .get(`/myScrapPage/${no}`, {
+      .get(`/api/myScrapPage/${no}`, {
         params: {
           page: currentPage,
           size: pageSize,
@@ -47,7 +47,7 @@ export default function Scrap() {
   // 스크랩 취소 함수
   const handleScrapCancel = (scrapNo) => {
     axios
-      .delete(`/main/scrap/${scrapNo}/${no}`)
+      .delete(`/api/main/scrap/${scrapNo}/${no}`)
       .then((res) => {
         if (res.data.result === true) {
           // 삭제 성공시 리스트 다시 불러오기

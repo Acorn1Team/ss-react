@@ -50,7 +50,7 @@ export default function PostListByUser() {
   // 로그인된 유저가 쓴 글 불러오기
   const getPostsByUser = () => {
     axios
-      .get(`/posts/list/${no}`, {
+      .get(`/api/posts/list/${no}`, {
         params: {
           page: currentPage,
           size: pageSize,
@@ -77,7 +77,7 @@ export default function PostListByUser() {
   // 휴지통에 있는 글 불러오기
   const getDeletedPosts = () => {
     axios
-      .get(`/posts/deleted/${no}`, {
+      .get(`/api/posts/deleted/${no}`, {
         params: {
           page: deletedCurrentPage,
           size: pageSize,
@@ -131,7 +131,7 @@ export default function PostListByUser() {
     try {
       await Promise.all(
         selectedPosts.map((postNo) =>
-          axios.delete(`/posts/soft-delete/${postNo}`)
+          axios.delete(`/api/posts/soft-delete/${postNo}`)
         )
       );
       const updatedUserPosts = userPosts.filter(
@@ -148,7 +148,7 @@ export default function PostListByUser() {
   const handleRestoreSelected = async () => {
     try {
       await Promise.all(
-        selectedPosts.map((postNo) => axios.put(`/posts/restore/${postNo}`))
+        selectedPosts.map((postNo) => axios.put(`/api/posts/restore/${postNo}`))
       );
       getDeletedPosts();
       setSelectedPosts([]);
@@ -162,7 +162,7 @@ export default function PostListByUser() {
     try {
       await Promise.all(
         selectedPosts.map((postNo) =>
-          axios.delete(`/posts/permanent-delete/${postNo}`)
+          axios.delete(`/api/posts/permanent-delete/${postNo}`)
         )
       );
       getDeletedPosts();

@@ -12,7 +12,7 @@ export default function Archive() {
   useEffect(() => {
     // 활성화된 게시물 가져오기
     axios
-      .get(`/posts/list/${userNo}`)
+      .get(`/api/posts/list/${userNo}`)
       .then((response) => {
         setPosts(response.data.content);
         setLoading(false);
@@ -21,7 +21,7 @@ export default function Archive() {
 
     // 삭제된 게시물 가져오기 (휴지통)
     axios
-      .get(`/posts/deleted`)
+      .get(`/api/posts/deleted`)
       .then((response) => {
         setDeletedPosts(response.data.content);
         setLoading(false);
@@ -31,7 +31,7 @@ export default function Archive() {
 
   const handleSoftDelete = (postNo) => {
     axios
-      .delete(`/posts/soft-delete/${postNo}`)
+      .delete(`/api/posts/soft-delete/${postNo}`)
       .then((response) => {
         if (response.data.result) {
           setPosts(posts.filter((post) => post.no !== postNo));
@@ -46,7 +46,7 @@ export default function Archive() {
 
   const handleRestore = (postNo) => {
     axios
-      .put(`/posts/restore/${postNo}`)
+      .put(`/api/posts/restore/${postNo}`)
       .then((response) => {
         if (response.data.result) {
           setDeletedPosts(deletedPosts.filter((post) => post.no !== postNo));
@@ -58,7 +58,7 @@ export default function Archive() {
 
   const handlePermanentDelete = (postNo) => {
     axios
-      .delete(`/posts/permanent-delete/${postNo}`)
+      .delete(`/api/posts/permanent-delete/${postNo}`)
       .then((response) => {
         if (response.data.result) {
           setDeletedPosts(deletedPosts.filter((post) => post.no !== postNo));

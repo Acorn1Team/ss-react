@@ -16,7 +16,7 @@ const ProductReviews = ({ product }) => {
   // 전체 리뷰 데이터를 불러오고 평균 평점을 계산하는 함수
   const fetchReviews = async (productId, page = 0, size = pageSize) => {
     try {
-      const response = await axios.get(`/admin/product/${productId}/reviews`, {
+      const response = await axios.get(`/api/admin/product/${productId}/reviews`, {
         params: {
           page,
           size,
@@ -35,7 +35,7 @@ const ProductReviews = ({ product }) => {
       // 모든 페이지에서 리뷰를 가져와 평균 평점 계산
       for (let i = 0; i < allPages; i++) {
         const pageResponse = await axios.get(
-          `/admin/product/${productId}/reviews`,
+          `/api/admin/product/${productId}/reviews`,
           {
             params: {
               page: i,

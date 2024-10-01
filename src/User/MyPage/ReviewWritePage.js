@@ -73,7 +73,7 @@ export default function ReviewWritePage() {
     }
 
     axios
-      .post(`/list/review/${orderProductNo}`, formData, {
+      .post(`/api/list/review/${orderProductNo}`, formData, {
         // 서버에서 주문상품번호를 가져와야함
         headers: {
           "Content-Type": "multipart/form-data", // FormData로 전송하기 위한 헤더 설정

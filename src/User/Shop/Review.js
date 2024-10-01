@@ -13,7 +13,7 @@ export default function Review() {
 
   const getReviewData = () => {
     axios
-      .get(`/mypage/review/detail/${no}`)
+      .get(`/api/mypage/review/detail/${no}`)
       .then((res) => {
         setReviewData(res.data);
 
@@ -33,7 +33,7 @@ export default function Review() {
     // 상품 이미지를 가져오는 함수 (리뷰 이미지가 없을 때 대체)
     const fetchProductImage = (productNo) => {
       axios
-        .get(`/list/product/${productNo}`)
+        .get(`/api/list/product/${productNo}`)
         .then((res) => {
           setReviewImage(res.data.pic); // 상품 이미지 설정
           

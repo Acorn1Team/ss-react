@@ -52,7 +52,7 @@ export default function PromotionCoupon() {
 
     setIsLoading(true);
     axios
-      .post("/admin/coupon", couponData)
+      .post("/api/admin/coupon", couponData)
       .then((response) => {
         if (response.data.isSuccess) {
           setIsLoading(false);

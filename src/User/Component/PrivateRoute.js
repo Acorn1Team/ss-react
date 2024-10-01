@@ -17,7 +17,7 @@ const useUserAuthenticated = () => {
     if ((token || tokenK || tokenN) && userNo) {
       if (token) {
         axios
-          .get(`/user/info`, {
+          .get(`/api/user/info`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -47,7 +47,7 @@ const useUserAuthenticated = () => {
             const id = res.data.id;
             console.log(userNo, " ", id);
             axios
-              .get(`/user/check/${id}/${userNo}`)
+              .get(`/api/user/check/${id}/${userNo}`)
               .then((res) => {
                 if (res.data.result) {
                   setAuthenticated(true); // 사용자 인증 성공 시 true로 설정

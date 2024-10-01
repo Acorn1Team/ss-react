@@ -25,7 +25,7 @@ export default function UserProfile() {
 
   const userInfo = () => {
     axios
-      .get(`/posts/user/${userNo}`)
+      .get(`/api/posts/user/${userNo}`)
       .then((res) => {
         setUserData({
           nickname: res.data.nickname || "",
@@ -67,7 +67,7 @@ export default function UserProfile() {
       }
 
       axios
-        .put(`/posts/user/${userNo}`, formData, {
+        .put(`/api/posts/user/${userNo}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -102,7 +102,7 @@ export default function UserProfile() {
 
   const followInfo = () => {
     axios
-      .get(`/posts/user/follow/${userNo}`)
+      .get(`/api/posts/user/follow/${userNo}`)
       .then((res) => {
         setFolloweeData(res.data.followeeList);
         setFollowerData(res.data.followerList);
@@ -165,7 +165,7 @@ export default function UserProfile() {
               const newValue = e.target.value;
               if (newValue.length <= 10) {
                 axios
-                  .get(`/nickname/check/${newValue}`)
+                  .get(`/api/nickname/check/${newValue}`)
                   .then((res) => {
                     if (res.data.result) {
                       setNicknameError(true);

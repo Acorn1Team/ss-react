@@ -18,7 +18,7 @@ function Myreview() {
 
   const myreviewOnly = (page = 0) => {
     axios
-      .get(`/mypage/review/${userNo}`, {
+      .get(`/api/mypage/review/${userNo}`, {
         params: { page: page, size: 5 },
       })
       .then((res) => {
@@ -39,7 +39,7 @@ function Myreview() {
 
   const fetchProductImage = (productNo) => {
     axios
-      .get(`/list/product/${productNo}`)
+      .get(`/api/list/product/${productNo}`)
       .then((res) => {
         setProductImages((prev) => ({
           ...prev,
@@ -58,7 +58,7 @@ function Myreview() {
   const deleteReview = () => {
     if (selectedReviewNo !== null) {
       axios
-        .delete(`/review/delete/${selectedReviewNo}`)
+        .delete(`/api/review/delete/${selectedReviewNo}`)
         .then(() => {
           setReviews(
             reviews.filter((review) => review.no !== selectedReviewNo)

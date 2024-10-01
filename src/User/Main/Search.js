@@ -30,7 +30,7 @@ function Search() {
       if (name && category) {
         try {
           const validPage = Math.max(currentPage, 0); // 페이지 계산 수정
-          const response = await axios.get(`/user/search/${category}/${name}`, {
+          const response = await axios.get(`/api/user/search/${category}/${name}`, {
             params: {
               page: validPage,
               size: pageSize,

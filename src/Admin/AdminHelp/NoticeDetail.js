@@ -20,7 +20,7 @@ export default function NoticeDetail() {
 
   useEffect(() => {
     axios
-      .get("/admin/help/notice/" + no)
+      .get("/api/admin/help/notice/" + no)
       .then((res) => {
         setState(res.data);
       })
@@ -40,7 +40,7 @@ export default function NoticeDetail() {
 
   const handleSave = () => {
     axios
-      .put("/admin/help/notice/" + no, state)
+      .put("/api/admin/help/notice/" + no, state)
       .then((res) => {
         if (res.data.isSuccess) navigate("/admin/help");
       })
@@ -51,7 +51,7 @@ export default function NoticeDetail() {
 
   const handleDelete = () => {
     axios
-      .delete("/admin/help/notice/" + no)
+      .delete("/api/admin/help/notice/" + no)
       .then((res) => {
         if (res.data.isSuccess) navigate("/admin/help");
       })

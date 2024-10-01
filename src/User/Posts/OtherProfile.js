@@ -38,7 +38,7 @@ export default function OtherProfile() {
   // 해당 프로필 유저 가져오기
   const getUserInfo = () => {
     axios
-      .get(`/posts/user/${profileUserNo}`)
+      .get(`/api/posts/user/${profileUserNo}`)
       .then((res) => {
         setUserInfo(res.data);
         if (res.data.email === null) {
@@ -53,7 +53,7 @@ export default function OtherProfile() {
   // 팔로잉, 팔로워 정보
   const followInfo = () => {
     axios
-      .get(`/posts/user/follow/${profileUserNo}`)
+      .get(`/api/posts/user/follow/${profileUserNo}`)
       .then((res) => {
         setFolloweeData(res.data.followeeList);
         setFollowerData(res.data.followerList);
@@ -66,7 +66,7 @@ export default function OtherProfile() {
   // 해당 유저가 작성한 글 리스트 가져오기
   const postInfo = () => {
     axios
-      .get(`/posts/list/${profileUserNo}`, {
+      .get(`/api/posts/list/${profileUserNo}`, {
         params: {
           page: currentPage,
           size: pageSize,
@@ -96,7 +96,7 @@ export default function OtherProfile() {
   // 해당 유저 팔로우하고 있는지 확인하기
   const followCheckProc = () => {
     axios
-      .get(`/posts/user/follow/${userNo}/${profileUserNo}`)
+      .get(`/api/posts/user/follow/${userNo}/${profileUserNo}`)
       .then((res) => {
         setFollowState(res.data.result);
       })
@@ -109,7 +109,7 @@ export default function OtherProfile() {
   const followOrCancel = () => {
     if (followState) {
       axios
-        .delete(`/posts/user/follow/${userNo}/${profileUserNo}`)
+        .delete(`/api/posts/user/follow/${userNo}/${profileUserNo}`)
         .then((res) => {
           if (res.data.result) {
             if (followState) {
@@ -123,7 +123,7 @@ export default function OtherProfile() {
         });
     } else {
       axios
-        .post("/posts/user/follow", {
+        .post("/api/posts/user/follow", {
           followeeNo: profileUserNo,
           followerNo: userNo,
         })
@@ -132,7 +132,7 @@ export default function OtherProfile() {
             if (!followState) {
               setFollowState(true);
             }
-            axios.post(`/alert/follow/from/${userNo}`, {
+            axios.post(`/api/alert/follow/from/${userNo}`, {
               userNo: profileUserNo,
               isRead: 0,
             });

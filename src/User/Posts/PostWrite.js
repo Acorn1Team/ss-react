@@ -36,7 +36,7 @@ export default function PostWrite() {
   // 상품 불러오기
   const getProductInfo = async (pNo) => {
     try {
-      const res = await axios.get(`/list/product/${pNo}`);
+      const res = await axios.get(`/api/list/product/${pNo}`);
 
       setProductInfo(res.data);
       setSelected(pNo); // 선택된 상품 설정
@@ -48,7 +48,7 @@ export default function PostWrite() {
   // 상품 목록 불러오기
   const getProductList = async () => {
     try {
-      const res = await axios.get(`/list`);
+      const res = await axios.get(`/api/list`);
       setProductList(res.data);
     } catch (err) {
       console.log(err);
@@ -58,7 +58,7 @@ export default function PostWrite() {
   // 구매한 상품 자료
   const getOrderProductList = () => {
     axios
-      .get(`/posts/product/${userNo}`)
+      .get(`/api/posts/product/${userNo}`)
       .then((res) => {
         setOrderProductList(res.data);
         console.log(res.data);
@@ -106,9 +106,9 @@ export default function PostWrite() {
     try {
       let res;
       if (postNo) {
-        res = await axios.put(`/posts/detail/${postNo}`, formData);
+        res = await axios.put(`/api/posts/detail/${postNo}`, formData);
       } else {
-        res = await axios.post("/posts/detail", formData);
+        res = await axios.post("/api/posts/detail", formData);
       }
 
       console.log("Server response:", res.data); // 서버 응답 확인
@@ -137,7 +137,7 @@ export default function PostWrite() {
   // 수정일 경우 저장되어 있는 post 내용 불러오기
   const getPostInfo = async () => {
     await axios
-      .get(`/posts/detail/${postNo}`)
+      .get(`/api/posts/detail/${postNo}`)
       .then((res) => {
         setContent(res.data.posts.content);
         // 기존 글 내용을 content에 설정
@@ -201,7 +201,7 @@ export default function PostWrite() {
       if (inputValue) {
         try {
           const response = await axios.get(
-            `/user/search/product?term=${inputValue}`
+            `/api/user/search/product?term=${inputValue}`
           );
           if (Array.isArray(response.data)) {
             setFilteredItems(response.data);

@@ -18,7 +18,7 @@ function AutoSearch({ onSearch }) {
       if (inputValue) {
         try {
           const response = await axios.get(
-            `/user/search/${category}?term=${inputValue}`
+            `/api/user/search/${category}?term=${inputValue}`
           );
           if (!isCancelled) {
             // 취소된 경우 상태 업데이트하지 않음
