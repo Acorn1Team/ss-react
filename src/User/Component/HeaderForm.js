@@ -73,7 +73,7 @@ function HeaderForm() {
 
   const forAlert = () => {
     axios
-      .get(`/alert/Readcheck/${userNo}`)
+      .get(`/api/alert/Readcheck/${userNo}`)
       .then((res) => {
         if (res.data.result) {
           setAlertCheckForDot(true);
@@ -110,7 +110,7 @@ function HeaderForm() {
     const userNo = sessionStorage.getItem("id");
     if (userNo) {
       try {
-        const response = await axios.get(`/alert/${userNo}`, {
+        const response = await axios.get(`/api/alert/${userNo}`, {
           params: {
             page: currentPage,
             size: pageSize,
@@ -134,7 +134,7 @@ function HeaderForm() {
 
   const markAsRead = async (alertNo) => {
     try {
-      await axios.put(`/alert/${alertNo}`);
+      await axios.put(`/api/alert/${alertNo}`);
       fetchAlerts();
     } catch (err) {
       console.log(err);
@@ -162,7 +162,7 @@ function HeaderForm() {
 
   const deleteAlert = async (alertNo) => {
     try {
-      const response = await axios.delete(`/alert/${alertNo}`);
+      const response = await axios.delete(`/api/alert/${alertNo}`);
       if (response.data.result) {
         fetchAlerts();
       }

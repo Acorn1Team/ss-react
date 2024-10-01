@@ -21,7 +21,7 @@ export default function MyOrder() {
 
   const getOrderList = () => {
     axios
-      .get(`/order/orderlist/${userNo}`, {
+      .get(`/api/order/orderlist/${userNo}`, {
         params: {
           page: currentPage,
           size: pageSize,
@@ -69,7 +69,7 @@ export default function MyOrder() {
   // 주문 취소 시 쿠폰 재사용
   const getCouponData = () => {
     axios
-      .get(`/coupon/${userNo}`)
+      .get(`/api/coupon/${userNo}`)
       .then((response) => {
         console.log("쿠폰 데이터 갱신:", response.data);
       })
@@ -82,7 +82,7 @@ export default function MyOrder() {
   const orderStateChange = () => {
     if (selectedOrder && selectedOrder.state === "주문접수") {
       axios
-        .delete(`/cancel/${selectedOrder.no}`)
+        .delete(`/api/cancel/${selectedOrder.no}`)
         .then((res) => {
           console.log("주문 취소 응답:", res.data);
           // 서버 응답이 문자열이므로 이에 따라 처리

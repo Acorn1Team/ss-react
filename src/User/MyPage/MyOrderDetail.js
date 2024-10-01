@@ -22,7 +22,7 @@ export default function MyOrderDetail() {
 
   const getOrderList = () => {
     axios
-      .get(`/order/orderdetail/${orderNo}`, {
+      .get(`/api/order/orderdetail/${orderNo}`, {
         params: {
           userNo: userNo,
         },
@@ -35,7 +35,7 @@ export default function MyOrderDetail() {
         // 각 상품에 대해 리뷰 작성 여부 확인
         res.data.order.productList.forEach((product) => {
           axios
-            .get(`/review/check/${userNo}/${product.no}`)
+            .get(`/api/review/check/${userNo}/${product.no}`)
             .then((response) => {
               if (response.data) {
                 setReviewedProducts((prevReviewedProducts) => [

@@ -16,7 +16,7 @@ export default function ShowList() {
 
   const getShowData = () => {
     axios
-      .get(`/main/showDataAll`, {
+      .get(`/api/main/showDataAll`, {
         params: {
           page: currentPage,
           size: pageSize,

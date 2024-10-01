@@ -23,7 +23,7 @@ const DeleteForm = () => {
 
   const emailCheck = async (email, setErrorMessage) => {
     try {
-      const response = await axios.get("/user/emailCheck", {
+      const response = await axios.get("/api/user/emailCheck", {
         params: { email }, // 파라미터로 이메일 전달
       });
 
@@ -51,7 +51,7 @@ const DeleteForm = () => {
   const handleDelete = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`/posts/user/${userNo}`);
+      const res = await axios.get(`/api/posts/user/${userNo}`);
 
       if (res.data.idK) {
         let kakaoTokenValue = sessionStorage.getItem("token_k");
@@ -78,7 +78,7 @@ const DeleteForm = () => {
         sessionStorage.removeItem("token_n");
       }
 
-      const response = await axios.put(`/user/mypage/delete`, {
+      const response = await axios.put(`/api/user/mypage/delete`, {
         userNo: userNo,
         email: email,
       });

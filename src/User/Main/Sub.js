@@ -36,7 +36,7 @@ export default function Sub() {
   // 현재 작품에 대한 모든 정보 가져오기
   const showSubData = () => {
     axios
-      .get(`/main/sub/${no}`)
+      .get(`/api/main/sub/${no}`)
       .then((res) => {
         setShow(res.data.show || {});
         setCharacters(res.data.characters || []);
@@ -62,7 +62,7 @@ export default function Sub() {
 
     // 스크랩 수 확인
     axios
-      .get(`/main/scrap/count/${characterNo}`) // 이 API는 캐릭터의 스크랩 수를 반환한다고 가정
+      .get(`/api/main/scrap/count/${characterNo}`) // 이 API는 캐릭터의 스크랩 수를 반환한다고 가정
       .then((res) => {
         setScrapCount(res.data.likesCount || 0);
       })
@@ -73,7 +73,7 @@ export default function Sub() {
 
   const isScrap = (characterNo) => {
     axios
-      .get(`/main/like/${characterNo}/${userNo}`)
+      .get(`/api/main/like/${characterNo}/${userNo}`)
       .then((s) => {
         setScrap(s.data === true);
       })
@@ -103,7 +103,7 @@ export default function Sub() {
     if (userNo) {
       if (scrap) {
         axios
-          .delete(`/main/scrap/${selectCharacter.no}/${userNo}`)
+          .delete(`/api/main/scrap/${selectCharacter.no}/${userNo}`)
           .then((res) => {
             if (res.data.result === true) {
               setScrap(false); // 스크랩 취소 후 상태 업데이트
@@ -115,7 +115,7 @@ export default function Sub() {
           });
       } else {
         axios
-          .post("/main/scrap", {
+          .post("/api/main/scrap", {
             characterNo: selectCharacter.no,
             userNo: userNo,
           })

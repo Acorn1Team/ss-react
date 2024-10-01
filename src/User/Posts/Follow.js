@@ -26,7 +26,7 @@ export default function Follow() {
 
   const followerInfo = (userNoToUse) => {
     axios
-      .get(`/posts/user/follow/follower/${userNoToUse}`, {
+      .get(`/api/posts/user/follow/follower/${userNoToUse}`, {
         params: {
           page: currentPage,
           size: pageSize,
@@ -43,7 +43,7 @@ export default function Follow() {
 
   const followeeInfo = (userNoToUse) => {
     axios
-      .get(`/posts/user/follow/followee/${userNoToUse}`, {
+      .get(`/api/posts/user/follow/followee/${userNoToUse}`, {
         params: {
           page: currentPage,
           size: pageSize,
@@ -67,7 +67,7 @@ export default function Follow() {
 
   const followCheckProc = (fno) => {
     axios
-      .get(`/posts/user/follow/${userNo}/${fno}`)
+      .get(`/api/posts/user/follow/${userNo}/${fno}`)
       .then((res) => {
         setFollowStatus((pstatus) => ({
           ...pstatus,
@@ -81,7 +81,7 @@ export default function Follow() {
 
   const deleteFollower = (fno) => {
     axios
-      .delete(`/posts/user/follow/${fno}/${userNo}`)
+      .delete(`/api/posts/user/follow/${fno}/${userNo}`)
       .then((res) => {
         if (res.data.result) {
           setFollowData((prevData) => prevData.filter((f) => f.no !== fno));
@@ -95,7 +95,7 @@ export default function Follow() {
   const followOrCancel = (fno) => {
     if (followStatus[fno]) {
       axios
-        .delete(`/posts/user/follow/${userNo}/${fno}`)
+        .delete(`/api/posts/user/follow/${userNo}/${fno}`)
         .then((res) => {
           if (res.data.result) {
             setFollowStatus((pstatus) => ({
@@ -109,7 +109,7 @@ export default function Follow() {
         });
     } else {
       axios
-        .post("/posts/user/follow", {
+        .post("/api/posts/user/follow", {
           followeeNo: fno,
           followerNo: userNo,
         })
@@ -119,7 +119,7 @@ export default function Follow() {
               ...pstatus,
               [fno]: true,
             }));
-            axios.post(`/alert/follow/from/${userNo}`, {
+            axios.post(`/api/alert/follow/from/${userNo}`, {
               userNo: fno,
               isRead: 0,
             });

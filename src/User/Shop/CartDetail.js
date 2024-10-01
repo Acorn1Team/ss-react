@@ -20,7 +20,7 @@ export default function CartDetail() {
   // 유저 정보 받기
   useEffect(() => {
     axios
-      .get(`/posts/user/${userNo}`)
+      .get(`/api/posts/user/${userNo}`)
       .then((response) => {
         setUser(response.data);
       })
@@ -37,7 +37,7 @@ export default function CartDetail() {
   // 쿠폰데이터
   const getCouponData = () => {
     axios
-      .get(`/coupon/order/${userNo}`)
+      .get(`/api/coupon/order/${userNo}`)
       .then((response) => {
         const couponData = response.data;
         // 사용되지 않은 쿠폰만 필터링
@@ -53,7 +53,7 @@ export default function CartDetail() {
 
   const orderProc = () => {
     axios
-      .post(`/order`, {
+      .post(`/api/order`, {
         userNo: userNo, // 유저 번호
         totalAmount: discountedPrice, // 할인 적용된 총 금액
         couponNo: selectedCoupon ? selectedCoupon.coupon.no : 0,

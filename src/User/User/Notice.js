@@ -13,7 +13,7 @@ export default function Notice() {
   const getNoticeList = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`/user/notice`, {
+      const res = await axios.get(`/api/user/notice`, {
         params: {
           page: currentPage,
           size: pageSize,

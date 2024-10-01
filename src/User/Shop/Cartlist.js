@@ -21,7 +21,7 @@ export default function CartList() {
     try {
       const productNos = cartItems.map((ci) => ci.product.no);
       const response = await axios.post(
-        "/cart/stock",
+        "/api/cart/stock",
         { productNos, userNo },
         {
           headers: {

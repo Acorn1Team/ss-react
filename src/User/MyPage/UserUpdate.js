@@ -105,7 +105,7 @@ const UserUpdate = () => {
         //   window.location.href = "/user/auth/login";
         //   return;
         // }
-        const response = await axios.get(`/user/update/${userNo}`);
+        const response = await axios.get(`/api/user/update/${userNo}`);
         setUser(response.data);
         setNameNull(response.data.name === null);
       } catch (error) {
@@ -188,7 +188,7 @@ const UserUpdate = () => {
 
     try {
       if (showPasswordForm && currentPassword) {
-        const passwordResponse = await axios.post(`/user/validate-password`, {
+        const passwordResponse = await axios.post(`/api/user/validate-password`, {
           no: userNo,
           pwd: currentPassword,
         });
@@ -202,7 +202,7 @@ const UserUpdate = () => {
         }
       }
 
-      const response = await axios.put(`/user/update/${userNo}`, updatedUser);
+      const response = await axios.put(`/api/user/update/${userNo}`, updatedUser);
       setModalContent("회원 정보가 수정되었습니다.");
       openModal();
     } catch (error) {
@@ -222,7 +222,7 @@ const UserUpdate = () => {
     try {
       console.log("Sending request with userNo:", userNo);
       const response = await axios.get(
-        "/user/passwordCheck",
+        "/api/user/passwordCheck",
         {
           params: { no: userNo },
         }
