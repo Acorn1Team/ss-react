@@ -14,7 +14,7 @@ export default function MonthlyRevenueDetail(){
 
     useEffect(() => {
         axios
-        .get('/admin/statistics/orders/monthly-revenue', {params: {startDate: '2024-01-01T00:00:00', endDate: '2024-12-31T23:59:59'}})
+        .get('/api/admin/statistics/orders/monthly-revenue', {params: {startDate: '2024-01-01T00:00:00', endDate: '2024-12-31T23:59:59'}})
         .then((response) => {setMonthlyData(response.data);})
         .catch((err) => {setError(err);})
         .finally(() => {setLoading(false);})

@@ -14,7 +14,7 @@ export default function MonthlyBestSellerDetail() {
 
     useEffect(() => {
         axios
-            .get('/admin/statistics/products/monthly-best')
+            .get('/api/admin/statistics/products/monthly-best')
             .then((response) => {
                 setBestSellerData(response.data);
             })
