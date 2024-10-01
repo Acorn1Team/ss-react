@@ -49,7 +49,7 @@ function ChatInput({ onSendMessage }) {
   // 채팅 종료 함수
   const handleCloseChat = () => {
     axios
-      .put(`/chat/user/${userNo}/${chatNo}`)
+      .put(`/api/chat/user/${userNo}/${chatNo}`)
       .then((res) => {
         if (res.data.result) {
           nv(`../user`);
@@ -70,7 +70,7 @@ function ChatInput({ onSendMessage }) {
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
     axios
-      .put(`/chat/user/${userNo}/${chatNo}/${category}`)
+      .put(`/api/chat/user/${userNo}/${chatNo}/${category}`)
       .then((res) => {
         if (res.data.result) {
           setIsModalOpen(false);
@@ -94,7 +94,7 @@ function ChatInput({ onSendMessage }) {
   useEffect(() => {
     // 기존 채팅 내역 불러오기
     axios
-      .get(`/chat/user/${userNo}`)
+      .get(`/api/chat/user/${userNo}`)
       .then((res) => {
         if (res.data.chatNo) {
           setChatNo(res.data.chatNo.no);
@@ -113,7 +113,7 @@ function ChatInput({ onSendMessage }) {
 
     // STOMP 클라이언트 설정 및 WebSocket 연결
     // const socket = new SockJS("/ws");
-    const socket = new SockJS(`http://${window.location.hostname}:8080/ws`);
+    const socket = new SockJS(`http://scenestealer.kr/ws`);
 
     const client = new Client({
       webSocketFactory: () => socket,

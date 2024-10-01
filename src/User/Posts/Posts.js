@@ -76,7 +76,7 @@ export default function Posts() {
   const getPostDetailInfo = () => {
     setLoading(true);
     axios
-      .get(`/posts/detail/${postNo}`, {
+      .get(`/api/posts/detail/${postNo}`, {
         params: {
           page: currentPage,
           size: pageSize,
@@ -118,7 +118,7 @@ export default function Posts() {
   // 인용된 상품 정보 가져오기
   const getProductInPost = () => {
     axios
-      .get(`/list/product/${postData.productNo}`)
+      .get(`/api/list/product/${postData.productNo}`)
       .then((res) => {
         setProductData(res.data);
       })
@@ -130,7 +130,7 @@ export default function Posts() {
   // 게시글 좋아요 갯수 가져오기
   const getPostLike = () => {
     axios
-      .get(`/posts/postlike/${postNo}`)
+      .get(`/api/posts/postlike/${postNo}`)
       .then((res) => setPostLike(res.data.result))
       .catch((err) => {
         console.log(err);
@@ -140,7 +140,7 @@ export default function Posts() {
   // 댓글 좋아요 수 가져오기
   const getCommentLike = (commentNo) => {
     axios
-      .get(`/posts/commentlike/${commentNo}`)
+      .get(`/api/posts/commentlike/${commentNo}`)
       .then((res) => {
         // 새로운 값으로 상태 초기화 (누적되지 않도록 처리)
         setCommentLike((prev) => ({
@@ -156,7 +156,7 @@ export default function Posts() {
   // 게시글 좋아요 상태 체크
   const checkPostLike = () => {
     axios
-      .get(`/posts/postlike/check/${postNo}/${userNo}`)
+      .get(`/api/posts/postlike/check/${postNo}/${userNo}`)
       .then((res) => {
         if (res.data.result) {
           setPostLikeStatus(true); // 사용자가 이미 좋아요를 눌렀다면 true 설정
@@ -170,7 +170,7 @@ export default function Posts() {
   // 댓글 좋아요 상태 체크
   const checkCommentLike = (commentNo) => {
     axios
-      .get(`/posts/commentlike/check/${commentNo}/${userNo}`)
+      .get(`/api/posts/commentlike/check/${commentNo}/${userNo}`)
       .then((res) => {
         // 댓글의 좋아요 상태를 업데이트
         setCommentLikeStatus((prev) => ({
@@ -188,7 +188,7 @@ export default function Posts() {
     if (postLikeStatus) {
       // 이미 좋아요가 눌린 상태라면 좋아요 취소
       axios
-        .delete(`/posts/postlike/${postNo}/${userNo}`)
+        .delete(`/api/posts/postlike/${postNo}/${userNo}`)
         .then((res) => {
           if (res.data.result === true) {
             setPostLikeStatus(false); // 좋아요 상태를 false로 설정
@@ -201,7 +201,7 @@ export default function Posts() {
     } else {
       // 좋아요가 눌리지 않은 상태라면 좋아요 추가
       axios
-        .post("/posts/postlike", {
+        .post("/api/posts/postlike", {
           postNo: postNo,
           userNo: userNo,
         })
@@ -227,7 +227,7 @@ export default function Posts() {
     if (commentLikeStatus[commentNo]) {
       // 이미 좋아요가 눌린 댓글이라면 좋아요 취소
       axios
-        .delete(`/posts/commentlike/${commentNo}/${userNo}`)
+        .delete(`/api/posts/commentlike/${commentNo}/${userNo}`)
         .then((res) => {
           if (res.data.result) {
             // 상태를 갱신하여 좋아요 상태를 false로 설정하고 좋아요 수 1 감소
@@ -250,7 +250,7 @@ export default function Posts() {
     } else {
       // 좋아요가 눌리지 않은 댓글이라면 좋아요 추가
       axios
-        .post("/posts/commentlike", {
+        .post("/api/posts/commentlike", {
           commentNo: commentNo,
           userNo: userNo,
         })
@@ -333,7 +333,7 @@ export default function Posts() {
 
     // 댓글 등록 요청
     axios
-      .post(`/posts/comment`, {
+      .post(`/api/posts/comment`, {
         postNo: postNo,
         userNo: userNo,
         parentCommentNo: recomment,
@@ -346,14 +346,14 @@ export default function Posts() {
           setRecommentCheck(0);
           if (String(postData.userNo) !== String(userNo)) {
             // 알림 전송
-            axios.post(`/alert/reply/post/${userNo}`, {
+            axios.post(`/api/alert/reply/post/${userNo}`, {
               userNo: postData.userNo,
               path: postNo,
               isRead: 0,
             });
 
             if (recomment !== null) {
-              axios.post(`/alert/reply/recomment/${userNo}`, {
+              axios.post(`/api/alert/reply/recomment/${userNo}`, {
                 userNo: recomment,
                 path: postNo,
                 isRead: 0,
@@ -369,7 +369,7 @@ export default function Posts() {
 
   const deleteComment = (commentNo) => {
     axios
-      .delete(`/posts/comment/${commentNo}`)
+      .delete(`/api/posts/comment/${commentNo}`)
       .then((res) => {
         if (res.data.result) {
           getPostDetailInfo(); // 댓글 삭제 후 게시글 정보 다시 가져오기
@@ -382,7 +382,7 @@ export default function Posts() {
 
   const handleConfirmDelete = () => {
     axios
-      .delete(`/posts/soft-delete/${postNo}`)
+      .delete(`/api/posts/soft-delete/${postNo}`)
       .then((res) => {
         if (res.data.result) {
           navigator(`../list/${userNo}`);
@@ -404,7 +404,7 @@ export default function Posts() {
 
   const reportCheck = () => {
     axios
-      .get(`/posts/report/${userNo}/${postNo}`)
+      .get(`/api/posts/report/${userNo}/${postNo}`)
       .then((res) => {
         setIsReport(res.data.result);
       })
@@ -427,7 +427,7 @@ export default function Posts() {
 
   const submitReport = () => {
     axios
-      .post("/posts/report", {
+      .post("/api/posts/report", {
         postNo: postNo,
         userNo: userNo,
         category: reportReason,
@@ -499,7 +499,7 @@ export default function Posts() {
   const handleConfirmDeleteComment = () => {
     if (commentToDelete !== null) {
       axios
-        .delete(`/posts/comment/${commentToDelete}`)
+        .delete(`/api/posts/comment/${commentToDelete}`)
         .then((res) => {
           if (res.data.result) {
             getPostDetailInfo(); // 댓글 삭제 후 게시글 정보 다시 가져오기
@@ -627,7 +627,7 @@ export default function Posts() {
                   ? `${postData.content.slice(0, 30)}...`
                   : postData.content || ""
               }`}
-              webUrl={`http://192.168.0.12:3000/user/style/detail/${postNo}`}
+              webUrl={`http://scenestealer.kr/user/style/detail/${postNo}`}
             />
           </div>
           <div className={styles.postContent}>
