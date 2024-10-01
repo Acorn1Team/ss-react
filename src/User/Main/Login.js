@@ -17,7 +17,7 @@ const Login = () => {
   
     const loginData = { id, pwd };
     try {
-      const response = await fetch("/user/auth/login", {
+      const response = await fetch("/api/user/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
