@@ -69,7 +69,7 @@ export default function ItemManage() {
               id="itemContainer"
               key={item.no}
               style={{
-                width: "30%",
+                width: "25%",
                 border: "1px solid #ccc",
                 borderRadius: "10px",
                 padding: "20px",

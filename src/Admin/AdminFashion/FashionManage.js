@@ -1,11 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ItemManage from "./ItemManage";
 
-export default function ShowSearch() {
+export default function FashionManage() {
+  const [showData, setShowData] = useState([]);
+  const [currentShowPage, setCurrentShowPage] = useState(0);
+  const [showPageSize, setShowPageSize] = useState(6);
+  const [totalShowPages, setTotalShowPages] = useState(1);
+
   const [inputValue, setInputValue] = useState("");
   const [filteredItems, setFilteredItems] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -16,8 +21,35 @@ export default function ShowSearch() {
   const [title, setTitle] = useState("");
   const [file, setFile] = useState(null);
 
+  const getShowData = () => {
+    axios
+      .get(`/api/main/showDataAll`, {
+        params: {
+          page: currentShowPage,
+          size: showPageSize,
+        },
+      })
+      .then((res) => {
+        setShowData(res.data.content);
+        setTotalShowPages(res.data.totalPages);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalShowPages) {
+      setCurrentShowPage(newPage);
+    }
+  };
+
+  useEffect(() => {
+    getShowData();
+  }, [currentShowPage]);
+
   const scrapShow = async (e) => {
-    e.preventDefault(); // 폼 제출 방지
+    e.preventDefault();
     setShowDropdown(false);
     setShow({ no: "", title: "", pic: "" }); // 선택한 작품 초기화
     await axios
@@ -102,6 +134,37 @@ export default function ShowSearch() {
     <>
       <Container>
         <LeftSection>
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+        {showData.map((s) => (
+          <Link to={`/user/main/sub/${s.no}`} key={s.no}>
+            <div className="mainPostsBoxSL">
+              <img src={s.pic} alt={s.title} />
+              <br />
+              {s.title}
+            </div>
+          </Link>
+        ))}
+      </div>
+      {totalShowPages > 1 && (
+        <div style={{ marginTop: "10px" }}>
+          <button
+            onClick={() => handlePageChange(currentShowPage - 1)}
+            disabled={currentShowPage === 0}
+          >
+            이전
+          </button>
+          <span style={{ margin: "0 10px" }}>
+            {currentShowPage + 1} / {totalShowPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentShowPage + 1)}
+            disabled={currentShowPage + 1 >= totalShowPages}
+          >
+            다음
+          </button>
+        </div>
+      )}
+
           <h2>패션 정보 관리</h2>
           <SearchForm>
             <SearchInput
@@ -233,11 +296,11 @@ const Container = styled.div`
 `;
 
 const LeftSection = styled.div`
-  width: 30%; /* 왼쪽 섹션 너비 */
+  width: 40%; /* 왼쪽 섹션 너비 */
 `;
 
 const RightSection = styled.div`
-  width: 70%; /* 오른쪽 섹션 너비 */
+  width: 60%; /* 오른쪽 섹션 너비 */
 `;
 
 const Divider = styled.div`

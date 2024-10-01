@@ -44,7 +44,7 @@ export default function PromotionMain() {
 
   const fetchPopups = () => {
     axios
-      .get("/admin/popups", {
+      .get("/api/admin/popups", {
         params: { page: currentPopupPage, size: popupPageSize },
       })
       .then((response) => {
