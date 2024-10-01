@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function SocialNaver({ props }) {
   const client_id = "bdezpMeUAefIKAYh8VfO";
-  const redirect_uri = "http://localhost:3000/user/callback/naver";
+  const redirect_uri = "http://scenestealer.kr/user/callback/naver";
   const state = "abcdefg";
   const naverURL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${client_id}&state=${state}&redirect_uri=${redirect_uri}`;
 
