@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Modal from "react-modal"; // react-modal 추가
 import "../Style/admin.css";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa"; // React Icons 추가
 
 Modal.setAppElement("#root"); // 접근성 설정
 
@@ -61,12 +62,15 @@ export default function ProductManage() {
 
   const fetchReviews = async (productId, page = 0, size = 5) => {
     try {
-      const response = await axios.get(`/api/admin/product/${productId}/reviews`, {
-        params: {
-          page,
-          size,
-        },
-      });
+      const response = await axios.get(
+        `/api/admin/product/${productId}/reviews`,
+        {
+          params: {
+            page,
+            size,
+          },
+        }
+      );
       setReviews((prevReviews) => ({
         ...prevReviews,
         [productId]: response.data.content,
@@ -216,6 +220,28 @@ export default function ProductManage() {
   const gobacktoproductlist = () => {
     fetchProducts(0, pageSize);
     setIsResultModalOpen(false);
+  };
+
+  const renderStars = (score) => {
+    const fullStars = Math.floor(score); // 꽉 찬 별의 수
+    const halfStar = score % 1 >= 0.5 ? 1 : 0; // 반 별의 유무
+    const emptyStars = 5 - fullStars - halfStar; // 빈 별의 수
+
+    return (
+      <>
+        {Array(fullStars)
+          .fill(<FaStar />)
+          .map((star, index) => (
+            <FaStar key={`full-${index}`} style={{ color: "#FFD700" }} />
+          ))}
+        {halfStar === 1 && <FaStarHalfAlt style={{ color: "#FFD700" }} />}
+        {Array(emptyStars)
+          .fill(<FaRegStar />)
+          .map((star, index) => (
+            <FaRegStar key={`empty-${index}`} style={{ color: "#FFD700" }} />
+          ))}
+      </>
+    );
   };
 
   // 텍스트바 크기 조정을 위한 함수
@@ -451,8 +477,7 @@ export default function ProductManage() {
                       <strong>재고:</strong>&nbsp;
                       {item.stock !== 0 ? (
                         <>
-                          {item.stock}
-                          &nbsp;
+                          {item.stock}개 &nbsp;
                           <button
                             className="btn4Small"
                             onClick={() => openSoldoutModal(item.no)}
@@ -505,19 +530,23 @@ export default function ProductManage() {
                         <div key={review.no}>
                           <strong>{review.userid}</strong>
                           <br />
-                          평점: {review.score}점<br />
+                          평점: {renderStars(review.score)}
+                          <br />
                           {review.contents}
                           <br />
-                          <img
-                            style={{ height: "50px" }}
-                            src={review.pic}
-                            alt={`${review.userid}의 후기 사진`}
-                          />
+                          {/* 사진이 있을 경우에만 이미지 표시 */}
+                          {review.pic && (
+                            <img
+                              style={{ height: "50px" }}
+                              src={review.pic}
+                              alt={`${review.userid}의 후기 사진`}
+                            />
+                          )}
                           <hr />
                         </div>
                       ))
                     ) : (
-                      <p>No reviews available</p>
+                      <p>리뷰가 없습니다.</p>
                     )}
                   </div>
                 </div>
