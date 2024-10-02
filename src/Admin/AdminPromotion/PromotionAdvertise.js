@@ -62,7 +62,7 @@ export default function PromotionAdvertise() {
   const addAdvertise = () => {
     setIsLoading(true);
     axios
-      .post("/admin/advertise", state)
+      .post("/api/admin/advertise", state)
       .then((response) => {
         if (response.data.isSuccess) {
           setIsLoading(false);

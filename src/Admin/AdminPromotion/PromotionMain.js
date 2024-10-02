@@ -179,7 +179,6 @@ export default function PromotionMain() {
               >
                 광고 알림 보내기
               </button>
-              <br />
               <button
                 className="add-button"
                 onClick={() => navigate("/admin/promotion/popup")}
@@ -203,10 +202,9 @@ export default function PromotionMain() {
                       <img
                         onClick={() => navigate(`${popup.path}`)}
                         className={styles.image}
-                        style={{ cursor: "pointer" }}
+                        style={{ cursor: "pointer", maxHeight: "120px", maxWidth: "120px"}}
                         src={popup.pic}
                         alt={`${popup.no} 이미지`}
-                        style={{ maxHeight: "120px", maxWidth: "120px" }}
                       />
                     </td>
                     <td>
