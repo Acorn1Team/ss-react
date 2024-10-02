@@ -76,7 +76,7 @@ export default function PromotionAdvertise() {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>광고 알림 보내기</h2>
+      <h2 className={styles.title}>광고 알림 보내기 💌</h2>
       <div className={styles.inputContainer}>
         <textarea
           className={styles.textarea}

@@ -97,7 +97,7 @@ export default function PromotionPopup() {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>팝업 등록</h2>
+      <h2 className={styles.title}>팝업 광고 등록</h2>
       <div className={styles.formGroup}>
         <input
           type="file"

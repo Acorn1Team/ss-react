@@ -116,7 +116,7 @@ export default function PromotionMain() {
             <div style={{ textAlign: "center" }}>
               <h3>🩶 쿠폰 🩶</h3>
               <button
-                className="add-button"
+                className="search-button"
                 onClick={() => {
                   navigate("/admin/promotion/coupon");
                 }}
@@ -172,7 +172,7 @@ export default function PromotionMain() {
             <div style={{ textAlign: "center" }}>
               <h3>🩶 광고 🩶</h3>
               <button
-                className="add-button"
+                className="search-button"
                 onClick={() => {
                   navigate("/admin/promotion/advertise");
                 }}
@@ -180,7 +180,7 @@ export default function PromotionMain() {
                 광고 알림 보내기
               </button>
               <button
-                className="add-button"
+                className="search-button"
                 onClick={() => navigate("/admin/promotion/popup")}
               >
                 팝업 등록하기
