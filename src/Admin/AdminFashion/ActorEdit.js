@@ -12,6 +12,11 @@ export default function ActorEdit() {
     const [isShowModalOpen, setIsShowModalOpen] = useState(false); // 작품 삭제 확인 모달
     const [isShowDeleteModalOpen, setIsShowDeleteModalOpen] = useState(false); // 작품 삭제 결과 모달
     const [isCharacterModalOpen, setIsCharacterModalOpen] = useState(false); // 배역 삭제 확인 모달
+    
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [addedCharacterPK, setAddedCharacterPK] = useState(0);
+    const [addedCharacter, setAddedCharacter] = useState(null); // 추가한 actorData
+
     const [selectedActor, setSelectedActor] = useState(null); // 선택된 actorData
 
     const [actorName, setActorName] = useState('');
@@ -55,15 +60,22 @@ export default function ActorEdit() {
     };
 
     const addCharacter = (data) => {
+        setAddedCharacter(data);
         axios
             .post(`/api/admin/show/${show.no}/character`, data)
             .then((response) => { // 추가된 캐릭터의 PK 반환
-                navigate(`/admin/fashion/character/${response.data}`, { state: data }); // 배역 정보 들고 감
+                setAddedCharacterPK(response.data);
+                setIsAddModalOpen(true);
             })
             .catch((error) => {
                 console.log(error);
             });
     };
+
+    const closeAddModal = () => {
+        getShowInfo();
+        setIsAddModalOpen(false);
+    }
 
     // 직접 추가 시
     const addCharacterDIY = () => {
@@ -122,7 +134,7 @@ export default function ActorEdit() {
                 {actors.length > 0 && (
                     <div style={{ width: '80%' }}>
                         <h3>등록된 배우들</h3>
-                        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', flexWrap: 'wrap'}}>
                             {actors.map((actorData, index) => (
                                 <div key={index} style={{ textAlign: 'center' }}>
                                     <img
@@ -130,7 +142,7 @@ export default function ActorEdit() {
                                         alt={`${actorData.character} 이미지`}
                                         style={{ height: '220px', display: 'block', margin: '0 auto' }}
                                     />
-                                    {actorData.actor} ({actorData.character})<br />
+                                    {actorData.actor}<br/>({actorData.character})<br />
                                     <button className="update-button" onClick={() => navigate(`/admin/fashion/character/${actorData.no}`, { state: actorData })}>
                                         스타일 편집
                                     </button><br />
@@ -145,7 +157,7 @@ export default function ActorEdit() {
             {scrapedDatas.length > 0 ? (
                 <div>
                     <h3>등록되지 않은 배우들</h3>
-                    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent:"center"  }}>
                         {scrapedDatas.map((data, index) => {
                             const isRegistered = isActorRegistered(data);
                             return (
@@ -153,8 +165,9 @@ export default function ActorEdit() {
                                     {!isRegistered && (
                                         <>
                                             <img src={data.pic} alt={`${data.character} 이미지`} style={{ height: '220px', display: 'block' }} />
-                                            <button className="add-button" onClick={() => addCharacter(data)}>배역 등록</button><br />
-                                            {data.actor}<br />({data.character})
+                                            {data.actor}<br />({data.character})<br />
+                                            <button className="add-button" onClick={() => addCharacter(data)}>배역 등록</button>
+                                            <div><br/><br/></div>
                                         </>
                                     )}
                                 </div>
@@ -266,6 +279,42 @@ export default function ActorEdit() {
                     </>
                 )}
             </Modal>
+
+            <Modal
+                isOpen={isAddModalOpen}
+                onRequestClose={() => setIsAddModalOpen(false)}
+                contentLabel="배우 추가 후 진행할 작업 선택"
+                style={{
+                overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+                content: {
+                    background: "white",
+                    padding: "20px",
+                    borderRadius: "8px",
+                    textAlign: "center",
+                    maxWidth: "400px",
+                    height: "500px",
+                    margin: "auto",
+                },
+                }}
+            >
+                {addedCharacter && (
+                <>
+                <div style={{textAlign:'center', justifyContent:'center'}}>
+                <h3>아래 배역이 추가되었습니다.</h3><br/>
+                <img src={addedCharacter.pic} alt={`${addedCharacter.character} 이미지`} style={{ height: '220px' }} /><br/>
+                {addedCharacter.actor}<br />({addedCharacter.character})<br /><br />
+                <h3>이어서 스타일을 편집하시겠습니까?</h3>
+                <button className="update-button" onClick={() => closeAddModal()}>
+                배역 편집 계속하기
+                </button>
+                <button className="search-button" onClick={() => navigate(`/admin/fashion/character/${addedCharacterPK}`, { state: addedCharacter })}>
+                스타일 편집하기
+                </button>
+                </div>
+                </>
+                )}
+            </Modal>
+
         </div>
     );
 }

@@ -85,7 +85,7 @@ export default function ItemManage() {
                 <img
                   src={item.pic}
                   alt={`${item.name} 이미지`}
-                  style={{ height: "150px", maxWidth: "180px" }}
+                  style={{ height: "120px", maxWidth: "150px" }}
                 />
                 <br />
                 <button className="btn3Small" onClick={() => openDeleteItemModal(item)}>
@@ -117,7 +117,6 @@ export default function ItemManage() {
                         <div style={{ flex: "2" }}>
                           [{styleInfo.showTitle}]<br />
                           {styleInfo.actorInfo.actor}<br/>
-                          ({styleInfo.actorInfo.character})<br />
                           <button
                             className="btn1Small"
                             onClick={() =>
@@ -138,8 +137,7 @@ export default function ItemManage() {
               </div>
               <div id="itemProductInfo" style={{ textAlign: "center", marginTop: "10px" }}>
                 연결 상품:&nbsp;
-              <span
-                style={{color:"#D5006D", cursor:"pointer"}}
+              <span id="connected-product"
                 onClick={() => navigate(`/admin/product/update/${item.productNo}`)}
               >
               {item.productName}

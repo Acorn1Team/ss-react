@@ -72,19 +72,22 @@ function HeaderForm() {
   }, []);
 
   const forAlert = () => {
-    axios
-      .get(`/api/alert/Readcheck/${userNo}`)
-      .then((res) => {
-        if (res.data.result) {
-          setAlertCheckForDot(true);
-        } else {
-          setAlertCheckForDot(false);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (userNo) {
+      axios
+        .get(`/api/alert/Readcheck/${userNo}`)
+        .then((res) => {
+          if (res.data.result) {
+            setAlertCheckForDot(true);
+          } else {
+            setAlertCheckForDot(false);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
+
   const handleAlarmClick = () => {
     forAlert();
     setActiveDropdown(activeDropdown === "alert" ? null : "alert"); // 알림 드롭다운 토글

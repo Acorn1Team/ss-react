@@ -28,13 +28,13 @@
 }
 
 .productItem {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr; /* 상품명, 수량, 가격, 리뷰 상태/버튼 */
+  align-items: center; /* 모든 항목을 수직 가운데 정렬 */
   padding: 15px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  display: flex;
-  justify-content: space-between;
-  align-items: center; /* 각 항목을 수직 가운데 정렬 */
   margin-bottom: 15px;
 }
 

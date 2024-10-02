@@ -94,10 +94,25 @@ export default function PostWrite() {
     formData.append("postDto", JSON.stringify(postDto));
 
     const fileInput = document.querySelector("input[type='file']");
-    if (fileInput && fileInput.files.length > 0) {
-      formData.append("pic", fileInput.files[0]);
-    } else {
-      // 이미지가 없으면 경고 메시지를 표시하고 함수를 종료합니다.
+    if (!postNo && fileInput && fileInput.files.length > 0) {
+      // 이미지 파일 확장자 검사
+      const file = fileInput.files[0];
+      const validExtensions = [
+        "image/jpg",
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+      ];
+
+      if (!validExtensions.includes(file.type)) {
+        document.querySelector("#forFileNull").innerText =
+          "이미지 파일만 업로드할 수 있습니다.";
+        return;
+      }
+
+      formData.append("pic", file);
+    } else if (!postNo && (!fileInput || fileInput.files.length === 0)) {
+      // 최초 등록일 때만 사진 필수
       document.querySelector("#forFileNull").innerText =
         "사진을 등록해 주세요!";
       return;
@@ -155,13 +170,24 @@ export default function PostWrite() {
     setInputValue(e.target.value);
   };
 
-  // 파일 변경 핸들러 (이미지 미리보기 추가)
+  // 파일 변경 핸들러 (이미지 미리보기 및 확장자 검사 추가)
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    const validExtensions = ["image/jpeg", "image/png", "image/gif"];
+
     if (file) {
+      // 파일 확장자 확인
+      if (!validExtensions.includes(file.type)) {
+        document.querySelector("#forFileNull").innerText =
+          "잘못된 파일 형식입니다. 이미지만 업로드할 수 있습니다!";
+        setPreviewImage(null); // 미리보기 초기화
+        return;
+      }
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result); // 미리보기 이미지 설정
+        document.querySelector("#forFileNull").innerText = ""; // 오류 메시지 초기화
       };
       reader.readAsDataURL(file);
     } else {

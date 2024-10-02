@@ -55,6 +55,7 @@ export default function SocialNaver({ props }) {
           src={`${process.env.PUBLIC_URL}/images/naverlogin.png`}
           alt="naverlogin"
           onClick={handleLogin}
+          style={{ cursor: "pointer" }}
           width={"200px"}
         ></img>
       )}

@@ -44,7 +44,7 @@ export default function PromotionMain() {
 
   const fetchPopups = () => {
     axios
-      .get("/admin/popups", {
+      .get("/api/admin/popups", {
         params: { page: currentPopupPage, size: popupPageSize },
       })
       .then((response) => {
@@ -116,7 +116,7 @@ export default function PromotionMain() {
             <div style={{ textAlign: "center" }}>
               <h3>🩶 쿠폰 🩶</h3>
               <button
-                className="add-button"
+                className="search-button"
                 onClick={() => {
                   navigate("/admin/promotion/coupon");
                 }}
@@ -172,16 +172,15 @@ export default function PromotionMain() {
             <div style={{ textAlign: "center" }}>
               <h3>🩶 광고 🩶</h3>
               <button
-                className="add-button"
+                className="search-button"
                 onClick={() => {
                   navigate("/admin/promotion/advertise");
                 }}
               >
                 광고 알림 보내기
               </button>
-              <br />
               <button
-                className="add-button"
+                className="search-button"
                 onClick={() => navigate("/admin/promotion/popup")}
               >
                 팝업 등록하기
@@ -203,10 +202,9 @@ export default function PromotionMain() {
                       <img
                         onClick={() => navigate(`${popup.path}`)}
                         className={styles.image}
-                        style={{ cursor: "pointer" }}
+                        style={{ cursor: "pointer", maxHeight: "120px", maxWidth: "120px"}}
                         src={popup.pic}
                         alt={`${popup.no} 이미지`}
-                        style={{ maxHeight: "120px", maxWidth: "120px" }}
                       />
                     </td>
                     <td>

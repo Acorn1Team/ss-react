@@ -37,7 +37,7 @@ export default function PostList() {
   const checkIfUserHasFollowers = () => {
     setIsLoading(true);
     axios
-      .get(`/posts/user/follow/followee/${userNo}`, {
+      .get(`/api/posts/user/follow/followee/${userNo}`, {
         params: {
           page: 0, // 첫 페이지에서 팔로우 게시글 확인
           size: 1, // 팔로우한 사람 1명만 체크
@@ -65,7 +65,7 @@ export default function PostList() {
   const loadFollowPosts = () => {
     setIsLoading(true);
     axios
-      .get(`/posts/followOrPopular/${userNo}`, {
+      .get(`/api/posts/followOrPopular/${userNo}`, {
         params: {
           page: currentPage,
           size: pageSize,
@@ -89,7 +89,8 @@ export default function PostList() {
   // 전체 게시글 불러오기
   const loadAllPosts = () => {
     setIsLoading(true);
-    const url = sortOrder === "latest" ? "/posts/latest" : "/posts/popular";
+    const url =
+      sortOrder === "latest" ? "/api/posts/latest" : "/api/posts/popular";
     axios
       .get(url, {
         params: {

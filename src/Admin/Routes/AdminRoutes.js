@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
 import AdminHome from "../AdminHome";
-import ShowSearch from "../AdminFashion/ShowSearch";
 import ProductManage from "../AdminProduct/ProductManage";
 import HelpManage from "../AdminHelp/HelpManage";
 import PromotionMain from "../AdminPromotion/PromotionMain";
@@ -20,13 +19,14 @@ import MonthlyRevenueDetail from "../AdminStatistics/MonthlyRevenueDetail";
 import MonthlyBestSellerDetail from "../AdminStatistics/MonthlyBestSellerDetail";
 import BestSellerDetail from "../AdminStatistics/BestSellerDetail";
 import ReturnRateDetail from "../AdminStatistics/ReturnRateDetail";
+import FashionManage from "../AdminFashion/FashionManage";
 
 export default function AdminRoutes() {
   return (
     <Routes>
       <Route path="/" element={<AdminHome />} />
 
-      <Route path="/fashion" element={<ShowSearch />} />
+      <Route path="/fashion" element={<FashionManage />} />
         <Route path="/fashion/show/:no" element={<ActorEdit />} />
         <Route path="/fashion/show/:no" element={<ActorEdit />} />
         <Route path="/fashion/character/:no" element={<StyleManage />} />

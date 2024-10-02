@@ -76,6 +76,7 @@ const SocialKakao = ({ props }) => {
         <img
           src={`${process.env.PUBLIC_URL}/images/kakaologin.png`}
           alt="kakaologin"
+          style={{ cursor: "pointer" }}
           onClick={handleLogin}
           width={"200px"}
         ></img>

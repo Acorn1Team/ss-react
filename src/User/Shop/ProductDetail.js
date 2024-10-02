@@ -159,6 +159,11 @@ export default function ProductDetail() {
               className={`btn2Small`}
               onClick={incrementQuantity}
               disabled={product.stock <= count}
+              style={{
+                backgroundColor: product.stock === 1 ? "gray" : "",
+                color: product.stock === 1 ? "white" : "",
+                cursor: product.stock === 1 ? "not-allowed" : "pointer",
+              }}
             >
               +
             </button>
@@ -170,6 +175,10 @@ export default function ProductDetail() {
               className={`btn2`}
               onClick={handleAddToCart}
               disabled={product.stock === 0}
+              style={{
+                backgroundColor: product.stock === 1 ? "#df919e" : "",
+                cursor: product.stock === 0 ? "not-allowed" : "pointer",
+              }}
             >
               장바구니에 담기
             </button>

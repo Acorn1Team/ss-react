@@ -308,16 +308,23 @@ export default function CartList() {
             )}
             <div className={styles.cartFooter}>
               <div className={styles.totalPrice}>
-                <div id={styles.originalPrice}>
-                  {getTotalCartPriceBefore().toLocaleString()}원
-                </div>
-                <div id={styles.discountAmount}>
-                  -{" "}
-                  {(
-                    getTotalCartPriceBefore() - getTotalCartPrice()
-                  ).toLocaleString()}
-                  원
-                </div>
+                {/* if 조건으로 할인 여부에 따라 출력 결정 */}
+                {getTotalCartPriceBefore() !== getTotalCartPrice() && (
+                  <>
+                    <div id={styles.originalPrice}>
+                      {getTotalCartPriceBefore().toLocaleString()}원
+                    </div>
+                    <div id={styles.discountAmount}>
+                      -{" "}
+                      {(
+                        getTotalCartPriceBefore() - getTotalCartPrice()
+                      ).toLocaleString()}
+                      원
+                    </div>
+                  </>
+                )}
+
+                {/* 총 금액은 항상 출력 */}
                 <div id={styles.finalPrice}>
                   총 {getTotalCartPrice().toLocaleString()}원
                 </div>
