@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import SocialKakao from "../Component/SocialKakao";
 import SocailNaver from "../Component/SocialNaver";
 import styles from "../Style/Login.module.css";
@@ -9,8 +9,37 @@ const Login = () => {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // 특정 경로로의 접근을 막는 함수
+  const handleRedirection = () => {
+    if (
+      isLoggedIn &&
+      (location.pathname === "/user/auth/register" ||
+        location.pathname === "/user/register/success" ||
+        location.pathname === "/user/auth/login")
+    ) {
+      navigate("/"); // 로그인 상태라면 메인 페이지로 이동
+    }
+  };
+
+  // 로그인 상태에 따라 페이지 이동 처리
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []); // 페이지 로드시 한번 실행
+
+  // 상태가 업데이트된 후에 리다이렉션 처리
+  useEffect(() => {
+    handleRedirection();
+  }, [isLoggedIn, location.pathname, navigate]); // isLoggedIn이 업데이트될 때마다 실행
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -35,7 +64,15 @@ const Login = () => {
           // 로그인 성공 처리
           sessionStorage.setItem("id", result.user.no);
           sessionStorage.setItem("token", result.token);
-          navigate(-1);
+
+          setIsLoggedIn(true); // 로그인 상태를 업데이트
+
+          // 로그인 성공 시 이전 페이지로 이동
+          if (location.state && location.state.from) {
+            navigate(location.state.from); // 이전 페이지로 이동
+          } else {
+            navigate(-1); // 이전 페이지가 없는 경우에도 뒤로가기
+          }
         } else {
           // 서버에서 전달된 오류 메시지
           setErrorMessage(
@@ -43,8 +80,7 @@ const Login = () => {
           );
         }
       } else {
-        // JSON이 아닌 응답을 받을 때 (예: HTML 에러 페이지)
-        const errorText = await response.text(); // HTML 내용을 텍스트로 받음
+        const errorText = await response.text();
         setErrorMessage("서버 오류가 발생했습니다: " + errorText);
       }
     } catch (error) {

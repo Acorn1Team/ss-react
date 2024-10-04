@@ -33,7 +33,7 @@ function FindPass() {
 
     setLoading(true);
     try {
-      await axios.post("/password-reset", {
+      await axios.post("/api/password-reset", {
         email,
         id,
       });
@@ -52,7 +52,7 @@ function FindPass() {
     <div>
       {loading && <Loading />}
       <form className={styles["form-container"]} onSubmit={handleSubmit}>
-      <h2>비밀번호 찾기</h2>
+        <h2>비밀번호 찾기</h2>
         <label>
           <input
             type="email"

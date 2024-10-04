@@ -2,15 +2,12 @@
 .searchContainer {
   display: flex;
   justify-content: center;
-  flex-wrap: nowrap; /* 줄바꿈을 하지 않도록 설정 */
+  flex-wrap: wrap;
   gap: 20px;
   padding: 20px;
-  overflow-x: auto; /* 가로로 넘치면 스크롤 가능하도록 설정 */
   position: relative;
-  min-height: 80vh;
-  margin-bottom: 100px;
+  margin-bottom: 30px; /* 검색 결과와 페이지네이션 사이 여백 조정 */
 }
-
 
 /* ActorItem, ShowItem, ProductItem, UserItem 공통 */
 .cardLink {
@@ -22,7 +19,9 @@
   color: #444;
 }
 
-.cardImage, .actorImage, .profileImage {
+.cardImage,
+.actorImage,
+.profileImage {
   width: 150px;
   height: 150px;
   border-radius: 50%;
@@ -75,9 +74,6 @@
   line-height: 1.4;
 }
 
-
-
-
 /* 작품 검색 결과 */
 .cardImage {
   width: 200px;
@@ -90,12 +86,14 @@
   margin-top: 10px;
 }
 
-
 /* ProductItem 스타일 */
 /* 상품 목록 컨테이너를 격자 형태로 정렬 */
 .productGridContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 각 아이템의 최소 너비를 설정하고 자동으로 칸을 채움 */
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(200px, 1fr)
+  ); /* 각 아이템의 최소 너비를 설정하고 자동으로 칸을 채움 */
   gap: 20px; /* 아이템 간 간격 */
   justify-items: center; /* 아이템들을 중앙에 정렬 */
   padding: 20px;
@@ -120,9 +118,9 @@
 
 /* 상품 이미지 */
 .productImage {
-  width: 180px;
-  height: 300px;
-  object-fit: cover;
+  width: 180px; /* 정사각형으로 유지하려면 width와 height를 동일하게 */
+  height: 180px; /* height도 width와 동일하게 설정 */
+  object-fit: cover; /* 이미지 비율을 유지하면서 넘치는 부분을 잘라냄 */
   border-radius: 0px;
   margin-bottom: 10px;
 }
@@ -142,7 +140,6 @@
   margin-top: 5px;
   text-align: left;
 }
-
 
 /* UserItem 스타일 */
 /* 사용자 프로필 전체 링크 */
@@ -207,7 +204,6 @@
   max-width: 220px; /* 텍스트의 최대 너비 설정 */
 }
 
-
 /* 링크 스타일 */
 .cardLink {
   text-decoration: none;
@@ -221,15 +217,15 @@
   transform: translateY(-5px); /* 호버 시 살짝 위로 이동 */
 }
 
-
 /* 페이지네이션 버튼을 하단 가운데에 위치시키기 위한 컨테이너 */
 .paginationContainer {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 20px; /* 페이지네이션과 하단 컨텐츠 사이 여백 */
+  position: relative;
+  bottom: 0; /* 페이지네이션을 하단에 고정 */
+  width: 100%;
 }
 
 /* 페이지네이션 버튼 스타일 */

@@ -89,8 +89,7 @@ export default function PostList() {
   // 전체 게시글 불러오기
   const loadAllPosts = () => {
     setIsLoading(true);
-    const url =
-      sortOrder === "latest" ? "/api/posts/latest" : "/api/posts/popular";
+    const url = sortOrder === "latest" ? "/posts/latest" : "/posts/popular";
     axios
       .get(url, {
         params: {

@@ -250,17 +250,27 @@
 /* 검색 폼 */
 .searchForm {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   margin-top: 20px;
   margin-bottom: 20px;
-  position: relative; /* 부모 요소가 기준 */
+  position: relative;
   width: 100%;
   z-index: 50;
 }
 
+/* 검색 입력 필드와 버튼을 가로로 정렬 */
+.searchRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
 /* 카테고리 선택박스 */
 .searchSelect {
+  background-color: white;
   padding: 8px;
   border: 1px solid #333;
   border-radius: 10px;
@@ -268,13 +278,14 @@
   font-size: 14px;
   color: #333;
   transition: background-color 0.3s ease;
-  width: 80px;
+  width: 150px; /* 너무 넓지 않도록 너비를 조정 */
   height: 44px;
   z-index: 10004;
 }
 
 /* 검색 입력 필드 */
 .searchInput {
+  background-color: white !important;
   padding: 10px;
   width: 400px;
   border: 1px solid #333 !important;
@@ -297,9 +308,11 @@
 /* 자동완성 컨테이너 */
 .autoSearchContainer {
   position: absolute;
-  top: calc(70% + 10px); /* 검색창 바로 아래에 위치 */
+  top: calc(100% + 5px); /* 검색창 바로 아래에 위치 */
   left: 0;
   width: 100%; /* 검색창과 같은 너비 */
+  max-height: 200px; /* 최대 높이 설정 */
+  overflow-y: auto; /* 스크롤 가능하도록 설정 */
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 4px;

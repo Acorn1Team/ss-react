@@ -61,6 +61,19 @@ function AutoSearch({ onSearch }) {
   const handleClick = (item) => {
     setInputValue(item.name || item.title || item);
     setShowDropdown(false);
+
+    // 자동완성 항목을 클릭했을 때 바로 검색 실행
+    const encodedInputValue = encodeURIComponent(
+      item.name || item.title || item
+    );
+    const encodedCategory = encodeURIComponent(category);
+    navigate(
+      `/user/search?category=${encodedCategory}&name=${encodedInputValue}`
+    );
+    setInputValue(""); // 검색 후 입력창 초기화
+    if (onSearch) {
+      onSearch();
+    }
   };
 
   const handleBlur = () => {
@@ -72,12 +85,8 @@ function AutoSearch({ onSearch }) {
     const encodedInputValue = encodeURIComponent(inputValue);
     const encodedCategory = encodeURIComponent(category);
     navigate(
-      `/user/search?category=${encodedCategory}&name=${encodedInputValue}`
+      `/user/search?category=${encodedCategory}&name=${encodedInputValue}&page=0&size=5`
     );
-    setInputValue("");
-    if (onSearch) {
-      onSearch();
-    }
   };
 
   const EnterSearch = (e) => {
@@ -88,51 +97,55 @@ function AutoSearch({ onSearch }) {
 
   return (
     <form className={styles.searchForm}>
-      <select
-        className={styles.searchSelect}
-        onChange={(e) => setCategory(e.target.value)}
-        value={category}
-      >
-        <option value="actor">배우</option>
-        <option value="show">작품</option>
-        <option value="product">상품</option>
-        <option value="user">사용자</option>
-      </select>
-      <input
-        type="text"
-        className={styles.searchInput}
-        value={inputValue}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        placeholder="Search..."
-        onKeyDown={EnterSearch}
-      />
+      <h2>검색어를 입력하세요</h2>
+      <br />
+      <div className={styles.searchRow}>
+        <select
+          className={styles.searchSelect}
+          onChange={(e) => setCategory(e.target.value)}
+          value={category}
+        >
+          <option value="actor">배우</option>
+          <option value="show">작품</option>
+          <option value="product">상품</option>
+          <option value="user">사용자</option>
+        </select>
+        <input
+          type="text"
+          className={styles.searchInput}
+          value={inputValue}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          placeholder="Search..."
+          onKeyDown={EnterSearch}
+        />
 
-      <input
-        onClick={handleSearch}
-        onKeyDown={EnterSearch}
-        type="button"
-        value="조회"
-        className={`btn4 ${styles.searchButton}`}
-      ></input>
+        <input
+          onClick={handleSearch}
+          onKeyDown={EnterSearch}
+          type="button"
+          value="조회"
+          className={`btn4 ${styles.searchButton}`}
+        ></input>
 
-      {showDropdown && (
-        <div className={styles.autoSearchContainer}>
-          {filteredItems.length > 0 ? (
-            filteredItems.map((item, index) => (
-              <div
-                key={index}
-                className={styles.autoSearchItem}
-                onMouseDown={() => handleClick(item)}
-              >
-                {item.name || item.title || item}
-              </div>
-            ))
-          ) : (
-            <div className={styles.autoSearchItem}>검색 결과가 없습니다</div>
-          )}
-        </div>
-      )}
+        {showDropdown && (
+          <div className={styles.autoSearchContainer}>
+            {filteredItems.length > 0 ? (
+              filteredItems.map((item, index) => (
+                <div
+                  key={index}
+                  className={styles.autoSearchItem}
+                  onMouseDown={() => handleClick(item)}
+                >
+                  {item.name || item.title || item}
+                </div>
+              ))
+            ) : (
+              <div className={styles.autoSearchItem}>검색 결과가 없습니다</div>
+            )}
+          </div>
+        )}
+      </div>
     </form>
   );
 }
