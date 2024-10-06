@@ -88,49 +88,62 @@
 
 /* ProductItem 스타일 */
 /* 상품 목록 컨테이너를 격자 형태로 정렬 */
-.productGridContainer {
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(200px, 1fr)
-  ); /* 각 아이템의 최소 너비를 설정하고 자동으로 칸을 채움 */
-  gap: 20px; /* 아이템 간 간격 */
-  justify-items: center; /* 아이템들을 중앙에 정렬 */
+/* 검색 컨테이너 */
+.searchContainer {
   padding: 20px;
 }
 
-/* 각 상품 카드 스타일 */
-.productCard {
+/* ProductItem들을 3행 3열로 배치하는 그리드 스타일 */
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3열 그리드 */
+  gap: 20px; /* 아이템 사이의 간격을 줄임 */
+  padding: 20px;
+  justify-items: center; /* 그리드 아이템을 수평 중앙에 맞춤 */
+}
+
+/* 빈 자리를 차지할 빈 div */
+.emptySlot {
+  height: 0;
+  visibility: hidden;
+}
+
+/* 개별 ProductItem 스타일 */
+.cardLink {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 15px;
-  background-color: #fff; /* 배경색을 흰색으로 */
-  border-radius: 10px; /* 모서리를 둥글게 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 가벼운 그림자 추가 */
-  transition: transform 0.3s, box-shadow 0.3s;
+  flex-direction: column; /* 아이템을 세로로 배치 */
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+  width: 100%; /* 카드의 너비를 균일하게 설정 */
+  max-width: 300px; /* 카드 최대 너비 설정 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
 }
 
-.productCard:hover {
-  transform: translateY(-5px); /* 호버 시 약간 떠오르는 효과 */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 확대 */
+.cardLink:hover {
+  transform: scale(1.05); /* 호버 시 살짝 확대 */
 }
 
-/* 상품 이미지 */
+/* 이미지 크기 조정 */
 .productImage {
-  width: 180px; /* 정사각형으로 유지하려면 width와 height를 동일하게 */
-  height: 180px; /* height도 width와 동일하게 설정 */
-  object-fit: cover; /* 이미지 비율을 유지하면서 넘치는 부분을 잘라냄 */
-  border-radius: 0px;
-  margin-bottom: 10px;
+  width: 110%;
+  height: 300px; /* 이미지 높이 고정 */
+  object-fit: cover; /* 이미지가 비율을 유지하며 영역에 맞게 조정 */
+}
+
+/* 상품 세부 정보 */
+.productDetails {
+  padding: 10px;
 }
 
 /* 상품명 텍스트 */
 .productName {
   font-size: 16px;
   font-weight: bold;
-  margin-top: 10px;
-  text-align: left;
+  text-align: center;
 }
 
 /* 상품 가격 텍스트 */
@@ -138,7 +151,7 @@
   font-size: 14px;
   color: #df919e;
   margin-top: 5px;
-  text-align: left;
+  text-align: center;
 }
 
 /* UserItem 스타일 */

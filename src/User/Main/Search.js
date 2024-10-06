@@ -16,6 +16,10 @@ function Search() {
   const [pageSize, setPageSize] = useState(5);
   const [totalPages, setTotalPages] = useState(1);
 
+  const itemsPerRow = 3; // 한 행에 표시할 아이템 수
+  const emptySlots =
+    (itemsPerRow - (dbData.length % itemsPerRow)) % itemsPerRow; // 빈 슬롯 계산
+
   useEffect(() => {
     setCurrentPage(0); // 검색어가 바뀔 때 페이지를 0으로 초기화
   }, [name, category]);
@@ -101,14 +105,30 @@ function Search() {
   return (
     <div className={styles.searchContainer}>
       {dbData.length > 0 ? (
-        dbData.map((item, index) => (
-          <div key={index} className={styles.cardContainer}>
-            {category === "actor" && <ActorItem item={item} />}
-            {category === "show" && <ShowItem item={item} />}
-            {category === "product" && <ProductItem item={item} />}
-            {category === "user" && <UserItem item={item} />}
+        // 상품 검색 결과일 때만 그리드 레이아웃을 적용
+        category === "product" ? (
+          <div className={styles.productGrid}>
+            {dbData.map((item, index) => (
+              <ProductItem key={index} item={item} />
+            ))}
+
+            {/* 빈 자리를 처리할 빈 div 추가 (빈 슬롯 처리) */}
+            {Array.from({ length: (3 - (dbData.length % 3)) % 3 }).map(
+              (_, index) => (
+                <div key={`empty-${index}`} className={styles.emptySlot}></div>
+              )
+            )}
           </div>
-        ))
+        ) : (
+          // 다른 카테고리일 때는 기존 방식으로 렌더링
+          dbData.map((item, index) => (
+            <div key={index} className={styles.cardContainer}>
+              {category === "actor" && <ActorItem item={item} />}
+              {category === "show" && <ShowItem item={item} />}
+              {category === "user" && <UserItem item={item} />}
+            </div>
+          ))
+        )
       ) : (
         <div>검색 결과가 없습니다.</div>
       )}

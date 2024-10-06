@@ -1,16 +1,13 @@
 .header {
-  margin-top: 20px;
-  margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
-  position: relative;
+  padding: 20px;
 }
 
 .leftContainer {
   display: flex;
-  align-items: center;
+  gap: 20px;
 }
 
 .centerContainer {
@@ -248,141 +245,88 @@
 }
 
 /* 검색 폼 */
-.searchForm {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  position: relative;
-  width: 100%;
-  z-index: 50;
-}
-
-/* 검색 입력 필드와 버튼을 가로로 정렬 */
-.searchRow {
+.searchContainer {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-top: 10px;
-}
-
-/* 카테고리 선택박스 */
-.searchSelect {
-  background-color: white;
-  padding: 8px;
-  border: 1px solid #333;
-  border-radius: 10px;
-  margin-right: 10px;
-  font-size: 14px;
-  color: #333;
-  transition: background-color 0.3s ease;
-  width: 150px; /* 너무 넓지 않도록 너비를 조정 */
-  height: 44px;
-  z-index: 10004;
-}
-
-/* 검색 입력 필드 */
-.searchInput {
-  background-color: white !important;
-  padding: 10px;
-  width: 400px;
-  border: 1px solid #333 !important;
-  border-radius: 4px;
-  font-size: 16px;
-  box-sizing: border-box;
-  margin-right: 10px;
+  gap: 10px;
   position: relative;
+  height: 35px; /* 고정된 높이 설정 */
 }
 
-/* 검색 버튼 */
+.searchSelect,
+.searchInput,
 .searchButton {
-  margin-bottom: 21px;
-  padding: 8px 16px;
+  height: 35px;
+  font-size: 14px;
   border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
+  box-sizing: border-box;
 }
 
-/* 자동완성 컨테이너 */
+/* 전체 검색폼 컨테이너 */
+.searchForm {
+  position: relative; /* 드롭다운이 input 아래에 뜰 수 있도록 relative 포지션 설정 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* 각 요소 간의 간격 */
+  padding: 10px;
+}
+
+/* 검색 요소들을 한 줄로 나란히 정렬 */
+
+/* 드롭다운, 검색창, 버튼 스타일 */
+.searchIcon {
+  cursor: pointer;
+  color: #333;
+  margin-right: 10px; /* 검색 아이콘과 검색 필드 사이 간격 */
+}
+
+/* 드롭다운 (카테고리 선택) */
+.searchSelect {
+  width: 100px !important;
+  padding: 0 8px;
+  border: 1px solid #ccc;
+}
+
+/* 검색어 입력 필드 */
+.searchInput {
+  width: 180px !important;
+  padding: 0 8px;
+  border: 1px solid #ccc;
+  height: 35px; /* 높이 고정 */
+}
+
+/* 자동완성 드롭다운 컨테이너: input 바로 아래 위치 */
 .autoSearchContainer {
   position: absolute;
-  top: calc(100% + 5px); /* 검색창 바로 아래에 위치 */
+  top: 100%; /* input 필드 바로 아래에 위치 */
   left: 0;
-  width: 100%; /* 검색창과 같은 너비 */
-  max-height: 200px; /* 최대 높이 설정 */
-  overflow-y: auto; /* 스크롤 가능하도록 설정 */
+  width: 100%;
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 4px;
-  z-index: 10003; /* 자동완성 목록이 모달 위에 표시되도록 설정 */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  max-height: 200px;
+  z-index: 10;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* 자동완성 아이템 */
+/* 자동완성 항목 */
 .autoSearchItem {
   padding: 10px;
   cursor: pointer;
-  font-size: 16px;
-  background-color: #fff;
-  color: #333;
-  transition: background-color 0.2s ease;
-  z-index: 10003;
 }
 
 .autoSearchItem:hover {
-  background-color: #f5e6e6;
+  background-color: #f0f0f0;
 }
 
-/* 모달 오버레이 */
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(2px);
-  z-index: 1000;
-}
-
-.modalContent {
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(255, 255, 255, 0.5);
-  /* backdrop-filter: blur(5px); */
-  padding: 100%;
-  /* padding: 20px;  */
-  /* border-radius: 8px; */
-  width: 60%;
-  max-width: 500px;
-  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+/* 검색 결과가 없을 때 표시 */
+.noResults {
+  padding: 10px;
   text-align: center;
-  z-index: 10002;
-  overflow: visible;
+  color: #888;
 }
 
-/* 자동완성 컨테이너 */
-.autoSearchContainer {
-  max-height: 200px; /* 최대 높이 설정 */
-  overflow-y: auto; /* 검색 결과가 많을 때 스크롤 */
-  z-index: 10003;
-}
-
-.closeButton {
-  position: absolute;
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  width: 30px;
-  height: 30px;
-  color: black;
-  z-index: 1; /* 모달 내용 위에 나타나도록 설정 */
-}
-.closeButton:hover {
-  background: none;
+.searchButton {
+  margin-top: 1px;
 }

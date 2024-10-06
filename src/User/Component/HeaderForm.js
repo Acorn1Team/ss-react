@@ -22,10 +22,14 @@ function HeaderForm() {
   const navigate = useNavigate();
   const location = useLocation(); // useLocation을 추가하여 페이지 경로를 추적
 
+  const [isSearchOpen, setIsSearchOpen] = useState(false); // 검색창 열림/닫힘 상태
+  const [searchInput, setSearchInput] = useState(""); // 검색 입력 값 상태
+
   // 페이지 이동 시 드롭다운 닫기
   useEffect(() => {
     setActiveDropdown(null); // 페이지 이동 시 드롭다운과 알림 팝업 닫기
     setIsModalOpen(false);
+    setIsSearchOpen(false);
   }, [location]); // location이 변경될 때마다 실행
 
   const checkFor = () => {
@@ -35,6 +39,26 @@ function HeaderForm() {
     } else {
       setIsLoggedIn(false);
       navigate("/user/auth/login");
+    }
+  };
+
+  const handleSearchClick = () => {
+    setIsSearchOpen(!isSearchOpen); // 클릭 시 검색창 상태를 토글
+  };
+
+  const handleInputChange = (e) => {
+    setSearchInput(e.target.value);
+  };
+
+  const handleSearchSubmit = () => {
+    if (searchInput.trim()) {
+      navigate(`/search?query=${encodeURIComponent(searchInput.trim())}`);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearchSubmit(); // 엔터키 입력 시 검색 실행
     }
   };
 
@@ -194,25 +218,22 @@ function HeaderForm() {
           <img src={`/images/logo-02.png`} alt="Logo" className={styles.logo} />
         </Link>
       </div>
+
       <div className={styles.rightContainer}>
-        {" "}
-        <FiSearch
-          size={26}
-          className={styles.searchIcon}
-          onClick={handleSearch}
-        />
-        <Modal
-          isOpen={isModalOpen} // 모달을 열기 위한 조건
-          onRequestClose={handleCloseModal} // 모달 바깥 클릭 시 닫히도록 설정
-          // contentLabel="Search Modal"
-          className={styles.modalContent} // 모달 콘텐츠에 대한 스타일 적용
-          overlayClassName={styles.modalOverlay} // 모달 오버레이에 대한 스타일 적용
-        >
-          <AutoSearch />
-          <button className={styles.closeButton} onClick={handleCloseModal}>
-            X
-          </button>
-        </Modal>
+        <div className={styles.searchContainer}>
+          {/* 검색 아이콘 클릭 시 검색창이 열림 */}
+          <FiSearch
+            size={26}
+            className={styles.searchIcon}
+            onClick={handleSearchClick}
+          />
+          {isSearchOpen && (
+            <div className={styles.searchBox}>
+              <AutoSearch />
+            </div>
+          )}
+        </div>
+
         <Link to="/user/shop/cart">
           <IoCartOutline className={styles.icon} />
         </Link>
