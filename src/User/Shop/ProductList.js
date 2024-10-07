@@ -32,23 +32,22 @@ export default function ProductList() {
         : "/api/list"; // "전체"일 때는 기본 전체 상품 목록 호출
 
     try {
-      const res = await axios.get(endpoint);
-      // 판매 가능한 상품만 필터링
-      let filteredProducts = res.data.content.filter(
-        (product) => product.available === true // available이 true인 상품만 필터링
-      );
+      axios.get(endpoint, {
+        params: {
+          page: currentPage,
+          size: pageSize
+        }
+      }).then((res)=> {
+        // 정렬 기준 적용
+        let sortedProducts = sortProducts(res.data.content, sortOption);
+  
+        if (excludeSoldOut) {
+          sortedProducts = sortedProducts.filter((product) => product.stock > 0); // 품절 상품 제외
+        }
+        setProducts(sortedProducts);
+        setTotalPages(res.data.totalPages);
+      })
 
-      // 정렬 기준 적용
-      let sortedProducts = sortProducts(filteredProducts, sortOption);
-
-      if (excludeSoldOut) {
-        sortedProducts = sortedProducts.filter((product) => product.stock > 0); // 품절 상품 제외
-      }
-      setProducts(sortedProducts);
-      setTotalPages(
-        Math.floor(sortedProducts.length / pageSize) +
-          (sortedProducts.length % pageSize > 0 ? 1 : 0)
-      );
     } catch (error) {
       console.log(error);
     }
@@ -107,13 +106,7 @@ export default function ProductList() {
 
   useEffect(() => {
     refresh(selectCategory, sortOption);
-  }, [excludeSoldOut, selectCategory, sortOption]);
-
-  // 현재 페이지에 맞는 제품 목록을 자르기
-  const paginatedProducts = products.slice(
-    currentPage * pageSize,
-    (currentPage + 1) * pageSize
-  );
+  }, [excludeSoldOut, selectCategory, sortOption, currentPage]);
 
   // 컴포넌트가 마운트될 때 처음으로 최신순으로 "전체" 카테고리를 새로고침
   useEffect(() => {
@@ -180,7 +173,7 @@ export default function ProductList() {
       </div>
 
       <div className={styles.productList}>
-        {paginatedProducts.map((product) => (
+        {products.map((product) => (
           <div
             key={product.no}
             className={`${styles.productItem} ${
