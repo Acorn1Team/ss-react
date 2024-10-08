@@ -270,13 +270,16 @@ export default function CartList() {
                 </div>
                 <div className={styles.cartQuantityWrapper}>
                   <div className={styles.cartQuantity}>
+                    {item.quantity > 1 && (
                     <button
                       style={{ color: "#c7727e" }}
                       onClick={() => decrementQuantity(item.no)}
                     >
                       -
                     </button>
+                    )}
                     <span>{item.quantity}</span>
+                    {item.quantity < item.stock && (
                     <button
                       style={{ color: "#c7727e" }}
                       onClick={() => incrementQuantity(item.no)}
@@ -284,6 +287,7 @@ export default function CartList() {
                     >
                       +
                     </button>
+                    )}
                   </div>
                   {item.stock > 0 && item.quantity >= item.stock && (
                     <div className={styles.stockWarning}>

@@ -21,11 +21,15 @@ const CartReducer = (state = initialCartState, action) => {
 
       let updatedItems;
       if (existingItem) {
-        updatedItems = existingItems.map((i) =>
-          i.product.no === product.no
-            ? { ...i, quantity: i.quantity + quantity }
-            : i
-        );
+        updatedItems = existingItems.map((i) => {
+          if(i.product.no === product.no){
+            const newQuantity = i.quantity + quantity > product.stock
+            ? product.stock
+            : i.quantity + quantity;
+            return {...i, quantity: newQuantity}
+          }
+        return i;
+        })
       } else {
         updatedItems = [...existingItems, { product, quantity }];
       }
