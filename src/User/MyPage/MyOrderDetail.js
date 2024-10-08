@@ -28,16 +28,20 @@ export default function MyOrderDetail() {
         },
       })
       .then((res) => {
+        console.log(res.data.order.orderProductList);
         setOrderInfo(res.data.order.orderInfo);
         setProductList(res.data.order.productList);
         setOrderProductList(res.data.order.orderProductList);
         setUserInfo(res.data.user);
+
         // 각 상품에 대해 리뷰 작성 여부 확인
-        res.data.order.productList.forEach((product) => {
+        res.data.order.orderProductList.forEach((product) => {
+          // alert(product.no);
+
           axios
             .get(`/api/review/check/${userNo}/${product.no}`)
             .then((response) => {
-              if (response.data) {
+              if (response.data.result) {
                 setReviewedProducts((prevReviewedProducts) => [
                   ...prevReviewedProducts,
                   product.no,
@@ -68,7 +72,11 @@ export default function MyOrderDetail() {
 
   return (
     <div className={styles.container}>
-      <button style={{alignSelf:"left"}} className="btn3Small" onClick={() => navigate(-1)}>
+      <button
+        style={{ alignSelf: "left" }}
+        className="btn3Small"
+        onClick={() => navigate(-1)}
+      >
         뒤로
       </button>
       <h2>주문 상세</h2>
@@ -84,11 +92,12 @@ export default function MyOrderDetail() {
 
       <div className={styles.productList}>
         {productList.map((pl) => {
+          console.log(pl);
           const orderProduct = orderProductList.find(
             (op) => op.productNo === pl.no
           );
-          console.log(orderProduct);
-          const hasReviewed = reviewedProducts.includes(pl.no); // 해당 상품에 리뷰가 있는지 확인
+          // console.log(orderProduct);
+          const hasReviewed = reviewedProducts.includes(orderProduct.no); // 해당 상품에 리뷰가 있는지 확인
 
           return (
             <div key={pl.no} className={styles.productItem}>
@@ -119,9 +128,7 @@ export default function MyOrderDetail() {
               </span>
               {pl.available ? (
                 hasReviewed ? (
-                  <span className={styles.reviewCompleted}>
-                    리뷰 작성 완료
-                  </span> // 리뷰 완료 시 텍스트 출력
+                  <span className={styles.reviewCompleted}>리뷰 작성 완료</span> // 리뷰 완료 시 텍스트 출력
                 ) : (
                   orderInfo.state === "배송완료" && (
                     <button
@@ -139,7 +146,6 @@ export default function MyOrderDetail() {
                   판매 종료 상품
                 </span>
               )}
-
             </div>
           );
         })}

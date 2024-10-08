@@ -89,7 +89,12 @@ export default function UserHome() {
   }, [styleItemCount]);
 
   useEffect(() => {
-    const popupCookieCheck = getCookie(`${userNo}_popup`);
+    const cookieUserNo = userNo || "guest";
+    console.log(`Checking popup cookie for: ${cookieUserNo}`);
+
+    const popupCookieCheck = getCookie(`${cookieUserNo}_popup`);
+
+    console.log("Popup cookie value:", popupCookieCheck); // 추가
 
     if (popupCookieCheck === null) {
       axios
@@ -97,7 +102,7 @@ export default function UserHome() {
         .then((res) => {
           const popupData = res.data.map((p) => ({
             ...p,
-            popupOpen: getCookie(`${userNo}_popup_${p.no}`) === null,
+            popupOpen: getCookie(`${cookieUserNo}_popup_${p.no}`) === null, // 쿠키 확인
           }));
           setMainPopup(popupData);
         })
@@ -115,8 +120,10 @@ export default function UserHome() {
   }
 
   const closePopup = (day, popupNo) => {
+    const cookieUserNo = userNo || "guest";
+
     if (day) {
-      document.cookie = `${userNo}_popup_${popupNo}=true; path=/; max-age=${
+      document.cookie = `${cookieUserNo}_popup_${popupNo}=true; path=/; max-age=${
         60 * 60 * 24
       }`;
     }
@@ -196,7 +203,8 @@ export default function UserHome() {
                             {randomShow?.title || "제목 없음"}
                           </p>
                           <p className="card__description">
-                            {randomCharacterNames && randomCharacterNames.length > 0 ? (
+                            {randomCharacterNames &&
+                            randomCharacterNames.length > 0 ? (
                               randomCharacterNames.map((c) => (
                                 <div key={c}>{c.slice(0, -2)}</div>
                               ))
@@ -208,8 +216,7 @@ export default function UserHome() {
                           <p style={{ fontSize: "80%" }}>
                             클릭해 보세요!
                             <br /> '{randomShow?.title}'의
-                            <br /> 더 많은 스타일을 <br />
-                            볼 수 있어요.
+                            <br /> 더 많은 스타일을 <br />볼 수 있어요.
                           </p>
                         </div>
                       </section>
