@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styles from "../Style/PromotionManage.module.css";
 import Modal from "react-modal";
 
@@ -8,22 +8,13 @@ export default function PromotionMain() {
   const navigate = useNavigate();
   const [coupons, setCoupons] = useState([]);
   const [popups, setPopups] = useState([]);
-
-  const [hideExpired, setHideExpired] = useState(false); // 만료된 쿠폰 숨기기 상태 추가
-
-  // 현재 페이지
+  const [hideExpired, setHideExpired] = useState(false); // 만료된 쿠폰 숨기기 상태
   const [currentCouponPage, setCurrentCouponPage] = useState(0);
   const [currentPopupPage, setCurrentPopupPage] = useState(0);
-
-  // 페이지 크기
   const [couponPageSize, setCouponPageSize] = useState(8);
   const [popupPageSize, setPopupPageSize] = useState(3);
-
-  // 전체 페이지 수
   const [totalCouponPages, setTotalCouponPages] = useState(1);
   const [totalPopupPages, setTotalPopupPages] = useState(1);
-
-  // 팝업 삭제 및 상태 변경 모달 관련
   const [popupToDelete, setPopupToDelete] = useState(null);
   const [isDeletePopupModal, setIsDeletePopupModalOpen] = useState(false);
   const [popupToChange, setPopupToChange] = useState(null);
@@ -31,8 +22,11 @@ export default function PromotionMain() {
   const [newStatus, setNewStatus] = useState(null);
 
   const fetchCoupons = () => {
+    const url = hideExpired
+      ? "/api/admin/coupons/active"
+      : "/api/admin/coupons";
     axios
-      .get("/api/admin/coupons", {
+      .get(url, {
         params: { page: currentCouponPage, size: couponPageSize },
       })
       .then((response) => {
@@ -58,12 +52,18 @@ export default function PromotionMain() {
       });
   };
 
+  // 필터나 페이지 변경 시 쿠폰 목록을 다시 불러옴
   useEffect(() => {
     fetchCoupons();
     fetchPopups();
-  }, [currentCouponPage, currentPopupPage]);
+  }, [currentCouponPage, currentPopupPage, hideExpired]);
 
-  // 페이지 변경 함수
+  // "만료된 쿠폰 제외" 체크박스 변경 시 페이지를 1페이지로 초기화
+  const handleHideExpiredChange = (e) => {
+    setHideExpired(e.target.checked);
+    setCurrentCouponPage(0); // 페이지를 1페이지로 설정
+  };
+
   const handleCouponPageChange = (newPage) => {
     if (newPage >= 0 && newPage < totalCouponPages) {
       setCurrentCouponPage(newPage);
@@ -110,24 +110,6 @@ export default function PromotionMain() {
     }
   };
 
-  // 만료된 쿠폰을 필터링하는 함수 (만료기간이 없는 쿠폰은 제외하지 않음)
-  const filterCoupons = (coupons) => {
-    if (hideExpired) {
-      const today = new Date().setHours(0, 0, 0, 0);
-      return coupons.filter((coupon) => {
-        if (!coupon.expiryDate) return true; // 만료기간이 없으면 제외하지 않음
-        const expiryDate = new Date(coupon.expiryDate).setHours(0, 0, 0, 0);
-        return expiryDate >= today; // 만료되지 않은 쿠폰만 표시
-      });
-    }
-    return coupons;
-  };
-
-  // 만료된 쿠폰 숨기기 체크박스 상태 변경 함수
-  const handleHideExpiredChange = (e) => {
-    setHideExpired(e.target.checked);
-  };
-
   return (
     <>
       <div id="admin-body">
@@ -150,7 +132,6 @@ export default function PromotionMain() {
                 >
                   쿠폰 발급하기
                 </button>
-                {/* 만료된 쿠폰 제외 체크박스 추가 */}
                 <label style={{ marginLeft: "10px" }}>
                   <input
                     type="checkbox"
@@ -171,7 +152,7 @@ export default function PromotionMain() {
                 </tr>
               </thead>
               <tbody>
-                {filterCoupons(coupons).map((coupon) => (
+                {coupons.map((coupon) => (
                   <tr key={coupon.no}>
                     <td>{coupon.name}</td>
                     <td>{coupon.discountRate}%</td>
