@@ -68,8 +68,6 @@ function AdminChat() {
         console.log(err);
       });
     const socket = new SockJS(`http://scenestealer.kr/ws`);
-
-    // const socket = new SockJS("/ws");
     const client = new Client({
       webSocketFactory: () => socket,
       debug: (str) => console.log(str),
@@ -157,7 +155,7 @@ function AdminChat() {
 
       {selectedUserId && chatNo && (
         <div className={styles.chatWindow}>
-          <h2>회원 번호 : {selectedUserId}</h2>
+          <h2>회원 번호 : 9042{selectedUserId}</h2>
           <div className={styles.messageList}>
             {messages.map((msg, index) => (
               <div
@@ -166,7 +164,6 @@ function AdminChat() {
                   msg.sendAdmin ? styles.admin : ""
                 }`}
               >
-                {msg.sendAdmin ? "관리자: " : ""}
                 {msg.content}
               </div>
             ))}
