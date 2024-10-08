@@ -167,7 +167,8 @@ export default function CommunityManage() {
                 {post.deleted > 0 && view === "reported" && (
                   <strong>휴지통에 있는 게시물입니다</strong>
                 )}
-                <strong>작성자:</strong> {post.userNickname}<br/>
+                <strong>작성자:</strong> {post.userNickname}
+                <br />
                 <br />
                 {post.pic && (
                   <div className="image-container">
@@ -182,11 +183,11 @@ export default function CommunityManage() {
                 {truncateText(post.content, 15)}
                 {post.content.length > 15 ? (
                   <div
-                  style={{ cursor: "pointer", color: "#ff6881" }} // 클릭 가능한 스타일 추가
-                  onClick={() => openDetailModal(post)} // 상세보기 모달 열기
+                    style={{ cursor: "pointer", color: "#ff6881" }} // 클릭 가능한 스타일 추가
+                    onClick={() => openDetailModal(post)} // 상세보기 모달 열기
                   >
-                  상세보기
-                </div>
+                    상세보기
+                  </div>
                 ) : null}
               </li>
             );
@@ -321,7 +322,7 @@ export default function CommunityManage() {
   margin-right: 10px;
   margin-bottom: 5px;
   width: 250px;
-  height: 300px;
+  height: 350px;
 }
 
 .image-container {

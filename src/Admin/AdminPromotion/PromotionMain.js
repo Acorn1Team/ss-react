@@ -9,6 +9,8 @@ export default function PromotionMain() {
   const [coupons, setCoupons] = useState([]);
   const [popups, setPopups] = useState([]);
 
+  const [hideExpired, setHideExpired] = useState(false); // 만료된 쿠폰 숨기기 상태 추가
+
   // 현재 페이지
   const [currentCouponPage, setCurrentCouponPage] = useState(0);
   const [currentPopupPage, setCurrentPopupPage] = useState(0);
@@ -108,6 +110,24 @@ export default function PromotionMain() {
     }
   };
 
+  // 만료된 쿠폰을 필터링하는 함수 (만료기간이 없는 쿠폰은 제외하지 않음)
+  const filterCoupons = (coupons) => {
+    if (hideExpired) {
+      const today = new Date().setHours(0, 0, 0, 0);
+      return coupons.filter((coupon) => {
+        if (!coupon.expiryDate) return true; // 만료기간이 없으면 제외하지 않음
+        const expiryDate = new Date(coupon.expiryDate).setHours(0, 0, 0, 0);
+        return expiryDate >= today; // 만료되지 않은 쿠폰만 표시
+      });
+    }
+    return coupons;
+  };
+
+  // 만료된 쿠폰 숨기기 체크박스 상태 변경 함수
+  const handleHideExpiredChange = (e) => {
+    setHideExpired(e.target.checked);
+  };
+
   return (
     <>
       <div id="admin-body">
@@ -115,14 +135,31 @@ export default function PromotionMain() {
           <div className={styles.card}>
             <div style={{ textAlign: "center" }}>
               <h3>🩶 쿠폰 🩶</h3>
-              <button
-                className="search-button"
-                onClick={() => {
-                  navigate("/admin/promotion/coupon");
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
-                쿠폰 발급하기
-              </button>
+                <button
+                  className="search-button"
+                  onClick={() => {
+                    navigate("/admin/promotion/coupon");
+                  }}
+                >
+                  쿠폰 발급하기
+                </button>
+                {/* 만료된 쿠폰 제외 체크박스 추가 */}
+                <label style={{ marginLeft: "10px" }}>
+                  <input
+                    type="checkbox"
+                    checked={hideExpired}
+                    onChange={handleHideExpiredChange}
+                  />
+                  만료된 쿠폰 제외
+                </label>
+              </div>
               <h4>발급한 쿠폰 목록</h4>
             </div>
             <table className={styles.table}>
@@ -134,14 +171,12 @@ export default function PromotionMain() {
                 </tr>
               </thead>
               <tbody>
-                {coupons.map((coupon) => (
+                {filterCoupons(coupons).map((coupon) => (
                   <tr key={coupon.no}>
                     <td>{coupon.name}</td>
                     <td>{coupon.discountRate}%</td>
                     <td>
-                      {coupon.expiryDate
-                        ? `${coupon.expiryDate}까지`
-                        : "없음"}
+                      {coupon.expiryDate ? `${coupon.expiryDate}까지` : "없음"}
                     </td>
                   </tr>
                 ))}
@@ -168,6 +203,7 @@ export default function PromotionMain() {
             )}
           </div>
 
+          {/* 팝업 관리 */}
           <div className={styles.card}>
             <div style={{ textAlign: "center" }}>
               <h3>🩶 광고 🩶</h3>
@@ -202,7 +238,11 @@ export default function PromotionMain() {
                       <img
                         onClick={() => navigate(`${popup.path}`)}
                         className={styles.image}
-                        style={{ cursor: "pointer", maxHeight: "120px", maxWidth: "120px"}}
+                        style={{
+                          cursor: "pointer",
+                          maxHeight: "120px",
+                          maxWidth: "120px",
+                        }}
                         src={popup.pic}
                         alt={`${popup.no} 이미지`}
                       />
@@ -273,14 +313,27 @@ export default function PromotionMain() {
       >
         {popupToDelete && (
           <>
-            <h3>해당 팝업을 삭제할까요?</h3><br />
+            <h3>해당 팝업을 삭제할까요?</h3>
+            <br />
             <img
               src={popupToDelete.pic}
               alt={`${popupToDelete.no} 이미지`}
               style={{ maxWidth: "70%", maxHeight: "30%" }}
-            /><br /><br />
-            <button className="delete-button" onClick={() => deletePopup(popupToDelete.no)}>삭제</button>
-            <button className="cancel-button" onClick={() => setIsDeletePopupModalOpen(false)}>취소</button>
+            />
+            <br />
+            <br />
+            <button
+              className="delete-button"
+              onClick={() => deletePopup(popupToDelete.no)}
+            >
+              삭제
+            </button>
+            <button
+              className="cancel-button"
+              onClick={() => setIsDeletePopupModalOpen(false)}
+            >
+              취소
+            </button>
           </>
         )}
       </Modal>
@@ -307,14 +360,19 @@ export default function PromotionMain() {
             <h3>
               팝업 상태를 "{newStatus === "true" ? "보이기" : "숨기기"}"로
               변경할까요?
-            </h3><br />
+            </h3>
+            <br />
             <img
               src={popupToChange.pic}
               alt={`${popupToChange.no} 이미지`}
               style={{ maxWidth: "70%", maxHeight: "30%" }}
             />
-            <br /><br />
-            <button className="cancel-button" onClick={() => setIsChangeStatusModalOpen(false)}>
+            <br />
+            <br />
+            <button
+              className="cancel-button"
+              onClick={() => setIsChangeStatusModalOpen(false)}
+            >
               취소
             </button>
             <button className="confirm-button" onClick={handleStatusChange}>

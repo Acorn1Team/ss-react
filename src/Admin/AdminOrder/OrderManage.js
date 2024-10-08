@@ -219,8 +219,8 @@ export default function OrderManage() {
   };
 
   const makeOrderNo = (orderDate) => {
-    return orderDate.substring(2, 10).replace(/-/g, '');
-  }
+    return orderDate.substring(2, 10).replace(/-/g, "");
+  };
 
   useEffect(() => {
     fetchOrders(currentPage, pageSize);
@@ -240,7 +240,7 @@ export default function OrderManage() {
             bottom: "auto",
             marginRight: "-50%",
             transform: "translate(-50%, -50%)",
-            textAlign: "center"
+            textAlign: "center",
           },
         }}
       >
@@ -264,7 +264,7 @@ export default function OrderManage() {
           }}
         >
           {/* 상태 필터 */}
-          <div style={{ marginTop:"9px", textAlign: "center" }}>
+          <div style={{ marginTop: "9px", textAlign: "center" }}>
             <StatusFilterSelect
               status={status}
               onStatusChange={handleStatusFilterChange}
@@ -278,7 +278,7 @@ export default function OrderManage() {
               placeholder="주문자명 입력"
               value={searchTerm}
               onChange={handleSearchChange}
-              style={{ marginTop:"10px", padding: "5px", width: "150px" }} // 크기 조정
+              style={{ marginTop: "10px", padding: "5px", width: "150px" }} // 크기 조정
             />
           </div>
 
@@ -307,7 +307,7 @@ export default function OrderManage() {
           <button
             className="view-all-button"
             onClick={handleReset}
-            style={{ marginTop:"10px", padding: "5px 10px" }}
+            style={{ marginTop: "10px", padding: "5px 10px" }}
           >
             전체보기
           </button>
@@ -329,19 +329,28 @@ export default function OrderManage() {
             orders.map((order) => (
               <React.Fragment key={order.no}>
                 <tr>
-                  <td>{makeOrderNo(`${order.date}`)}{order.no}</td>
+                  <td>
+                    {makeOrderNo(`${order.date}`)}
+                    {order.no}
+                  </td>
                   <td>{order.userName}</td>
                   <td>
-                    <select style={{padding:"1px", height:"40px", width:"100px", fontSize:"15px"}}
+                    <select
+                      style={{
+                        padding: "1px",
+                        height: "40px",
+                        width: "100px",
+                        fontSize: "15px",
+                      }}
                       value={order.state}
                       onChange={(e) => openModal(order.no, e.target.value)}
-                      >
+                    >
                       <option
                         value="주문접수"
                         disabled={
                           order.state === "배송중" || order.state === "배송완료"
                         }
-                        >
+                      >
                         주문접수
                       </option>
                       <option
@@ -353,7 +362,7 @@ export default function OrderManage() {
                       <option
                         value="배송완료"
                         disabled={order.state === "주문취소"}
-                        >
+                      >
                         배송완료
                       </option>
                       <option value="주문취소">주문취소</option>
@@ -362,7 +371,10 @@ export default function OrderManage() {
                   <td>{new Date(order.date).toLocaleString()}</td>
                   <td>
                     {order.price.toLocaleString("ko-KR")}원&nbsp;
-                    <button className="btn1Small" onClick={() => toggleRowExpansion(order.no)}>
+                    <button
+                      className="btn1Small"
+                      onClick={() => toggleRowExpansion(order.no)}
+                    >
                       {expandedRows.includes(order.no) ? "닫기" : "상세보기"}
                     </button>
                   </td>
@@ -378,7 +390,9 @@ export default function OrderManage() {
                             <thead>
                               <tr>
                                 <td colSpan={5}>
-                                  <h4>주문자 정보<br/>
+                                  <h4>
+                                    주문자 정보
+                                    <br />
                                     연락처) {userInfo[order.no].tel}
                                     <br />
                                     주소) {userInfo[order.no].address}
@@ -394,29 +408,44 @@ export default function OrderManage() {
                               </tr>
                             </thead>
                             <tbody>
-                              {orderDetails[order.no].orderProducts.map((p) => (
-                                <tr key={p.productNo}>
-                                  <td>{p.productNo}</td>
-                                  <td
-                                    style={{ cursor: "pointer", color: "#C32E61" }}
-                                    onClick={() =>
-                                      navigate(
-                                        `/admin/product/update/${p.productNo}`
-                                      )
-                                    }
-                                  >
-                                    {productInfo[order.no][p.productNo]}
-                                  </td>
-                                  <td>{p.quantity}</td>
-                                  <td>
-                                    {(p.price / p.quantity).toFixed(0).toLocaleString(
-                                      "ko-KR"
-                                    )}
-                                    원
-                                  </td>
-                                  <td>{p.price.toLocaleString("ko-KR")}원</td>
-                                </tr>
-                              ))}
+                              {orderDetails[order.no].orderProducts.map((p) => {
+                                const price = Number(
+                                  p.price.toString().replace(/,/g, "")
+                                );
+                                const quantity = Number(
+                                  p.quantity.toString().replace(/,/g, "")
+                                );
+                                const unitPrice =
+                                  quantity !== 0 ? price / quantity : 0;
+
+                                return (
+                                  <tr key={p.productNo}>
+                                    <td>{p.productNo}</td>
+                                    <td
+                                      style={{
+                                        cursor: "pointer",
+                                        color: "#C32E61",
+                                      }}
+                                      onClick={() =>
+                                        navigate(
+                                          `/admin/product/update/${p.productNo}`
+                                        )
+                                      }
+                                    >
+                                      {productInfo[order.no][p.productNo]}
+                                    </td>
+                                    <td>{quantity}</td>
+                                    <td>
+                                      {unitPrice.toLocaleString("ko-KR", {
+                                        minimumFractionDigits: 0,
+                                        maximumFractionDigits: 0,
+                                      })}
+                                      원
+                                    </td>
+                                    <td>{price.toLocaleString("ko-KR")}원</td>
+                                  </tr>
+                                );
+                              })}
                             </tbody>
                           </table>
                         ) : (

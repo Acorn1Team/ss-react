@@ -18,6 +18,7 @@ export default function PromotionCoupon() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [discountRateError, setDiscountRateError] = useState("");
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,15 +41,23 @@ export default function PromotionCoupon() {
     });
   };
 
+  // 만료된 쿠폰 제외하기 로직 추가
   const addCoupon = () => {
-    const { name, discountRate } = state;
+    const { name, discountRate, expiryDate } = state;
     if (!discountRate) {
       setDiscountRateError("할인율을 입력해 주세요.");
       return;
     }
 
-    const expiryDate = state.expiryDate || getFutureDate(7);
-    const couponData = { ...state, expiryDate };
+    const expiry = expiryDate || getFutureDate(7);
+
+    // 만료 날짜가 현재 날짜보다 이전인 경우 에러 처리
+    if (new Date(expiry) < new Date()) {
+      setError("유효기간이 이미 지난 쿠폰은 등록할 수 없습니다.");
+      return;
+    }
+
+    const couponData = { ...state, expiryDate: expiry };
 
     setIsLoading(true);
     axios
@@ -115,6 +124,7 @@ export default function PromotionCoupon() {
           min={new Date().toISOString().split("T")[0]} // 오늘 전 날짜 선택 방지
         />
       </div>
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <button onClick={addCoupon} className={styles.button}>
         등록
       </button>
@@ -138,7 +148,8 @@ export default function PromotionCoupon() {
         }}
       >
         <br />
-        <h3>쿠폰 발급이 완료되었습니다!</h3><br/>
+        <h3>쿠폰 발급이 완료되었습니다!</h3>
+        <br />
         <button onClick={() => navigate("/admin/promotion")}>
           목록으로 돌아가기
         </button>
