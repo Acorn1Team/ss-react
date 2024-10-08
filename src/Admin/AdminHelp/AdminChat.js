@@ -67,6 +67,7 @@ function AdminChat() {
       .catch((err) => {
         console.log(err);
       });
+
     const socket = new SockJS(`http://scenestealer.kr/ws`);
     const client = new Client({
       webSocketFactory: () => socket,
