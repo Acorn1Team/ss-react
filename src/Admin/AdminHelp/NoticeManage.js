@@ -57,23 +57,42 @@ export default function NoticeManage() {
   // 날짜 형식을 변환하는 함수
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
+    return `${date.getFullYear()}년 ${
+      date.getMonth() + 1
+    }월 ${date.getDate()}일`;
   };
 
   return (
     <>
       <h2>
         공지 목록 &nbsp;
-        <button className="add-button" onClick={() => navigate("/admin/help/notices/new")}>
+        <button
+          className="add-button"
+          onClick={() => navigate("/admin/help/notices/new")}
+        >
           공지 추가하기
         </button>
       </h2>
-      <table className="adminTable" style={{width:"60%"}}>
+      <table
+        className="adminTable"
+        style={{ width: "60%", minHeight: "300px" }}
+      >
         <thead>
           <tr>
             <th>번호</th>
             <th>
-              <select id="category" value={selectedCategory} onChange={handleCategoryChange} style={{ marginTop:"10px", padding: "1px", height:"30px", fontSize: "15px", width:"100px" }}>
+              <select
+                id="category"
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+                style={{
+                  marginTop: "10px",
+                  padding: "1px",
+                  height: "30px",
+                  fontSize: "15px",
+                  width: "150px", // 너비를 150px로 유지
+                }}
+              >
                 <option value="">카테고리</option>
                 <option value="주문">주문 상태</option>
                 <option value="결제">결제</option>
@@ -94,7 +113,7 @@ export default function NoticeManage() {
               <tr key={notice.no}>
                 <td>{notice.no}</td>
                 <td>{notice.category}</td>
-                <td> 
+                <td>
                   <Link to={`/admin/help/notices/${notice.no}`}>
                     {notice.title}
                   </Link>
@@ -114,23 +133,23 @@ export default function NoticeManage() {
 
       {/* 페이지네이션 */}
       {totalPages > 1 && (
-      <div id="pagination">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 0}
-        >
-          이전
-        </button>
-        <span style={{ margin: "0 10px" }}>
-          {currentPage + 1} / {totalPages}
-        </span>
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage + 1 === totalPages}
-        >
-          다음
-        </button>
-      </div>
+        <div id="pagination">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 0}
+          >
+            이전
+          </button>
+          <span style={{ margin: "0 10px" }}>
+            {currentPage + 1} / {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage + 1 === totalPages}
+          >
+            다음
+          </button>
+        </div>
       )}
     </>
   );
