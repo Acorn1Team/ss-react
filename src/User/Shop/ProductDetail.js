@@ -191,15 +191,15 @@ export default function ProductDetail() {
           <h2>SOLD OUT</h2>
         )}
       </div>
-
+      <br />
+      <Link to={`/user/style/write/${no}`} className={`btn4`}>
+        커뮤니티 공유하기
+      </Link>
       <div className={styles.reviewSection}>
         <h3>리뷰 보기</h3>
         <ProductReviews product={product} setAverageRating={setAverageRating} />
       </div>
       <br />
-      <Link to={`/user/style/write/${no}`} className={`btn4`}>
-        커뮤니티 공유하기
-      </Link>
 
       {/* 모달 구현 */}
       <Modal

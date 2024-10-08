@@ -59,11 +59,53 @@ h2 {
 
 .reviewSection {
   margin-top: 30px;
+  text-align: center; /* 중앙 정렬 */
 }
 
 .reviewSection h3 {
   margin-bottom: 20px;
   color: #333;
+}
+
+.reviewGrid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(300px, 1fr)
+  ); /* 300px 크기의 칸을 자동으로 채움 */
+  grid-gap: 20px; /* 칸 사이에 여백 */
+  justify-items: center; /* 그리드 아이템들을 중앙 정렬 */
+  margin-top: 20px;
+}
+
+.reviewItem {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  height: 100%; /* 동일한 높이를 유지 */
+  display: flex;
+  flex-direction: column; /* 내용물이 상하로 배치되도록 설정 */
+  justify-content: space-between; /* 상하로 간격을 균등하게 조정 */
+}
+
+.reviewItem h4 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #333;
+}
+
+.reviewItem p {
+  flex-grow: 1; /* 본문이 중간 영역을 채우도록 설정 */
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.reviewItem .rating {
+  color: #df919e;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .communityLink {
@@ -89,5 +131,3 @@ h2 {
   display: block; /* 이미지 블록 요소로 처리 */
   margin: 0 auto; /* 수평 가운데 정렬 */
 }
-
-

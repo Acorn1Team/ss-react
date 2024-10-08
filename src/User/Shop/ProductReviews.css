@@ -2,12 +2,13 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 20px;
+  text-align: center; /* 전체 중앙 정렬 */
 }
 
 .average-rating {
-  font-size: 1.2rem; /* 평균 평점 글씨 크기 조정 */
+  font-size: 1.2rem;
   margin-bottom: 20px;
-  text-align: center; /* 가운데 정렬 */
+  text-align: center;
   font-weight: bold;
 }
 
@@ -18,51 +19,46 @@
 }
 
 .review-list-item {
-  display: flex;
-  align-items: center; /* 이미지와 텍스트가 수직으로 가운데 정렬 */
+  display: grid;
+  width: 500px;
+  grid-template-columns: 100px auto; /* 이미지와 리뷰 내용을 그리드로 배치 */
+  align-items: start; /* 이미지와 텍스트를 시작 위치로 정렬 */
   border-bottom: 1px solid #ddd;
   padding: 20px 0;
   margin-bottom: 20px;
+  text-align: left; /* 리뷰 내용 왼쪽 정렬 */
+  height: 150px; /* 고정 높이 설정 */
 }
 
 .review-left {
-  flex: 0 0 100px;
   display: flex;
   justify-content: center;
 }
 
 .review-right {
-  flex: 1; /* 텍스트 부분을 넓게 차지 */
-  padding-left: 30px; /* 텍스트와 이미지 사이 간격을 넓게 설정 */
+  padding-left: 30px;
+  overflow: hidden; /* 내용이 넘칠 경우 숨김 */
+  height: 100%; /* 부모 요소와 동일한 높이로 설정 */
 }
 
 .review-header {
   display: flex;
-  justify-content: flex-start; /* 왼쪽 정렬 */
-  align-items: center; /* 아이템들을 수직 중앙에 맞춤 */
-  margin-bottom: 0px;
-}
-
-.review-product-name {
-  font-size: 1.2rem;
-  font-weight: bold;
+  align-items: center;
+  margin-bottom: 0;
 }
 
 .review-user {
   font-size: 1.1rem;
   color: #888;
-  margin-left: 10px; /* 사용자 이름과 이미지 사이 간격 조정 */
+  margin-left: 10px;
 }
 
 .review-content {
   font-size: 1.1rem;
   color: #555;
   line-height: 1.5;
-  margin-top: 0px; /* 닉네임과 리뷰 텍스트 사이 간격 없애기 */
-  padding-top: 0px; /* 불필요한 패딩 제거 */
-}
-.review-text {
-  margin-bottom: 5px; /* 텍스트와 점수 사이의 간격 */
+  max-height: 70%; /* 최대 높이 설정 */
+  overflow: hidden; /* 내용이 넘칠 경우 숨김 */
 }
 
 .review-rating {
@@ -71,11 +67,11 @@
 }
 
 .review-image2 {
-  width: 100px; /* 이미지 가로 크기 */
-  height: 120px; /* 이미지 세로 크기 */
-  object-fit: cover; /* 이미지 비율 유지하며 자르기 */
-  border-radius: 8px; /* 모서리를 조금 더 둥글게 설정 */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 이미지에 약간의 그림자 추가 */
+  width: 100px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .pagination {
