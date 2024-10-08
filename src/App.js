@@ -24,7 +24,9 @@ function App() {
     dispatch({ type: "SET_LOADING", payload: true });
     // const socket = new SockJS(`http://scenestealer.kr/ws`);
 
-    const socket = new SockJS("/ws");
+    // const socket = new SockJS("/ws");
+    const socket = new WebSocket("ws://scenestealer.kr/ws");
+
     const client = new Client({
       webSocketFactory: () => socket,
       debug: (str) => console.log("STOMP Debug: ", str),

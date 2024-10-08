@@ -364,7 +364,8 @@ function ChatInput({ onSendMessage }) {
       });
 
     // STOMP 클라이언트 설정 및 WebSocket 연결
-    const socket = new SockJS(`/ws`);
+    // const socket = new SockJS(`/ws`);
+    const socket = new WebSocket("ws://scenestealer.kr/ws");
 
     const client = new Client({
       webSocketFactory: () => socket,
