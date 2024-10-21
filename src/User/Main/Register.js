@@ -132,7 +132,7 @@ const Register = () => {
         if (result.exists) {
           setErrorMessage((prev) => ({
             ...prev,
-            id: "아이디가 이미 사용 중입니다.",
+            id: "이미 사용 중인 아이디입니다.",
           }));
           setIdChecked(false);
         } else {
@@ -193,14 +193,11 @@ const Register = () => {
     setLoading(true);
     console.log(email, setVerificationCode, setErrorMessage);
     try {
-      const response = await fetch(
-        "/api/user/auth/send-verification-code",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-        }
-      );
+      const response = await fetch("/api/user/auth/send-verification-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
       const result = await response.json();
       console.log("Verification Code Response:", result); // 응답 확인
       <Loading />;
@@ -223,14 +220,11 @@ const Register = () => {
   };
   const verifyEmailCodeOnServer = async (email, inputCode, setErrorMessage) => {
     try {
-      const response = await fetch(
-        "/api/user/auth/verify-code",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, code: inputCode }),
-        }
-      );
+      const response = await fetch("/api/user/auth/verify-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code: inputCode }),
+      });
 
       const result = await response.json();
       if (response.ok && result.status === "success") {
