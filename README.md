@@ -1,4 +1,4 @@
-## 📬 SceneStealer 씬스틸러
+## 🎞 SceneStealer 씬스틸러
 
 패션 쇼핑 및 커뮤니티 프로젝트 SceneStealer 프론트엔드 코드 저장소입니다
 ```
